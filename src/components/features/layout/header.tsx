@@ -102,7 +102,7 @@ export function Header() {
                     {user.email}
                   </p>
                   <p className="text-xs text-[#3b82f6]">
-                    {user.role?.description || 'No affiliation'}
+                    {user.role?.name || 'No affiliation'}
                   </p>
                 </div>
                 <Avatar className="w-9 h-9">
