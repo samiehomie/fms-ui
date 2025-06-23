@@ -1,5 +1,3 @@
-import { ApiResponse } from './api.common'
-
 export interface LoginRequest {
   username: string
   password: string
@@ -21,9 +19,34 @@ export interface LoginResponse {
   }
 }
 
+export interface RefreshTokenRequest {
+  token: string
+  // TODO: API 구현 예정 현재는 빈 문자열 전달
+  refresh_token: string
+}
+
+export interface RefreshTokenResponse {
+  token: string
+  user: {
+    id: number
+    name: string
+    username: string
+    email: string
+    role: {
+      id: number
+      name: string
+      description: string
+    }
+  }
+}
+
 export interface AuthApiTypes {
   'POST /auth/login': {
     request: LoginRequest
-    response: ApiResponse<LoginResponse>
+    response: LoginResponse
+  }
+  'POST /auth/refresh': {
+    request: RefreshTokenRequest
+    response: RefreshTokenResponse
   }
 }

@@ -1,9 +1,10 @@
 import { HttpError, NetworkError } from './errors'
 
+export type FetchJsonError = { success: false; error: HttpError | NetworkError }
 /** fetch 응답 타입 */
 export type FetchJsonResult<T = any> =
   | { success: true; data: T }
-  | { success: false; error: HttpError | NetworkError }
+  | FetchJsonError
 
 /**
  * 타입 안전한 JSON fetch 유틸리티 함수

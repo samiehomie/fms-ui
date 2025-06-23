@@ -1,12 +1,8 @@
-import { FetchJsonResult } from '@/lib/api/fetch'
+import { FetchJsonResult, FetchJsonError } from '@/lib/api/fetch'
 
 export type ApiResponse<T = any> = FetchJsonResult<T>
 
-export interface ApiError {
-  code: string
-  message: string
-  details?: Record<string, any>
-}
+export type ApiError = FetchJsonError
 
 export interface PaginationParams {
   page: number
