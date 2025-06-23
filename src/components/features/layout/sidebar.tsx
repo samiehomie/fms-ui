@@ -13,13 +13,15 @@ import {
 import { Button } from '@/components/ui/button'
 import { useAuthActions } from '@/hooks/use-auth-actions' // Assuming this hook provides logout
 import { cn } from '@/lib/utils'
+import Image from 'next/image'
+import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
 
 const navigationItems = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Companies', href: '/dashboard/companies', icon: Building },
-  { name: 'Users', href: '/dashboard/users', icon: Users },
-  { name: 'Vehicles', href: '/dashboard/vehicles', icon: Truck },
-  { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Companies', href: '/companies', icon: Building },
+  { name: 'Users', href: '/users', icon: Users },
+  { name: 'Vehicles', href: '/vehicles', icon: Truck },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ]
 
 export function Sidebar() {
@@ -29,9 +31,8 @@ export function Sidebar() {
   return (
     <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:border-r lg:border-slate-200 lg:bg-[#f8fafc] dark:lg:border-slate-700 dark:lg:bg-slate-900">
       <div className="flex items-center h-16 px-6 border-b border-slate-200 dark:border-slate-700">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <span className="text-2xl font-bold text-[#3b82f6]">BANF</span>
-          <span className="text-2xl font-bold text-[#0f172a]">FLEET</span>
+        <Link href="/" className="flex items-center gap-2">
+          <Image src={banfleetLogoSVG} alt="logo" />
         </Link>
       </div>
       <nav className="flex-1 p-4 space-y-1">
