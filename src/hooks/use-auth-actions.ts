@@ -39,7 +39,7 @@ export function useAuthActions() {
     },
     onSuccess: (data) => {
       storeActions.setUser(data.user, data.expiresIn)
-      router.push('/dashboard') // Or your desired redirect path
+      router.push('/') // Or your desired redirect path
     },
     onError: (error) => {
       console.error('Login error:', error)
