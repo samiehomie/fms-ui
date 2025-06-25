@@ -5,7 +5,7 @@ import {
   useAuthUser,
   useAuthIsLoading,
 } from '@/stores/auth-store'
-import { useAuthActions } from '@/hooks/use-auth-actions'
+import { useAuthActions } from '@/hooks/use-auth'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'

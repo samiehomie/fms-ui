@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useAuthActions } from '@/hooks/use-auth-actions'
+import { useAuthActions } from '@/hooks/use-auth'
 import type { LoginRequest } from '@/types/api/auth.types'
 import Image from 'next/image'
 import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
@@ -106,7 +106,11 @@ export function LoginForm() {
             )}
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full mt-6" disabled={isLoggingIn}>
+            <Button
+              type="submit"
+              className="w-full mt-6"
+              disabled={isLoggingIn}
+            >
               {isLoggingIn ? 'Signing In...' : 'Sign In'}
             </Button>
           </CardFooter>

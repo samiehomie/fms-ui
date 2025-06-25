@@ -11,7 +11,7 @@ import {
   LogOut,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useAuthActions } from '@/hooks/use-auth-actions' // Assuming this hook provides logout
+import { useAuthActions } from '@/hooks/use-auth' // Assuming this hook provides logout
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import banfleetLogoSVG from '@/../public/logos/banfleet.svg'

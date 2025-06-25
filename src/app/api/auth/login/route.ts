@@ -3,7 +3,10 @@ import { cookies } from 'next/headers'
 import { fetchJson } from '@/lib/api/fetch'
 import { buildURL } from '@/lib/api/utils'
 import type { LoginRequest, LoginResponse } from '@/types/api/auth.types'
-import { AUTH_TOKEN_COOKIE_NAME } from '@/constants/auth'
+import {
+  AUTH_TOKEN_COOKIE_NAME,
+  AUTH_EXPIRE_COOKIE_NAME,
+} from '@/constants/auth'
 
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies()
@@ -38,10 +41,19 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       path: '/',
-      maxAge: expires_in, // `expires_in` is in seconds
+      maxAge: expires_in, // seconds
       sameSite: 'lax',
     })
 
+    cookieStore.set(AUTH_EXPIRE_COOKIE_NAME, `${expires_in}`, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+      maxAge: expires_in, // seconds
+      sameSite: 'lax',
+    })
+
+    // TODO: 관련 로직 삭제 필요함 - 클라이언트 사이드에서 다루지 않음
     return NextResponse.json({ user, expiresIn: expires_in })
   } catch (error) {
     console.error('Login route error:', error)

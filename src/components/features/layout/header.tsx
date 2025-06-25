@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Bell, Search, Menu, LayoutDashboard, LogOut } from 'lucide-react'
 import { useAuthUser, useIsAuthenticated } from '@/stores/auth-store'
-import { useAuthActions } from '@/hooks/use-auth-actions'
+import { useAuthActions } from '@/hooks/use-auth'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
 export function Header() {

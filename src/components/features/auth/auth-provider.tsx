@@ -7,7 +7,7 @@ import {
   useTokenExpiresAt,
   useIsAuthenticated,
 } from '@/stores/auth-store'
-import { useAuthActions } from '@/hooks/use-auth-actions'
+import { useAuthActions } from '@/hooks/use-auth'
 
 interface LoginResponse {
   user: any // Replace 'any' with the actual type of your user object
@@ -27,6 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useIsAuthenticated()
   const refreshTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  // TODO: 실제 없는 더미 API 호출중임
   useEffect(() => {
     const checkSession = async () => {
       try {
