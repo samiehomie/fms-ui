@@ -8,6 +8,10 @@ export const getCompanies = async (): Promise<
   ApiResponseType<'GET /admin/companies/list'>
 > => {
   const { authToken } = await getAuthServer()
+  if (!authToken) {
+    logger.error('GET /admin/companies/list 실패: 유저 토큰 없음')
+    throw new Error(`회사 목록을 불러올 수 없습니다: 유저 토큰 없음`)
+  }
   const apiUrl = buildURL('/admin/companies/list')
   const response = await fetchJson<
     ApiResponseType<'GET /admin/companies/list'>

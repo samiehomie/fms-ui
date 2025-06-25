@@ -120,12 +120,20 @@ export async function withAuth(
 export const getAuthServer = async () => {
   const cookieStore = await cookies()
   const authToken = cookieStore.get(AUTH_TOKEN_COOKIE_NAME)?.value
-
   const expire = cookieStore.get(AUTH_EXPIRE_COOKIE_NAME)?.value
 
-  const cookie = `${AUTH_TOKEN_COOKIE_NAME}=${
-    authToken ?? ''
-  }; ${AUTH_EXPIRE_COOKIE_NAME}=${expire ?? ''};`
+  if (authToken || expire) return { authToken }
 
-  return { authToken, cookie }
+  const refreshTokenData = await refreshTokenIfNeeded(authToken, expire)
+  if (!refreshTokenData) {
+    cookieStore.delete(AUTH_TOKEN_COOKIE_NAME)
+    cookieStore.delete(AUTH_EXPIRE_COOKIE_NAME)
+    return { authToken }
+  }
+
+  // const cookie = `${AUTH_TOKEN_COOKIE_NAME}=${
+  //   authToken ?? ''
+  // }; ${AUTH_EXPIRE_COOKIE_NAME}=${expire ?? ''};`
+
+  return { authToken: refreshTokenData.token }
 }

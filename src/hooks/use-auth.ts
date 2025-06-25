@@ -57,7 +57,7 @@ export function useAuthActions() {
       }
     },
     onSuccess: () => {
-      storeActions.clearAuth()
+      // storeActions.clearAuth()
       queryClient.clear() // Clear all query cache on logout
       router.push('/login')
     },
