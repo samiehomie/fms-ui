@@ -11,6 +11,7 @@ import {
 import { buildURL } from '@/lib/api/utils'
 import type { ApiResponseType, ApiRequestType } from '@/types/api'
 import { fetchJson } from '../api/fetch'
+import { redirect } from 'next/navigation'
 
 /**
  * TITLE: RefreshToken 호출 위한 헬퍼 함수
@@ -116,9 +117,10 @@ export async function withAuth(
   return response
 }
 
-export const getServerCookie = async () => {
+export const getAuthServer = async () => {
   const cookieStore = await cookies()
   const authToken = cookieStore.get(AUTH_TOKEN_COOKIE_NAME)?.value
+
   const expire = cookieStore.get(AUTH_EXPIRE_COOKIE_NAME)?.value
 
   const cookie = `${AUTH_TOKEN_COOKIE_NAME}=${
