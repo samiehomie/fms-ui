@@ -1,9 +1,20 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  /* 반프 디자인 시스템 */
+  --color-banf: #005eae;
+  --color-success: #00cea7;
+  --color-disabled: #a5abbd;
+  --color-typo-p: #414656;
+  --color-typo-h: #1e1e1e;
+  --radius-6: 6px;
+}
+
 @theme inline {
+  /* tailwindcss 기본 설정 */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
