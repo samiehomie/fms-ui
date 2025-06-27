@@ -1,21 +1,19 @@
 import { buildURL } from './utils'
 import { fetchJson } from '@/lib/api/fetch'
-import { getAuthServer } from '@/lib/actions/auth'
+import { getAuthData } from '@/lib/actions/auth'
 import type { ApiResponseType } from '@/types/api'
 import { logger } from '../utils'
 
 export const getCompanies = async (): Promise<
-  ApiResponseType<'GET /admin/companies/list'>
+  ApiResponseType<'GET /companies'>
 > => {
-  const { authToken } = await getAuthServer()
+  const { authToken } = await getAuthData()
   if (!authToken) {
     logger.error('GET /admin/companies/list 실패: 유저 토큰 없음')
     throw new Error(`회사 목록을 불러올 수 없습니다: 유저 토큰 없음`)
   }
-  const apiUrl = buildURL('/admin/companies/list')
-  const response = await fetchJson<
-    ApiResponseType<'GET /admin/companies/list'>
-  >(apiUrl, {
+  const apiUrl = buildURL('/companies')
+  const response = await fetchJson<ApiResponseType<'GET /companies'>>(apiUrl, {
     headers: {
       Authorization: `Bearer ${authToken}`,
       'Content-Type': 'application/json',

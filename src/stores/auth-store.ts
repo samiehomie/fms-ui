@@ -1,7 +1,7 @@
 import { create } from 'zustand'
-import type { LoginResponse } from '@/types/api/auth.types'
+import { ApiResponseType } from '@/types/api'
 
-type User = LoginResponse['user']
+type User = ApiResponseType<'POST /auth/login'>['user']
 
 interface AuthState {
   user: User | null

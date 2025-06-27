@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import type { Company } from '@/types/api/admin.types'
+import type { Company } from '@/types/api/company.types'
 import { ShieldCheck } from 'lucide-react'
 import { formatDateTime, getCompanyTypeColor } from '@/lib/utils'
 import { MoreHorizontal } from 'lucide-react'
@@ -14,6 +14,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+
+import {
+  IconChevronDown,
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronsLeft,
+  IconChevronsRight,
+  IconCircleCheckFilled,
+  IconDotsVertical,
+  IconGripVertical,
+  IconLayoutColumns,
+  IconLoader,
+  IconPlus,
+  IconTrendingUp,
+} from '@tabler/icons-react'
+import { Badge } from '@/components/ui/badge'
+import { Checkbox } from '@/components/ui/checkbox'
 
 export const columns: ColumnDef<Company>[] = [
   {
@@ -39,10 +56,16 @@ export const columns: ColumnDef<Company>[] = [
       const isVerified = row.getValue('verified')
       return (
         <div className="flex justify-center">
-          {isVerified ? (
-            <ShieldCheck stroke={`var(--color-success)`} size={19} />
+          {!isVerified ? (
+            <Badge variant="outline" className="text-muted-foreground px-1.5">
+              <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
+              {`verified`}
+            </Badge>
           ) : (
-            <ShieldCheck stroke={`var(--color-disabled)`} size={19} />
+            <Badge variant="outline" className="text-muted-foreground px-1.5">
+              <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
+              {`verified`}
+            </Badge>
           )}
         </div>
       )

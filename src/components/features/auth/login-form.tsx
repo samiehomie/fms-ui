@@ -16,9 +16,9 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useAuthActions } from '@/hooks/use-auth'
-import type { LoginRequest } from '@/types/api/auth.types'
 import Image from 'next/image'
 import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
+import { ApiRequestType } from '@/types/api'
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
@@ -42,7 +42,7 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormValues) => {
     setApiError(null)
     try {
-      const loginData: LoginRequest = {
+      const loginData: ApiRequestType<'POST /auth/login'> = {
         username: data.username,
         password: data.password,
       }

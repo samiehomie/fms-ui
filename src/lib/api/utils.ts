@@ -1,3 +1,6 @@
+import { decodeJwt } from 'jose'
+import { logger } from '../utils'
+
 export const buildURL = (
   endpoint: string,
   baseURL?: string,
@@ -17,4 +20,15 @@ export const buildURL = (
   }
 
   return url.toString()
+}
+
+export function parseJWT(token: string) {
+  try {
+    const payload = decodeJwt(token)
+    logger.log('JWT payload: ', payload)
+    return payload
+  } catch (error) {
+    logger.error('JWT 파싱 실패:', error)
+    return null
+  }
 }

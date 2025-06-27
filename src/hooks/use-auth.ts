@@ -2,29 +2,28 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { useAuthActions as useStoreActions } from '@/stores/auth-store'
-import type {
-  LoginRequest,
-  LoginResponse,
-  RefreshTokenResponse,
-} from '@/types/api/auth.types'
+import type { ApiResponseType, ApiRequestType } from '@/types/api'
 
 interface LoginSuccessData {
-  user: LoginResponse['user']
+  user: ApiResponseType<'POST /auth/login'>['user']
   expiresIn: number // seconds
 }
 
 interface RefreshSuccessData {
-  user: RefreshTokenResponse['user']
+  user: ApiResponseType<'POST /auth/refresh'>['user']
   expiresIn: number // seconds
 }
 
 export function useAuthActions() {
-  const storeActions = useStoreActions()
+  // const storeActions = useStoreActions()
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const loginMutation = useMutation<LoginSuccessData, Error, LoginRequest>({
+  const loginMutation = useMutation<
+    LoginSuccessData,
+    Error,
+    ApiRequestType<'POST /auth/login'>
+  >({
     mutationFn: async (credentials) => {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -38,12 +37,12 @@ export function useAuthActions() {
       return response.json()
     },
     onSuccess: (data) => {
-      storeActions.setUser(data.user, data.expiresIn)
+      //storeActions.setUser(data.user, data.expiresIn)
       router.push('/') // Or your desired redirect path
     },
     onError: (error) => {
       console.error('Login error:', error)
-      storeActions.clearAuth()
+      // storeActions.clearAuth()
       // You might want to show a toast notification here
     },
   })
@@ -69,27 +68,27 @@ export function useAuthActions() {
 
   const refreshAccessToken = async (): Promise<RefreshSuccessData | null> => {
     try {
-      storeActions.setLoading(true)
+      // storeActions.setLoading(true)
       const response = await fetch('/api/auth/refresh', {
         method: 'POST',
       })
       if (!response.ok) {
         const errorData = await response.json()
         console.error('Token refresh failed:', errorData.message)
-        storeActions.clearAuth()
+        // storeActions.clearAuth()
         router.push('/login') // Force logout if refresh fails
         return null
       }
       const data: RefreshSuccessData = await response.json()
-      storeActions.setUser(data.user, data.expiresIn)
+      // storeActions.setUser(data.user, data.expiresIn)
       return data
     } catch (error) {
       console.error('Token refresh error:', error)
-      storeActions.clearAuth()
+      // storeActions.clearAuth()
       router.push('/login') // Force logout on unexpected error
       return null
     } finally {
-      storeActions.setLoading(false)
+      // storeActions.setLoading(false)
     }
   }
 

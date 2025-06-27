@@ -1,9 +1,9 @@
 export * from './auth.types'
 
 import { AuthApiTypes } from './auth.types'
-import { AdminApiTypes } from './admin.types'
+import { CompanyApiTypes } from './company.types'
 
-export interface ApiTypes extends AuthApiTypes, AdminApiTypes {}
+export interface ApiTypes extends AuthApiTypes, CompanyApiTypes {}
 
 export type ApiEndpoint = keyof ApiTypes
 export type ApiRequestType<T extends ApiEndpoint> = ApiTypes[T]['request']

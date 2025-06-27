@@ -1,4 +1,4 @@
-import { getCompanies } from '@/lib/api/admin'
+import { getCompanies } from '@/lib/api/company'
 import { columns } from '@/components/features/companies/columns'
 import { DataTable } from '@/components/features/companies/data-table'
 

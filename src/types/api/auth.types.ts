@@ -3,6 +3,11 @@ export interface LoginRequest {
   password: string
 }
 
+export interface Role {
+  name: string
+  description: string
+}
+
 export interface LoginResponse {
   token: string
   expires_in: number
@@ -11,11 +16,7 @@ export interface LoginResponse {
     name: string
     username: string
     email: string
-    role: {
-      id: number
-      name: string
-      description: string
-    }
+    role: Role
   }
 }
 
@@ -27,16 +28,13 @@ export interface RefreshTokenRequest {
 
 export interface RefreshTokenResponse {
   token: string
+  expires_in: number
   user: {
     id: number
     name: string
     username: string
     email: string
-    role: {
-      id: number
-      name: string
-      description: string
-    }
+    role: Role
   }
 }
 

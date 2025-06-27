@@ -12,27 +12,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Bell, Search, Menu, LayoutDashboard, LogOut } from 'lucide-react'
-import { useAuthUser, useIsAuthenticated } from '@/stores/auth-store'
 import { useAuthActions } from '@/hooks/use-auth'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { useAuth } from '../auth/auth-provider'
+import { logger, getInitials } from '@/lib/utils'
 
 export function Header() {
-  const user = useAuthUser()
-  const isAuthenticated = useIsAuthenticated()
+  const { user, isLoading } = useAuth()
   const { logout } = useAuthActions()
 
-  const getInitials = (name?: string, username?: string) => {
-    if (name) {
-      const parts = name.split(' ')
-      if (parts.length > 1) {
-        return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase()
-      }
-      return name.substring(0, 2).toUpperCase()
-    }
-    if (username) {
-      return username.substring(0, 2).toUpperCase()
-    }
-    return 'CN'
+  if (isLoading) {
+    return <div>Loading...</div>
   }
 
   return (
@@ -85,7 +75,7 @@ export function Header() {
           className="w-full pl-8 md:w-[300px] lg:w-[320px] bg-[#f8fafc] dark:bg-slate-800"
         />
       </div>
-      {isAuthenticated && user ? (
+      {user ? (
         <div className="flex items-center gap-4 ml-auto">
           <Button variant="ghost" size="icon" className="rounded-full">
             <Bell className="w-5 h-5" />
