@@ -39,26 +39,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message }, { status })
     }
 
-    const { token, expires_in, user } = result.data
+    const { token, expires_in: expiresIn } = result.data
+    const expiryTime = Date.now() + expiresIn * 1000
 
     cookieStore.set(AUTH_TOKEN_COOKIE_NAME, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       path: '/',
-      maxAge: expires_in, // seconds
       sameSite: 'lax',
     })
 
-    cookieStore.set(AUTH_EXPIRE_COOKIE_NAME, `${expires_in}`, {
+    cookieStore.set(AUTH_EXPIRE_COOKIE_NAME, expiryTime.toString(), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       path: '/',
-      maxAge: expires_in, // seconds
       sameSite: 'lax',
     })
 
     // TODO: 관련 로직 삭제 필요함 - 클라이언트 사이드에서 다루지 않음
-    return NextResponse.json({ user, expiresIn: expires_in })
+    return NextResponse.json({ mesage: 'Login success', status: 200 })
   } catch (error) {
     logger.error('Login route error:', error)
     return NextResponse.json(

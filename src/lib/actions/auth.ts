@@ -31,11 +31,10 @@ export async function refreshTokenIfNeeded(
     return null
   }
 
-  const expireDate = new Date(Date.now() + Number(currentExpire) * 1000) // expire 쿠키 단위 : 초 -> 밀리초 변환
-  const now = new Date()
-  const threshold = 60 * 60 * 1000 // 임계치 60분
+  const refreshThreshold = 5 * 60 * 1000 // 5 minutes
+  const timeUntilExpiry = parseInt(currentExpire) - Date.now()
 
-  if (expireDate.getTime() - now.getTime() < threshold) {
+  if (timeUntilExpiry < refreshThreshold) {
     const apiUrl = buildURL(
       '/auth/refresh',
       process.env.NEXT_PUBLIC_API_BASE_URL,
