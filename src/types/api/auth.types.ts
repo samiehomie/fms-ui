@@ -38,6 +38,18 @@ export interface RefreshTokenResponse {
   }
 }
 
+export interface JWTAuthPayload {
+  id: number
+  name: string
+  username: string
+  email: string
+  role_id: number
+  role: string
+  company: string
+  iat: number
+  exp: number
+}
+
 export interface AuthApiTypes {
   'POST /auth/login': {
     request: LoginRequest

@@ -8,15 +8,23 @@ import {
 } from '@/constants/auth'
 import { buildURL } from '@/lib/api/utils'
 import type { ApiResponseType, ApiRequestType } from '@/types/api'
-import { fetchJson } from '../api/fetch'
-import { parseJWT } from '@/lib/api/utils'
+import { fetchJson } from './fetch'
+import { decodeJwt } from 'jose'
+import type { JWTAuthPayload } from '@/types/api'
 
 type User = ApiResponseType<'POST /auth/login'>['user']
-/**
- * TITLE: RefreshToken 호출 위한 헬퍼 함수
- * - acessToken(JWT) 만료 임박시 refreshToken API 호출하여 토큰 갱신
- * - 갱신 실패시 null 반환하여 재로그인 필요 알림
- */
+
+export async function parseJWT<T = any>(token: string): Promise<T | null> {
+  try {
+    const payload = decodeJwt(token) as T
+    logger.log('JWT payload: ', payload)
+    return payload
+  } catch (error) {
+    logger.error('JWT 파싱 실패:', error)
+    return null
+  }
+}
+
 export async function refreshTokenIfNeeded(
   currentToken?: string,
   currentExpire?: string,
@@ -25,7 +33,7 @@ export async function refreshTokenIfNeeded(
   expire: string
 } | null> {
   if (!currentToken || !currentExpire) {
-    logger.error(
+    logger.log(
       `인증 토큰 갱신실패: ${AUTH_TOKEN_COOKIE_NAME} 또는 ${AUTH_EXPIRE_COOKIE_NAME} 쿠키 없음.`,
     )
     return null
@@ -77,6 +85,25 @@ export async function refreshTokenIfNeeded(
   return { token: currentToken, expire: currentExpire }
 }
 
+export async function setAuthCookies(token: string, expiresIn: number) {
+  const cookieStore = await cookies()
+  const expiryTime = Date.now() + expiresIn * 1000
+
+  cookieStore.set(AUTH_TOKEN_COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+  })
+
+  cookieStore.set(AUTH_EXPIRE_COOKIE_NAME, expiryTime.toString(), {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+  })
+}
+
 export async function withAuth(
   handler: (tokenData: {
     token: string
@@ -124,8 +151,14 @@ export const getAuthData = async () => {
     return null
   }
 
-  const user = parseJWT(refreshTokenData.token) as User | null
+  const user = await parseJWT<JWTAuthPayload>(refreshTokenData.token)
   if (!user) return null
 
   return { token: refreshTokenData.token, user }
+}
+
+export async function clearAuthCookies() {
+  const cookieStore = await cookies()
+  cookieStore.delete(AUTH_TOKEN_COOKIE_NAME)
+  cookieStore.delete(AUTH_EXPIRE_COOKIE_NAME)
 }

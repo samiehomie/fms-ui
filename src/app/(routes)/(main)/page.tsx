@@ -1,35 +1,15 @@
 'use client'
-
-import {
-  useIsAuthenticated,
-  useAuthUser,
-  useAuthIsLoading,
-} from '@/stores/auth-store'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useAuth } from '@/components/features/auth/auth-provider'
 import { StatCard } from '@/components/features/dashboard/stat-card'
 import { RecentCompaniesList } from '@/components/features/dashboard/recent-companies-list'
 import { VehicleStatusList } from '@/components/features/dashboard/vehicle-status-list'
 import { Globe, Users, Truck, RefreshCw } from 'lucide-react'
 
 export default function DashboardPage() {
-  const router = useRouter()
-  const isAuthenticated = useIsAuthenticated()
-  const isLoading = useAuthIsLoading()
-  const user = useAuthUser()
+  const { user, isLoading } = useAuth()
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.replace('/login')
-    }
-  }, [isAuthenticated, isLoading, router])
-
-  if (isLoading || (!isLoading && !isAuthenticated)) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p>Loading...</p> {/* Or a proper spinner/skeleton component */}
-      </div>
-    )
+  if (isLoading) {
+    return <div>Loading...</div>
   }
 
   return (

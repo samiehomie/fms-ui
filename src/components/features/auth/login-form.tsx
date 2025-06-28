@@ -15,10 +15,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useAuthActions } from '@/hooks/use-auth'
 import Image from 'next/image'
 import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
 import { ApiRequestType } from '@/types/api'
+import { loginAction } from '@/lib/actions/login'
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
@@ -28,8 +28,8 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>
 
 export function LoginForm() {
-  const { login, isLoggingIn, loginError } = useAuthActions()
   const [apiError, setApiError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -41,18 +41,20 @@ export function LoginForm() {
 
   const onSubmit = async (data: LoginFormValues) => {
     setApiError(null)
+    setIsLoading(true)
     try {
       const loginData: ApiRequestType<'POST /auth/login'> = {
         username: data.username,
         password: data.password,
       }
-      await login(loginData)
+      await loginAction(loginData)
       // Redirect is handled by the login mutation's onSuccess
     } catch (error: any) {
       // Error from mutation's throw will be caught by loginError state in useAuthActions
       // This catch is for other potential issues, though typically mutation handles it.
       setApiError(error.message || 'An unexpected error occurred.')
     }
+    setIsLoading(false)
   }
 
   return (
@@ -99,19 +101,11 @@ export function LoginForm() {
                 </p>
               )}
             </div>
-            {(apiError || loginError) && (
-              <p className="text-sm text-red-500">
-                {apiError || loginError?.message}
-              </p>
-            )}
+            {apiError && <p className="text-sm text-red-500">{apiError}</p>}
           </CardContent>
           <CardFooter>
-            <Button
-              type="submit"
-              className="w-full mt-6"
-              disabled={isLoggingIn}
-            >
-              {isLoggingIn ? 'Signing In...' : 'Sign In'}
+            <Button type="submit" className="w-full mt-6" disabled={isLoading}>
+              {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
           </CardFooter>
         </form>

@@ -11,10 +11,10 @@ import {
   LogOut,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useAuthActions } from '@/hooks/use-auth' // Assuming this hook provides logout
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
+// import { useAuth } from '../auth/auth-provider'
 
 const navigationItems = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
@@ -25,8 +25,8 @@ const navigationItems = [
 ]
 
 export function Sidebar() {
+  // const { user, isLoading } = useAuth()
   const pathname = usePathname()
-  const { logout, isLoggingOut } = useAuthActions()
 
   return (
     <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:border-r lg:border-slate-200 lg:bg-[#f8fafc] dark:lg:border-slate-700 dark:lg:bg-slate-900">
@@ -59,11 +59,13 @@ export function Sidebar() {
         <Button
           variant="ghost"
           className="w-full justify-start text-[#ef4444] hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-[#ef4444]"
-          onClick={() => logout()}
-          disabled={isLoggingOut}
+          onClick={async () => {
+            await fetch('/api/auth/logout', { method: 'POST' })
+            window.location.reload()
+          }}
         >
           <LogOut className="w-5 h-5 mr-3" />
-          {isLoggingOut ? 'Logging out...' : 'Log out'}
+          {'Log out'}
         </Button>
       </div>
     </aside>

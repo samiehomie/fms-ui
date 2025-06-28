@@ -8,12 +8,13 @@ import {
   ReactNode,
 } from 'react'
 import type { ApiResponseType } from '@/types/api'
-import { getAuthData } from '@/lib/actions/auth'
+import { parseJWT } from '@/lib/api/auth'
+import type { JWTAuthPayload } from '@/types/api'
 
 type User = ApiResponseType<'POST /auth/login'>['user']
 
 type AuthContextType = {
-  user: User | null
+  user: JWTAuthPayload | null
   isLoading: boolean
 }
 
@@ -22,18 +23,27 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
 })
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({
+  children,
+  token,
+}: {
+  children: ReactNode
+  token?: string
+}) {
   const [authState, setAuthState] = useState<AuthContextType>({
     user: null,
     isLoading: true,
   })
 
   useEffect(() => {
-    const fetchAuth = async () => {
+    const handleAuthChange = async () => {
+      if (!token) {
+        return setAuthState({ user: null, isLoading: false })
+      }
       try {
-        const authData = await getAuthData()
+        const user = await parseJWT<JWTAuthPayload>(token)
         setAuthState({
-          user: authData ? authData.user : null,
+          user,
           isLoading: false,
         })
       } catch (error) {
@@ -41,8 +51,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    fetchAuth()
-  }, [])
+    // 1. 초기 로드 시
+    handleAuthChange()
+
+    // 2. 탭 간 인증 상태 동기화
+    window.addEventListener('storage', handleAuthChange)
+
+    return () => window.removeEventListener('storage', handleAuthChange)
+  }, [token])
 
   return (
     <AuthContext.Provider value={authState}>{children}</AuthContext.Provider>
