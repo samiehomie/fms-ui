@@ -9,7 +9,7 @@ export const getCompanies = async (): Promise<
 > => {
   const authData = await getAuthData()
   if (!authData) {
-    logger.error('GET /admin/companies/list 실패: 유저 토큰 없음')
+    // logger.error('GET /admin/companies/list 실패: 유저 토큰 없음')
     throw new Error(`회사 목록을 불러올 수 없습니다: 유저 토큰 없음`)
   }
   const apiUrl = buildURL('/companies')
@@ -21,7 +21,7 @@ export const getCompanies = async (): Promise<
   })
 
   if (!response.success) {
-    logger.error('GET /admin/companies/list 실패: ', response.error)
+    // logger.error('GET /admin/companies/list 실패: ', response.error)
     throw new Error(`회사 목록을 불러올 수 없습니다: ${response.error}`)
   }
   return response.data

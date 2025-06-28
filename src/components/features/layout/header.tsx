@@ -23,7 +23,7 @@ export function Header() {
     return <div>Loading...</div>
   }
 
-  logger.info('user', user)
+  // logger.info('user', user)
   return (
     <header className="sticky top-0 z-30 flex items-center h-16 px-4 bg-white border-b border-slate-200 dark:bg-slate-950 dark:border-slate-700 lg:px-6">
       <div className="lg:hidden">
@@ -96,7 +96,7 @@ export function Header() {
                 </div>
                 <Avatar className="w-9 h-9">
                   <AvatarImage
-                    src="/diverse-user-avatars.png"
+                    // src="/diverse-user-avatars.png"
                     alt={user.name || user.username}
                   />
                   <AvatarFallback>

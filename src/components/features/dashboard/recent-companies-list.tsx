@@ -49,7 +49,7 @@ export function RecentCompaniesList() {
           <div key={company.name} className="flex items-center gap-4">
             <Avatar className="h-10 w-10 border border-slate-200 dark:border-slate-700">
               <AvatarImage
-                src={company.logo || '/placeholder.svg'}
+                // src={company.logo || '/placeholder.svg'}
                 alt={company.name}
               />
               <AvatarFallback>

@@ -77,7 +77,7 @@ export function formatDateTime(dateString: string): string {
 
     return `${year}. ${month}. ${day} ${hours}:${minutes}`
   } catch (error) {
-    logger.error('날짜 포맷팅 오류:', error)
+    // logger.error('날짜 포맷팅 오류:', error)
     return '날짜 오류'
   }
 }

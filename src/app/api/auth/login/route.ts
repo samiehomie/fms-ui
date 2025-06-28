@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     // TODO: 관련 로직 삭제 필요함 - 클라이언트 사이드에서 다루지 않음
     return NextResponse.json({ mesage: 'Login success', status: 200 })
   } catch (error) {
-    logger.error('Login route error:', error)
+    // logger.error('Login route error:', error)
     return NextResponse.json(
       { message: 'An unexpected error occurred.' },
       { status: 500 },

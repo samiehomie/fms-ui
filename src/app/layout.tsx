@@ -2,8 +2,9 @@ import type React from 'react'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { Providers } from '@/components/providers'
-import { getAuthData } from '@/lib/api/auth'
+// import { Providers } from '@/components/providers'
+// import { getAuthData } from '@/lib/api/auth'
+import { logger } from '@/lib/utils'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,12 +18,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const authData = await getAuthData()
+  const timestamp = Date.now()
+  // const authData = await getAuthData()
+  logger.log('루트 레이아웃 렌더링', timestamp)
+
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <Providers token={authData?.token}>{children}</Providers>
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }

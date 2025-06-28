@@ -17,10 +17,10 @@ type User = ApiResponseType<'POST /auth/login'>['user']
 export async function parseJWT<T = any>(token: string): Promise<T | null> {
   try {
     const payload = decodeJwt(token) as T
-    logger.log('JWT payload: ', payload)
+    // logger.log('JWT payload: ', payload)
     return payload
   } catch (error) {
-    logger.error('JWT 파싱 실패:', error)
+    // logger.error('JWT 파싱 실패:', error)
     return null
   }
 }
@@ -33,9 +33,9 @@ export async function refreshTokenIfNeeded(
   expire: string
 } | null> {
   if (!currentToken || !currentExpire) {
-    logger.log(
-      `인증 토큰 갱신실패: ${AUTH_TOKEN_COOKIE_NAME} 또는 ${AUTH_EXPIRE_COOKIE_NAME} 쿠키 없음.`,
-    )
+    // logger.log(
+    //   `인증 토큰 갱신실패: ${AUTH_TOKEN_COOKIE_NAME} 또는 ${AUTH_EXPIRE_COOKIE_NAME} 쿠키 없음.`,
+    // )
     return null
   }
 
@@ -73,15 +73,15 @@ export async function refreshTokenIfNeeded(
           ? error.serverMessage
           : error.message || 'Token refresh failed'
 
-      logger.error(`인증 토큰 갱신실패: ${status} - ${message}`)
+      //logger.error(`인증 토큰 갱신실패: ${status} - ${message}`)
       return null
     }
     const { token: newToken, expires_in: newExpiresIn } = result.data
 
-    logger.info('인증 토큰 갱신성공')
+    //logger.info('인증 토큰 갱신성공')
     return { token: newToken, expire: `${newExpiresIn * 1000}` }
   }
-  logger.info('인증 토큰 갱신 필요없음. 기존 토큰 사용 유지.')
+  //logger.info('인증 토큰 갱신 필요없음. 기존 토큰 사용 유지.')
   return { token: currentToken, expire: currentExpire }
 }
 
