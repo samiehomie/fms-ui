@@ -23,13 +23,15 @@ export const companiesApi = {
       ...(params.search && { search: params.search }),
     })
 
-    const response = await fetch(`/api/companies?${searchParams}`)
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'GET /companies'>>
+    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?${searchParams}`)
 
-    if (!response.ok) {
+    if (!response.success) {
       throw new Error('Failed to fetch companies')
     }
 
-    return response.json()
+    return response.data
   },
 
   // 회사 배열만 추출하는 헬퍼 함수

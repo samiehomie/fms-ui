@@ -13,7 +13,6 @@ function makeQueryClient() {
       queries: {
         staleTime: 3 * 60 * 1000, // 3분
         gcTime: 5 * 60 * 1000,
-        refetchOnWindowFocus: false,
       },
     },
   })

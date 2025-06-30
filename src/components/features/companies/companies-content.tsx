@@ -1,29 +1,22 @@
 'use client'
 import { DataTable } from './data-table'
-import type { Company } from '@/types/api/company.types'
-import { useState, useEffect } from 'react'
+import type { CompaniesPaginationParams } from '@/types/api/company.types'
+import { useState } from 'react'
 import { useCompaniesPaginated } from '@/lib/hooks/queries/useCompanies'
 import { columns } from '@/components/features/companies/columns'
-import { logger } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function CompaniesContent() {
-  const [pageParams, setPageParams] = useState({
+const CompaniesContent = () => {
+  const [pageParams, setPageParams] = useState<CompaniesPaginationParams>({
     page: 1,
     limit: 10,
+    // verified: false,
     // sort: 'created_at',
     // order: 'desc' as const,
   })
-  const [tableData, setTableData] = useState<Company[]>([])
-  const { data, isLoading, error } = useCompaniesPaginated(pageParams)
+  const { data, isLoading } = useCompaniesPaginated(pageParams)
 
-  useEffect(() => {
-    if (data) {
-      setTableData(data.data.companies)
-    }
-  }, [data])
-
-  if (isLoading) {
+  if (isLoading || !data) {
     return (
       <div className="mt-10 flex flex-col gap-y-2">
         <Skeleton className="w-full h-10" />
@@ -33,5 +26,7 @@ export default function CompaniesContent() {
     )
   }
 
-  return <DataTable columns={columns} data={tableData} />
+  return <DataTable columns={columns} data={data.data.companies} />
 }
+
+export default CompaniesContent
