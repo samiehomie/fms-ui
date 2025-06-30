@@ -131,7 +131,7 @@ export async function withAuth(
     path: '/',
     sameSite: 'lax',
   })
-  cookieStore.set(AUTH_TOKEN_COOKIE_NAME, refreshTokenData.expire, {
+  cookieStore.set(AUTH_EXPIRE_COOKIE_NAME, refreshTokenData.expire, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     path: '/',

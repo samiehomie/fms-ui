@@ -1,3 +1,4 @@
+import { PaginatedResponseWithKey } from './api.common'
 export interface Address {
   id: number
   created_at: string
@@ -30,7 +31,15 @@ export interface Company {
   address: Address
 }
 
-export type CompaniesResponse = Company[]
+export interface CompaniesPaginationParams {
+  page: number
+  limit: number
+  verified?: boolean
+  type?: string
+  search?: string
+}
+
+export type CompaniesResponse = PaginatedResponseWithKey<Company, 'companies'>
 
 export interface CompanyApiTypes {
   'GET /companies': {

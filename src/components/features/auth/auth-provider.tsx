@@ -20,13 +20,7 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
 })
 
-export function AuthProvider({
-  children,
-  token,
-}: {
-  children: ReactNode
-  token?: string
-}) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [authState, setAuthState] = useState<AuthContextType>({
     user: null,
     isLoading: true,
@@ -45,7 +39,6 @@ export function AuthProvider({
       }
     }
     handleAuthChange()
-
   }, [])
 
   return (
