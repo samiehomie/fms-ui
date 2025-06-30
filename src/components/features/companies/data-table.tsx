@@ -11,6 +11,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  PaginationState,
 } from '@tanstack/react-table'
 import {
   Table,
@@ -23,33 +24,60 @@ import {
 import { Button } from '@/components/ui/button'
 import { DataTablePagination } from './data-table-pagination'
 import { Input } from '@/components/ui/input'
+import { CompaniesPaginationParams } from '@/types/api/company.types'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  pagination: CompaniesPaginationParams
+  setPagination: (pagination: CompaniesPaginationParams) => void
+  totalCount: number
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  totalCount,
+  pagination,
+  setPagination,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
+  const [tablePagination, setTablePagination] = useState<PaginationState>({
+    pageIndex: pagination.page - 1, // TanStack Table은 0부터 시작
+    pageSize: pagination.limit,
+  })
   const [rowSelection, setRowSelection] = useState({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: (updater) => {
+      const newPagination =
+        typeof updater === 'function' ? updater(tablePagination) : updater
+
+      setTablePagination(newPagination)
+
+      // 서버 사이드 페이지네이션 상태 업데이트
+      setPagination({
+        ...pagination,
+        page: newPagination.pageIndex + 1, // 1부터 시작하도록 변환
+        limit: newPagination.pageSize,
+      })
+    },
+    manualPagination: true,
+    pageCount: Math.ceil(totalCount / pagination.limit),
     state: {
       sorting,
       columnFilters,
       rowSelection,
+      pagination: tablePagination,
     },
   })
 

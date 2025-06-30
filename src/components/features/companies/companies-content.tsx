@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { useCompaniesPaginated } from '@/lib/hooks/queries/useCompanies'
 import { columns } from '@/components/features/companies/columns'
 import { Skeleton } from '@/components/ui/skeleton'
+import { logger } from '@/lib/utils'
 
 const CompaniesContent = () => {
   const [pageParams, setPageParams] = useState<CompaniesPaginationParams>({
@@ -14,6 +15,7 @@ const CompaniesContent = () => {
     // sort: 'created_at',
     // order: 'desc' as const,
   })
+  logger.log('page', pageParams)
   const { data, isLoading } = useCompaniesPaginated(pageParams)
 
   if (isLoading || !data) {
@@ -26,7 +28,15 @@ const CompaniesContent = () => {
     )
   }
 
-  return <DataTable columns={columns} data={data.data.companies} />
+  return (
+    <DataTable
+      columns={columns}
+      data={data.data.companies}
+      pagination={pageParams}
+      setPagination={setPageParams}
+      totalCount={data.data.pagination.total}
+    />
+  )
 }
 
 export default CompaniesContent
