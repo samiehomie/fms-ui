@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import type { Company } from '@/types/api/company.types'
 import { ShieldCheck } from 'lucide-react'
 import { formatDateTime, getCompanyTypeColor } from '@/lib/utils'
-import { MoreHorizontal } from 'lucide-react'
+import { MoreHorizontal, ArrowUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -34,10 +34,45 @@ import { Checkbox } from '@/components/ui/checkbox'
 
 export const columns: ColumnDef<Company>[] = [
   {
-    accessorKey: 'id',
-    header: () => <div className="min-w-[45px] pl-2">{'ID'}</div>,
-    cell: ({ row }) => <div className="pl-2">{row.getValue('id')}</div>,
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        className="ml-2 mr-2"
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        className="ml-2 mr-2"
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
   },
+  {
+    accessorKey: 'id',
+    header: ({ column }) => (
+      <Button
+        variant={'ghost'}
+        className="w-full text-center"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        ID
+        <ArrowUpDown />
+      </Button>
+    ),
+    //header: () => <div className="min-w-[35px] pl-1">{'ID'}</div>,
+    cell: ({ row }) => <div className="w-full text-center pr-4">{row.getValue('id')}</div>,
+  },
+
   { accessorKey: 'name', header: 'Company' },
   { accessorKey: 'reg_number', header: 'Reg No' },
   {
@@ -73,7 +108,16 @@ export const columns: ColumnDef<Company>[] = [
   },
   {
     accessorKey: 'created_at',
-    header: () => <div className="text-center">Created at</div>,
+    header: ({ column }) => (
+      <Button
+        variant={'ghost'}
+        className="w-full"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        Created at
+        <ArrowUpDown />
+      </Button>
+    ),
     cell: ({ row }) => {
       const createdAt = row.getValue('created_at') as string
       return (
