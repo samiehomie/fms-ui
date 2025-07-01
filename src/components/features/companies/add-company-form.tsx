@@ -43,6 +43,7 @@ import { Loader2 } from 'lucide-react'
 import { companiesApi } from '@/lib/api/company'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ApiResponseType, ApiRequestType } from '@/types/api'
+import { toast } from 'sonner'
 
 import { IconPlus } from '@tabler/icons-react'
 
@@ -84,6 +85,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
       queryClient.invalidateQueries({
         queryKey: ['companies'],
       })
+      toast.success('A new company added', { position: 'bottom-center' })
     },
   })
 

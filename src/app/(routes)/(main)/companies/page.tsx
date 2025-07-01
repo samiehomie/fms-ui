@@ -9,7 +9,7 @@ import { companiesApi } from '@/lib/api/company'
 export default async function CompaniesPage() {
   const queryClient = new QueryClient()
   await queryClient.prefetchQuery({
-    queryKey: ['companies', { page: 1, limit: 10 }],
+    queryKey: ['companies'],
     queryFn: () => companiesApi.getCompaniesPaginated({ page: 1, limit: 10 }),
   })
   return (
