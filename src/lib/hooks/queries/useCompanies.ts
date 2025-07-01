@@ -7,12 +7,21 @@ import { toast } from 'sonner'
 type CreateCompanyResponse = ApiResponseType<'POST /companies'>
 type CreateCompanyRequest = ApiRequestType<'POST /companies'>
 type DeleteCompanyResponse = ApiResponseType<'DELETE /companies'>
-type DeleteCompanyRequest = ApiRequestType<'DELETE /companies'>
+type ModifyCompanyResponse = ApiResponseType<'PUT /companies'>
+type ModifyCompanyRequest = ApiRequestType<'PUT /companies'>
 
 export function useCompaniesPaginated(params: CompaniesPaginationParams) {
   return useQuery({
     queryKey: ['companies', params],
     queryFn: () => companiesApi.getCompaniesPaginated(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
+export function useCompanyById(id: number) {
+  return useQuery({
+    queryKey: ['companies', id],
+    queryFn: () => companiesApi.getCompanyById(id),
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
@@ -67,6 +76,31 @@ export function useDeleteCompany() {
         position: 'bottom-center',
       })
       console.error('Delete company error:', error)
+    },
+  })
+}
+
+export function useModifyCompany(id: number) {
+  const queryClient = useQueryClient()
+  return useMutation<ModifyCompanyResponse, Error, ModifyCompanyRequest>({
+    mutationFn: async (newCompany) => {
+      const { data } = await companiesApi.modifyCompany(id, newCompany)
+      return data
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['companies'],
+      })
+      toast.success('A new company added', {
+        description: `${data.company.name}`,
+        position: 'bottom-center',
+      })
+    },
+    onError: (error) => {
+      toast.error('Adding a new company failed.', {
+        position: 'bottom-center',
+        description: error.message,
+      })
     },
   })
 }

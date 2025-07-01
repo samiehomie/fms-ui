@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -41,10 +41,11 @@ import {
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
 import { ApiResponseType, ApiRequestType } from '@/types/api'
-import { useCreateCompany } from '@/lib/hooks/queries/useCompanies'
-
+import { useModifyCompany } from '@/lib/hooks/queries/useCompanies'
+import { useCompanyById } from '@/lib/hooks/queries/useCompanies'
+import { Skeleton } from '@/components/ui/skeleton'
+import { logger } from '@/lib/utils'
 import { IconPlus } from '@tabler/icons-react'
-
 
 const companySchema = z.object({
   name: z.string().min(1, 'Company name is required'),
@@ -69,8 +70,9 @@ const companySchema = z.object({
 
 type CompanyFormData = z.infer<typeof companySchema>
 
-function CompanyForm({ onClose }: { onClose: () => void }) {
-  const mutation = useCreateCompany()
+function CompanyForm({ onClose, id }: { onClose: () => void; id: number }) {
+  const { data, isLoading } = useCompanyById(id)
+  const mutation = useModifyCompany(id)
   const form = useForm<CompanyFormData>({
     resolver: zodResolver(companySchema),
     defaultValues: {
@@ -96,6 +98,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
   })
 
   const onSubmit = async (data: CompanyFormData) => {
+    logger.log('modify', data)
     try {
       await mutation.mutateAsync({
         company: data,
@@ -105,6 +108,37 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
     } catch (error) {
       // Error is handled in the mutation
     }
+  }
+
+  useEffect(() => {
+    if (data && data.data.company) {
+      const company = data.data.company
+      logger.log('company', company)
+      form.reset({
+        name: company.name || '',
+        reg_number: company.reg_number || '',
+        type: company.type || '',
+        details: company.details || '',
+        phone: company.phone || '',
+        email: company.email || '',
+        website: company.website || '',
+        contact_person: company.contact_person || '',
+        contact_phone: company.contact_phone || '',
+        address: {
+          street: company.address?.street || '',
+          city: company.address?.city || '',
+          state: company.address?.state || '',
+          country: company.address?.country || '',
+          postal_code: company.address?.postal_code || '',
+          latitude: company.address?.latitude || 0,
+          longitude: company.address?.longitude || 0,
+        },
+      })
+    }
+  }, [data])
+
+  if (!data || isLoading) {
+    return <Skeleton className="h-10 w-[18.75rem]" />
   }
 
   return (
@@ -154,10 +188,11 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select company type" />
+                        <SelectValue placeholder={field.value} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
+                      <SelectItem value="Owner">Owner</SelectItem>
                       <SelectItem value="Guest">Guest</SelectItem>
                       <SelectItem value="Partner">Partner</SelectItem>
                       <SelectItem value="Client">Client</SelectItem>
@@ -168,7 +203,6 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="phone"
@@ -364,7 +398,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
   )
 }
 
-export function AddCompanyForm() {
+export function ModifyCompanyForm({ id }: { id: number }) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMedia('(min-width: 768px)', true)
 
@@ -387,7 +421,7 @@ export function AddCompanyForm() {
             </DrawerDescription>
           </DrawerHeader>
           <div className="px-4 pb-4 overflow-y-auto">
-            <CompanyForm onClose={handleClose} />
+            <CompanyForm onClose={handleClose} id={id} />
           </div>
         </DrawerContent>
       </Drawer>
@@ -409,7 +443,7 @@ export function AddCompanyForm() {
             Fill in the company information to add it to your database.
           </DialogDescription>
         </DialogHeader>
-        <CompanyForm onClose={handleClose} />
+        <CompanyForm onClose={handleClose} id={id} />
       </DialogContent>
     </Dialog>
   )

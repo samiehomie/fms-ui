@@ -41,6 +41,48 @@ export interface CompaniesPaginationParams {
 
 export type CompaniesResponse = PaginatedResponseWithKey<Company, 'companies'>
 
+export interface CompanyByIdResponse {
+  company: {
+    id: number
+    name: string
+    reg_number: string
+    type: string
+    details: string
+    phone: string
+    email: string
+    website: string
+    contact_person: string
+    contact_phone: string
+    verified: boolean
+    isdeleted: boolean
+    deletedAt: string | null
+    created_at: string
+    updated_at: string
+    address: {
+      id: number
+      street: string
+      city: string
+      state: string
+      country: string
+      postal_code: string
+      latitude: number
+      longitude: number
+      created_at: string
+      updated_at: string
+    }
+    users: {
+      id: number
+      username: string
+      email: string
+      role: string
+    }[]
+    vehicles: {
+      id: number
+      plate_number: string
+    }[]
+  }
+}
+
 export interface CompaniesCreateRequest {
   company: {
     name: string
@@ -85,8 +127,16 @@ export interface CompanyApiTypes {
     request: {}
     response: CompaniesResponse
   }
+  'GET /companies/id': {
+    request: {}
+    response: CompanyByIdResponse
+  }
   'DELETE /companies': {
     request: CompaniesDeleteRequest
     response: CompaniesDeleteResponse
+  }
+  'PUT /companies': {
+    request: CompaniesCreateRequest
+    response: CompaniesCreateResponse
   }
 }

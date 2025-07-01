@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   const cookieStore = await cookies()
   try {
     const body = (await request.json()) as ApiRequestType<'POST /auth/login'>
-    const apiUrl = buildURL('/auth/login', process.env.NEXT_PUBLIC_API_BASE_URL)
+    const apiUrl = buildURL('/auth/login')
 
     const result = await fetchJson<ApiResponseType<'POST /auth/login'>>(
       apiUrl,

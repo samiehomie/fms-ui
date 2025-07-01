@@ -17,11 +17,19 @@ export async function GET(request: NextRequest) {
     const verified = searchParams.get('verified') ?? ''
     const type = searchParams.get('type') ?? ''
     const search = searchParams.get('search') ?? ''
+    const id = searchParams.get('id')
 
     const { token } = tokenData
-    const apiUrl = buildURL(
-      `/companies?page=${page}&limit=${limit}&verified=${verified}&type=${type}&search=${search}`,
-    )
+    const apiUrl =
+      typeof id === 'string'
+        ? buildURL(`/companies/${id}`)
+        : buildURL(`/companies`, {
+            page,
+            limit,
+            verified,
+            type,
+            search,
+          })
     try {
       const response = await fetchJson<ApiResponseType<'GET /companies'>>(
         apiUrl,
@@ -125,6 +133,46 @@ export async function DELETE(request: NextRequest) {
       return createErrorResponse(
         'INTERNAL_ERROR',
         'An unexpected error occurred while deleting companies',
+      )
+    }
+  })
+}
+
+export async function PUT(request: NextRequest) {
+  return await withAuth(async (tokenData) => {
+    const { token } = tokenData
+    const id = (await request.json()) as number
+    const apiUrl = buildURL(`/companies/${id}`)
+    const requestBody = await request.json()
+
+    try {
+      const response = await fetchJson<ApiResponseType<'PUT /companies'>>(
+        apiUrl,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        },
+      )
+      if (!response.success) {
+        return createErrorResponse(
+          'INTERNAL_ERROR',
+          'Failed to modify companies from external API',
+        )
+      }
+      return createSuccessResponse(
+        response.data,
+        'Companies modified successfully',
+      )
+    } catch (err) {
+      logger.error('Error modifying companies:', err)
+
+      return createErrorResponse(
+        'INTERNAL_ERROR',
+        'An unexpected error occurred while modifying companies',
       )
     }
   })

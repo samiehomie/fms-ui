@@ -2,18 +2,17 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 import type { Company } from '@/types/api/company.types'
-import { ShieldCheck } from 'lucide-react'
 import { formatDateTime, getCompanyTypeColor } from '@/lib/utils'
-import { MoreHorizontal, ArrowUpDown, CircleSlash } from 'lucide-react'
+import { ArrowUpDown, CircleSlash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { ModifyCompanyForm } from './modify-company-form'
 
 import { IconCircleCheckFilled } from '@tabler/icons-react'
 import { Badge } from '@/components/ui/badge'
@@ -166,7 +165,8 @@ export const columns: ColumnDef<Company>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-32">
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <ModifyCompanyForm id={companyId} />
+            {/* <DropdownMenuItem>Edit</DropdownMenuItem> */}
             <DropdownMenuItem>Verify</DropdownMenuItem>
             <DropdownMenuItem>Copy ID</DropdownMenuItem>
             <DropdownMenuSeparator />
