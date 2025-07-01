@@ -41,7 +41,39 @@ export interface CompaniesPaginationParams {
 
 export type CompaniesResponse = PaginatedResponseWithKey<Company, 'companies'>
 
+export interface CompaniesCreateRequest {
+  company: {
+    name: string
+    reg_number: string
+    type: string
+    details: string
+    phone: string
+    email: string
+    website: string
+    contact_person: string
+    contact_phone: string
+    address: {
+      street: string
+      city: string
+      state: string
+      country: string
+      postal_code: string
+      latitude: number
+      longitude: number
+    }
+  }
+}
+
+export interface CompaniesCreateResponse {
+  message: string
+  company: Company
+}
+
 export interface CompanyApiTypes {
+  'POST /companies': {
+    request: CompaniesCreateRequest
+    response: CompaniesCreateResponse
+  }
   'GET /companies': {
     request: {}
     response: CompaniesResponse

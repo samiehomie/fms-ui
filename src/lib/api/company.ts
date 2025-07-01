@@ -1,7 +1,6 @@
 import { buildURL } from './utils'
 import { fetchJson } from '@/lib/api/fetch'
-import { getAuthData } from '@/lib/api/auth'
-import type { ApiResponseType } from '@/types/api'
+import type { ApiRequestType, ApiResponseType } from '@/types/api'
 import type {
   CompaniesPaginationParams,
   Company,
@@ -40,5 +39,25 @@ export const companiesApi = {
   ): Promise<Company[]> => {
     const response = await companiesApi.getCompaniesPaginated(params)
     return response.data.companies
+  },
+
+  createCompany: async (
+    company: ApiRequestType<'POST /companies'>,
+  ): Promise<ApiSuccessResponse<ApiResponseType<'POST /companies'>>> => {
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'POST /companies'>>
+    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(company),
+    })
+
+    if (!response.success) {
+      throw new Error('Failed to create company')
+    }
+
+    return response.data
   },
 }

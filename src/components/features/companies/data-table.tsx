@@ -1,6 +1,5 @@
 'use client'
-import type { Company } from '@/types/api/company.types'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -8,7 +7,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
   PaginationState,
@@ -25,6 +23,7 @@ import { Button } from '@/components/ui/button'
 import { DataTablePagination } from './data-table-pagination'
 import { Input } from '@/components/ui/input'
 import { CompaniesPaginationParams } from '@/types/api/company.types'
+import { AddCompanyForm } from './add-company-form'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -99,7 +98,11 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <Button variant={'outline'}>Add</Button>
+        <AddCompanyForm />
+        {/* <Button variant={'outline'} size="sm">
+          <IconPlus />
+          Add Company
+        </Button> */}
       </div>
 
       <div className="text-slate-900 ">

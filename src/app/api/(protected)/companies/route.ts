@@ -1,5 +1,5 @@
-import { NextResponse, NextRequest } from 'next/server'
-import type { ApiRequestType, ApiResponseType } from '@/types/api'
+import { NextRequest } from 'next/server'
+import type { ApiResponseType } from '@/types/api'
 import { withAuth } from '@/lib/api/auth'
 import { fetchJson } from '@/lib/api/fetch'
 import { buildURL } from '@/lib/api/utils'
@@ -48,6 +48,45 @@ export async function GET(request: NextRequest) {
       return createErrorResponse(
         'INTERNAL_ERROR',
         'An unexpected error occurred while fetching companies',
+      )
+    }
+  })
+}
+
+export async function POST(request: NextRequest) {
+  return await withAuth(async (tokenData) => {
+    const { token } = tokenData
+    const apiUrl = buildURL(`/companies`)
+    const requestBody = await request.json()
+    logger.log('post companies', requestBody)
+    try {
+      const response = await fetchJson<ApiResponseType<'POST /companies'>>(
+        apiUrl,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        },
+      )
+      if (!response.success) {
+        return createErrorResponse(
+          'INTERNAL_ERROR',
+          'Failed to create companies from external API',
+        )
+      }
+      return createSuccessResponse(
+        response.data,
+        'Companies created successfully',
+      )
+    } catch (err) {
+      logger.error('Error creating companies:', err)
+
+      return createErrorResponse(
+        'INTERNAL_ERROR',
+        'An unexpected error occurred while creating companies',
       )
     }
   })
