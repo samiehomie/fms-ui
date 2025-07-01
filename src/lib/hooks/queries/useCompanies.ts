@@ -67,12 +67,12 @@ export function useDeleteCompany() {
       queryClient.invalidateQueries({
         queryKey: ['companies'],
       })
-      toast.success('회사가 성공적으로 삭제되었습니다.', {
+      toast.success('A company deleted.', {
         position: 'bottom-center',
       })
     },
     onError: (error) => {
-      toast.error('회사 삭제에 실패했습니다.', {
+      toast.error('Deleting a comapny failed.', {
         position: 'bottom-center',
       })
       console.error('Delete company error:', error)

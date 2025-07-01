@@ -146,7 +146,20 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: number }) {
   }, [form.formState.errors])
 
   if (!data || isLoading) {
-    return <Skeleton className="h-10 w-[18.75rem]" />
+    return (
+      <div className="min-h-[51.125rem]  flex flex-col gap-y-4 overflow-y-hidden">
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+      </div>
+    )
   }
 
   return (
@@ -440,7 +453,12 @@ export function ModifyCompanyForm({ id }: { id: number }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={'ghost'} className='w-full flex justify-start pl-2 font-[400]'>Edit</Button>
+        <Button
+          variant={'ghost'}
+          className="w-full flex justify-start pl-2 font-[400]"
+        >
+          Edit
+        </Button>
         {/* <Button variant={'outline'}>
           <IconPlus />
           Add Company
