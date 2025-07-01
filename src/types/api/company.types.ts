@@ -69,6 +69,13 @@ export interface CompaniesCreateResponse {
   company: Company
 }
 
+export interface CompaniesDeleteRequest {
+  id: number
+}
+export interface CompaniesDeleteResponse {
+  message: string
+}
+
 export interface CompanyApiTypes {
   'POST /companies': {
     request: CompaniesCreateRequest
@@ -77,5 +84,9 @@ export interface CompanyApiTypes {
   'GET /companies': {
     request: {}
     response: CompaniesResponse
+  }
+  'DELETE /companies': {
+    request: CompaniesDeleteRequest
+    response: CompaniesDeleteResponse
   }
 }

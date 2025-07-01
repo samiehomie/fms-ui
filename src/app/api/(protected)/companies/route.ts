@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import type { ApiResponseType } from '@/types/api'
+import type { ApiResponseType, ApiRequestType } from '@/types/api'
 import { withAuth } from '@/lib/api/auth'
 import { fetchJson } from '@/lib/api/fetch'
 import { buildURL } from '@/lib/api/utils'
@@ -87,6 +87,44 @@ export async function POST(request: NextRequest) {
       return createErrorResponse(
         'INTERNAL_ERROR',
         'An unexpected error occurred while creating companies',
+      )
+    }
+  })
+}
+
+export async function DELETE(request: NextRequest) {
+  return await withAuth(async (tokenData) => {
+    const { token } = tokenData
+    const id = (await request.json()) as number
+    const apiUrl = buildURL(`/companies/${id}`)
+
+    try {
+      const response = await fetchJson<ApiResponseType<'DELETE /companies'>>(
+        apiUrl,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      if (!response.success) {
+        return createErrorResponse(
+          'INTERNAL_ERROR',
+          'Failed to delete companies from external API',
+        )
+      }
+      return createSuccessResponse(
+        response.data,
+        'Companies deleted successfully',
+      )
+    } catch (err) {
+      logger.error('Error deleting companies:', err)
+
+      return createErrorResponse(
+        'INTERNAL_ERROR',
+        'An unexpected error occurred while deleting companies',
       )
     }
   })

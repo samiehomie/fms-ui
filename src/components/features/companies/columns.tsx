@@ -19,6 +19,8 @@ import { IconCircleCheckFilled } from '@tabler/icons-react'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { IconDotsVertical } from '@tabler/icons-react'
+import { useDeleteCompany } from '@/lib/hooks/queries/useCompanies'
+import { logger } from '@/lib/utils'
 
 export const columns: ColumnDef<Company>[] = [
   {
@@ -147,7 +149,10 @@ export const columns: ColumnDef<Company>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const company = row.original
+      const companyId = row.original.id
+      logger.log('companyId', companyId)
+      const mutation = useDeleteCompany()
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -165,7 +170,14 @@ export const columns: ColumnDef<Company>[] = [
             <DropdownMenuItem>Verify</DropdownMenuItem>
             <DropdownMenuItem>Copy ID</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={async () => {
+                await mutation.mutateAsync(companyId)
+              }}
+            >
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

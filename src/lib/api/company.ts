@@ -41,6 +41,7 @@ export const companiesApi = {
     return response.data.companies
   },
 
+  // 새 회사 추가
   createCompany: async (
     company: ApiRequestType<'POST /companies'>,
   ): Promise<ApiSuccessResponse<ApiResponseType<'POST /companies'>>> => {
@@ -56,6 +57,27 @@ export const companiesApi = {
 
     if (!response.success) {
       throw new Error('Failed to create company')
+    }
+
+    return response.data
+  },
+
+  // 회사 삭제
+  deleteCompany: async (
+    id: number,
+  ): Promise<ApiSuccessResponse<ApiResponseType<'DELETE /companies'>>> => {
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'DELETE /companies'>>
+    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: id.toString(),
+    })
+
+    if (!response.success) {
+      throw new Error('Failed to delete company')
     }
 
     return response.data

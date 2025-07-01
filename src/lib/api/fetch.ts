@@ -52,7 +52,7 @@ export async function fetchJson<T = unknown>(
         fetchOptions.next = { revalidate: init.revalidate }
       }
     } else {
-      fetchOptions.next = { revalidate: 60 } // 기본값 1분
+      fetchOptions.next = { revalidate: 0 } // 기본값 - 캐싱 비활성화
     }
 
     const response = await fetch(input, fetchOptions)
