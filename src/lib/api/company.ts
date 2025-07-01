@@ -110,8 +110,8 @@ export const companiesApi = {
   ) => {
     const response = await fetchJson<
       ApiSuccessResponse<ApiResponseType<'POST /companies'>>
-    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies`, {
-      method: 'POST',
+    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },

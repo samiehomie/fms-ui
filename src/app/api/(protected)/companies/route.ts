@@ -141,7 +141,8 @@ export async function DELETE(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   return await withAuth(async (tokenData) => {
     const { token } = tokenData
-    const id = (await request.json()) as number
+    const searchParams = request.nextUrl.searchParams
+    const id = searchParams.get('id')
     const apiUrl = buildURL(`/companies/${id}`)
     const requestBody = await request.json()
 

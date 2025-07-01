@@ -130,12 +130,20 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: number }) {
           state: company.address?.state || '',
           country: company.address?.country || '',
           postal_code: company.address?.postal_code || '',
-          latitude: company.address?.latitude || 0,
-          longitude: company.address?.longitude || 0,
+          latitude: 0,
+          longitude: 0,
         },
       })
     }
   }, [data])
+
+  // 폼 에러 확인
+  useEffect(() => {
+    const errors = form.formState.errors
+    if (Object.keys(errors).length > 0) {
+      console.log('Form validation errors:', errors)
+    }
+  }, [form.formState.errors])
 
   if (!data || isLoading) {
     return <Skeleton className="h-10 w-[18.75rem]" />
@@ -390,7 +398,7 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: number }) {
             {mutation.isPending && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Add Company
+            Edit Company
           </Button>
         </div>
       </form>
