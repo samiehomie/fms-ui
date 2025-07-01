@@ -24,12 +24,14 @@ import { DataTablePagination } from './data-table-pagination'
 import { Input } from '@/components/ui/input'
 import { CompaniesPaginationParams } from '@/types/api/company.types'
 import { AddCompanyForm } from './add-company-form'
+import { PlusOutlined } from '@ant-design/icons'
+import { Flex, Tag, theme, Tooltip } from 'antd'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   pagination: CompaniesPaginationParams
-  setPagination: (pagination: CompaniesPaginationParams) => void
+  setPagination: React.Dispatch<React.SetStateAction<CompaniesPaginationParams>>
   totalCount: number
 }
 
@@ -40,6 +42,7 @@ export function DataTable<TData, TValue>({
   pagination,
   setPagination,
 }: DataTableProps<TData, TValue>) {
+  const [search, setSearch] = useState('')
   const [sorting, setSorting] = useState<SortingState>([])
   const [tablePagination, setTablePagination] = useState<PaginationState>({
     pageIndex: pagination.page - 1, // TanStack Table은 0부터 시작
@@ -85,24 +88,58 @@ export function DataTable<TData, TValue>({
     return row?.getValue('id')
   })
 
-  const selectedFilesCount = selectedFiles.length
+  const handleSearch = () => {
+    setPagination((old) => ({ ...old, search }))
+  }
+
+  // Enter 키 이벤트 핸들러
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSearch()
+    }
+  }
+
+  //const selectedFilesCount = selectedFiles.length
 
   return (
     <div className="flex flex-col gap-y-3">
-      <div className="flex items-center gap-x-4">
-        <Input
-          placeholder="Filter file name..."
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-          onChange={(event) =>
-            table.getColumn('name')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+      <div className="flex items-center justify-between gap-x-4">
+        <div className="flex items-center gap-x-2 ">
+          <Input
+            placeholder="Search in company name, reg number, or email"
+            value={search}
+            onChange={(event) => {
+              //setPagination((old) => ({ ...old, search: event.target.value }))
+              setSearch(event.target.value)
+              // table.getColumn('name')?.setFilterValue(event.target.value)
+            }}
+            onKeyDown={handleKeyDown}
+            className="min-w-[400px]"
+          />
+          <Button variant={'outline'} onClick={handleSearch}>
+            Search
+          </Button>
+          <div className="ml-2">
+            {pagination.search && (
+              <Tag
+                color="processing"
+                className="ml-3"
+                bordered={false}
+                onClose={() => {
+                  setPagination((old) => ({
+                    ...old,
+                    search: '',
+                  }))
+                  setSearch('')
+                }}
+                closable={true}
+              >
+                {pagination.search}
+              </Tag>
+            )}
+          </div>
+        </div>
         <AddCompanyForm />
-        {/* <Button variant={'outline'} size="sm">
-          <IconPlus />
-          Add Company
-        </Button> */}
       </div>
 
       <div className="text-slate-900 ">
@@ -162,13 +199,13 @@ export function DataTable<TData, TValue>({
       </div>
       <div className="flex items-center justify-between py-4 px-1">
         <div className="text-sm text-muted-foreground flex items-center">
-          {selectedFilesCount} of {table.getFilteredRowModel().rows.length}{' '}
-          row(s) selected
-          <Button
+          {/* {selectedFilesCount} of {table.getFilteredRowModel().rows.length}{' '}
+          row(s) selected */}
+          {/* <Button
             className="ml-4"
             variant="secondary"
             // onClick={handleDelete}
-          >{`${selectedFilesCount} row(s) delete`}</Button>
+          >{`${selectedFilesCount} row(s) delete`}</Button> */}
         </div>
         <DataTablePagination table={table} />
       </div>

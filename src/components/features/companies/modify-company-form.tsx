@@ -40,12 +40,12 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { ApiResponseType, ApiRequestType } from '@/types/api'
 import { useModifyCompany } from '@/lib/hooks/queries/useCompanies'
 import { useCompanyById } from '@/lib/hooks/queries/useCompanies'
 import { Skeleton } from '@/components/ui/skeleton'
 import { logger } from '@/lib/utils'
 import { IconPlus } from '@tabler/icons-react'
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
 const companySchema = z.object({
   name: z.string().min(1, 'Company name is required'),
@@ -416,10 +416,11 @@ export function ModifyCompanyForm({ id }: { id: number }) {
     return (
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
-          <Button>
+          <DropdownMenuItem>Edit</DropdownMenuItem>
+          {/* <Button>
             <IconPlus />
             Add Company
-          </Button>
+          </Button> */}
         </DrawerTrigger>
         <DrawerContent className="max-h-[90vh]">
           <DrawerHeader>
@@ -439,10 +440,11 @@ export function ModifyCompanyForm({ id }: { id: number }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={'outline'}>
+        <Button variant={'ghost'} className='w-full flex justify-start pl-2 font-[400]'>Edit</Button>
+        {/* <Button variant={'outline'}>
           <IconPlus />
           Add Company
-        </Button>
+        </Button> */}
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[91vh] overflow-y-auto">
         <DialogHeader>

@@ -397,7 +397,7 @@ export function AddCompanyForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={'outline'}>
+        <Button variant={'outline'} className=''>
           <IconPlus />
           Add Company
         </Button>
