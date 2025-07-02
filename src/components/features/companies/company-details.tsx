@@ -3,8 +3,6 @@
 import type { ApiResponseType } from '@/types/api'
 import type React from 'react'
 import type { CompanyDetail } from '@/types/api/company.types'
-import { Tree } from 'antd'
-import type { DataNode } from 'antd/es/tree'
 import {
   Card,
   CardContent,

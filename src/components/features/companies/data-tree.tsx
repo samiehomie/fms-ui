@@ -4,26 +4,8 @@ import type React from 'react'
 import type { CompanyDetail } from '@/types/api/company.types'
 import { Tree } from 'antd'
 import type { TreeDataNode, TreeProps } from 'antd'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import {
-  Building,
-  Mail,
-  Phone,
-  UserIcon,
-  Globe,
-  Truck,
-  UserCircle,
-  CheckCircle2,
-  XCircle,
-  MapPin,
-} from 'lucide-react'
+import { UserIcon, Truck, UserCircle } from 'lucide-react'
 import { ApiResponseType } from '@/types/api'
 
 // Mock data as requested
@@ -87,24 +69,6 @@ const companyData: CompanyDetail = {
   },
 }
 
-const InfoRow = ({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode
-  label: string
-  value: React.ReactNode
-}) => (
-  <div className="flex items-start space-x-3">
-    <div className="text-muted-foreground mt-0.5">{icon}</div>
-    <div className="flex flex-col">
-      <span className="text-sm font-medium text-muted-foreground">{label}</span>
-      <span className="text-base">{value}</span>
-    </div>
-  </div>
-)
-
 export default function DataTree({
   detail,
 }: {
@@ -117,29 +81,35 @@ export default function DataTree({
 
   const treeData: TreeDataNode[] = [
     {
-      title: `users (${users?.length})`,
-      key: 'users',
-      icon: <UserIcon className="w-4 h-4" />,
-      children: users.map((user) => ({
-        title: (
-          <div className="flex items-center space-x-2">
-            <span>{user.username}</span>
-            <Badge variant="outline">{user.role}</Badge>
-          </div>
-        ),
-        key: `user-${user.id}`,
-        icon: <UserCircle className="w-4 h-4 text-muted-foreground" />,
-      })),
-    },
-    {
-      title: `vehicles (${vehicles.length})`,
-      key: 'vehicles',
-      icon: <Truck className="w-4 h-4" />,
-      children: vehicles.map((vehicle) => ({
-        title: vehicle.plate_number,
-        key: `vehicle-${vehicle.id}`,
-        icon: <Truck className="w-4 h-4 text-muted-foreground" />,
-      })),
+      title: <div className="font-bold">{company.name}</div>,
+      key: company.name,
+      children: [
+        {
+          title: `users (${users?.length})`,
+          key: `${company.name}-users`,
+          icon: <UserIcon className="w-4 h-4" />,
+          children: users.map((user) => ({
+            title: (
+              <div className="flex items-center space-x-2">
+                <span>{user.username}</span>
+                <Badge variant="outline">{user.role}</Badge>
+              </div>
+            ),
+            key: `${company.name}-user-${user.id}`,
+            icon: <UserCircle className="w-4 h-4 text-muted-foreground" />,
+          })),
+        },
+        {
+          title: `vehicles (${vehicles.length})`,
+          key: 'vehicles',
+          icon: <Truck className="w-4 h-4" />,
+          children: vehicles.map((vehicle) => ({
+            title: vehicle.plate_number,
+            key: `${company.name}-vehicle-${vehicle.id}`,
+            icon: <Truck className="w-4 h-4 text-muted-foreground" />,
+          })),
+        },
+      ],
     },
   ]
 
