@@ -58,13 +58,13 @@ const companyData: CompanyDetail = {
     users: [
       {
         id: 1,
-        username: 'via_km',
+        username: 'Vially',
         email: 'viakm@company.com',
         role: 'driver',
       },
       {
         id: 2,
-        username: 'john_doe',
+        username: 'John Doe',
         email: 'johndoe@company.com',
         role: 'manager',
       },

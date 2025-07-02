@@ -23,9 +23,24 @@ import {
   CheckCircle2,
   XCircle,
   MapPin,
+  Minus,
 } from 'lucide-react'
 import DataTree from './data-tree'
 import { VerifiedBadge, UnVerifiedBadge } from '@/components/ui/custom-badges'
+
+const vehicleData = {
+  vehicle_name: 'Fleet Vehicle 01',
+  plate_number: 'ABC-1234',
+  brand: 'Toyota',
+  model: 'Camry',
+  manuf_year: 2023,
+  can_bitrate: '500000',
+  fuel_type: 'gasoline',
+  gear_type: 'automatic',
+  num_tire: 4,
+  isdeleted: false,
+  deletedAt: '2025-07-02T08:13:18.475Z',
+}
 // Mock data as requested
 const companyData: CompanyDetail = {
   company: {
@@ -99,7 +114,9 @@ const InfoRow = ({
   <div className="flex items-start space-x-3">
     <div className="text-muted-foreground mt-0.5">{icon}</div>
     <div className="flex flex-col">
-      <span className="text-sm tracking-tight font-medium text-muted-foreground">{label}</span>
+      <span className="text-sm tracking-tight font-medium text-muted-foreground">
+        {label}
+      </span>
       <span className="text-sm">{value}</span>
     </div>
   </div>
@@ -143,7 +160,7 @@ export default function CompanyDetails() {
           <DataTree />
         </div>
         <div className="lg:col-span-7 space-y-5">
-          <Card className="shadow-none">
+          <Card className="shadow-none px-5">
             <CardHeader>
               <div className="flex gap-x-3 items-start">
                 <div>
@@ -166,17 +183,17 @@ export default function CompanyDetails() {
             <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <div className="space-y-4">
                 <InfoRow
-                  icon={<Phone size={14} />}
+                  icon={<Phone size={15} />}
                   label="Main Contact"
                   value={company.phone}
                 />
                 <InfoRow
-                  icon={<Mail size={14} />}
+                  icon={<Mail size={15} />}
                   label="Email"
                   value={company.email}
                 />
                 <InfoRow
-                  icon={<Globe size={14} />}
+                  icon={<Globe size={15} />}
                   label="Website"
                   value={
                     <a
@@ -192,74 +209,118 @@ export default function CompanyDetails() {
               </div>
               <div className="space-y-4">
                 <InfoRow
-                  icon={<Phone size={14} />}
-                  label="Main Contact"
-                  value={company.phone}
+                  icon={<UserCircle size={15} />}
+                  label="Contact Person"
+                  value={company.contact_person}
                 />
                 <InfoRow
-                  icon={<Mail size={14} />}
-                  label="Email"
-                  value={company.email}
+                  icon={<Phone size={15} />}
+                  label="Contact Phone"
+                  value={company.contact_phone}
                 />
                 <InfoRow
-                  icon={<Globe size={14} />}
-                  label="Website"
-                  value={
-                    <a
-                      href={company.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      {company.website}
-                    </a>
-                  }
+                  icon={<Building size={15} />}
+                  label="Registration No."
+                  value={company.reg_number}
                 />
               </div>
               <div className="space-y-4">
                 <InfoRow
-                  icon={<Phone size={14} />}
-                  label="Main Contact"
-                  value={company.phone}
-                />
-                <InfoRow
-                  icon={<Mail size={14} />}
-                  label="Email"
-                  value={company.email}
-                />
-                <InfoRow
-                  icon={<Globe size={14} />}
-                  label="Website"
+                  icon={<MapPin size={15} />}
+                  label="Address"
                   value={
-                    <a
-                      href={company.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      {company.website}
-                    </a>
+                    <div>
+                      {`${company.address.street}`}
+                      <br />
+                      <span className="leading-4">{`${company.address.state}, ${company.address.country} (${company.address.postal_code})`}</span>
+                    </div>
                   }
                 />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="shadow-none">
+          <Card className="shadow-none px-5">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MapPin className="w-6 h-6" />
-                Address
-              </CardTitle>
+              <div className="flex items-center gap-x-3">
+                <CardTitle className="flex items-center gap-2 text-2xl">
+                  12가3456
+                </CardTitle>
+                <Badge variant="outline" className="text-muted-foreground">
+                  {`Vehicle`}
+                </Badge>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-2">
-              <p className="text-lg">
-                {company.address.street}, {company.address.city}
-              </p>
-              <p className="text-muted-foreground">
-                {company.address.state}, {company.address.country} (
-                {company.address.postal_code})
-              </p>
+            <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="space-y-4">
+                <InfoRow
+                  icon={
+                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
+                  }
+                  label="Vehicle Name"
+                  value={vehicleData.vehicle_name}
+                />
+                <InfoRow
+                  icon={
+                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
+                  }
+                  label="Brand"
+                  value={vehicleData.brand}
+                />
+                <InfoRow
+                  icon={
+                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
+                  }
+                  label="Model"
+                  value={vehicleData.model}
+                />
+              </div>
+              <div className="space-y-4">
+                <InfoRow
+                  icon={
+                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
+                  }
+                  label="Manufacture Year"
+                  value={vehicleData.manuf_year}
+                />
+                <InfoRow
+                  icon={
+                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
+                  }
+                  label="Fuel Type"
+                  value={vehicleData.fuel_type}
+                />
+                <InfoRow
+                  icon={
+                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
+                  }
+                  label="Gear Type"
+                  value={vehicleData.gear_type}
+                />
+              </div>
+              <div className="space-y-4">
+                <InfoRow
+                  icon={
+                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
+                  }
+                  label="Can Bitrate"
+                  value={vehicleData.can_bitrate}
+                />
+                <InfoRow
+                  icon={
+                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
+                  }
+                  label="Number of Tires"
+                  value={vehicleData.num_tire}
+                />
+                {/* <InfoRow
+                  icon={
+                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
+                  }
+                  label="Model"
+                  value={vehicleData.model}
+                /> */}
+              </div>
             </CardContent>
           </Card>
         </div>
