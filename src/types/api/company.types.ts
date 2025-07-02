@@ -112,13 +112,13 @@ export interface CompanyByIdResponse {
       created_at: string
       updated_at: string
     }
-    users: {
+    users?: {
       id: number
       username: string
       email: string
       role: string
     }[]
-    vehicles: {
+    vehicles?: {
       id: number
       plate_number: string
     }[]

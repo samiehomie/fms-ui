@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import CompanyDetails from '@/components/features/companies/company-details'
 import { companiesApi } from '@/lib/api/company'
+import { getAuthData } from '@/lib/api/auth'
 
 type CompanyIdParams = {
   params: Promise<{ id: string }>
@@ -8,7 +9,8 @@ type CompanyIdParams = {
 
 const Page: FC<CompanyIdParams> = async ({ params }) => {
   const { id } = await params
-  const response = await companiesApi.getCompanyById(parseInt(id))
+  const authData = await getAuthData()
+  const response = await companiesApi.getCompanyById(parseInt(id), authData?.cookie)
 
   return <CompanyDetails detail={response.data} />
 }

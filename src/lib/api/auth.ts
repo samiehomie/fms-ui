@@ -151,7 +151,9 @@ export const getAuthData = async () => {
   const user = await parseJWT<JWTAuthPayload>(refreshTokenData.token)
   if (!user) return null
 
-  return { token: refreshTokenData.token, user }
+  const cookie = `${AUTH_TOKEN_COOKIE_NAME}=${authToken}; ${AUTH_EXPIRE_COOKIE_NAME}=${expire};`
+
+  return { token: refreshTokenData.token, user, cookie }
 }
 
 export async function clearAuthCookies() {

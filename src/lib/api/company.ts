@@ -42,10 +42,20 @@ export const companiesApi = {
 
   getCompanyById: async (
     id: number,
+    cookie?: string,
   ): Promise<ApiSuccessResponse<ApiResponseType<'GET /companies/id'>>> => {
     const response = await fetchJson<
       ApiSuccessResponse<ApiResponseType<'GET /companies/id'>>
-    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`)
+    >(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`,
+      cookie
+        ? {
+            headers: {
+              Cookie: cookie,
+            },
+          }
+        : undefined,
+    )
 
     if (!response.success) {
       throw new Error('Failed to fetch companies')

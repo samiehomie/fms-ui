@@ -112,12 +112,15 @@ export default function DataTree({
 }) {
   const { company } = detail
 
+  const users = company.users ?? []
+  const vehicles = company.vehicles ?? []
+
   const treeData: TreeDataNode[] = [
     {
-      title: `users (${company.users.length})`,
+      title: `users (${users?.length})`,
       key: 'users',
       icon: <UserIcon className="w-4 h-4" />,
-      children: company.users.map((user) => ({
+      children: users.map((user) => ({
         title: (
           <div className="flex items-center space-x-2">
             <span>{user.username}</span>
@@ -129,10 +132,10 @@ export default function DataTree({
       })),
     },
     {
-      title: `vehicles (${company.vehicles.length})`,
+      title: `vehicles (${vehicles.length})`,
       key: 'vehicles',
       icon: <Truck className="w-4 h-4" />,
-      children: company.vehicles.map((vehicle) => ({
+      children: vehicles.map((vehicle) => ({
         title: vehicle.plate_number,
         key: `vehicle-${vehicle.id}`,
         icon: <Truck className="w-4 h-4 text-muted-foreground" />,

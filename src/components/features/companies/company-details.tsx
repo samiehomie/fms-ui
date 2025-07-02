@@ -17,12 +17,8 @@ import {
   Building,
   Mail,
   Phone,
-  UserIcon,
   Globe,
-  Truck,
   UserCircle,
-  CheckCircle2,
-  XCircle,
   MapPin,
   Minus,
 } from 'lucide-react'
