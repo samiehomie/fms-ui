@@ -43,10 +43,7 @@ export async function refreshTokenIfNeeded(
   const timeUntilExpiry = parseInt(currentExpire) - Date.now()
 
   if (timeUntilExpiry < refreshThreshold) {
-    const apiUrl = buildURL(
-      '/auth/refresh',
-      process.env.NEXT_PUBLIC_API_BASE_URL,
-    )
+    const apiUrl = buildURL('/auth/refresh')
     const requestBody: ApiRequestType<'POST /auth/refresh'> = {
       token: currentToken,
       refresh_token: '',

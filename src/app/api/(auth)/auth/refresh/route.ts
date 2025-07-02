@@ -17,10 +17,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const apiUrl = buildURL(
-      '/auth/refresh',
-      process.env.NEXT_PUBLIC_API_BASE_URL,
-    )
+    const apiUrl = buildURL('/auth/refresh')
 
     // As per user's note: "refresh_token: API 구현 예정 현재는 빈 문자열 전달"
     const requestBody: ApiRequestType<'POST /auth/refresh'> = {

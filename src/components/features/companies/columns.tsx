@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import type { Company } from '@/types/api/company.types'
@@ -148,6 +149,7 @@ export const columns: ColumnDef<Company>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
+      const router = useRouter()
       const companyId = row.original.id
       const verified = row.original.verified
       const mutationDelete = useDeleteCompany()
@@ -196,7 +198,13 @@ export const columns: ColumnDef<Company>[] = [
               </div>
             </ConfirmDialog>
 
-            <DropdownMenuItem>View Details</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                router.push(`/companies/${companyId}`)
+              }}
+            >
+              View Details
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <ConfirmDialog
               onClose={() => setOpen(false)}
