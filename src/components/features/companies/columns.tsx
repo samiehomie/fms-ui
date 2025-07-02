@@ -48,22 +48,26 @@ export const columns: ColumnDef<Company>[] = [
   },
   {
     accessorKey: 'id',
-    header: ({ column }) => (
-      <Button
-        variant={'ghost'}
-        className="w-full text-center"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        ID
-        <ArrowUpDown />
-      </Button>
-    ),
-    //header: () => <div className="min-w-[35px] pl-1">{'ID'}</div>,
-    cell: ({ row }) => (
-      <div className="w-full text-center pr-4">{row.getValue('id')}</div>
-    ),
+    header: () => <div className="min-w-[45px] pl-2">{'ID'}</div>,
+    cell: ({ row }) => <div className="pl-2">{row.getValue('id')}</div>,
   },
-
+  // {
+  //   accessorKey: 'id',
+  //   header: ({ column }) => (
+  //     <Button
+  //       variant={'ghost'}
+  //       className="w-full text-center"
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+  //     >
+  //       ID
+  //       <ArrowUpDown />
+  //     </Button>
+  //   ),
+  //   //header: () => <div className="min-w-[35px] pl-1">{'ID'}</div>,
+  //   cell: ({ row }) => (
+  //     <div className="w-full text-center pr-4">{row.getValue('id')}</div>
+  //   ),
+  // },
   { accessorKey: 'name', header: 'Company' },
   { accessorKey: 'reg_number', header: 'Reg No' },
   {
@@ -159,7 +163,7 @@ export const columns: ColumnDef<Company>[] = [
             <ModifyCompanyForm id={companyId} />
             {/* <DropdownMenuItem>Edit</DropdownMenuItem> */}
             <DropdownMenuItem>Verify</DropdownMenuItem>
-            <DropdownMenuItem>Copy ID</DropdownMenuItem>
+            <DropdownMenuItem>View Details</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               variant="destructive"
