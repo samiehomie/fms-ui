@@ -1,5 +1,6 @@
 'use client'
 
+import type { ApiResponseType } from '@/types/api'
 import type React from 'react'
 import type { CompanyDetail } from '@/types/api/company.types'
 import { Tree } from 'antd'
@@ -122,42 +123,18 @@ const InfoRow = ({
   </div>
 )
 
-export default function CompanyDetails() {
-  const { company } = companyData
-
-  const treeData: DataNode[] = [
-    {
-      title: `사용자 (${company.users.length})`,
-      key: 'users',
-      icon: <UserIcon className="w-4 h-4" />,
-      children: company.users.map((user) => ({
-        title: (
-          <div className="flex items-center space-x-2">
-            <span>{user.username}</span>
-            <Badge variant="outline">{user.role}</Badge>
-          </div>
-        ),
-        key: `user-${user.id}`,
-        icon: <UserCircle className="w-4 h-4 text-muted-foreground" />,
-      })),
-    },
-    {
-      title: `차량 (${company.vehicles.length})`,
-      key: 'vehicles',
-      icon: <Truck className="w-4 h-4" />,
-      children: company.vehicles.map((vehicle) => ({
-        title: vehicle.plate_number,
-        key: `vehicle-${vehicle.id}`,
-        icon: <Truck className="w-4 h-4 text-muted-foreground" />,
-      })),
-    },
-  ]
+export default function CompanyDetails({
+  detail,
+}: {
+  detail: ApiResponseType<'GET /companies/id'>
+}) {
+  const { company } = detail
 
   return (
     <div className="min-h-screen">
       <div className=" grid gap-6 lg:grid-cols-9">
         <div className="lg:col-span-2">
-          <DataTree />
+          <DataTree detail={detail} />
         </div>
         <div className="lg:col-span-7 space-y-5">
           <Card className="shadow-none px-5">

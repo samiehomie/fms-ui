@@ -24,6 +24,7 @@ import {
   XCircle,
   MapPin,
 } from 'lucide-react'
+import { ApiResponseType } from '@/types/api'
 
 // Mock data as requested
 const companyData: CompanyDetail = {
@@ -104,8 +105,12 @@ const InfoRow = ({
   </div>
 )
 
-export default function DataTree() {
-  const { company } = companyData
+export default function DataTree({
+  detail,
+}: {
+  detail: ApiResponseType<'GET /companies/id'>
+}) {
+  const { company } = detail
 
   const treeData: TreeDataNode[] = [
     {
