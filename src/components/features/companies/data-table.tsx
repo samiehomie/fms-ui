@@ -24,8 +24,9 @@ import { DataTablePagination } from './data-table-pagination'
 import { Input } from '@/components/ui/input'
 import { CompaniesPaginationParams } from '@/types/api/company.types'
 import { AddCompanyForm } from './add-company-form'
-import { PlusOutlined } from '@ant-design/icons'
-import { Flex, Tag, theme, Tooltip } from 'antd'
+import { Tag } from 'antd'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -139,6 +140,13 @@ export function DataTable<TData, TValue>({
             )}
           </div>
         </div>
+        <div className="flex space-x-2 py-2 px-3 bg-[#f8fafc] rounded-lg border border-[#cad5e3] ">
+          <Switch id="verified" />
+          <Label htmlFor="verified" className="text-sm ">
+            Verified
+          </Label>
+        </div>
+
         <AddCompanyForm />
       </div>
 

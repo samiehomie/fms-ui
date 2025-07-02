@@ -178,3 +178,44 @@ export async function PUT(request: NextRequest) {
     }
   })
 }
+
+export async function PATCH(request: NextRequest) {
+  return await withAuth(async (tokenData) => {
+    const { token } = tokenData
+    const searchParams = request.nextUrl.searchParams
+    const id = searchParams.get('id')
+    const apiUrl = buildURL(`/companies/${id}/verify`)
+    const requestBody = await request.json()
+
+    try {
+      const response = await fetchJson<ApiResponseType<'PUT /companies'>>(
+        apiUrl,
+        {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        },
+      )
+      if (!response.success) {
+        return createErrorResponse(
+          'INTERNAL_ERROR',
+          'Failed to modify companies from external API',
+        )
+      }
+      return createSuccessResponse(
+        response.data,
+        'Companies modified successfully',
+      )
+    } catch (err) {
+      logger.error('Error modifying companies:', err)
+
+      return createErrorResponse(
+        'INTERNAL_ERROR',
+        'An unexpected error occurred while modifying companies',
+      )
+    }
+  })
+}

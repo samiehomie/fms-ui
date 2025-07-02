@@ -376,7 +376,7 @@ export function AddCompanyForm() {
         <DrawerTrigger asChild>
           <Button>
             <IconPlus />
-            Add Company
+            Add
           </Button>
         </DrawerTrigger>
         <DrawerContent className="max-h-[90vh]">
@@ -399,7 +399,7 @@ export function AddCompanyForm() {
       <DialogTrigger asChild>
         <Button variant={'outline'} className=''>
           <IconPlus />
-          Add Company
+          Add
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[91vh] overflow-y-auto">

@@ -94,16 +94,7 @@ export const columns: ColumnDef<Company>[] = [
   { accessorKey: 'details', header: 'Details' },
   {
     accessorKey: 'verified',
-    header: ({ column }) => (
-      <Button
-        variant={'ghost'}
-        className="w-full"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Verified
-        <ArrowUpDown />
-      </Button>
-    ),
+    header: () => <div className="text-center">Verified</div>,
     //header: () => <div className="text-center">Verified</div>,
     cell: ({ row }) => {
       const isVerified = row.getValue('verified')
