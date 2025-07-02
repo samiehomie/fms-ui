@@ -24,6 +24,7 @@ import {
   XCircle,
   MapPin,
 } from 'lucide-react'
+import DataTree from './data-tree'
 
 // Mock data as requested
 const companyData: CompanyDetail = {
@@ -139,22 +140,7 @@ export default function CompanyDetails() {
     <div className="min-h-screen p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-1">
-          <Card className="h-full">
-            <CardHeader>
-              <CardTitle>소속 사용자 및 차량</CardTitle>
-              <CardDescription>
-                목록을 펼쳐 상세 정보를 확인하세요.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Tree
-                showIcon
-                defaultExpandAll
-                treeData={treeData}
-                className="bg-transparent"
-              />
-            </CardContent>
-          </Card>
+          <DataTree />
         </div>
         <div className="lg:col-span-2 space-y-6">
           <Card>
