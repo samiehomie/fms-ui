@@ -45,7 +45,6 @@ import { useCreateCompany } from '@/lib/hooks/queries/useCompanies'
 
 import { IconPlus } from '@tabler/icons-react'
 
-
 const companySchema = z.object({
   name: z.string().min(1, 'Company name is required'),
   reg_number: z.string().min(1, 'Registration number is required'),
@@ -374,10 +373,7 @@ export function AddCompanyForm() {
     return (
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
-          <Button>
-            <IconPlus />
-            Add
-          </Button>
+          <Button>Add</Button>
         </DrawerTrigger>
         <DrawerContent className="max-h-[90vh]">
           <DrawerHeader>
@@ -397,9 +393,13 @@ export function AddCompanyForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={'outline'} className=''>
+        <Button
+          variant={'outline'}
+          size={'sm'}
+          className="text-[.8125rem] tracking-tight h-6"
+        >
           <IconPlus />
-          Add
+          Add Company
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[91vh] overflow-y-auto">

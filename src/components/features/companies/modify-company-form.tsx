@@ -419,11 +419,20 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: number }) {
   )
 }
 
-export function ModifyCompanyForm({ id }: { id: number }) {
+export function ModifyCompanyForm({
+  id,
+  onClose,
+}: {
+  id: number
+  onClose: () => void
+}) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMedia('(min-width: 768px)', true)
 
-  const handleClose = () => setOpen(false)
+  const handleClose = () => {
+    onClose()
+    setOpen(false)
+  }
 
   if (!isDesktop) {
     return (
@@ -464,7 +473,10 @@ export function ModifyCompanyForm({ id }: { id: number }) {
           Add Company
         </Button> */}
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[91vh] overflow-y-auto">
+      <DialogContent
+        onClose={handleClose}
+        className="max-w-4xl max-h-[91vh] overflow-y-auto"
+      >
         <DialogHeader>
           <DialogTitle>Add Company</DialogTitle>
           <DialogDescription>

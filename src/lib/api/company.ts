@@ -124,4 +124,25 @@ export const companiesApi = {
 
     return response.data
   },
+
+  verifyCompany: async (
+    id: number,
+    verified: ApiRequestType<'PATCH /companies/id'>,
+  ) => {
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'PATCH /companies/id'>>
+    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(verified),
+    })
+
+    if (!response.success) {
+      throw new Error('Failed to create company')
+    }
+
+    return response.data
+  },
 }

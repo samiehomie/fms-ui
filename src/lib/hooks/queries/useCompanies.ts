@@ -9,6 +9,8 @@ type CreateCompanyRequest = ApiRequestType<'POST /companies'>
 type DeleteCompanyResponse = ApiResponseType<'DELETE /companies'>
 type ModifyCompanyResponse = ApiResponseType<'PUT /companies'>
 type ModifyCompanyRequest = ApiRequestType<'PUT /companies'>
+type VerifyCompanyRequest = ApiRequestType<'PATCH /companies/id'>
+type VerifyCompanyRespone = ApiResponseType<'PATCH /companies/id'>
 
 export function useCompaniesPaginated(params: CompaniesPaginationParams) {
   return useQuery({
@@ -98,6 +100,31 @@ export function useModifyCompany(id: number) {
     },
     onError: (error) => {
       toast.error('Adding a new company failed.', {
+        position: 'bottom-center',
+        description: error.message,
+      })
+    },
+  })
+}
+
+export function useVerifyCompany(id: number) {
+  const queryClient = useQueryClient()
+  return useMutation<VerifyCompanyRespone, Error, VerifyCompanyRequest>({
+    mutationFn: async (newCompany) => {
+      const { data } = await companiesApi.verifyCompany(id, newCompany)
+      return data
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['companies'],
+      })
+      toast.success('Company Verification Complete', {
+        description: `${data.company.name}`,
+        position: 'bottom-center',
+      })
+    },
+    onError: (error) => {
+      toast.error('Company Verification Failed', {
         position: 'bottom-center',
         description: error.message,
       })

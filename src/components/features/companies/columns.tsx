@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import type { Company } from '@/types/api/company.types'
 import { formatDateTime, getCompanyTypeColor } from '@/lib/utils'
@@ -18,8 +19,12 @@ import { IconCircleCheckFilled } from '@tabler/icons-react'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { IconDotsVertical } from '@tabler/icons-react'
-import { useDeleteCompany } from '@/lib/hooks/queries/useCompanies'
+import {
+  useDeleteCompany,
+  useVerifyCompany,
+} from '@/lib/hooks/queries/useCompanies'
 import { logger } from '@/lib/utils'
+import ConfirmDialog from '@/components/ui/confirm-dialog'
 
 export const columns: ColumnDef<Company>[] = [
   {
@@ -144,11 +149,32 @@ export const columns: ColumnDef<Company>[] = [
     id: 'actions',
     cell: ({ row }) => {
       const companyId = row.original.id
-      logger.log('companyId', companyId)
-      const mutation = useDeleteCompany()
+      const verified = row.original.verified
+      const mutationDelete = useDeleteCompany()
+      const mutationVerify = useVerifyCompany(companyId)
+
+      const [open, setOpen] = useState(false)
+
+      const handleVerifyAction = async () => {
+        try {
+          await mutationVerify.mutateAsync({ verified: !verified })
+          setOpen(false) // 메뉴 닫기
+        } catch (error) {
+          logger.error('Verify action failed:', error)
+        }
+      }
+
+      const handleDeleteAction = async () => {
+        try {
+          await mutationDelete.mutateAsync(companyId)
+          setOpen(false) // 메뉴 닫기
+        } catch (error) {
+          logger.error('Delete action failed:', error)
+        }
+      }
 
       return (
-        <DropdownMenu>
+        <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
@@ -160,19 +186,26 @@ export const columns: ColumnDef<Company>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-32">
-            <ModifyCompanyForm id={companyId} />
-            {/* <DropdownMenuItem>Edit</DropdownMenuItem> */}
-            <DropdownMenuItem>Verify</DropdownMenuItem>
+            <ModifyCompanyForm id={companyId} onClose={() => setOpen(false)} />
+            <ConfirmDialog
+              onClose={() => setOpen(false)}
+              handleClick={handleVerifyAction}
+            >
+              <div className="text-sm p-2 hover:bg-gray-100/90 rounded-sm">
+                {verified ? 'Unverify' : 'Verify'}
+              </div>
+            </ConfirmDialog>
+
             <DropdownMenuItem>View Details</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={async () => {
-                await mutation.mutateAsync(companyId)
-              }}
+            <ConfirmDialog
+              onClose={() => setOpen(false)}
+              handleClick={handleDeleteAction}
             >
-              Delete
-            </DropdownMenuItem>
+              <div className="text-sm p-2 text-red-500 hover:bg-gray-100/90 rounded-sm">
+                Delete
+              </div>
+            </ConfirmDialog>
           </DropdownMenuContent>
         </DropdownMenu>
       )

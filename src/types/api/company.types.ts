@@ -118,6 +118,31 @@ export interface CompaniesDeleteResponse {
   message: string
 }
 
+export interface CompaniesVerifyRequest {
+  verified: boolean
+}
+
+export interface CompaniesVerifyResponse {
+  message: string
+  company: {
+    id: number
+    created_at: string
+    updated_at: string
+    name: string
+    reg_number: string
+    type: string
+    details: string
+    phone: string
+    email: string
+    website: string
+    contact_person: string
+    contact_phone: string
+    verified: boolean
+    isdeleted: boolean
+    deletedAt: string | null
+  }
+}
+
 export interface CompanyApiTypes {
   'POST /companies': {
     request: CompaniesCreateRequest
@@ -138,5 +163,9 @@ export interface CompanyApiTypes {
   'PUT /companies': {
     request: CompaniesCreateRequest
     response: CompaniesCreateResponse
+  }
+  'PATCH /companies/id': {
+    request: CompaniesVerifyRequest
+    response: CompaniesVerifyResponse
   }
 }

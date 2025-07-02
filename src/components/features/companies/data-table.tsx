@@ -25,8 +25,7 @@ import { Input } from '@/components/ui/input'
 import { CompaniesPaginationParams } from '@/types/api/company.types'
 import { AddCompanyForm } from './add-company-form'
 import { Tag } from 'antd'
-import { Switch } from '@/components/ui/switch'
-import { Label } from '@/components/ui/label'
+import { Switch } from 'antd'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -140,14 +139,21 @@ export function DataTable<TData, TValue>({
             )}
           </div>
         </div>
-        <div className="flex space-x-2 py-2 px-3 bg-[#f8fafc] rounded-lg border border-[#cad5e3] ">
-          <Switch id="verified" />
-          <Label htmlFor="verified" className="text-sm ">
-            Verified
-          </Label>
+        <div className="flex items-center gap-x-[.625rem] py-2 px-2 rounded-sm bg-slate-50/80  border border-slate-300/80 ">
+          <Switch
+            size={'default'}
+            checkedChildren="verified"
+            unCheckedChildren="unverified"
+            checked={pagination.verified}
+            onChange={() => {
+              setPagination((old) => ({
+                ...old,
+                verified: !old.verified,
+              }))
+            }}
+          />
+          <AddCompanyForm />
         </div>
-
-        <AddCompanyForm />
       </div>
 
       <div className="text-slate-900 ">
@@ -155,9 +161,7 @@ export function DataTable<TData, TValue>({
           <TableHeader className="bg-slate-50  border border-slate-300">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow className="border-none" key={headerGroup.id}>
-                {headerGroup.headers.map((header, index) => {
-                  const isFirst = index === 0
-                  const isLast = index === headerGroup.headers.length - 1
+                {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
                       key={header.id}

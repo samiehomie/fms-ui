@@ -185,10 +185,10 @@ export async function PATCH(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const id = searchParams.get('id')
     const apiUrl = buildURL(`/companies/${id}/verify`)
-    const requestBody = await request.json()
+    const requestBody = await request.json() as ({verified: boolean})
 
     try {
-      const response = await fetchJson<ApiResponseType<'PUT /companies'>>(
+      const response = await fetchJson<ApiResponseType<'PATCH /companies/id'>>(
         apiUrl,
         {
           method: 'PATCH',

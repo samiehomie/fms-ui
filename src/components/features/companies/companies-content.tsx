@@ -12,7 +12,7 @@ const CompaniesContent = () => {
     page: 1,
     limit: 10,
     search: '',
-    // verified: true,
+    verified: false,
     // sort: 'created_at',
     // order: 'desc' as const,
   })
