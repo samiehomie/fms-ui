@@ -83,10 +83,10 @@ export function DataTable<TData, TValue>({
     },
   })
 
-  const selectedFiles = Object.keys(rowSelection).map((rowId) => {
-    const row = table.getRow(rowId)
-    return row?.getValue('id')
-  })
+  // const selectedFiles = Object.keys(rowSelection).map((rowId) => {
+  //   const row = table.getRow(rowId)
+  //   return row?.getValue('id')
+  // })
 
   const handleSearch = () => {
     setPagination((old) => ({ ...old, search }))

@@ -25,7 +25,7 @@ import {
   MapPin,
 } from 'lucide-react'
 import DataTree from './data-tree'
-
+import { VerifiedBadge, UnVerifiedBadge } from '@/components/ui/custom-badges'
 // Mock data as requested
 const companyData: CompanyDetail = {
   company: {
@@ -99,8 +99,8 @@ const InfoRow = ({
   <div className="flex items-start space-x-3">
     <div className="text-muted-foreground mt-0.5">{icon}</div>
     <div className="flex flex-col">
-      <span className="text-sm font-medium text-muted-foreground">{label}</span>
-      <span className="text-base">{value}</span>
+      <span className="text-sm tracking-tight font-medium text-muted-foreground">{label}</span>
+      <span className="text-sm">{value}</span>
     </div>
   </div>
 )
@@ -137,50 +137,47 @@ export default function CompanyDetails() {
   ]
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-1">
+    <div className="min-h-screen">
+      <div className=" grid gap-6 lg:grid-cols-9">
+        <div className="lg:col-span-2">
           <DataTree />
         </div>
-        <div className="lg:col-span-2 space-y-6">
-          <Card>
+        <div className="lg:col-span-7 space-y-5">
+          <Card className="shadow-none">
             <CardHeader>
-              <div className="flex justify-between items-start">
+              <div className="flex gap-x-3 items-start">
                 <div>
-                  <CardTitle className="text-2xl font-bold flex items-center gap-2">
-                    <Building className="w-7 h-7" />
+                  <CardTitle className="text-2xl  leading-none font-bold flex items-center gap-2">
                     {company.name}
                   </CardTitle>
-                  <CardDescription>{company.details}</CardDescription>
+                  <CardDescription className="mt-1 ml-[.125rem]">
+                    {company.details}
+                  </CardDescription>
                 </div>
-                <div className="flex items-center gap-4">
-                  <Badge variant={company.verified ? 'default' : 'destructive'}>
-                    {company.verified ? (
-                      <CheckCircle2 className="w-4 h-4 mr-1" />
-                    ) : (
-                      <XCircle className="w-4 h-4 mr-1" />
-                    )}
-                    {company.verified ? 'Verified' : 'Not Verified'}
+                <div className="flex items-center gap-2">
+                  {company.verified ? <VerifiedBadge /> : <UnVerifiedBadge />}
+
+                  <Badge variant="outline" className="text-muted-foreground">
+                    {company.type}
                   </Badge>
-                  <Badge variant="secondary">{company.type}</Badge>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="grid gap-6 sm:grid-cols-2">
+            <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <div className="space-y-4">
                 <InfoRow
-                  icon={<Phone size={16} />}
-                  label="대표 연락처"
+                  icon={<Phone size={14} />}
+                  label="Main Contact"
                   value={company.phone}
                 />
                 <InfoRow
-                  icon={<Mail size={16} />}
-                  label="대표 이메일"
+                  icon={<Mail size={14} />}
+                  label="Email"
                   value={company.email}
                 />
                 <InfoRow
-                  icon={<Globe size={16} />}
-                  label="웹사이트"
+                  icon={<Globe size={14} />}
+                  label="Website"
                   value={
                     <a
                       href={company.website}
@@ -195,29 +192,64 @@ export default function CompanyDetails() {
               </div>
               <div className="space-y-4">
                 <InfoRow
-                  icon={<UserCircle size={16} />}
-                  label="담당자"
-                  value={company.contact_person}
+                  icon={<Phone size={14} />}
+                  label="Main Contact"
+                  value={company.phone}
                 />
                 <InfoRow
-                  icon={<Phone size={16} />}
-                  label="담당자 연락처"
-                  value={company.contact_phone}
+                  icon={<Mail size={14} />}
+                  label="Email"
+                  value={company.email}
                 />
                 <InfoRow
-                  icon={<Building size={16} />}
-                  label="사업자 등록번호"
-                  value={company.reg_number}
+                  icon={<Globe size={14} />}
+                  label="Website"
+                  value={
+                    <a
+                      href={company.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {company.website}
+                    </a>
+                  }
+                />
+              </div>
+              <div className="space-y-4">
+                <InfoRow
+                  icon={<Phone size={14} />}
+                  label="Main Contact"
+                  value={company.phone}
+                />
+                <InfoRow
+                  icon={<Mail size={14} />}
+                  label="Email"
+                  value={company.email}
+                />
+                <InfoRow
+                  icon={<Globe size={14} />}
+                  label="Website"
+                  value={
+                    <a
+                      href={company.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {company.website}
+                    </a>
+                  }
                 />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="shadow-none">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <MapPin className="w-6 h-6" />
-                주소 정보
+                Address
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">

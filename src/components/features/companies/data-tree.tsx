@@ -136,19 +136,13 @@ export default function DataTree() {
   ]
 
   return (
-    <Card className="h-full">
-      <CardHeader>
-        <CardTitle>{`Users & Vehicles`}</CardTitle>
-        <CardDescription>{`Expand for Details`}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Tree
-          showLine
-          defaultExpandAll
-          treeData={treeData}
-          className="bg-transparent"
-        />
-      </CardContent>
-    </Card>
+    <div className="">
+      <Tree
+        showLine
+        defaultExpandAll
+        treeData={treeData}
+        className="bg-transparent"
+      />
+    </div>
   )
 }
