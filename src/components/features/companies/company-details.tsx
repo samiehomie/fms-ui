@@ -22,6 +22,8 @@ import {
 } from 'lucide-react'
 import DataTree from './data-tree'
 import { VerifiedBadge, UnVerifiedBadge } from '@/components/ui/custom-badges'
+import CompanyVehiclesContent from '@/components/features/vehicles/company-vehicles-content'
+
 
 const vehicleData = {
   vehicle_name: 'Fleet Vehicle 01',
@@ -109,77 +111,108 @@ const InfoRow = ({
   <div className="flex items-start space-x-3">
     <div className="text-muted-foreground mt-0.5">{icon}</div>
     <div className="flex flex-col">
-      <span className="text-sm tracking-tight font-medium text-muted-foreground">
+      {/* <span className="text-sm tracking-tight font-medium text-muted-foreground">
         {label}
-      </span>
-      <span className="text-sm">{value}</span>
+      </span> */}
+      <span className="text-sm tracking-wide">{value}</span>
     </div>
   </div>
 )
 
 export default function CompanyDetails({
   detail,
+  companyId
 }: {
   detail: ApiResponseType<'GET /companies/id'>
+  companyId: number
 }) {
   const { company } = detail
 
   return (
     <div className="flex-1 flex flex-col">
-      <div className="flex-1 grid gap-x-12 lg:grid-cols-10">
-        <div className="lg:col-span-3 h-full flex flex-col relative">
+      <div className="flex-1 grid gap-x-12 lg:grid-cols-11">
+        <div className="lg:col-span-2 h-full flex flex-col relative">
           <DataTree detail={detail} />
-          <div className='absolute bg-gray-200/90 w-[1px] h-[100%] -translate-y-1/2 top-1/2 right-[-23px]' />
+          <div className="absolute bg-gray-200/90 w-[1px] h-[100%] -translate-y-1/2 top-1/2 right-[-23px]" />
         </div>
-       
-        <div className="lg:col-span-7 space-y-5">
+        <div className="lg:col-span-9 space-y-5 grid grid-cols-3 gap-x-5 self-start">
+          {/* <Card className="shadow-none px-3 gap-3">
+            <CardHeader>
+              <div className="flex gap-x-3 items-start">
+                <div>
+                  <CardTitle className="text-xl leading-none font-bold flex items-center gap-y-2 gap-x-2">
+                    {company.name}
+                    <Badge
+                      variant="outline"
+                      className="text-muted-foreground ml-1 text-[11px] rounded-sm"
+                    >
+                      {company.type}
+                    </Badge>
+                    {company.verified ? (
+                      <VerifiedBadge className="text-[11px] rounded-sm" />
+                    ) : (
+                      <UnVerifiedBadge className="text-[11px] rounded-sm" />
+                    )}
+                  </CardTitle>
+                  <CardDescription className="mt-1 ml-[.125rem] text-sm">
+                    {company.details}
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="">
+              <InfoRow
+                icon={<Phone size={15} />}
+                label="Main Contact"
+                value={company.phone}
+              />
+              <InfoRow
+                icon={<Mail size={15} />}
+                label="Email"
+                value={company.email}
+              />
+              <InfoRow
+                icon={<Building size={15} />}
+                label="Registration No."
+                value={company.reg_number}
+              />
+              <InfoRow
+                icon={<Globe size={15} />}
+                label="Website"
+                value={
+                  <a
+                    href={company.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    {company.website}
+                  </a>
+                }
+              />
+            </CardContent>
+          </Card>
           <Card className="shadow-none px-5">
             <CardHeader>
               <div className="flex gap-x-3 items-start">
                 <div>
-                  <CardTitle className="text-2xl  leading-none font-bold flex items-center gap-2">
+                  <CardTitle className="text-2xl  leading-none font-bold flex items-center gap-y-2 gap-x-2">
                     {company.name}
+                    <Badge
+                      variant="outline"
+                      className="text-muted-foreground ml-1"
+                    >
+                      {company.type}
+                    </Badge>
+                    {company.verified ? <VerifiedBadge /> : <UnVerifiedBadge />}
                   </CardTitle>
                   <CardDescription className="mt-1 ml-[.125rem]">
                     {company.details}
                   </CardDescription>
                 </div>
-                <div className="flex items-center gap-2">
-                  {company.verified ? <VerifiedBadge /> : <UnVerifiedBadge />}
-
-                  <Badge variant="outline" className="text-muted-foreground">
-                    {company.type}
-                  </Badge>
-                </div>
               </div>
             </CardHeader>
             <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="space-y-4">
-                <InfoRow
-                  icon={<Phone size={15} />}
-                  label="Main Contact"
-                  value={company.phone}
-                />
-                <InfoRow
-                  icon={<Mail size={15} />}
-                  label="Email"
-                  value={company.email}
-                />
-                <InfoRow
-                  icon={<Globe size={15} />}
-                  label="Website"
-                  value={
-                    <a
-                      href={company.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      {company.website}
-                    </a>
-                  }
-                />
-              </div>
               <div className="space-y-4">
                 <InfoRow
                   icon={<UserCircle size={15} />}
@@ -191,12 +224,30 @@ export default function CompanyDetails({
                   label="Contact Phone"
                   value={company.contact_phone}
                 />
-                <InfoRow
-                  icon={<Building size={15} />}
-                  label="Registration No."
-                  value={company.reg_number}
-                />
               </div>
+            </CardContent>
+          </Card>
+          <Card className="shadow-none px-5">
+            <CardHeader>
+              <div className="flex gap-x-3 items-start">
+                <div>
+                  <CardTitle className="text-2xl  leading-none font-bold flex items-center gap-y-2 gap-x-2">
+                    {company.name}
+                    <Badge
+                      variant="outline"
+                      className="text-muted-foreground ml-1"
+                    >
+                      {company.type}
+                    </Badge>
+                    {company.verified ? <VerifiedBadge /> : <UnVerifiedBadge />}
+                  </CardTitle>
+                  <CardDescription className="mt-1 ml-[.125rem]">
+                    {company.details}
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <div className="space-y-4">
                 <InfoRow
                   icon={<MapPin size={15} />}
@@ -211,91 +262,8 @@ export default function CompanyDetails({
                 />
               </div>
             </CardContent>
-          </Card>
-
-          <Card className="shadow-none px-5">
-            <CardHeader>
-              <div className="flex items-center gap-x-3">
-                <CardTitle className="flex items-center gap-2 text-2xl">
-                  12가3456
-                </CardTitle>
-                <Badge variant="outline" className="text-muted-foreground">
-                  {`Vehicle`}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="space-y-4">
-                <InfoRow
-                  icon={
-                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
-                  }
-                  label="Vehicle Name"
-                  value={vehicleData.vehicle_name}
-                />
-                <InfoRow
-                  icon={
-                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
-                  }
-                  label="Brand"
-                  value={vehicleData.brand}
-                />
-                <InfoRow
-                  icon={
-                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
-                  }
-                  label="Model"
-                  value={vehicleData.model}
-                />
-              </div>
-              <div className="space-y-4">
-                <InfoRow
-                  icon={
-                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
-                  }
-                  label="Manufacture Year"
-                  value={vehicleData.manuf_year}
-                />
-                <InfoRow
-                  icon={
-                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
-                  }
-                  label="Fuel Type"
-                  value={vehicleData.fuel_type}
-                />
-                <InfoRow
-                  icon={
-                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
-                  }
-                  label="Gear Type"
-                  value={vehicleData.gear_type}
-                />
-              </div>
-              <div className="space-y-4">
-                <InfoRow
-                  icon={
-                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
-                  }
-                  label="Can Bitrate"
-                  value={vehicleData.can_bitrate}
-                />
-                <InfoRow
-                  icon={
-                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
-                  }
-                  label="Number of Tires"
-                  value={vehicleData.num_tire}
-                />
-                {/* <InfoRow
-                  icon={
-                    <Minus size={12} className="mt-[.125rem]" stroke="#000" />
-                  }
-                  label="Model"
-                  value={vehicleData.model}
-                /> */}
-              </div>
-            </CardContent>
-          </Card>
+          </Card> */}
+          <CompanyVehiclesContent companyId={companyId} />
         </div>
       </div>
     </div>

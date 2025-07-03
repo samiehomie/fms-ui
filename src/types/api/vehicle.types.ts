@@ -38,5 +38,17 @@ export interface VehiclesByCompany {
 
 export type VehiclesByCompanyResponse = PaginatedResponseWithKey<
   VehiclesByCompany,
-  'companies'
+  'vehicles'
 > & { company_id: number }
+
+export interface VehiclesPaginationParams {
+  page: number
+  limit: number
+}
+
+export interface VehicleApiTypes {
+  'GET /vehicles/company/id': {
+    request: {}
+    response: VehiclesByCompanyResponse
+  }
+}

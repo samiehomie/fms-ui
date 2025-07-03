@@ -117,21 +117,21 @@ export default function DataTree({
 
   return (
     <div className="flex-1 flex flex-col">
-      <div className="relative mb-4">
+      {/* <div className="relative mb-4">
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500 dark:text-slate-400" />
         <Input
           type="search"
           placeholder="Type a command or search..."
           className="pl-8 w-full bg-[#f8fafc]"
         />
-      </div>
+      </div> */}
       <Tree
         showLine
         defaultExpandAll
         treeData={treeData}
         className="bg-transparent"
       />
-      <CompanyDetailsPagination />
+      {/* <CompanyDetailsPagination /> */}
     </div>
   )
 }

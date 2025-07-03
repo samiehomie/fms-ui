@@ -20,10 +20,10 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
-import { DataTablePagination } from './data-table-pagination'
+import { DataTablePagination } from '../features/companies/data-table-pagination'
 import { Input } from '@/components/ui/input'
 import { CompaniesPaginationParams } from '@/types/api/company.types'
-import { AddCompanyForm } from './add-company-form'
+import { AddCompanyForm } from '../features/companies/add-company-form'
 import { Tag } from 'antd'
 import { Switch } from 'antd'
 
@@ -50,6 +50,7 @@ export function DataTable<TData, TValue>({
   })
   const [rowSelection, setRowSelection] = useState({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+
   const table = useReactTable({
     data,
     columns,
@@ -102,60 +103,8 @@ export function DataTable<TData, TValue>({
   //const selectedFilesCount = selectedFiles.length
 
   return (
-    <div className="flex flex-col gap-y-3">
-      <div className="flex items-center justify-between gap-x-4">
-        <div className="flex items-center gap-x-2 ">
-          <Input
-            placeholder="Search in company name, reg number, or email"
-            value={search}
-            onChange={(event) => {
-              //setPagination((old) => ({ ...old, search: event.target.value }))
-              setSearch(event.target.value)
-              // table.getColumn('name')?.setFilterValue(event.target.value)
-            }}
-            onKeyDown={handleKeyDown}
-            className="min-w-[400px]"
-          />
-          <Button variant={'outline'} onClick={handleSearch}>
-            Search
-          </Button>
-          <div className="ml-2">
-            {pagination.search && (
-              <Tag
-                color="processing"
-                className="ml-3"
-                bordered={false}
-                onClose={() => {
-                  setPagination((old) => ({
-                    ...old,
-                    search: '',
-                  }))
-                  setSearch('')
-                }}
-                closable={true}
-              >
-                {pagination.search}
-              </Tag>
-            )}
-          </div>
-        </div>
-        <div className="flex items-center gap-x-[.625rem] py-2 px-2 rounded-sm bg-slate-50/80  border border-slate-300/80 ">
-          <Switch
-            size={'default'}
-            checkedChildren="verified"
-            unCheckedChildren="unverified"
-            checked={pagination.verified}
-            onChange={() => {
-              setPagination((old) => ({
-                ...old,
-                verified: !old.verified,
-              }))
-            }}
-          />
-          <AddCompanyForm />
-        </div>
-      </div>
-
+    <div className="flex flex-col gap-y-3 ">
+    
       <div className="text-slate-900 ">
         <Table className="border-none">
           <TableHeader className="bg-slate-50  border border-slate-300">

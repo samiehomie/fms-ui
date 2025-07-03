@@ -2,8 +2,12 @@ export * from './auth.types'
 
 import { AuthApiTypes } from './auth.types'
 import { CompanyApiTypes } from './company.types'
+import { VehicleApiTypes } from './vehicle.types'
 
-export interface ApiTypes extends AuthApiTypes, CompanyApiTypes {}
+export interface ApiTypes
+  extends AuthApiTypes,
+    CompanyApiTypes,
+    VehicleApiTypes {}
 
 export type ApiEndpoint = keyof ApiTypes
 export type ApiRequestType<T extends ApiEndpoint> = ApiTypes[T]['request']

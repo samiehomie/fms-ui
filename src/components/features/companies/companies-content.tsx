@@ -1,11 +1,12 @@
 'use client'
-import { DataTable } from './data-table'
+import { DataTable } from '../../ui/data-table'
 import type { CompaniesPaginationParams } from '@/types/api/company.types'
 import { useState } from 'react'
 import { useCompaniesPaginated } from '@/lib/hooks/queries/useCompanies'
 import { columns } from '@/components/features/companies/columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import { logger } from '@/lib/utils'
+import DataTableHeader from './data-table-header'
 
 const CompaniesContent = () => {
   const [pageParams, setPageParams] = useState<CompaniesPaginationParams>({
@@ -30,13 +31,16 @@ const CompaniesContent = () => {
   }
 
   return (
-    <DataTable
-      columns={columns}
-      data={data.data.companies}
-      pagination={pageParams}
-      setPagination={setPageParams}
-      totalCount={data.data.pagination.total}
-    />
+    <div className="flex flex-col gap-y-3">
+      <DataTableHeader setPagination={setPageParams} pagination={pageParams} />
+      <DataTable
+        columns={columns}
+        data={data.data.companies}
+        pagination={pageParams}
+        setPagination={setPageParams}
+        totalCount={data.data.pagination.total}
+      />
+    </div>
   )
 }
 
