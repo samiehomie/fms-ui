@@ -1,17 +1,18 @@
 'use client'
 import { DataTable } from '@/components/ui/data-table'
-import type { VehiclesPaginationParams } from '@/types/api/vehicle.types'
+import type { VehiclesByCompanyIdPaginationParams } from '@/types/api/vehicle.types'
 import { useState } from 'react'
-import { useCompanyVehiclesPaginated } from '@/lib/hooks/queries/useVehicles'
+import { useCompanyVehiclesPaginated } from '@/lib/hooks/queries/useCompanies'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import { logger } from '@/lib/utils'
 
 const CompanyVehiclesContent = ({ companyId }: { companyId: number }) => {
-  const [pageParams, setPageParams] = useState<VehiclesPaginationParams>({
-    page: 1,
-    limit: 10,
-  })
+  const [pageParams, setPageParams] =
+    useState<VehiclesByCompanyIdPaginationParams>({
+      page: 1,
+      limit: 10,
+    })
 
   const { data, isLoading } = useCompanyVehiclesPaginated(companyId, pageParams)
 

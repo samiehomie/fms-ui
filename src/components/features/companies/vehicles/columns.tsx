@@ -20,9 +20,9 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { IconDotsVertical } from '@tabler/icons-react'
 import { logger } from '@/lib/utils'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
-import type { Vehicle } from '@/types/api/vehicle.types'
+import type { VehiclesByCompany } from '@/types/api/vehicle.types'
 
-export const columns: ColumnDef<Vehicle>[] = [
+export const columns: ColumnDef<VehiclesByCompany>[] = [
   {
     accessorKey: 'id',
     header: () => <div className="min-w-[45px] pl-2">{'ID'}</div>,

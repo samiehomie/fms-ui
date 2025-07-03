@@ -3,6 +3,8 @@ import { companiesApi } from '@/lib/api/company'
 import type { CompaniesPaginationParams } from '@/types/api/company.types'
 import { ApiResponseType, ApiRequestType } from '@/types/api'
 import { toast } from 'sonner'
+import type { VehiclesByCompanyIdPaginationParams } from '@/types/api/vehicle.types'
+import { vehiclesApi } from '@/lib/api/vehicle'
 
 type CreateCompanyResponse = ApiResponseType<'POST /companies'>
 type CreateCompanyRequest = ApiRequestType<'POST /companies'>
@@ -129,5 +131,18 @@ export function useVerifyCompany(id: number) {
         description: error.message,
       })
     },
+  })
+}
+
+
+export function useCompanyVehiclesPaginated(
+  companyId: number,
+  params: VehiclesByCompanyIdPaginationParams,
+) {
+  return useQuery({
+    queryKey: ['vehicles', params, companyId],
+    queryFn: () =>
+      vehiclesApi.getVehiclesByCompanyIdPaginated(params, companyId),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }

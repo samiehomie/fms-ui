@@ -4,14 +4,38 @@ import type { VehiclesPaginationParams } from '@/types/api/vehicle.types'
 import { ApiResponseType, ApiRequestType } from '@/types/api'
 import { toast } from 'sonner'
 
-export function useCompanyVehiclesPaginated(
-  companyId: number,
-  params: VehiclesPaginationParams,
-) {
+type CreateVehicleResponse = ApiResponseType<'POST /vehicles'>
+type CreateVehicleRequest = ApiRequestType<'POST /vehicles'>
+
+export function useVehiclesPaginated(params: VehiclesPaginationParams) {
   return useQuery({
-    queryKey: ['vehicles', params, companyId],
-    queryFn: () =>
-      vehiclesApi.getVehiclesByCompanyIdPaginated(params, companyId),
+    queryKey: ['vehicles', params],
+    queryFn: () => vehiclesApi.getVehiclesPaginated(params),
     staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
+export function useCreateVehicle() {
+  const queryClient = useQueryClient()
+  return useMutation<CreateVehicleResponse, Error, CreateVehicleRequest>({
+    mutationFn: async (newVehicle) => {
+      const { data } = await vehiclesApi.createVehicle(newVehicle)
+      return data
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['vehicles'],
+      })
+      toast.success('A new vehicle added', {
+        description: `${data.vehicle.vehicle_name}`,
+        position: 'bottom-center',
+      })
+    },
+    onError: (error) => {
+      toast.error('Adding a new vehicle failed.', {
+        position: 'bottom-center',
+        description: error.message,
+      })
+    },
   })
 }

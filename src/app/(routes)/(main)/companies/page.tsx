@@ -5,9 +5,10 @@ import {
   QueryClient,
 } from '@tanstack/react-query'
 import { companiesApi } from '@/lib/api/company'
+import { getQueryClient } from '@/lib/api/get-query-client'
 
 export default async function CompaniesPage() {
-  const queryClient = new QueryClient()
+  const queryClient = getQueryClient()
   await queryClient.prefetchQuery({
     queryKey: ['companies', { page: 1, limit: 10 }],
     queryFn: () => companiesApi.getCompaniesPaginated({ page: 1, limit: 10 }),

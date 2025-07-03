@@ -22,7 +22,7 @@ import {
 } from 'lucide-react'
 import DataTree from './data-tree'
 import { VerifiedBadge, UnVerifiedBadge } from '@/components/ui/custom-badges'
-import CompanyVehiclesContent from '@/components/features/vehicles/company-vehicles-content'
+import CompanyVehiclesContent from '@/components/features/companies/vehicles/company-vehicles-content'
 
 
 const vehicleData = {
