@@ -66,14 +66,14 @@ export function Header() {
         </Sheet>
       </div>
 
-      <div className="relative flex-1 ml-auto lg:ml-0">
+      {/* <div className="relative flex-1 ml-auto lg:ml-0">
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500 dark:text-slate-400" />
         <Input
           type="search"
           placeholder="Type a command or search..."
           className="w-full pl-8 md:w-[300px] lg:w-[320px] bg-[#f8fafc] dark:bg-slate-800"
         />
-      </div>
+      </div> */}
       {user ? (
         <div className="flex items-center gap-4 ml-auto">
           <Button variant="ghost" size="icon" className="rounded-full">

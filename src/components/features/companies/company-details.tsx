@@ -125,11 +125,13 @@ export default function CompanyDetails({
   const { company } = detail
 
   return (
-    <div className="min-h-screen">
-      <div className=" grid gap-6 lg:grid-cols-9">
-        <div className="lg:col-span-2">
+    <div className="flex-1 flex flex-col">
+      <div className="flex-1 grid gap-x-12 lg:grid-cols-10">
+        <div className="lg:col-span-3 h-full flex flex-col relative">
           <DataTree detail={detail} />
+          <div className='absolute bg-gray-200/90 w-[1px] h-[100%] -translate-y-1/2 top-1/2 right-[-23px]' />
         </div>
+       
         <div className="lg:col-span-7 space-y-5">
           <Card className="shadow-none px-5">
             <CardHeader>

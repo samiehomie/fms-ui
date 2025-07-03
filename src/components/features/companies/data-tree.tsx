@@ -5,8 +5,10 @@ import type { CompanyDetail } from '@/types/api/company.types'
 import { Tree } from 'antd'
 import type { TreeDataNode, TreeProps } from 'antd'
 import { Badge } from '@/components/ui/badge'
-import { UserIcon, Truck, UserCircle } from 'lucide-react'
+import { UserIcon, Truck, UserCircle, Search } from 'lucide-react'
 import { ApiResponseType } from '@/types/api'
+import { Input } from '@/components/ui/input'
+import CompanyDetailsPagination from './company-details-pagination'
 
 // Mock data as requested
 const companyData: CompanyDetail = {
@@ -114,13 +116,22 @@ export default function DataTree({
   ]
 
   return (
-    <div className="">
+    <div className="flex-1 flex flex-col">
+      <div className="relative mb-4">
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500 dark:text-slate-400" />
+        <Input
+          type="search"
+          placeholder="Type a command or search..."
+          className="pl-8 w-full bg-[#f8fafc]"
+        />
+      </div>
       <Tree
         showLine
         defaultExpandAll
         treeData={treeData}
         className="bg-transparent"
       />
+      <CompanyDetailsPagination />
     </div>
   )
 }
