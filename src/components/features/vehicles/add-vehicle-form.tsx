@@ -73,7 +73,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
       plate_number: '',
       brand: '',
       model: '',
-      manuf_year: 1930,
+      manuf_year: 2000,
       can_bitrate: '',
       fuel_type: '',
       gear_type: '',

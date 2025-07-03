@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getAuthData } from './lib/api/auth'
 
 const PUBLIC_ROUTES = ['/login', '/signup']
-const PROTECTED_ROUTES = ['/companies']
+const PROTECTED_ROUTES = ['/companies', '/vehicles']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
