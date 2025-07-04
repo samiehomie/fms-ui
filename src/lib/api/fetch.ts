@@ -47,12 +47,12 @@ export async function fetchJson<T = unknown>(
     // revalidate 설정 처리
     if (init?.revalidate !== undefined) {
       if (init.revalidate === false) {
-        fetchOptions.cache = 'no-store' // 캐싱 비활성화
+        fetchOptions.cache = 'no-store' // 캐싱 완전 비활성화
       } else {
         fetchOptions.next = { revalidate: init.revalidate }
       }
     } else {
-      fetchOptions.next = { revalidate: 0 } // 기본값 - 캐싱 비활성화
+      fetchOptions.next = { revalidate: 0 } // no-cache
     }
 
     const response = await fetch(input, fetchOptions)
