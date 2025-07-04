@@ -27,7 +27,7 @@ export const usersApi = {
               Cookie: cookie,
             },
           }
-        : undefined,
+        : { revalidate: false },
     )
 
     if (!response.success) {

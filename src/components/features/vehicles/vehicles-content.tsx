@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { useVehiclesPaginated } from '@/lib/hooks/queries/useVehicles'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
-import { logger } from '@/lib/utils'
 import { AddVehicleForm } from './add-vehicle-form'
 
 const VehiclesContent = () => {
@@ -29,7 +28,7 @@ const VehiclesContent = () => {
 
   return (
     <div className="col-span-3">
-      <div className='mb-3'>
+      <div className="mb-3">
         <AddVehicleForm />
       </div>
       <DataTable

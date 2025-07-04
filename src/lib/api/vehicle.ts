@@ -30,7 +30,7 @@ export const vehiclesApi = {
               Cookie: cookie,
             },
           }
-        : undefined,
+        : { revalidate: false },
     )
 
     if (!response.success) {
