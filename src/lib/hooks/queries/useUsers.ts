@@ -19,12 +19,12 @@ export function useCreateUser() {
   const queryClient = useQueryClient()
   return useMutation<CreateUserResponse, Error, CreateUserRequest>({
     mutationFn: async (newUser) => {
-      const { data } = await usersApi.createVehicle(newUser)
+      const { data } = await usersApi.createUser(newUser)
       return data
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ['vehicles'],
+        queryKey: ['users'],
       })
       toast.success('A new vehicle added', {
         description: `${data.message}`,

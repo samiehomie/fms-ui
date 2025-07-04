@@ -36,7 +36,7 @@ export const usersApi = {
 
     return response.data
   },
-  createVehicle: async (
+  createUser: async (
     user: ApiRequestType<'POST /users'>,
   ): Promise<ApiSuccessResponse<ApiResponseType<'POST /users'>>> => {
     const response = await fetchJson<

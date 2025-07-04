@@ -41,6 +41,7 @@ import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
 import { useCreateUser } from '@/lib/hooks/queries/useUsers'
 import { IconPlus } from '@tabler/icons-react'
+import { useCompaniesPaginated } from '@/lib/hooks/queries/useCompanies'
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -55,6 +56,12 @@ type UserFormData = z.infer<typeof userSchema>
 
 function UserForm({ onClose }: { onClose: () => void }) {
   const mutation = useCreateUser()
+  const { data: companiesData, isLoading: isLoadingCompanies } =
+    useCompaniesPaginated({
+      page: 1,
+      limit: 10000, // 모든 회사를 가져오기 위해 충분히 큰 수로 설정
+    })
+
   const form = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
     defaultValues: {
@@ -163,7 +170,7 @@ function UserForm({ onClose }: { onClose: () => void }) {
                     value={field.value?.toString()}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select role" />
                       </SelectTrigger>
                     </FormControl>
@@ -188,16 +195,33 @@ function UserForm({ onClose }: { onClose: () => void }) {
                   <Select
                     onValueChange={(value) => field.onChange(parseInt(value))}
                     value={field.value?.toString()}
+                    disabled={isLoadingCompanies}
                   >
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select company" />
+                      <SelectTrigger className="w-full">
+                        <SelectValue
+                          placeholder={
+                            isLoadingCompanies
+                              ? 'Loading companies...'
+                              : 'Select company'
+                          }
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="1">Company A</SelectItem>
-                      <SelectItem value="2">Company B</SelectItem>
-                      <SelectItem value="3">Company C</SelectItem>
+                      {companiesData?.data?.companies.map((company) => (
+                        <SelectItem
+                          key={company.id}
+                          value={company.id.toString()}
+                        >
+                          {company.name}
+                        </SelectItem>
+                      ))}
+                      {companiesData?.data?.companies.length === 0 && (
+                        <SelectItem value="" disabled>
+                          No companies available
+                        </SelectItem>
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />
