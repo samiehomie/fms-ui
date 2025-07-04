@@ -36,4 +36,23 @@ export const usersApi = {
 
     return response.data
   },
+  createVehicle: async (
+    user: ApiRequestType<'POST /users'>,
+  ): Promise<ApiSuccessResponse<ApiResponseType<'POST /users'>>> => {
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'POST /users'>>
+    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    })
+
+    if (!response.success) {
+      throw new Error('Failed to create user')
+    }
+
+    return response.data
+  },
 }

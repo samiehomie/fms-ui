@@ -128,10 +128,25 @@ export interface VehiclesCreateResponse {
   }
 }
 
+export interface VehiclesSearchPaginationParams {
+  query: string
+  page: number
+  limit: number
+  include_deleted: boolean
+}
+
+export type VehiclesSearchResponse = VehiclesResponse & {
+  search_query: string
+}
+
 export interface VehicleApiTypes {
   'GET /vehicles': {
     request: {}
     response: VehiclesResponse
+  }
+  'GET /vehicles/search': {
+    request: {}
+    response: VehiclesSearchResponse
   }
   'GET /vehicles/company/id': {
     request: {}

@@ -40,7 +40,6 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { ApiResponseType, ApiRequestType } from '@/types/api'
 import { useCreateCompany } from '@/lib/hooks/queries/useCompanies'
 
 import { IconPlus } from '@tabler/icons-react'

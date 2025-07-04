@@ -24,9 +24,28 @@ export interface UsersPaginationParams {
   limit: number
 }
 
+export interface UsersCreateRequest {
+  user: {
+    name: string
+    username: string
+    password: string
+    email: string
+    role_id: number
+    company_id: number
+  }
+}
+
+export interface UsersCreateResponse {
+  message: string
+}
+
 export interface UserApiTypes {
   'GET /users': {
     request: {}
     response: UsersResponse
+  }
+  'POST /users': {
+    request: UsersCreateRequest
+    response: UsersCreateResponse
   }
 }

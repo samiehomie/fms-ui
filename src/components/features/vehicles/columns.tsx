@@ -29,6 +29,18 @@ export const columns: ColumnDef<Vehicle>[] = [
     cell: ({ row }) => <div className="pl-2">{row.getValue('id')}</div>,
   },
   {
+    id: 'company',
+    header: 'Company',
+    cell: ({ row }) => {
+      const company = row.original.company_id
+      return <div>{company.name}</div>
+    },
+  },
+  {
+    accessorKey: 'vehicle_name',
+    header: 'Name',
+  },
+  {
     accessorKey: 'plate_number',
     header: 'Plate No.',
   },
@@ -57,6 +69,27 @@ export const columns: ColumnDef<Vehicle>[] = [
   {
     accessorKey: 'num_tire',
     header: 'Tires',
+  },
+  {
+    accessorKey: 'created_at',
+    header: ({ column }) => (
+      <Button
+        variant={'ghost'}
+        className="w-full"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        Created at
+        <ArrowUpDown />
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const createdAt = row.getValue('created_at') as string
+      return (
+        <div className="flex justify-center tracking-tight">
+          {formatDateTime(createdAt)}
+        </div>
+      )
+    },
   },
   {
     id: 'actions',

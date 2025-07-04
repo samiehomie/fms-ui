@@ -22,7 +22,6 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
   SelectContent,
@@ -73,7 +72,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
       plate_number: '',
       brand: '',
       model: '',
-      manuf_year: 2000,
+      manuf_year: 1900,
       can_bitrate: '',
       fuel_type: '',
       gear_type: '',
@@ -168,12 +167,12 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="2024"
-                      value={field.value || ''}
+                      placeholder="1900"
+                      value={field.value || 1900}
                       onChange={(e) => {
                         const value = e.target.value
                         if (value === '') {
-                          field.onChange(undefined)
+                          field.onChange(1900)
                         } else {
                           const numValue = parseInt(value)
                           if (!isNaN(numValue)) {
@@ -198,11 +197,11 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
                     <Input
                       type="number"
                       placeholder="4"
-                      value={field.value || ''}
+                      value={field.value || 4}
                       onChange={(e) => {
                         const value = e.target.value
                         if (value === '') {
-                          field.onChange(undefined)
+                          field.onChange(4)
                         } else {
                           const numValue = parseInt(value)
                           if (!isNaN(numValue)) {

@@ -31,15 +31,12 @@ export async function GET(request: NextRequest) {
             search,
           })
     try {
-      const response = await fetchJson<ApiResponseType<'GET /users'>>(
-        apiUrl,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
+      const response = await fetchJson<ApiResponseType<'GET /users'>>(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-      )
+      })
       if (!response.success) {
         return createErrorResponse(
           'INTERNAL_ERROR',
@@ -56,6 +53,39 @@ export async function GET(request: NextRequest) {
       return createErrorResponse(
         'INTERNAL_ERROR',
         'An unexpected error occurred while fetching companies',
+      )
+    }
+  })
+}
+
+export async function POST(request: NextRequest) {
+  return await withAuth(async (tokenData) => {
+    const { token } = tokenData
+    const apiUrl = buildURL(`/users`)
+    const requestBody = await request.json()
+    logger.log('post users', requestBody)
+    try {
+      const response = await fetchJson<ApiResponseType<'POST /users'>>(apiUrl, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      })
+      if (!response.success) {
+        return createErrorResponse(
+          'INTERNAL_ERROR',
+          'Failed to create user from external API',
+        )
+      }
+      return createSuccessResponse(response.data, 'User created successfully')
+    } catch (err) {
+      logger.error('Error creating user:', err)
+
+      return createErrorResponse(
+        'INTERNAL_ERROR',
+        'An unexpected error occurred while creating user',
       )
     }
   })

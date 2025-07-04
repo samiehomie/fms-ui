@@ -5,7 +5,10 @@ import {
   useSuspenseQuery,
 } from '@tanstack/react-query'
 import { vehiclesApi } from '@/lib/api/vehicle'
-import type { VehiclesPaginationParams } from '@/types/api/vehicle.types'
+import type {
+  VehiclesPaginationParams,
+  VehiclesSearchPaginationParams,
+} from '@/types/api/vehicle.types'
 import { ApiResponseType, ApiRequestType } from '@/types/api'
 import { toast } from 'sonner'
 
@@ -16,6 +19,17 @@ export function useVehiclesPaginated(params: VehiclesPaginationParams) {
   return useQuery({
     queryKey: ['vehicles', params],
     queryFn: () => vehiclesApi.getVehiclesPaginated(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
+// TODO: useVehiclesPaginated와 통합될 예정
+export function useVehiclesSearchPaginated(
+  params: VehiclesSearchPaginationParams,
+) {
+  return useQuery({
+    queryKey: ['vehicles', params],
+    queryFn: () => vehiclesApi.getVehiclesSearchPaginated(params),
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }

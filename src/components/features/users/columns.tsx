@@ -14,13 +14,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import { IconCircleCheckFilled } from '@tabler/icons-react'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
-import { IconDotsVertical } from '@tabler/icons-react'
 import { logger } from '@/lib/utils'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
 import type { User } from '@/types/api/user.types'
+import { IconCircleCheckFilled, IconDotsVertical } from '@tabler/icons-react'
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -33,8 +32,20 @@ export const columns: ColumnDef<User>[] = [
     header: 'Name',
   },
   {
+    id: 'company',
+    header: 'Company',
+    cell: ({ row }) => {
+      const company = row.original.company_id
+      return <div>{company.name}</div>
+    },
+  },
+  {
     accessorKey: 'email',
     header: 'Email',
+  },
+  {
+    accessorKey: 'username',
+    header: 'Username',
   },
   {
     id: 'role',
@@ -42,6 +53,120 @@ export const columns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       const role = row.original.role_id
       return <div className="">{role.name}</div>
+    },
+  },
+  {
+    accessorKey: 'verified',
+    header: () => <div className="text-center">Verified</div>,
+    //header: () => <div className="text-center">Verified</div>,
+    cell: ({ row }) => {
+      const isVerified = row.getValue('verified')
+      return (
+        <div className="flex justify-center">
+          {isVerified ? (
+            <Badge variant="outline" className="text-muted-foreground px-1.5">
+              <IconCircleCheckFilled className="fill-green-500" />
+              {`Verified`}
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="text-muted-foreground px-1.5">
+              <CircleSlash className="stroke-gray-500  " />
+              {`Not yet`}
+            </Badge>
+          )}
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'created_at',
+    header: ({ column }) => (
+      <Button
+        variant={'ghost'}
+        className="w-full"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        Created at
+        <ArrowUpDown />
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const createdAt = row.getValue('created_at') as string
+      return (
+        <div className="flex justify-center tracking-tight">
+          {formatDateTime(createdAt)}
+        </div>
+      )
+    },
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      const router = useRouter()
+      const companyId = row.original.id
+
+      const [open, setOpen] = useState(false)
+
+      // const handleVerifyAction = async () => {
+      //   try {
+      //     await mutationVerify.mutateAsync({ verified: !verified })
+      //     setOpen(false) // 메뉴 닫기
+      //   } catch (error) {
+      //     logger.error('Verify action failed:', error)
+      //   }
+      // }
+
+      // const handleDeleteAction = async () => {
+      //   try {
+      //     await mutationDelete.mutateAsync(companyId)
+      //     setOpen(false) // 메뉴 닫기
+      //   } catch (error) {
+      //     logger.error('Delete action failed:', error)
+      //   }
+      // }
+
+      return (
+        <DropdownMenu open={open} onOpenChange={setOpen}>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
+              size="icon"
+            >
+              <IconDotsVertical />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-32">
+            {/* <ModifyCompanyForm id={companyId} onClose={() => setOpen(false)} /> */}
+            {/* <ConfirmDialog
+              onClose={() => setOpen(false)}
+              handleClick={handleVerifyAction}
+            >
+              <div className="text-sm p-2 hover:bg-gray-100/90 rounded-sm">
+                {verified ? 'Unverify' : 'Verify'}
+              </div>
+            </ConfirmDialog> */}
+
+            <DropdownMenuItem
+              onClick={() => {
+                router.push(`/companies/${companyId}`)
+              }}
+            >
+              View Details
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            {/* <ConfirmDialog
+              onClose={() => setOpen(false)}
+              handleClick={handleDeleteAction}
+            >
+              <div className="text-sm p-2 text-red-500 hover:bg-gray-100/90 rounded-sm">
+                Delete
+              </div>
+            </ConfirmDialog> */}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
     },
   },
 ]

@@ -5,14 +5,13 @@ import { useState } from 'react'
 import { useUsersPaginated } from '@/lib/hooks/queries/useUsers'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
-import { logger } from '@/lib/utils'
+import DataTableHeader from './data-table-header'
 
 const UsersContent = () => {
-  const [pageParams, setPageParams] =
-    useState<UsersPaginationParams>({
-      page: 1,
-      limit: 10,
-    })
+  const [pageParams, setPageParams] = useState<UsersPaginationParams>({
+    page: 1,
+    limit: 10,
+  })
 
   const { data, isLoading } = useUsersPaginated(pageParams)
 
@@ -28,6 +27,12 @@ const UsersContent = () => {
 
   return (
     <div className="col-span-3">
+      <div className="mb-3">
+        <DataTableHeader
+          setPagination={setPageParams}
+          pagination={pageParams}
+        />
+      </div>
       <DataTable
         columns={columns}
         data={data.data.users}

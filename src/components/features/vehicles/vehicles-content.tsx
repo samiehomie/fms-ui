@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useVehiclesPaginated } from '@/lib/hooks/queries/useVehicles'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
-import { AddVehicleForm } from './add-vehicle-form'
+import DataTableHeader from './data-table-header'
 
 const VehiclesContent = () => {
   const [pageParams, setPageParams] = useState<VehiclesPaginationParams>({
@@ -29,7 +29,10 @@ const VehiclesContent = () => {
   return (
     <div className="col-span-3">
       <div className="mb-3">
-        <AddVehicleForm />
+        <DataTableHeader
+          setPagination={setPageParams}
+          pagination={pageParams}
+        />
       </div>
       <DataTable
         columns={columns}

@@ -16,10 +16,9 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ModifyCompanyForm } from './modify-company-form'
 
-import { IconCircleCheckFilled } from '@tabler/icons-react'
+import { IconCircleCheckFilled, IconDotsVertical } from '@tabler/icons-react'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
-import { IconDotsVertical } from '@tabler/icons-react'
 import {
   useDeleteCompany,
   useVerifyCompany,

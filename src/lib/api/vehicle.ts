@@ -4,6 +4,7 @@ import { ApiSuccessResponse } from '@/types/api/route.types'
 import type {
   VehiclesPaginationParams,
   VehiclesByCompanyIdPaginationParams,
+  VehiclesSearchPaginationParams,
 } from '@/types/api/vehicle.types'
 import { logger } from '../utils'
 
@@ -24,6 +25,38 @@ export const vehiclesApi = {
       ApiSuccessResponse<ApiResponseType<'GET /vehicles'>>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles?${searchParams}`,
+      cookie
+        ? {
+            headers: {
+              Cookie: cookie,
+            },
+          }
+        : { revalidate: false },
+    )
+
+    if (!response.success) {
+      throw new Error('Failed to fetch vehicles')
+    }
+
+    return response.data
+  },
+  getVehiclesSearchPaginated: async (
+    params: VehiclesSearchPaginationParams,
+    cookie?: string,
+  ): Promise<ApiSuccessResponse<ApiResponseType<'GET /vehicles/search'>>> => {
+    const searchParams =
+      params &&
+      new URLSearchParams({
+        query: params.query.toString(),
+        page: params.page.toString(),
+        limit: params.limit.toString(),
+        include_deleted: `${params.include_deleted ?? false}`,
+      })
+
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'GET /vehicles/search'>>
+    >(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/search?${searchParams}`,
       cookie
         ? {
             headers: {
