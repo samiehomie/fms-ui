@@ -35,6 +35,20 @@ export interface UsersCreateRequest {
   }
 }
 
+export interface UsersVerifyRequest {
+  username: string
+}
+
+export interface UsersVerifyResponse {
+  message: string
+  user: {
+    id: number
+    username: string
+    name: string
+    verified: boolean
+  }
+}
+
 export interface UsersCreateResponse {
   message: string
 }
@@ -47,5 +61,9 @@ export interface UserApiTypes {
   'POST /users': {
     request: UsersCreateRequest
     response: UsersCreateResponse
+  }
+  'POST /users/verify': {
+    request: UsersVerifyRequest
+    response: UsersVerifyResponse
   }
 }

@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-
+import { useVerifyUser } from '@/lib/hooks/queries/useUsers'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { logger } from '@/lib/utils'
@@ -103,18 +103,21 @@ export const columns: ColumnDef<User>[] = [
     id: 'actions',
     cell: ({ row }) => {
       const router = useRouter()
-      const companyId = row.original.id
+      const username = row.original.username
+      const verified = row.original.verified
+      //const mutationDelete = useDeleteCompany()
+      const mutationVerify = useVerifyUser()
 
       const [open, setOpen] = useState(false)
 
-      // const handleVerifyAction = async () => {
-      //   try {
-      //     await mutationVerify.mutateAsync({ verified: !verified })
-      //     setOpen(false) // 메뉴 닫기
-      //   } catch (error) {
-      //     logger.error('Verify action failed:', error)
-      //   }
-      // }
+      const handleVerifyAction = async () => {
+        try {
+          await mutationVerify.mutateAsync({ username })
+          setOpen(false) // 메뉴 닫기
+        } catch (error) {
+          logger.error('Verify action failed:', error)
+        }
+      }
 
       // const handleDeleteAction = async () => {
       //   try {
@@ -139,23 +142,23 @@ export const columns: ColumnDef<User>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-32">
             {/* <ModifyCompanyForm id={companyId} onClose={() => setOpen(false)} /> */}
-            {/* <ConfirmDialog
+            <ConfirmDialog
               onClose={() => setOpen(false)}
               handleClick={handleVerifyAction}
             >
               <div className="text-sm p-2 hover:bg-gray-100/90 rounded-sm">
                 {verified ? 'Unverify' : 'Verify'}
               </div>
-            </ConfirmDialog> */}
+            </ConfirmDialog>
 
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               onClick={() => {
                 router.push(`/companies/${companyId}`)
               }}
             >
               View Details
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
+            </DropdownMenuItem> */}
+            {/* <DropdownMenuSeparator /> */}
             {/* <ConfirmDialog
               onClose={() => setOpen(false)}
               handleClick={handleDeleteAction}

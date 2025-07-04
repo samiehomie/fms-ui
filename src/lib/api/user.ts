@@ -55,4 +55,22 @@ export const usersApi = {
 
     return response.data
   },
+
+  verifyUser: async (verified: ApiRequestType<'POST /users/verify'>) => {
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'POST /users/verify'>>
+    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/users/verify`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(verified),
+    })
+
+    if (!response.success) {
+      throw new Error('Failed to verify user')
+    }
+
+    return response.data
+  },
 }
