@@ -1,10 +1,17 @@
-"use client"
+'use client'
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
-import type { TripSession } from "./types"
-import { Car, Clock, MapPin, AlertTriangle } from "lucide-react"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
+import type { TripSession } from './types'
+import { Car, Clock, MapPin, AlertTriangle } from 'lucide-react'
 
 interface TripHistoryTableProps {
   sessions: TripSession[]
@@ -47,20 +54,35 @@ export function TripHistoryTable({
               onClick={() => onRowClick(session.id)}
               onMouseEnter={() => onRowHover(session.id)}
               data-selected={selectedIds.has(session.id)}
-              className={cn("cursor-pointer transition-colors", "data-[selected=true]:bg-muted/80 hover:bg-muted/50")}
+              className={cn(
+                'group cursor-pointer transition-colors hover:bg-inherit',
+                'hover:shadow-[3px_3px_15px_0px_rgba(12,140,251,0.3)_inset,-3px_-3px_15px_0px_rgba(12,140,251,0.3)_inset]',
+                selectedIds.has(session.id) && 'bg-muted/80 hover:bg-muted/80 ', // 선택된 상태에서 hover 시 더 진한 배경
+              )}
             >
-              <TableCell className="font-medium">
-                <div className="flex items-center">
-                  <Car className="h-4 w-4 mr-2 text-muted-foreground" />
+              <TableCell className="font-medium relative">
+                <div
+                  className={cn(
+                    'absolute top-0 bottom-0 -left-1 w-4 transition-all duration-200',
+                    selectedIds.has(session.id)
+                      ? 'bg-[#005eae]'
+                      : 'bg-transparent',
+                  )}
+                />
+                <div className="flex items-center pl-6">
                   <div>
                     <div>{session.startLocation}</div>
-                    <div className="text-muted-foreground text-xs">to {session.endLocation}</div>
+                    <div className="text-muted-foreground text-xs">
+                      to {session.endLocation}
+                    </div>
                   </div>
                 </div>
               </TableCell>
               <TableCell>
                 <div>Driving: {session.driveTime} min</div>
-                <div className="text-muted-foreground text-xs">Idle: {session.idleTime} min</div>
+                <div className="text-muted-foreground text-xs">
+                  Idle: {session.idleTime} min
+                </div>
               </TableCell>
               <TableCell>
                 <div className="flex flex-wrap gap-1">

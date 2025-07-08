@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment} from 'react'
+import { Fragment } from 'react'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css'
 import 'leaflet-defaulticon-compatibility'
@@ -66,7 +66,7 @@ export default function TripMap({ sessions, hoveredId }: TripMapProps) {
   return (
     <MapContainer
       center={[37.5665, 126.978]} // Default center (Seoul)
-      zoom={10}
+      zoom={8}
       scrollWheelZoom={true}
       className="h-full w-full"
     >

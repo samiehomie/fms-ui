@@ -52,7 +52,7 @@ export default function TripHistoryPage() {
     <div className="h-screen w-full bg-background text-foreground">
       {isMapVisible ? (
         <ResizablePanelGroup direction="horizontal" className="h-full w-full">
-          <ResizablePanel defaultSize={50} minSize={30}>
+          <ResizablePanel defaultSize={50} minSize={40} maxSize={60}>
             <div className="h-full overflow-y-auto p-4">
               <TripHistoryTable
                 sessions={sessions}
