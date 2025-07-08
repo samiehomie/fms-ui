@@ -63,7 +63,7 @@ export default function TripHistoryPage() {
               />
             </div>
           </ResizablePanel>
-          <ResizableHandle withHandle />
+          <ResizableHandle withHandle className="z-[999]" />
           <ResizablePanel defaultSize={50} minSize={30}>
             <TripMap sessions={selectedSessions} hoveredId={hoveredId} />
           </ResizablePanel>

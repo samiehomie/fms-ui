@@ -80,7 +80,7 @@ export default function TripMap({ sessions, hoveredId }: TripMapProps) {
           key={session.id}
           positions={session.path as LatLngExpression[]}
           pathOptions={{
-            color: hoveredId === session.id ? 'red' : 'blue',
+            color: 'blue',
             weight: 5,
           }}
         />
