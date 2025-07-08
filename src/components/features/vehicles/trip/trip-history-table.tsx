@@ -32,7 +32,7 @@ export function TripHistoryTable({
     <div onMouseLeave={onMouseLeave}>
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className='hover:bg-inherit'>
             <TableHead className="w-[40%] pl-6">
               <MapPin className="inline-block mr-2 h-4 w-4" />
               Route
@@ -56,8 +56,8 @@ export function TripHistoryTable({
               data-selected={selectedIds.has(session.id)}
               className={cn(
                 'group cursor-pointer transition-colors hover:bg-inherit',
-                'hover:shadow-[3px_3px_15px_0px_rgba(12,140,251,0.3)_inset,-3px_-3px_15px_0px_rgba(12,140,251,0.3)_inset]',
-                selectedIds.has(session.id) && 'bg-muted/80 hover:bg-muted/80 ', // 선택된 상태에서 hover 시 더 진한 배경
+                'hover:bg-slate-100/50',
+                selectedIds.has(session.id) && 'bg-slate-100/50 hover:bg-slate-200/70 ', // 선택된 상태에서 hover 시 더 진한 배경
               )}
             >
               <TableCell className="font-medium relative">
