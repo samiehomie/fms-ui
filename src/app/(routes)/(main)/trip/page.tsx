@@ -62,9 +62,9 @@ export default function TripHistoryPage() {
     selectedIds.size > 0 && selectedIds.size === sessions.length
 
   return (
-    <div className="h-screen w-full bg-background text-foreground flex flex-col">
+    <div className="flex-1 w-full bg-background text-foreground flex flex-col">
       <header className="flex items-center justify-between p-4 border-b shrink-0">
-        <h1 className="text-xl font-bold sm:text-2xl">Trip History</h1>
+        <h1 className="text-xl font-bold sm:text-2xl">Trips History</h1>
         <DateRangePicker />
       </header>
       <main className="flex-grow overflow-hidden flex flex-col">
