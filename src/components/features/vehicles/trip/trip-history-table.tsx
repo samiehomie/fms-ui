@@ -33,7 +33,7 @@ export function TripHistoryTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[40%]">
+            <TableHead className="w-[40%] pl-6">
               <MapPin className="inline-block mr-2 h-4 w-4" />
               Route
             </TableHead>

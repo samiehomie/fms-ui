@@ -8,6 +8,7 @@ export const tripData: TripSession[] = [
     endLocation: '경기도 성남시 분당구',
     driveTime: 45,
     idleTime: 5,
+    distance: 25,
     events: ['과속', '급정거'],
     path: [
       [37.4979, 127.0276],
@@ -21,6 +22,7 @@ export const tripData: TripSession[] = [
     endLocation: '인천국제공항',
     driveTime: 90,
     idleTime: 15,
+    distance: 70,
     events: ['장시간 공회전'],
     path: [
       [37.4449, 127.1389],
@@ -35,6 +37,7 @@ export const tripData: TripSession[] = [
     endLocation: '경기도 파주시',
     driveTime: 60,
     idleTime: 10,
+    distance: 40,
     events: ['지오펜스 진입'],
     path: [
       [37.5663, 126.9014],
@@ -49,6 +52,7 @@ export const tripData: TripSession[] = [
     endLocation: '충청남도 천안시',
     driveTime: 75,
     idleTime: 8,
+    distance: 60,
     events: ['급가속'],
     path: [
       [37.2636, 127.0286],
@@ -63,6 +67,7 @@ export const tripData: TripSession[] = [
     endLocation: '경기도 가평군',
     driveTime: 80,
     idleTime: 20,
+    distance: 65,
     events: ['과속', '장시간 공회전'],
     path: [
       [37.572, 126.979],
@@ -77,6 +82,7 @@ export const tripData: TripSession[] = [
     endLocation: '울산시 남구',
     driveTime: 55,
     idleTime: 7,
+    distance: 50,
     events: ['급정거'],
     path: [
       [35.163, 129.16],
@@ -90,6 +96,7 @@ export const tripData: TripSession[] = [
     endLocation: '경상북도 구미시',
     driveTime: 50,
     idleTime: 5,
+    distance: 45,
     events: ['과속'],
     path: [
       [35.8714, 128.6014],
