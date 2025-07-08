@@ -12,6 +12,7 @@ import {
   Marker,
   Popup,
   useMap,
+  Tooltip,
 } from 'react-leaflet'
 import type { LatLngExpression } from 'leaflet'
 import L from 'leaflet'
@@ -50,10 +51,22 @@ const MapUpdater = ({
   return null
 }
 
+const createCircleIcon = (color: string) => {
+  return L.divIcon({
+    html: `<span class="flex h-[1.125rem] w-[1.125rem] rounded-full border-2 border-white ${color} shadow-md"></span>`,
+    className: 'bg-transparent border-transparent',
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
+  })
+}
+
 export default function TripMap({ sessions, hoveredId }: TripMapProps) {
   const sessionsToDisplay = hoveredId
     ? sessions.filter((s) => s.id === hoveredId)
     : sessions
+
+  const startIcon = createCircleIcon('bg-[#005EAE]')
+  const endIcon = createCircleIcon('bg-[#a5abbd]')
 
   if (sessions.length === 0) {
     return (
@@ -80,7 +93,7 @@ export default function TripMap({ sessions, hoveredId }: TripMapProps) {
           key={session.id}
           positions={session.path as LatLngExpression[]}
           pathOptions={{
-            color: 'blue',
+            color: '#005EAE',
             weight: 5,
           }}
         />
@@ -89,16 +102,38 @@ export default function TripMap({ sessions, hoveredId }: TripMapProps) {
       {sessionsToDisplay.map((session, index) => (
         <Fragment key={index}>
           <Marker
-            key={`start-${session.id}`}
             position={session.path[0] as LatLngExpression}
+            icon={startIcon}
+            eventHandlers={{
+              mouseover: (e) => e.target.openPopup(),
+              mouseout: (e) => e.target.closePopup(),
+            }}
           >
-            <Popup>Start: {session.startLocation}</Popup>
+            <Popup>
+              <div className="font-semibold">Start</div>
+              {session.startLocation}
+            </Popup>
+            <Tooltip
+              permanent
+              direction="right"
+              offset={[10, 0]}
+              className="trip-label"
+            >
+              {session.id.replace('trip-', 'Trip #')}
+            </Tooltip>
           </Marker>
           <Marker
-            key={`end-${session.id}`}
             position={session.path[session.path.length - 1] as LatLngExpression}
+            icon={endIcon}
+            eventHandlers={{
+              mouseover: (e) => e.target.openPopup(),
+              mouseout: (e) => e.target.closePopup(),
+            }}
           >
-            <Popup>End: {session.endLocation}</Popup>
+            <Popup>
+              <div className="font-semibold">End</div>
+              {session.endLocation}
+            </Popup>
           </Marker>
         </Fragment>
       ))}

@@ -57,7 +57,7 @@ export function TripOverview({
   }, [sessions])
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-2 border-b bg-[#3c5063] rounded-[4px]">
+    <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-2 border-b bg-[#414656] rounded-[4px]">
       <div className="flex items-center gap-2">
         <Car className="h-5 w-5 text-primary" stroke="#fff" />
         <span className="font-semibold text-white text-sm ">{vehicleName}</span>

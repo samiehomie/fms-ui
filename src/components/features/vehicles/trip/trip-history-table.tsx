@@ -65,7 +65,7 @@ export function TripHistoryTable({
                   className={cn(
                     'absolute top-0 bottom-0 -left-1 w-4 transition-all duration-200',
                     selectedIds.has(session.id)
-                      ? 'bg-[#005eae]'
+                      ? 'bg-[#0055a3]'
                       : 'bg-transparent',
                   )}
                 />
