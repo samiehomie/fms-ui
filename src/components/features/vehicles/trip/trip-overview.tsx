@@ -68,7 +68,12 @@ export function TripOverview({
         <StatCard icon={ParkingCircle} label="Idle" value={stats.idleTime} />
         <StatCard icon={Route} label="Distance" value={stats.distance} />
       </div>
-      <Button variant="outline" onClick={onToggleSelectAll} size={'sm'} className='text-sm'>
+      <Button
+        variant="outline"
+        onClick={onToggleSelectAll}
+        size={'sm'}
+        className="text-sm"
+      >
         {areAllSelected ? 'Hide All Trips' : 'Show All Trips'}
       </Button>
     </div>
