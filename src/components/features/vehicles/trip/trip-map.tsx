@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css'
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css'
 import 'leaflet-defaulticon-compatibility'
 
+import MarkerClusterGroup from 'react-leaflet-markercluster'
 import {
   MapContainer,
   TileLayer,
@@ -14,7 +15,7 @@ import {
   useMap,
   Tooltip,
 } from 'react-leaflet'
-import type { LatLngExpression } from 'leaflet'
+import type { LatLngExpression, Marker as LeafletMarker } from 'leaflet'
 import L from 'leaflet'
 import { useEffect, useRef } from 'react'
 import type { TripSession } from './types'
@@ -49,6 +50,26 @@ const MapUpdater = ({
   }, [sessionsToDisplay, map])
 
   return null
+}
+
+const createClusterCustomIcon = (cluster: any) => {
+  const childMarkers = cluster.getAllChildMarkers() as (LeafletMarker & {
+    options: { tripId: string }
+  })[]
+  const tripNumbers = childMarkers.map((marker) =>
+    marker.options.tripId.replace('trip-', ''),
+  )
+
+  let label = `Trips #${tripNumbers.slice(0, 2).join(', ')}`
+  if (tripNumbers.length > 2) {
+    label += `, ... (+${tripNumbers.length - 2})`
+  }
+
+  const size = 30 + tripNumbers.length * 2
+  return L.divIcon({
+    html: `<div class="trip-cluster-label">${label}</div>`,
+    iconSize: [size, size],
+  })
 }
 
 const createCircleIcon = (color: string) => {
@@ -89,39 +110,14 @@ export default function TripMap({ sessions, hoveredId }: TripMapProps) {
       />
 
       {sessionsToDisplay.map((session, index) => (
-        <Polyline
-          key={session.id}
-          positions={session.path as LatLngExpression[]}
-          pathOptions={{
-            color: '#005EAE',
-            weight: 5,
-          }}
-        />
-      ))}
-
-      {sessionsToDisplay.map((session, index) => (
-        <Fragment key={index}>
-          <Marker
-            position={session.path[0] as LatLngExpression}
-            icon={startIcon}
-            eventHandlers={{
-              mouseover: (e) => e.target.openPopup(),
-              mouseout: (e) => e.target.closePopup(),
+        <Fragment key={`path-and-end-${session.id}}`}>
+          <Polyline
+            positions={session.path as LatLngExpression[]}
+            pathOptions={{
+              color: '#005EAE',
+              weight: 5,
             }}
-          >
-            <Popup>
-              <div className="font-semibold">Start</div>
-              {session.startLocation}
-            </Popup>
-            <Tooltip
-              permanent
-              direction="right"
-              offset={[10, 0]}
-              className="trip-label"
-            >
-              {session.id.replace('trip-', 'Trip #')}
-            </Tooltip>
-          </Marker>
+          />
           <Marker
             position={session.path[session.path.length - 1] as LatLngExpression}
             icon={endIcon}
@@ -137,7 +133,36 @@ export default function TripMap({ sessions, hoveredId }: TripMapProps) {
           </Marker>
         </Fragment>
       ))}
-
+      <MarkerClusterGroup
+        iconCreateFunction={createClusterCustomIcon}
+        showCoverageOnHover={false}
+      >
+        {sessionsToDisplay.map((session, index) => (
+          <Marker
+            key={`start-${session.id}`}
+            tripId={session.id}
+            position={session.path[0] as LatLngExpression}
+            icon={startIcon}
+            eventHandlers={{
+              mouseover: (e) => e.target.openPopup(),
+              mouseout: (e) => e.target.closePopup(),
+            }}
+          >
+            <Popup>
+              <div className="font-semibold">Start</div>
+              {session.startLocation}
+            </Popup>
+            <Tooltip
+              permanent
+              direction="right"
+              offset={[12, -5]}
+              className="trip-label"
+            >
+              {session.id.replace('trip-', 'Trip #')}
+            </Tooltip>
+          </Marker>
+        ))}
+      </MarkerClusterGroup>
       <MapUpdater sessionsToDisplay={sessionsToDisplay} />
     </MapContainer>
   )

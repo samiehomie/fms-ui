@@ -131,3 +131,39 @@
     @apply bg-background text-foreground;
   }
 }
+
+.trip-label {
+  background: #424656 !important;
+  border: none !important;
+  border-radius: 5px !important;
+  color: white !important;
+  font-weight: 500 !important;
+  font-size: 11px !important;
+  padding: 3px 10px !important;
+  box-shadow: 0 2px 8px rgba(0, 94, 174, 0.3) !important;
+}
+
+.trip-label::before {
+  border-right-color: #424656 !important;
+}
+
+.trip-cluster-label {
+  background: #424656 !important;
+  border: none !important;
+  border-radius: 5px !important;
+  color: white !important;
+  font-weight: 500 !important;
+  font-size: 11px !important;
+  padding: 3px 10px !important;
+  box-shadow: 0 2px 8px rgba(0, 94, 174, 0.3) !important;
+  width: 90px !important;
+}
+
+.trip-cluster-label::before {
+  border-right-color: #424656 !important;
+}
+
+.leaflet-div-icon {
+  background: none !important;
+  border: none !important;
+}

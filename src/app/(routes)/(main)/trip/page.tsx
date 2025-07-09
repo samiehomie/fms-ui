@@ -64,7 +64,9 @@ export default function TripHistoryPage() {
   return (
     <div className="flex-1 w-full bg-background text-foreground flex flex-col">
       <header className="flex items-center justify-between mb-8  shrink-0">
-        <h1 className="text-xl font-bold sm:text-4xl tracking-tight">Trips History</h1>
+        <h1 className="text-xl font-bold sm:text-4xl tracking-tight">
+          Trips History
+        </h1>
         <DateRangePicker />
       </header>
       <main className="flex-grow overflow-hidden flex flex-col">
@@ -81,7 +83,7 @@ export default function TripHistoryPage() {
               className="h-full w-full"
             >
               <ResizablePanel defaultSize={50} minSize={40} maxSize={60}>
-                <div className="h-full overflow-y-auto p-4">
+                <div className="h-full overflow-y-auto pl-1 pr-4 pt-4 pb-4">
                   <TripHistoryTable
                     sessions={sessions}
                     selectedIds={selectedIds}
@@ -97,7 +99,7 @@ export default function TripHistoryPage() {
               </ResizablePanel>
             </ResizablePanelGroup>
           ) : (
-            <div className="h-full overflow-y-auto p-4">
+            <div className="h-full overflow-y-auto pl-1 pr-4 pt-4 pb-4">
               <TripHistoryTable
                 sessions={sessions}
                 selectedIds={selectedIds}
