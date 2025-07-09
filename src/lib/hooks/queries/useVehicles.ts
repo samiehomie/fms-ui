@@ -8,6 +8,8 @@ import { vehiclesApi } from '@/lib/api/vehicle'
 import type {
   VehiclesPaginationParams,
   VehiclesSearchPaginationParams,
+  VehicleTripsPaginationParams,
+  VehicleTripsParams,
 } from '@/types/api/vehicle.types'
 import { ApiResponseType, ApiRequestType } from '@/types/api'
 import { toast } from 'sonner'
@@ -56,5 +58,13 @@ export function useCreateVehicle() {
         description: error.message,
       })
     },
+  })
+}
+
+export function useVehicleTripsPaginated(params: VehicleTripsParams) {
+  return useQuery({
+    queryKey: ['trips', params],
+    queryFn: () => vehiclesApi.getVehicleTripsByVehicleIdPaginated(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }

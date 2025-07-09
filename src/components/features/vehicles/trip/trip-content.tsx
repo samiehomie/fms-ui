@@ -13,11 +13,8 @@ import type { TripSession } from '@/components/features/vehicles/trip/types'
 import { DateRangePicker } from '@/components/ui/data-range-picker'
 import { TripOverview } from '@/components/features/vehicles/trip/trip-overview'
 import { useVehicleTripsPaginated } from '@/lib/hooks/queries/useVehicles'
-import type {
-  VehicleTripsParams,
-  VehicleTripsPaginationParams,
-} from '@/types/api/vehicle.types'
-import { logger } from '@/lib/utils'
+import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
+import { Skeleton } from '@/components/ui/skeleton'
 
 // react-leaflet은 클라이언트 측에서만 렌더링되어야 하므로 dynamic import를 사용합니다.
 const TripMap = dynamic(
@@ -32,13 +29,7 @@ const TripMap = dynamic(
   },
 )
 
-export default function TripHistoryPage() {
-  const { data } = useVehicleTripsPaginated({
-    page: 1,
-    limit: 10,
-    status: 'completed',
-    id: 1,
-  })
+export default function TripContent({ vehicleId }: { vehicleId: number }) {
   const [sessions] = useState<TripSession[]>(tripData)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [hoveredId, setHoveredId] = useState<string | null>(null)
@@ -46,6 +37,11 @@ export default function TripHistoryPage() {
     page: 1,
     limit: 10,
     status: 'completed',
+  })
+
+  const { data, isLoading } = useVehicleTripsPaginated({
+    ...pageParams,
+    id: vehicleId,
   })
 
   const handleRowClick = (id: string) => {
@@ -78,12 +74,19 @@ export default function TripHistoryPage() {
   const areAllSelected =
     selectedIds.size > 0 && selectedIds.size === sessions.length
 
-
-  logger.log('trip data', data)
+  if (isLoading || !data) {
+    return (
+      <div className="col-span-3 flex flex-col gap-y-2">
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+      </div>
+    )
+  }
 
   return (
     <div className="flex-1 w-full bg-background text-foreground flex flex-col">
-      {data && JSON.stringify(data, null, 2)}
+      {JSON.stringify(data, null, 2)}
       <header className="flex items-center justify-between mb-8  shrink-0">
         <h1 className="text-xl font-bold sm:text-4xl tracking-tight">
           Trips History

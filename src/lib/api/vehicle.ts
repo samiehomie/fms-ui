@@ -5,6 +5,7 @@ import type {
   VehiclesPaginationParams,
   VehiclesByCompanyIdPaginationParams,
   VehiclesSearchPaginationParams,
+  VehicleTripsParams,
 } from '@/types/api/vehicle.types'
 import { logger } from '../utils'
 
@@ -114,6 +115,31 @@ export const vehiclesApi = {
 
     if (!response.success) {
       throw new Error('Failed to fetch vehicles')
+    }
+
+    return response.data
+  },
+  getVehicleTripsByVehicleIdPaginated: async (
+    params: VehicleTripsParams,
+  ): Promise<
+    ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/vehicle/id'>>
+  > => {
+    const searchParams =
+      params &&
+      new URLSearchParams({
+        page: params.page.toString(),
+        limit: params.limit.toString(),
+        status: params.status ?? 'completed',
+      })
+
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/vehicle/id'>>
+    >(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/trips?id=${params.id}&${searchParams}`,
+    )
+
+    if (!response.success) {
+      throw new Error('Failed to fetch trips')
     }
 
     return response.data

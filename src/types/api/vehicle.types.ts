@@ -19,6 +19,23 @@ export interface Vehicle {
   created_at: string
 }
 
+export interface VehicleReference {
+  id: number
+  created_at: string
+  updated_at: string
+  vehicle_name: string | null
+  plate_number: string
+  brand: string
+  model: string
+  manuf_year: number
+  can_bitrate: string
+  fuel_type: string
+  gear_type: string
+  num_tire: number
+  isdeleted: boolean
+  deletedAt: string | null
+}
+
 export type VehiclesResponse = PaginatedResponseWithKey<Vehicle, 'vehicles'>
 export interface VehiclesPaginationParams {
   page: number
@@ -139,6 +156,86 @@ export type VehiclesSearchResponse = VehiclesResponse & {
   search_query: string
 }
 
+export type VehicleTripStatus = 'active' | 'completed' | 'cancelled'
+export interface VehicleTripsPaginationParams {
+  page: number
+  limit: number
+  status?: VehicleTripStatus
+}
+
+export interface VehicleTripsPathParams {
+  id: number
+}
+
+export type VehicleTripsParams = VehicleTripsPaginationParams &
+  VehicleTripsPathParams
+
+export interface VehicleTrip {
+  id: number
+  created_at: string
+  updated_at: string
+  start_time: string
+  end_time: string
+  status: VehicleTripStatus
+  vehicle_id: VehicleReference
+}
+
+export type VehicleTripsResponse = PaginatedResponseWithKey<
+  VehicleTrip,
+  'trips'
+>
+
+export interface GPS {
+  id: number
+  created_at: string
+  updated_at: string
+  latitude: string
+  longitude: string
+  north_south: string
+  east_west: string
+  speed_over_grd: string
+  gps_time: string | null
+}
+
+export interface Trip {
+  id: number
+  created_at: string
+  updated_at: string
+  start_time: string
+  end_time: string
+  status: VehicleTripStatus
+  vehicle_id: VehicleReference
+  gpss: GPS[]
+  statistics: {
+    total_gps_points: number
+    start_location: {
+      id: number
+      created_at: string
+      updated_at: string
+      latitude: string
+      longitude: string
+      north_south: string
+      east_west: string
+      speed_over_grd: string
+      gps_time?: string | null
+    }
+    end_location: {
+      id: number
+      created_at: string
+      updated_at: string
+      latitude: string
+      longitude: string
+      north_south: string
+      east_west: string
+      speed_over_grd: string
+      gps_time?: string | null
+    }
+    duration_minutes: number
+  }
+}
+
+export type VehicleTripDetailResponse = Trip
+
 export interface VehicleApiTypes {
   'GET /vehicles': {
     request: {}
@@ -155,5 +252,13 @@ export interface VehicleApiTypes {
   'POST /vehicles': {
     request: VehiclesCreateRequest
     response: VehiclesCreateResponse
+  }
+  'GET /vehicles/trips/vehicle/id': {
+    request: {}
+    response: VehicleTripsResponse
+  }
+  'GET /vehicles/trips/id': {
+    request: {}
+    response: VehicleTripDetailResponse
   }
 }
