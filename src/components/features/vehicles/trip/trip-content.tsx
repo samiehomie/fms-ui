@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import {
   ResizableHandle,
@@ -8,8 +8,6 @@ import {
   ResizablePanelGroup,
 } from '@/components/ui/resizable'
 import { TripHistoryTable } from '@/components/features/vehicles/trip/trip-history-table'
-import { tripData } from '@/components/features/vehicles/trip/data'
-import type { TripSession } from '@/components/features/vehicles/trip/types'
 import { DateRangePicker } from '@/components/ui/data-range-picker'
 import { TripOverview } from '@/components/features/vehicles/trip/trip-overview'
 import { useVehicleTripsPaginated } from '@/lib/hooks/queries/useVehicles'
@@ -17,6 +15,18 @@ import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TripPagination } from './trip-pagination'
 import { logger } from '@/lib/utils'
+import { formatDuration, formatTotalDuration } from '@/lib/api/utils'
+
+export interface TripSession {
+  id: number
+  startLocation: string
+  endLocation: string
+  driveTime: string // in minutes
+  idleTime: string // in minutes
+  distance: string // in km
+  events: string[]
+  path: [number, number][] // [lat, lng]
+}
 
 const TripMap = dynamic(
   () => import('@/components/features/vehicles/trip/trip-map'),
@@ -31,9 +41,9 @@ const TripMap = dynamic(
 )
 
 export default function TripContent({ vehicleId }: { vehicleId: number }) {
-  const [sessions] = useState<TripSession[]>(tripData)
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const [sessions, setSessions] = useState<TripSession[]>([])
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
+  const [hoveredId, setHoveredId] = useState<number | null>(null)
   const [pageParams, setPageParams] = useState<VehicleTripsPaginationParams>({
     page: 1,
     limit: 5,
@@ -45,7 +55,7 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
     id: vehicleId,
   })
 
-  const handleRowClick = (id: string) => {
+  const handleRowClick = (id: number) => {
     setSelectedIds((prev) => {
       const newSelectedIds = new Set(prev)
       if (newSelectedIds.has(id)) {
@@ -75,6 +85,22 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
   const areAllSelected =
     selectedIds.size > 0 && selectedIds.size === sessions.length
 
+  useEffect(() => {
+    if (data) {
+      const newSessions: TripSession[] = data.data.trips.map((trip) => ({
+        id: trip.id,
+        startLocation: `601 Marks St, Henderson, NV 89014, USA`,
+        endLocation: `Las Vegas Blvd S, Sloan, NV 89054, USA`,
+        driveTime: formatDuration(trip.start_time, trip.end_time),
+        idleTime: '10',
+        distance: '10',
+        events: ['test'],
+        path: [],
+      }))
+      setSessions(newSessions)
+    }
+  }, [data])
+
   if (isLoading || !data) {
     return (
       <div className="col-span-3 flex flex-col gap-y-2">
@@ -84,8 +110,6 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
       </div>
     )
   }
-
-  logger.log(data.data.pagination)
 
   return (
     <div className="flex-1 w-full bg-background text-foreground flex flex-col">
@@ -97,7 +121,15 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
       </header>
       <main className="flex-grow flex-1 overflow-hidden flex flex-col">
         <TripOverview
-          sessions={sessions}
+          totalDriveTime={formatTotalDuration(
+            data.data.trips.map((trip) => ({
+              created_at: trip.start_time,
+              updated_at: trip.end_time,
+            })),
+          )}
+          totalIdleTime={'100'}
+          totalDistance={'100'}
+          totalTrips={data.data.trips.length}
           vehicleName="Vehicle-001"
           onToggleSelectAll={handleToggleSelectAll}
           areAllSelected={areAllSelected}

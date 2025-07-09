@@ -1,10 +1,10 @@
 export interface TripSession {
-  id: string
+  id: number
   startLocation: string
   endLocation: string
-  driveTime: number // in minutes
-  idleTime: number // in minutes
-  distance: number // in km
+  driveTime: string // in minutes
+  idleTime: string // in minutes
+  distance: string // in km
   events: string[]
-  path: [number, number][] // [lat, lng]
+  path: [string, string][] // [lat, lng]
 }

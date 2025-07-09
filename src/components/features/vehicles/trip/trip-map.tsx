@@ -18,11 +18,10 @@ import {
 import type { LatLngExpression, Marker as LeafletMarker } from 'leaflet'
 import L from 'leaflet'
 import { useEffect, useRef } from 'react'
-import type { TripSession } from './types'
-
+import type { TripSession } from './trip-content'
 interface TripMapProps {
   sessions: TripSession[]
-  hoveredId: string | null
+  hoveredId: number | null
 }
 
 const MapUpdater = ({
@@ -159,7 +158,7 @@ export default function TripMap({ sessions, hoveredId }: TripMapProps) {
               offset={[12, -5]}
               className="trip-label"
             >
-              {session.id.replace('trip-', 'Trip #')}
+              {session.id}
             </Tooltip>
           </Marker>
         ))}

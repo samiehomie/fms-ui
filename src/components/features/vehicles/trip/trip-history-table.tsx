@@ -10,14 +10,14 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
-import type { TripSession } from './types'
+import type { TripSession } from './trip-content'
 import { Car, Clock, MapPin, AlertTriangle } from 'lucide-react'
 
 interface TripHistoryTableProps {
   sessions: TripSession[]
-  selectedIds: Set<string>
-  onRowClick: (id: string) => void
-  onRowHover: (id: string | null) => void
+  selectedIds: Set<number>
+  onRowClick: (id: number) => void
+  onRowHover: (id: number | null) => void
   onMouseLeave: () => void
 }
 
@@ -79,9 +79,9 @@ export function TripHistoryTable({
                 </div>
               </TableCell>
               <TableCell>
-                <div>Driving: {session.driveTime} min</div>
+                <div>Driving: {session.driveTime}</div>
                 <div className="text-muted-foreground text-xs">
-                  Idle: {session.idleTime} min
+                  Idle: {session.idleTime}
                 </div>
               </TableCell>
               <TableCell>
