@@ -6,6 +6,7 @@ import type {
   VehiclesByCompanyIdPaginationParams,
   VehiclesSearchPaginationParams,
   VehicleTripsParams,
+  VehicleTripsByTripIdParams,
 } from '@/types/api/vehicle.types'
 import { logger } from '../utils'
 
@@ -136,6 +137,22 @@ export const vehiclesApi = {
       ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/vehicle/id'>>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/trips?id=${params.id}&${searchParams}`,
+    )
+
+    if (!response.success) {
+      throw new Error('Failed to fetch trips')
+    }
+
+    return response.data
+  },
+
+  getVehicleTripsByTripId: async (
+    params: VehicleTripsByTripIdParams,
+  ): Promise<ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/id'>>> => {
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/id'>>
+    >(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/trips/details?id=${params.tripId}`,
     )
 
     if (!response.success) {

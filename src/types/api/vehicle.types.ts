@@ -234,7 +234,11 @@ export interface Trip {
   }
 }
 
-export type VehicleTripDetailResponse = Trip
+export type VehicleTripsByTripIdResponse = Trip
+
+export interface VehicleTripsByTripIdParams {
+  tripId: number
+}
 
 export interface VehicleApiTypes {
   'GET /vehicles': {
@@ -259,6 +263,6 @@ export interface VehicleApiTypes {
   }
   'GET /vehicles/trips/id': {
     request: {}
-    response: VehicleTripDetailResponse
+    response: VehicleTripsByTripIdResponse
   }
 }

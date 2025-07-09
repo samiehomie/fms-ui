@@ -2,14 +2,14 @@ import {
   useQuery,
   useMutation,
   useQueryClient,
-  useSuspenseQuery,
+  skipToken,
 } from '@tanstack/react-query'
 import { vehiclesApi } from '@/lib/api/vehicle'
 import type {
   VehiclesPaginationParams,
   VehiclesSearchPaginationParams,
-  VehicleTripsPaginationParams,
   VehicleTripsParams,
+  VehicleTripsByTripIdParams,
 } from '@/types/api/vehicle.types'
 import { ApiResponseType, ApiRequestType } from '@/types/api'
 import { toast } from 'sonner'
@@ -65,6 +65,18 @@ export function useVehicleTripsPaginated(params: VehicleTripsParams) {
   return useQuery({
     queryKey: ['trips', params],
     queryFn: () => vehiclesApi.getVehicleTripsByVehicleIdPaginated(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
+export function useVehicleTripDetails(
+  params: VehicleTripsByTripIdParams | null,
+) {
+  return useQuery({
+    queryKey: ['trip details', params],
+    queryFn: params
+      ? () => vehiclesApi.getVehicleTripsByTripId(params)
+      : skipToken,
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }

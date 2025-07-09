@@ -101,6 +101,17 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
     }
   }, [data])
 
+  const totalDriveTime = useMemo(() => {
+    if (!data?.data.trips) return '0s'
+
+    return formatTotalDuration(
+      data.data.trips.map((trip) => ({
+        created_at: trip.start_time,
+        updated_at: trip.end_time,
+      })),
+    )
+  }, [data])
+
   if (isLoading || !data) {
     return (
       <div className="col-span-3 flex flex-col gap-y-2">
@@ -121,16 +132,11 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
       </header>
       <main className="flex-grow flex-1 overflow-hidden flex flex-col">
         <TripOverview
-          totalDriveTime={formatTotalDuration(
-            data.data.trips.map((trip) => ({
-              created_at: trip.start_time,
-              updated_at: trip.end_time,
-            })),
-          )}
+          totalDriveTime={totalDriveTime}
           totalIdleTime={'100'}
           totalDistance={'100'}
           totalTrips={data.data.trips.length}
-          vehicleName="Vehicle-001"
+          vehicleName={`Vehicle-${vehicleId}`}
           onToggleSelectAll={handleToggleSelectAll}
           areAllSelected={areAllSelected}
         />
