@@ -15,8 +15,9 @@ import { TripOverview } from '@/components/features/vehicles/trip/trip-overview'
 import { useVehicleTripsPaginated } from '@/lib/hooks/queries/useVehicles'
 import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
 import { Skeleton } from '@/components/ui/skeleton'
+import { TripPagination } from './trip-pagination'
+import { logger } from '@/lib/utils'
 
-// react-leaflet은 클라이언트 측에서만 렌더링되어야 하므로 dynamic import를 사용합니다.
 const TripMap = dynamic(
   () => import('@/components/features/vehicles/trip/trip-map'),
   {
@@ -35,8 +36,8 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   const [pageParams, setPageParams] = useState<VehicleTripsPaginationParams>({
     page: 1,
-    limit: 10,
-    status: 'completed',
+    limit: 5,
+    //status: 'completed',
   })
 
   const { data, isLoading } = useVehicleTripsPaginated({
@@ -84,36 +85,52 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
     )
   }
 
+  logger.log(data.data.pagination)
+
   return (
     <div className="flex-1 w-full bg-background text-foreground flex flex-col">
-      {JSON.stringify(data, null, 2)}
       <header className="flex items-center justify-between mb-8  shrink-0">
         <h1 className="text-xl font-bold sm:text-4xl tracking-tight">
           Trips History
         </h1>
         <DateRangePicker />
       </header>
-      <main className="flex-grow overflow-hidden flex flex-col">
+      <main className="flex-grow flex-1 overflow-hidden flex flex-col">
         <TripOverview
           sessions={sessions}
           vehicleName="Vehicle-001"
           onToggleSelectAll={handleToggleSelectAll}
           areAllSelected={areAllSelected}
         />
-        <div className="flex-grow overflow-hidden">
+        <div className="flex-grow flex-1 overflow-hidden flex flex-col">
           {isMapVisible ? (
             <ResizablePanelGroup
               direction="horizontal"
               className="h-full w-full"
             >
-              <ResizablePanel defaultSize={50} minSize={40} maxSize={60}>
-                <div className="h-full overflow-y-auto pl-1 pr-4 pt-4 pb-4">
+              <ResizablePanel
+                defaultSize={50}
+                minSize={40}
+                maxSize={60}
+                className="flex flex-col flex-1"
+              >
+                <div className="flex-1 flex flex-col overflow-y-auto pl-1 pr-4 pt-4 pb-4">
                   <TripHistoryTable
                     sessions={sessions}
                     selectedIds={selectedIds}
                     onRowClick={handleRowClick}
                     onRowHover={setHoveredId}
                     onMouseLeave={() => setHoveredId(null)}
+                  />
+                  <TripPagination
+                    currentPage={pageParams.page}
+                    totalPages={data.data.pagination.pages}
+                    onPageChange={(page) => {
+                      setPageParams({
+                        ...pageParams,
+                        page,
+                      })
+                    }}
                   />
                 </div>
               </ResizablePanel>
@@ -123,13 +140,25 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
               </ResizablePanel>
             </ResizablePanelGroup>
           ) : (
-            <div className="h-full overflow-y-auto pl-1 pr-4 pt-4 pb-4">
-              <TripHistoryTable
-                sessions={sessions}
-                selectedIds={selectedIds}
-                onRowClick={handleRowClick}
-                onRowHover={() => {}}
-                onMouseLeave={() => {}}
+            <div className="flex-1 flex flex-col pl-1 pr-4 pt-4 pb-4 ">
+              <div className="flex-grow overflow-y-auto">
+                <TripHistoryTable
+                  sessions={sessions}
+                  selectedIds={selectedIds}
+                  onRowClick={handleRowClick}
+                  onRowHover={() => {}}
+                  onMouseLeave={() => {}}
+                />
+              </div>
+              <TripPagination
+                currentPage={pageParams.page}
+                totalPages={data.data.pagination.pages}
+                onPageChange={(page) => {
+                  setPageParams({
+                    ...pageParams,
+                    page,
+                  })
+                }}
               />
             </div>
           )}
