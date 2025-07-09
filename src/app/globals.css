@@ -157,6 +157,11 @@
   padding: 3px 10px !important;
   box-shadow: 0 2px 8px rgba(0, 94, 174, 0.3) !important;
   width: 90px !important;
+
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  display: block !important;
 }
 
 .trip-cluster-label::before {
