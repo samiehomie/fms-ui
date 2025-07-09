@@ -77,7 +77,10 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
   }
 
   const selectedSessions = useMemo(
-    () => sessions.filter((session) => selectedIds.has(session.id)),
+    () =>
+      sessions
+        .filter((session) => selectedIds.has(session.id))
+        .map((session) => session.id),
     [sessions, selectedIds],
   )
 
@@ -174,7 +177,7 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
               </ResizablePanel>
               <ResizableHandle withHandle className="z-[999]" />
               <ResizablePanel defaultSize={50} minSize={30}>
-                <TripMap sessions={selectedSessions} hoveredId={hoveredId} />
+                <TripMap selectedIds={selectedSessions} hoveredId={hoveredId} />
               </ResizablePanel>
             </ResizablePanelGroup>
           ) : (

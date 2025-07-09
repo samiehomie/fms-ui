@@ -19,8 +19,11 @@ import type { LatLngExpression, Marker as LeafletMarker } from 'leaflet'
 import L from 'leaflet'
 import { useEffect, useRef } from 'react'
 import type { TripSession } from './trip-content'
+import { useVehicleTripDetailsBatch } from '@/lib/hooks/queries/useVehicles'
+import { logger } from '@/lib/utils'
+
 interface TripMapProps {
-  sessions: TripSession[]
+  selectedIds: number[]
   hoveredId: number | null
 }
 
@@ -80,21 +83,29 @@ const createCircleIcon = (color: string) => {
   })
 }
 
-export default function TripMap({ sessions, hoveredId }: TripMapProps) {
+export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
+  const { data: tripDetailsMap, isLoading } =
+    useVehicleTripDetailsBatch(selectedIds)
+
   const sessionsToDisplay = hoveredId
-    ? sessions.filter((s) => s.id === hoveredId)
-    : sessions
+    ? selectedIds.filter((s) => s === hoveredId)
+    : selectedIds
 
   const startIcon = createCircleIcon('bg-[#005EAE]')
   const endIcon = createCircleIcon('bg-[#a5abbd]')
 
-  if (sessions.length === 0) {
+  if (selectedIds.length === 0) {
     return (
       <div className="flex h-full w-full items-center justify-center bg-muted">
         <p>Select a trip to display on the map.</p>
       </div>
     )
   }
+
+  if (isLoading) return <div>loading..</div>
+  if (!tripDetailsMap) return null
+
+  logger.log('map', tripDetailsMap, sessionsToDisplay)
 
   return (
     <MapContainer
@@ -108,8 +119,8 @@ export default function TripMap({ sessions, hoveredId }: TripMapProps) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {sessionsToDisplay.map((session, index) => (
-        <Fragment key={`path-and-end-${session.id}}`}>
+      {/* {sessionsToDisplay.map((session, index) => (
+        <Fragment key={`path-and-end-${session}}`}>
           <Polyline
             positions={session.path as LatLngExpression[]}
             pathOptions={{
@@ -131,17 +142,20 @@ export default function TripMap({ sessions, hoveredId }: TripMapProps) {
             </Popup>
           </Marker>
         </Fragment>
-      ))}
+      ))} */}
       <MarkerClusterGroup
         iconCreateFunction={createClusterCustomIcon}
         showCoverageOnHover={false}
       >
-        {sessionsToDisplay.map((session, index) => (
+        {sessionsToDisplay.map((id) => (
           <Marker
-            key={`start-${session.id}`}
+            key={`start-${id}`}
             // @ts-expect-error: 임시 타입에러 무시
-            tripId={session.id}
-            position={session.path[0] as LatLngExpression}
+            tripId={id}
+            position={[
+              tripDetailsMap[id].trip.gpss[0].latitude,
+              tripDetailsMap[id].trip.gpss[0].longitude,
+            ]}
             icon={startIcon}
             eventHandlers={{
               mouseover: (e) => e.target.openPopup(),
@@ -150,7 +164,7 @@ export default function TripMap({ sessions, hoveredId }: TripMapProps) {
           >
             <Popup>
               <div className="font-semibold">Start</div>
-              {session.startLocation}
+              {id}
             </Popup>
             <Tooltip
               permanent
@@ -158,12 +172,12 @@ export default function TripMap({ sessions, hoveredId }: TripMapProps) {
               offset={[12, -5]}
               className="trip-label"
             >
-              {session.id}
+              {id}
             </Tooltip>
           </Marker>
         ))}
       </MarkerClusterGroup>
-      <MapUpdater sessionsToDisplay={sessionsToDisplay} />
+      {/* <MapUpdater sessionsToDisplay={sessionsToDisplay} /> */}
     </MapContainer>
   )
 }
