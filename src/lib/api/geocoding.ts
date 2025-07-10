@@ -31,8 +31,8 @@ export async function reverseGeocode(
 
   const data: GeocodeResponse = await response.json()
   logger.log('geocoding', data)
-  if (data.status === 'OK' && data.results.length > 3) {
-    return data.results[3].formatted_address
+  if (data.status === 'OK' && data.results.length > 1) {
+    return data.results[1].formatted_address
   }
 
   return `${lat}, ${lng}` // 실패시 좌표 반환

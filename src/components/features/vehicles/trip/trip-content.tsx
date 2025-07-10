@@ -49,7 +49,7 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
   const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
   const [pageParams, setPageParams] = useState<VehicleTripsPaginationParams>({
     page: 1,
-    limit: 5,
+    limit: 10,
     //status: 'completed',
   })
 
@@ -57,7 +57,6 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
     ...pageParams,
     id: vehicleId,
   })
-
 
   const handleRowClick = (id: number) => {
     const newSelectedIds = new Set(selectedIds)
