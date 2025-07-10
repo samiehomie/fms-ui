@@ -86,7 +86,6 @@ const createClusterCustomIcon = (cluster: any) => {
   })
 }
 
-
 const createCircleIcon = (color: string) => {
   return L.divIcon({
     html: `<span class="flex h-[1.125rem] w-[1.125rem] rounded-full border-2 border-white ${color} shadow-md"></span>`,
@@ -139,70 +138,81 @@ export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
       />
 
       {sessionsToDisplay.map((id) => {
-        const path = tripDetailsMap[id].trip.gpss.map((gps) => ({
-          lat: parseFloat(gps.latitude),
-          lng: parseFloat(gps.longitude),
-        }))
-        return (
-          <Fragment key={`path-and-end-${id}}`}>
-            <Polyline
-              positions={path as LatLngExpression[]}
-              pathOptions={{
-                color: '#005EAE',
-                weight: 3.5,
-              }}
-            />
-            <Marker
-              position={path[path.length - 1] as LatLngExpression}
-              icon={endIcon}
-              eventHandlers={{
-                mouseover: (e) => e.target.openPopup(),
-                mouseout: (e) => e.target.closePopup(),
-              }}
-            >
-              <Popup>
-                <div className="font-semibold">End</div>
-                {'end test'}
-              </Popup>
-            </Marker>
-          </Fragment>
-        )
+        const gpsData = tripDetailsMap[id].trip.gpss
+        if (gpsData.length === 0) {
+          return <Fragment key={`trip-${id}`}></Fragment>
+        } else {
+          const path = gpsData.map((gps) => ({
+            lat: parseFloat(gps.latitude),
+            lng: parseFloat(gps.longitude),
+          }))
+
+          return (
+            <Fragment key={`path-and-end-${id}}`}>
+              <Polyline
+                positions={path as LatLngExpression[]}
+                pathOptions={{
+                  color: '#005EAE',
+                  weight: 3.5,
+                }}
+              />
+              <Marker
+                position={path[path.length - 1] as LatLngExpression}
+                icon={endIcon}
+                eventHandlers={{
+                  mouseover: (e) => e.target.openPopup(),
+                  mouseout: (e) => e.target.closePopup(),
+                }}
+              >
+                <Popup>
+                  <div className="font-semibold">End</div>
+                  {'end test'}
+                </Popup>
+              </Marker>
+            </Fragment>
+          )
+        }
       })}
       <MarkerClusterGroup
         iconCreateFunction={createClusterCustomIcon}
         showCoverageOnHover={false}
       >
         {sessionsToDisplay.map((id) => {
-          const startPosition = {
-            lat: parseFloat(tripDetailsMap[id].trip.gpss[0].latitude),
-            lng: parseFloat(tripDetailsMap[id].trip.gpss[0].longitude),
-          }
-          return (
-            <Marker
-              key={`trip-${id}`}
-              // @ts-expect-error: 추가 속성
-              tripId={id}
-              position={startPosition}
-              icon={startIcon}
-              eventHandlers={{
-                mouseover: (e) => e.target.openPopup(),
-                mouseout: (e) => e.target.closePopup(),
-              }}
-            >
-              <Popup>
-                <div className="font-semibold">Start</div>
-                {id}
-              </Popup>
-              <Tooltip
-                permanent
-                direction="right"
-                offset={[12, -5]}
-                className="trip-label"
+          const gpsData = tripDetailsMap[id].trip.gpss
+          if (gpsData.length === 0) {
+            return <Fragment key={`trip-${id}`}></Fragment>
+          } else {
+            const startPosition = {
+              lat: parseFloat(gpsData[0].latitude),
+              lng: parseFloat(gpsData[0].longitude),
+            }
+            return (
+              <Marker
+                key={`trip-${id}`}
+                // @ts-expect-error: 추가 속성
+                tripId={id}
+                position={startPosition}
+                icon={startIcon}
+                eventHandlers={{
+                  mouseover: (e) => e.target.openPopup(),
+                  mouseout: (e) => e.target.closePopup(),
+                }}
               >
-                {id}
-              </Tooltip>
-            </Marker>
-          )
+                <Popup>
+                  <div className="font-semibold">Start</div>
+                  {id}
+                </Popup>
+                <Tooltip
+                  permanent
+                  direction="right"
+                  offset={[12, -5]}
+                  className="trip-label"
+                >
+                  {id}
+                </Tooltip>
+              </Marker>
+            )
+          }
         })}
       </MarkerClusterGroup>
       <MapUpdater
