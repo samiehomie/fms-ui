@@ -154,9 +154,12 @@
   color: white !important;
   font-weight: 500 !important;
   font-size: 11px !important;
-  padding: 3px 10px !important;
+  text-align: center !important;
+  z-index: 999 !important;
+  padding: 4px 0px !important;
   box-shadow: 0 2px 8px rgba(0, 94, 174, 0.3) !important;
-  width: 90px !important;
+  /* width: 85px !important;
+  height: 25px !important; */
 
   overflow: hidden !important;
   white-space: nowrap !important;

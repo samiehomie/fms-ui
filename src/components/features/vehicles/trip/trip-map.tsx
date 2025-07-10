@@ -65,41 +65,62 @@ const MapUpdater = ({
   return null
 }
 
-const createClusterCustomIcon = (tripNumbers: number[]) => () => {
-  //const childMarkers = cluster.getAllChildMarkers() as LeafletMarker[]
+const createClusterCustomIcon = (cluster: any) => {
+  const childMarkers = cluster.getAllChildMarkers() as (LeafletMarker & {
+    options: { tripId: number }
+  })[]
+  const tripNumbers = childMarkers.map((marker) =>
+    String(marker.options.tripId),
+  )
 
-  // const tripNumbers = childMarkers
-  //   .map((marker) => {
-  //     try {
-  //       const element = marker.getElement()
-  //       const tripId = element?.getAttribute('data-trip-id')
-  //       return tripId
-  //     } catch (error) {
-  //       console.warn('Error reading trip ID from marker:', error)
-  //       return null
-  //     }
-  //   })
-  //   .filter((id): id is string => id !== null && id !== undefined)
-
-  if (tripNumbers.length === 0) {
-    return L.divIcon({
-      html: `<div class="trip-cluster-label">Trips</div>`,
-      iconSize: [60, 30],
-    })
+  let label = `${tripNumbers.slice(0, 3).join(', ')}`
+  if (tripNumbers.length > 3) {
+    label += ` (+${tripNumbers.length - 3})`
   }
 
-  let label = `${tripNumbers.slice(0, 2).join(', ')}`
-  // if (tripNumbers.length > 2) {
-  //   label += ` ... (+${tripNumbers.length - 2})`
-  // }
-
-  //const size = Math.max(40, 30 + tripNumbers.length * 2) // 최소 크기 보장
+  const size = 25 * Math.min(tripNumbers.length, 4)
   return L.divIcon({
-    html: `<div class="trip-cluster-label">${label}</div>`,
-    iconSize: [40, 30],
-    //iconAnchor: [size / 2, 15],
+    html: `<div>${label}</div>`,
+    className: 'trip-cluster-label',
+    iconSize: [size, 25],
+    iconAnchor: [-10, 10],
   })
 }
+// const createClusterCustomIcon = (tripNumbers: number[]) => () => {
+//   //const childMarkers = cluster.getAllChildMarkers() as LeafletMarker[]
+
+//   // const tripNumbers = childMarkers
+//   //   .map((marker) => {
+//   //     try {
+//   //       const element = marker.getElement()
+//   //       const tripId = element?.getAttribute('data-trip-id')
+//   //       return tripId
+//   //     } catch (error) {
+//   //       console.warn('Error reading trip ID from marker:', error)
+//   //       return null
+//   //     }
+//   //   })
+//   //   .filter((id): id is string => id !== null && id !== undefined)
+
+//   if (tripNumbers.length === 0) {
+//     return L.divIcon({
+//       html: `<div class="trip-cluster-label">Trips</div>`,
+//       iconSize: [60, 30],
+//     })
+//   }
+
+//   let label = `${tripNumbers.slice(0, 2).join(', ')}`
+//   // if (tripNumbers.length > 2) {
+//   //   label += ` ... (+${tripNumbers.length - 2})`
+//   // }
+
+//   //const size = Math.max(40, 30 + tripNumbers.length * 2) // 최소 크기 보장
+//   return L.divIcon({
+//     html: `<div class="trip-cluster-label">${label}</div>`,
+//     iconSize: [40, 30],
+//     //iconAnchor: [size / 2, 15],
+//   })
+// }
 
 const createCircleIcon = (color: string) => {
   return L.divIcon({
@@ -183,7 +204,7 @@ export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
         )
       })}
       <MarkerClusterGroup
-        iconCreateFunction={createClusterCustomIcon(selectedIds)}
+        iconCreateFunction={createClusterCustomIcon}
         showCoverageOnHover={false}
       >
         {sessionsToDisplay.map((id) => {
@@ -194,7 +215,8 @@ export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
           return (
             <Marker
               key={`trip-${id}`}
-              data-trip-id={id}
+              // @ts-expect-error: 추가 속성
+              tripId={id}
               position={startPosition}
               icon={startIcon}
               eventHandlers={{
