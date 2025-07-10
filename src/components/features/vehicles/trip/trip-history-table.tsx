@@ -11,7 +11,8 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { TripSession } from './trip-content'
-import { Car, Clock, MapPin, AlertTriangle } from 'lucide-react'
+import { Clock, MapPin, AlertTriangle } from 'lucide-react'
+import { useReverseGeocode } from '@/lib/hooks/queries/useGeocoding'
 
 interface TripHistoryTableProps {
   sessions: TripSession[]
@@ -28,11 +29,25 @@ export function TripHistoryTable({
   onRowHover,
   onMouseLeave,
 }: TripHistoryTableProps) {
+  const {
+    data: address,
+    isLoading,
+    isError,
+  } = useReverseGeocode('37.364037', '126.946976')
+
+  if (isLoading) {
+    return <span className="text-muted-foreground">Loading address...</span>
+  }
+
+  if (isError) {
+    return <span className="text-muted-foreground">eror</span>
+  }
+
   return (
     <div onMouseLeave={onMouseLeave}>
       <Table>
         <TableHeader>
-          <TableRow className='hover:bg-inherit'>
+          <TableRow className="hover:bg-inherit">
             <TableHead className="w-[40%] pl-6">
               <MapPin className="inline-block mr-2 h-4 w-4" />
               Route
@@ -57,7 +72,8 @@ export function TripHistoryTable({
               className={cn(
                 'group cursor-pointer transition-colors hover:bg-inherit',
                 'hover:bg-slate-100/50',
-                selectedIds.has(session.id) && 'bg-slate-100/50 hover:bg-slate-200/70 ', // 선택된 상태에서 hover 시 더 진한 배경
+                selectedIds.has(session.id) &&
+                  'bg-slate-100/50 hover:bg-slate-200/70 ', // 선택된 상태에서 hover 시 더 진한 배경
               )}
             >
               <TableCell className="font-medium relative">
@@ -71,7 +87,7 @@ export function TripHistoryTable({
                 />
                 <div className="flex items-center pl-6">
                   <div>
-                    <div>{session.startLocation}</div>
+                    <div>{address}</div>
                     <div className="text-muted-foreground text-xs">
                       to {session.endLocation}
                     </div>
