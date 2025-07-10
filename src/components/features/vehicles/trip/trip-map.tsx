@@ -21,6 +21,7 @@ import { useEffect, useRef } from 'react'
 import type { TripSession } from './trip-content'
 import { useVehicleTripDetailsBatch } from '@/lib/hooks/queries/useVehicles'
 import { logger } from '@/lib/utils'
+import type { VehicleTripsByTripIdResponse } from '@/types/api/vehicle.types'
 
 interface TripMapProps {
   selectedIds: number[]
@@ -29,15 +30,25 @@ interface TripMapProps {
 
 const MapUpdater = ({
   sessionsToDisplay,
+  trips,
 }: {
-  sessionsToDisplay: TripSession[]
+  sessionsToDisplay: number[]
+  trips: Record<number, VehicleTripsByTripIdResponse>
 }) => {
   const map = useMap()
   const isInitialLoad = useRef(true)
 
   useEffect(() => {
     if (sessionsToDisplay.length > 0) {
-      const allPoints = sessionsToDisplay.flatMap((s) => s.path)
+      const allPoints = sessionsToDisplay
+        .map((id) => {
+          const trip = trips[id]?.trip.gpss.map((gps) => ({
+            lat: parseFloat(gps.latitude),
+            lng: parseFloat(gps.longitude),
+          }))
+          return trip
+        })
+        .flat()
       if (allPoints.length > 0) {
         const bounds = L.latLngBounds(allPoints as LatLngExpression[])
         map.fitBounds(bounds, {
@@ -119,65 +130,76 @@ export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {/* {sessionsToDisplay.map((session, index) => (
-        <Fragment key={`path-and-end-${session}}`}>
-          <Polyline
-            positions={session.path as LatLngExpression[]}
-            pathOptions={{
-              color: '#005EAE',
-              weight: 5,
-            }}
-          />
-          <Marker
-            position={session.path[session.path.length - 1] as LatLngExpression}
-            icon={endIcon}
-            eventHandlers={{
-              mouseover: (e) => e.target.openPopup(),
-              mouseout: (e) => e.target.closePopup(),
-            }}
-          >
-            <Popup>
-              <div className="font-semibold">End</div>
-              {session.endLocation}
-            </Popup>
-          </Marker>
-        </Fragment>
-      ))} */}
+      {sessionsToDisplay.map((id) => {
+        const path = tripDetailsMap[id].trip.gpss.map((gps) => ({
+          lat: parseFloat(gps.latitude),
+          lng: parseFloat(gps.longitude),
+        }))
+        return (
+          <Fragment key={`path-and-end-${id}}`}>
+            <Polyline
+              positions={path as LatLngExpression[]}
+              pathOptions={{
+                color: '#005EAE',
+                weight: 5,
+              }}
+            />
+            <Marker
+              position={path[path.length - 1] as LatLngExpression}
+              icon={endIcon}
+              eventHandlers={{
+                mouseover: (e) => e.target.openPopup(),
+                mouseout: (e) => e.target.closePopup(),
+              }}
+            >
+              <Popup>
+                <div className="font-semibold">End</div>
+                {'end test'}
+              </Popup>
+            </Marker>
+          </Fragment>
+        )
+      })}
       <MarkerClusterGroup
         iconCreateFunction={createClusterCustomIcon}
         showCoverageOnHover={false}
       >
-        {sessionsToDisplay.map((id) => (
-          <Marker
-            key={`start-${id}`}
-            // @ts-expect-error: 임시 타입에러 무시
-            tripId={id}
-            position={[
-              tripDetailsMap[id].trip.gpss[0].latitude,
-              tripDetailsMap[id].trip.gpss[0].longitude,
-            ]}
-            icon={startIcon}
-            eventHandlers={{
-              mouseover: (e) => e.target.openPopup(),
-              mouseout: (e) => e.target.closePopup(),
-            }}
-          >
-            <Popup>
-              <div className="font-semibold">Start</div>
-              {id}
-            </Popup>
-            <Tooltip
-              permanent
-              direction="right"
-              offset={[12, -5]}
-              className="trip-label"
+        {sessionsToDisplay.map((id) => {
+          const startPosition = {
+            lat: parseFloat(tripDetailsMap[id].trip.gpss[0].latitude),
+            lng: parseFloat(tripDetailsMap[id].trip.gpss[0].longitude),
+          }
+          return (
+            <Marker
+              key={`trip-${id}`}
+              tripId={id}
+              position={startPosition}
+              icon={startIcon}
+              eventHandlers={{
+                mouseover: (e) => e.target.openPopup(),
+                mouseout: (e) => e.target.closePopup(),
+              }}
             >
-              {id}
-            </Tooltip>
-          </Marker>
-        ))}
+              <Popup>
+                <div className="font-semibold">Start</div>
+                {id}
+              </Popup>
+              <Tooltip
+                permanent
+                direction="right"
+                offset={[12, -5]}
+                className="trip-label"
+              >
+                {id}
+              </Tooltip>
+            </Marker>
+          )
+        })}
       </MarkerClusterGroup>
-      {/* <MapUpdater sessionsToDisplay={sessionsToDisplay} /> */}
+      <MapUpdater
+        sessionsToDisplay={sessionsToDisplay}
+        trips={tripDetailsMap}
+      />
     </MapContainer>
   )
 }

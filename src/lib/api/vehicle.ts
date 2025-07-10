@@ -7,6 +7,7 @@ import type {
   VehiclesSearchPaginationParams,
   VehicleTripsParams,
   VehicleTripsByTripIdParams,
+  VehicleTripsByTripIdResponse
 } from '@/types/api/vehicle.types'
 import { logger } from '../utils'
 

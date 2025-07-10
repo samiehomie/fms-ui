@@ -206,6 +206,10 @@ export interface Trip {
   status: VehicleTripStatus
   vehicle_id: VehicleReference
   gpss: GPS[]
+}
+
+export type VehicleTripsByTripIdResponse = {
+  trip: Trip
   statistics: {
     total_gps_points: number
     start_location: {
@@ -233,8 +237,6 @@ export interface Trip {
     duration_minutes: number
   }
 }
-
-export type VehicleTripsByTripIdResponse = Trip
 
 export interface VehicleTripsByTripIdParams {
   tripId: number

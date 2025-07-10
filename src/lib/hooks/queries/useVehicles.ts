@@ -10,7 +10,7 @@ import type {
   VehiclesPaginationParams,
   VehiclesSearchPaginationParams,
   VehicleTripsParams,
-  VehicleTripsByTripIdParams,
+  VehicleTripsByTripIdResponse
 } from '@/types/api/vehicle.types'
 import { ApiResponseType, ApiRequestType } from '@/types/api'
 import { toast } from 'sonner'
@@ -86,7 +86,7 @@ export function useVehicleTripDetailsBatch(tripIds: number[]) {
 
   // tripId와 결과를 매핑하여 객체로 반환
   const mappedData = useMemo(() => {
-    const result: Record<number, any> = {}
+    const result: Record<number, VehicleTripsByTripIdResponse> = {}
 
     tripIds.forEach((tripId, index) => {
       const query = queries[index]
