@@ -11,7 +11,14 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { TripSession } from './trip-content'
-import { Clock, MapPin, AlertTriangle, Eye, EyeOff } from 'lucide-react'
+import {
+  Clock,
+  MapPin,
+  AlertTriangle,
+  Eye,
+  EyeOff,
+  MoveRight,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useReverseGeocode } from '@/lib/hooks/queries/useGeocoding'
 
@@ -61,7 +68,7 @@ export function TripHistoryTable({
               <AlertTriangle className="inline-block mr-2 h-4 w-4" />
               Events
             </TableHead>
-            <TableHead className="w-12"></TableHead>
+            <TableHead className="w-10"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -86,11 +93,12 @@ export function TripHistoryTable({
                       : 'bg-transparent',
                   )}
                 />
-                <div className="flex items-center pl-6">
+                <div className="flex items-center pl-6 text-xs">
                   <div>
                     <div>{address}</div>
-                    <div className="text-muted-foreground text-xs">
-                      to {session.endLocation}
+                    <div className="text-muted-foreground flex gap-x-1 items-center">
+                      <MoveRight className="leading-none" size={15} />
+                      {session.endLocation}
                     </div>
                   </div>
                 </div>
@@ -110,7 +118,7 @@ export function TripHistoryTable({
                   ))}
                 </div>
               </TableCell>
-              <TableCell className="text-center">
+              <TableCell className="text-center pr-[.625rem]">
                 {selectedIds.has(session.id) && (
                   <Button
                     variant="ghost"
@@ -119,7 +127,7 @@ export function TripHistoryTable({
                       e.stopPropagation() // 행 전체 클릭 방지
                       onVisibilityToggle(session.id)
                     }}
-                    className="h-8 w-8"
+                    className="h-6 w-6"
                   >
                     {visibleIds.has(session.id) ? (
                       <Eye className="h-4 w-4" />

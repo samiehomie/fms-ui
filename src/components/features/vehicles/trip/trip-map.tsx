@@ -98,10 +98,6 @@ export default function TripMap({ selectedIds }: TripMapProps) {
   const { data: tripDetailsMap, isLoading } =
     useVehicleTripDetailsBatch(selectedIds)
 
-  // const sessionsToDisplay = hoveredId
-  //   ? selectedIds.filter((s) => s === hoveredId)
-  //   : selectedIds
-
   const startIcon = createCircleIcon('bg-[#005EAE]')
   const endIcon = createCircleIcon('bg-[#a5abbd]')
 
