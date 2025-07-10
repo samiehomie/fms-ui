@@ -156,7 +156,7 @@ export type VehiclesSearchResponse = VehiclesResponse & {
   search_query: string
 }
 
-export type VehicleTripStatus = 'active' | 'completed' | 'cancelled'
+export type VehicleTripStatus = 'active' | 'completed' | 'cancelled' | ''
 export interface VehicleTripsPaginationParams {
   page: number
   limit: number

@@ -50,7 +50,7 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
   const [pageParams, setPageParams] = useState<VehicleTripsPaginationParams>({
     page: 1,
     limit: 6,
-    //status: 'completed',
+    status: '',
   })
 
   const { data, isLoading } = useVehicleTripsPaginated({

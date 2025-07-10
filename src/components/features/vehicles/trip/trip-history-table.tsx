@@ -81,7 +81,7 @@ export function TripHistoryTable({
                   {session.id}
                 </div>
                 <div className="flex items-center pl-4 text-xs text-gray-800 font-[400]">
-                  <div className='flex flex-col gap-y-[9px] leading-none'> 
+                  <div className="flex flex-col gap-y-[9px] leading-none">
                     {startAddress && <div>{startAddress}</div>}
                     {endAddress && (
                       <div className="flex gap-x-1 items-center">
@@ -107,7 +107,11 @@ export function TripHistoryTable({
               <TableCell className="">
                 <Badge
                   variant={'outline'}
-                  className={'text-xs text-muted-foreground font-[400]'}
+                  className={cn(
+                    'text-xs text-muted-foreground font-[400]',
+                    session.status === 'active' &&
+                      'border-green-500 text-green-500',
+                  )}
                 >
                   {session.status}
                 </Badge>
