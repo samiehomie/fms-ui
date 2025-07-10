@@ -25,7 +25,7 @@ export interface TripSession {
   idleTime: string // in minutes
   distance: string // in km
   events: string[]
-  path: [number, number][] // [lat, lng]
+  status: string
 }
 
 const TripMap = dynamic(
@@ -107,13 +107,13 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
     if (data) {
       const newSessions: TripSession[] = data.data.trips.map((trip) => ({
         id: trip.id,
-        startLocation: `601 Marks St, Henderson, NV 89014, USA`,
-        endLocation: `Las Vegas Blvd S, Sloan, NV 89054, USA`,
+        startLocation: trip.start_time,
+        endLocation: trip.end_time,
         driveTime: formatDuration(trip.start_time, trip.end_time),
         idleTime: '10',
         distance: '10',
         events: ['test'],
-        path: [],
+        status: trip.status,
       }))
       setSessions(newSessions)
     }
@@ -192,7 +192,7 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
               </ResizablePanel>
               <ResizableHandle withHandle className="z-[999]" />
               <ResizablePanel defaultSize={50} minSize={30}>
-                <TripMap selectedIds={selectedSessions}   />
+                <TripMap selectedIds={selectedSessions} />
               </ResizablePanel>
             </ResizablePanelGroup>
           ) : (

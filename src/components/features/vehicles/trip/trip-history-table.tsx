@@ -55,20 +55,21 @@ export function TripHistoryTable({
     <div>
       <Table>
         <TableHeader>
-          <TableRow className="hover:bg-inherit">
-            <TableHead className="w-[40%] pl-6">
-              <MapPin className="inline-block mr-2 h-4 w-4" />
+          <TableRow className="hover:bg-inherit text-sm">
+            <TableHead className="w-[43%] pl-6">
+              {/* <MapPin className="inline-block mt-[-1px] mr-1 h-4 w-4" /> */}
               Route
             </TableHead>
+            <TableHead>{`Status`}</TableHead>
             <TableHead>
-              <Clock className="inline-block mr-2 h-4 w-4" />
-              Duration
+              {/* <Clock className="inline-block mt-[-1px] mr-1 h-4 w-4" /> */}
+              {`Trip Length`}
             </TableHead>
             <TableHead>
-              <AlertTriangle className="inline-block mr-2 h-4 w-4" />
+              {/* <AlertTriangle className="inline-block mr-1 mt-[-1px] h-4 w-4" /> */}
               Events
             </TableHead>
-            <TableHead className="w-10"></TableHead>
+            <TableHead className=""></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -93,7 +94,7 @@ export function TripHistoryTable({
                       : 'bg-transparent',
                   )}
                 />
-                <div className="flex items-center pl-6 text-xs">
+                <div className="flex items-center pl-4 text-xs">
                   <div>
                     <div>{address}</div>
                     <div className="text-muted-foreground flex gap-x-1 items-center">
@@ -103,10 +104,18 @@ export function TripHistoryTable({
                   </div>
                 </div>
               </TableCell>
-              <TableCell>
+              <TableCell className="">
+                <Badge
+                  variant={'outline'}
+                  className={'text-xs text-muted-foreground font-[400]'}
+                >
+                  {session.status}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-xs">
                 <div>Driving: {session.driveTime}</div>
-                <div className="text-muted-foreground text-xs">
-                  Idle: {session.idleTime}
+                <div className="text-muted-foreground">
+                  Distance: {session.distance}km
                 </div>
               </TableCell>
               <TableCell>
