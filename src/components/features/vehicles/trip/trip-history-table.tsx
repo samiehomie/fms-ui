@@ -12,16 +12,10 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { TripSession } from './trip-content'
-import {
-  Clock,
-  MapPin,
-  AlertTriangle,
-  Eye,
-  EyeOff,
-  MoveRight,
-} from 'lucide-react'
+import { Eye, EyeOff, MoveRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useReverseGeocode } from '@/lib/hooks/queries/useGeocoding'
+import { format, parseISO } from 'date-fns'
 
 interface TripHistoryTableProps {
   sessions: TripSession[]
@@ -72,7 +66,7 @@ export function TripHistoryTable({
                 'group cursor-pointer transition-colors hover:bg-inherit',
                 'hover:bg-slate-100/50',
                 selectedIds.has(session.id) &&
-                  'bg-slate-100/50 hover:bg-slate-200/70 ', // 선택된 상태에서 hover 시 더 진한 배경
+                  'bg-slate-100/50 hover:bg-slate-200/70 ',
               )}
             >
               <TableCell className="font-medium relative">
@@ -86,15 +80,27 @@ export function TripHistoryTable({
                 >
                   {session.id}
                 </div>
-                <div className="flex items-center pl-4 text-xs">
-                  <div>
+                <div className="flex items-center pl-4 text-xs text-gray-800 font-[400]">
+                  <div className='flex flex-col gap-y-[9px] leading-none'> 
                     {startAddress && <div>{startAddress}</div>}
                     {endAddress && (
-                      <div className="text-muted-foreground flex gap-x-1 items-center">
-                        <MoveRight className="leading-none" size={12} />
+                      <div className="flex gap-x-1 items-center">
+                        <MoveRight
+                          className="leading-none text-muted-foreground"
+                          size={12}
+                        />
                         {endAddress}
                       </div>
                     )}
+                    <div className="text-muted-foreground font-light tracking-wider text-[11.6px] font-mono">
+                      {`${format(
+                        parseISO(session.startTime),
+                        'yy.MM.d HH:mm',
+                      )} ~ ${format(
+                        parseISO(session.endTime),
+                        'yy.MM.d HH:mm',
+                      )}`}
+                    </div>
                   </div>
                 </div>
               </TableCell>

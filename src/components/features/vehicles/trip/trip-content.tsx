@@ -22,8 +22,8 @@ import { formatDuration, formatTotalDuration } from '@/lib/api/utils'
 
 export interface TripSession {
   id: number
-  startLocation: string
-  endLocation: string
+  startTime: string
+  endTime: string
   driveTime: string // in minutes
   idleTime: string // in minutes
   distance: string // in km
@@ -102,8 +102,8 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
     if (data) {
       const newSessions: TripSession[] = data.data.trips.map((trip) => ({
         id: trip.id,
-        startLocation: trip.start_time,
-        endLocation: trip.end_time,
+        startTime: trip.start_time,
+        endTime: trip.end_time,
         driveTime: formatDuration(trip.start_time, trip.end_time),
         idleTime: '10',
         distance: '10',
