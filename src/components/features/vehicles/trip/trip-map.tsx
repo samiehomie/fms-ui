@@ -66,22 +66,38 @@ const MapUpdater = ({
 }
 
 const createClusterCustomIcon = (cluster: any) => {
-  const childMarkers = cluster.getAllChildMarkers() as (LeafletMarker & {
-    options: { tripId: string }
-  })[]
-  const tripNumbers = childMarkers.map((marker) =>
-    marker.options.tripId.replace('trip-', ''),
-  )
+  const childMarkers = cluster.getAllChildMarkers() as LeafletMarker[]
+
+  const tripNumbers = childMarkers
+    .map((marker) => {
+      try {
+        const element = marker.getElement()
+        const tripId = element?.getAttribute('data-trip-id')
+        return tripId
+      } catch (error) {
+        console.warn('Error reading trip ID from marker:', error)
+        return null
+      }
+    })
+    .filter((id): id is string => id !== null && id !== undefined)
+
+  if (tripNumbers.length === 0) {
+    return L.divIcon({
+      html: `<div class="trip-cluster-label">Trips</div>`,
+      iconSize: [60, 30],
+    })
+  }
 
   let label = `Trips #${tripNumbers.slice(0, 2).join(', ')}`
   if (tripNumbers.length > 2) {
     label += `, ... (+${tripNumbers.length - 2})`
   }
 
-  const size = 30 + tripNumbers.length * 2
+  const size = Math.max(90, 30 + tripNumbers.length * 2) // 최소 크기 보장
   return L.divIcon({
     html: `<div class="trip-cluster-label">${label}</div>`,
-    iconSize: [size, size],
+    iconSize: [size, 30],
+    iconAnchor: [size / 2, 15],
   })
 }
 
@@ -116,7 +132,13 @@ export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
   if (isLoading) return <div>loading..</div>
   if (!tripDetailsMap) return null
 
-  logger.log('map', tripDetailsMap, sessionsToDisplay)
+  logger.log(
+    'map',
+    tripDetailsMap,
+    'selected Ids',
+    sessionsToDisplay,
+    selectedIds,
+  )
 
   return (
     <MapContainer
@@ -172,7 +194,7 @@ export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
           return (
             <Marker
               key={`trip-${id}`}
-              tripId={id}
+              data-trip-id={id}
               position={startPosition}
               icon={startIcon}
               eventHandlers={{
