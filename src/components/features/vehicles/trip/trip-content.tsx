@@ -43,7 +43,7 @@ const TripMap = dynamic(
 export default function TripContent({ vehicleId }: { vehicleId: number }) {
   const [sessions, setSessions] = useState<TripSession[]>([])
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
-  const [hoveredId, setHoveredId] = useState<number | null>(null)
+  const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
   const [pageParams, setPageParams] = useState<VehicleTripsPaginationParams>({
     page: 1,
     limit: 5,
@@ -56,32 +56,47 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
   })
 
   const handleRowClick = (id: number) => {
-    setSelectedIds((prev) => {
-      const newSelectedIds = new Set(prev)
-      if (newSelectedIds.has(id)) {
-        newSelectedIds.delete(id)
-      } else {
-        newSelectedIds.add(id)
-      }
-      return newSelectedIds
-    })
+    const newSelectedIds = new Set(selectedIds)
+    const newVisibleIds = new Set(visibleIds)
+
+    if (newSelectedIds.has(id)) {
+      newSelectedIds.delete(id)
+      newVisibleIds.delete(id) // 선택 해제 시, 보임 목록에서도 제거
+    } else {
+      newSelectedIds.add(id)
+      newVisibleIds.add(id) // 선택 시, 기본적으로 보이도록 추가
+    }
+    setSelectedIds(newSelectedIds)
+    setVisibleIds(newVisibleIds)
+  }
+
+  const handleVisibilityToggle = (id: number) => {
+    const newVisibleIds = new Set(visibleIds)
+    if (newVisibleIds.has(id)) {
+      newVisibleIds.delete(id)
+    } else {
+      newVisibleIds.add(id)
+    }
+    setVisibleIds(newVisibleIds)
   }
 
   const handleToggleSelectAll = () => {
     if (selectedIds.size === sessions.length) {
       setSelectedIds(new Set())
+      setVisibleIds(new Set())
     } else {
       const allIds = new Set(sessions.map((s) => s.id))
       setSelectedIds(allIds)
+      setVisibleIds(allIds)
     }
   }
 
   const selectedSessions = useMemo(
     () =>
       sessions
-        .filter((session) => selectedIds.has(session.id))
+        .filter((session) => visibleIds.has(session.id))
         .map((session) => session.id),
-    [sessions, selectedIds],
+    [sessions, visibleIds],
   )
 
   const isMapVisible = selectedIds.size > 0
@@ -159,9 +174,9 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
                   <TripHistoryTable
                     sessions={sessions}
                     selectedIds={selectedIds}
+                    visibleIds={visibleIds}
                     onRowClick={handleRowClick}
-                    onRowHover={setHoveredId}
-                    onMouseLeave={() => setHoveredId(null)}
+                    onVisibilityToggle={handleVisibilityToggle}
                   />
                   <TripPagination
                     currentPage={pageParams.page}
@@ -177,7 +192,7 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
               </ResizablePanel>
               <ResizableHandle withHandle className="z-[999]" />
               <ResizablePanel defaultSize={50} minSize={30}>
-                <TripMap selectedIds={selectedSessions} hoveredId={hoveredId} />
+                <TripMap selectedIds={selectedSessions}   />
               </ResizablePanel>
             </ResizablePanelGroup>
           ) : (
@@ -186,9 +201,9 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
                 <TripHistoryTable
                   sessions={sessions}
                   selectedIds={selectedIds}
+                  visibleIds={visibleIds}
                   onRowClick={handleRowClick}
-                  onRowHover={() => {}}
-                  onMouseLeave={() => {}}
+                  onVisibilityToggle={handleVisibilityToggle}
                 />
               </div>
               <TripPagination

@@ -24,22 +24,21 @@ import type { VehicleTripsByTripIdResponse } from '@/types/api/vehicle.types'
 
 interface TripMapProps {
   selectedIds: number[]
-  hoveredId: number | null
 }
 
 const MapUpdater = ({
-  sessionsToDisplay,
+  selectedIds,
   trips,
 }: {
-  sessionsToDisplay: number[]
+  selectedIds: number[]
   trips: Record<number, VehicleTripsByTripIdResponse>
 }) => {
   const map = useMap()
   const isInitialLoad = useRef(true)
 
   useEffect(() => {
-    if (sessionsToDisplay.length > 0) {
-      const allPoints = sessionsToDisplay
+    if (selectedIds.length > 0) {
+      const allPoints = selectedIds
         .map((id) => {
           const trip = trips[id]?.trip.gpss.map((gps) => ({
             lat: parseFloat(gps.latitude),
@@ -59,7 +58,7 @@ const MapUpdater = ({
         }
       }
     }
-  }, [sessionsToDisplay, map])
+  }, [selectedIds, map])
 
   return null
 }
@@ -95,13 +94,13 @@ const createCircleIcon = (color: string) => {
   })
 }
 
-export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
+export default function TripMap({ selectedIds }: TripMapProps) {
   const { data: tripDetailsMap, isLoading } =
     useVehicleTripDetailsBatch(selectedIds)
 
-  const sessionsToDisplay = hoveredId
-    ? selectedIds.filter((s) => s === hoveredId)
-    : selectedIds
+  // const sessionsToDisplay = hoveredId
+  //   ? selectedIds.filter((s) => s === hoveredId)
+  //   : selectedIds
 
   const startIcon = createCircleIcon('bg-[#005EAE]')
   const endIcon = createCircleIcon('bg-[#a5abbd]')
@@ -117,14 +116,6 @@ export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
   if (isLoading) return <div>loading..</div>
   if (!tripDetailsMap) return null
 
-  logger.log(
-    'map',
-    tripDetailsMap,
-    'selected Ids',
-    sessionsToDisplay,
-    selectedIds,
-  )
-
   return (
     <MapContainer
       center={[37.5665, 126.978]} // Default center (Seoul)
@@ -137,7 +128,7 @@ export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {sessionsToDisplay.map((id) => {
+      {selectedIds.map((id) => {
         const gpsData = tripDetailsMap[id].trip.gpss
         if (gpsData.length === 0) {
           return <Fragment key={`trip-${id}`}></Fragment>
@@ -177,7 +168,7 @@ export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
         iconCreateFunction={createClusterCustomIcon}
         showCoverageOnHover={false}
       >
-        {sessionsToDisplay.map((id) => {
+        {selectedIds.map((id) => {
           const gpsData = tripDetailsMap[id].trip.gpss
           if (gpsData.length === 0) {
             return <Fragment key={`trip-${id}`}></Fragment>
@@ -215,10 +206,7 @@ export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
           }
         })}
       </MarkerClusterGroup>
-      <MapUpdater
-        sessionsToDisplay={sessionsToDisplay}
-        trips={tripDetailsMap}
-      />
+      <MapUpdater selectedIds={selectedIds} trips={tripDetailsMap} />
     </MapContainer>
   )
 }

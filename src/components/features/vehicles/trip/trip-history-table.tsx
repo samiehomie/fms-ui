@@ -11,23 +11,24 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { TripSession } from './trip-content'
-import { Clock, MapPin, AlertTriangle } from 'lucide-react'
+import { Clock, MapPin, AlertTriangle, Eye, EyeOff } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { useReverseGeocode } from '@/lib/hooks/queries/useGeocoding'
 
 interface TripHistoryTableProps {
   sessions: TripSession[]
   selectedIds: Set<number>
   onRowClick: (id: number) => void
-  onRowHover: (id: number | null) => void
-  onMouseLeave: () => void
+  visibleIds: Set<number>
+  onVisibilityToggle: (id: number) => void
 }
 
 export function TripHistoryTable({
   sessions,
   selectedIds,
   onRowClick,
-  onRowHover,
-  onMouseLeave,
+  visibleIds,
+  onVisibilityToggle,
 }: TripHistoryTableProps) {
   const {
     data: address,
@@ -44,7 +45,7 @@ export function TripHistoryTable({
   }
 
   return (
-    <div onMouseLeave={onMouseLeave}>
+    <div>
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-inherit">
@@ -60,6 +61,7 @@ export function TripHistoryTable({
               <AlertTriangle className="inline-block mr-2 h-4 w-4" />
               Events
             </TableHead>
+            <TableHead className="w-12"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -67,7 +69,6 @@ export function TripHistoryTable({
             <TableRow
               key={session.id}
               onClick={() => onRowClick(session.id)}
-              onMouseEnter={() => onRowHover(session.id)}
               data-selected={selectedIds.has(session.id)}
               className={cn(
                 'group cursor-pointer transition-colors hover:bg-inherit',
@@ -108,6 +109,26 @@ export function TripHistoryTable({
                     </Badge>
                   ))}
                 </div>
+              </TableCell>
+              <TableCell className="text-center">
+                {selectedIds.has(session.id) && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => {
+                      e.stopPropagation() // 행 전체 클릭 방지
+                      onVisibilityToggle(session.id)
+                    }}
+                    className="h-8 w-8"
+                  >
+                    {visibleIds.has(session.id) ? (
+                      <Eye className="h-4 w-4" />
+                    ) : (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    <span className="sr-only">Toggle visibility</span>
+                  </Button>
+                )}
               </TableCell>
             </TableRow>
           ))}
