@@ -65,21 +65,21 @@ const MapUpdater = ({
   return null
 }
 
-const createClusterCustomIcon = (cluster: any) => {
-  const childMarkers = cluster.getAllChildMarkers() as LeafletMarker[]
+const createClusterCustomIcon = (tripNumbers: number[]) => () => {
+  //const childMarkers = cluster.getAllChildMarkers() as LeafletMarker[]
 
-  const tripNumbers = childMarkers
-    .map((marker) => {
-      try {
-        const element = marker.getElement()
-        const tripId = element?.getAttribute('data-trip-id')
-        return tripId
-      } catch (error) {
-        console.warn('Error reading trip ID from marker:', error)
-        return null
-      }
-    })
-    .filter((id): id is string => id !== null && id !== undefined)
+  // const tripNumbers = childMarkers
+  //   .map((marker) => {
+  //     try {
+  //       const element = marker.getElement()
+  //       const tripId = element?.getAttribute('data-trip-id')
+  //       return tripId
+  //     } catch (error) {
+  //       console.warn('Error reading trip ID from marker:', error)
+  //       return null
+  //     }
+  //   })
+  //   .filter((id): id is string => id !== null && id !== undefined)
 
   if (tripNumbers.length === 0) {
     return L.divIcon({
@@ -88,16 +88,16 @@ const createClusterCustomIcon = (cluster: any) => {
     })
   }
 
-  let label = `Trips #${tripNumbers.slice(0, 2).join(', ')}`
-  if (tripNumbers.length > 2) {
-    label += `, ... (+${tripNumbers.length - 2})`
-  }
+  let label = `${tripNumbers.slice(0, 2).join(', ')}`
+  // if (tripNumbers.length > 2) {
+  //   label += ` ... (+${tripNumbers.length - 2})`
+  // }
 
-  const size = Math.max(90, 30 + tripNumbers.length * 2) // 최소 크기 보장
+  //const size = Math.max(40, 30 + tripNumbers.length * 2) // 최소 크기 보장
   return L.divIcon({
     html: `<div class="trip-cluster-label">${label}</div>`,
-    iconSize: [size, 30],
-    iconAnchor: [size / 2, 15],
+    iconSize: [40, 30],
+    //iconAnchor: [size / 2, 15],
   })
 }
 
@@ -163,7 +163,7 @@ export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
               positions={path as LatLngExpression[]}
               pathOptions={{
                 color: '#005EAE',
-                weight: 5,
+                weight: 3.5,
               }}
             />
             <Marker
@@ -183,7 +183,7 @@ export default function TripMap({ selectedIds, hoveredId }: TripMapProps) {
         )
       })}
       <MarkerClusterGroup
-        iconCreateFunction={createClusterCustomIcon}
+        iconCreateFunction={createClusterCustomIcon(selectedIds)}
         showCoverageOnHover={false}
       >
         {sessionsToDisplay.map((id) => {
