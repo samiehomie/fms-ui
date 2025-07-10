@@ -1,17 +1,19 @@
-import { useQuery, useQueries } from '@tanstack/react-query'
+import { useQuery, useQueries, skipToken } from '@tanstack/react-query'
 import { reverseGeocode } from '@/lib/api/geocoding'
 
 export function useReverseGeocode(
-  latitude: string | number,
-  longitude: string | number,
-  options?: { enabled?: boolean },
+  latitude: string | number | null,
+  longitude: string | number | null,
 ) {
   return useQuery({
     queryKey: ['reverse-geocode', latitude, longitude],
-    queryFn: () => reverseGeocode(latitude, longitude),
+    queryFn:
+      latitude && longitude
+        ? () => reverseGeocode(latitude, longitude)
+        : skipToken,
     staleTime: 24 * 60 * 60 * 1000, // 24시간 캐싱
     gcTime: 7 * 24 * 60 * 60 * 1000, // 7일간 캐시 유지
-    enabled: options?.enabled ?? true,
+    // enabled: options?.enabled ?? true,
     retry: 1, // API 제한으로 인한 재시도 최소화
   })
 }

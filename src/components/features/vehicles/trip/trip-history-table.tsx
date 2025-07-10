@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import {
   Table,
   TableBody,
@@ -20,6 +21,7 @@ import {
   MoveRight,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useVehicleTripDetailsBatch } from '@/lib/hooks/queries/useVehicles'
 import { useReverseGeocode } from '@/lib/hooks/queries/useGeocoding'
 
 interface TripHistoryTableProps {
@@ -37,15 +39,14 @@ export function TripHistoryTable({
   visibleIds,
   onVisibilityToggle,
 }: TripHistoryTableProps) {
-  const {
-    data: address,
-    isLoading,
-    isError,
-  } = useReverseGeocode('37.364037', '126.946976')
+  const { data: startAddress, isError } = useReverseGeocode(
+    '37.101135',
+    '126.901810',
+  )
 
-  if (isLoading) {
-    return <span className="text-muted-foreground">Loading address...</span>
-  }
+  // if (isLoading) {
+  //   return <span className="text-muted-foreground">Loading address...</span>
+  // }
 
   if (isError) {
     return <span className="text-muted-foreground">eror</span>
@@ -96,7 +97,7 @@ export function TripHistoryTable({
                 />
                 <div className="flex items-center pl-4 text-xs">
                   <div>
-                    <div>{address}</div>
+                    {startAddress && <div>{startAddress}</div>}
                     <div className="text-muted-foreground flex gap-x-1 items-center">
                       <MoveRight className="leading-none" size={15} />
                       {session.endLocation}

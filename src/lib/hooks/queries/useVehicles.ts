@@ -80,7 +80,6 @@ export function useVehicleTripDetailsBatch(tripIds: number[]) {
           ? () => vehiclesApi.getVehicleTripsByTripId({ tripId })
           : skipToken,
       staleTime: 5 * 60 * 1000, // 5 minutes
-      enabled: tripId > 0, // 유효한 ID만 요청
     })),
   })
 

@@ -10,7 +10,10 @@ import {
 import { TripHistoryTable } from '@/components/features/vehicles/trip/trip-history-table'
 import { DateRangePicker } from '@/components/ui/data-range-picker'
 import { TripOverview } from '@/components/features/vehicles/trip/trip-overview'
-import { useVehicleTripsPaginated } from '@/lib/hooks/queries/useVehicles'
+import {
+  useVehicleTripsPaginated,
+  useVehicleTripDetailsBatch,
+} from '@/lib/hooks/queries/useVehicles'
 import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TripPagination } from './trip-pagination'
@@ -55,6 +58,7 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
     id: vehicleId,
   })
 
+
   const handleRowClick = (id: number) => {
     const newSelectedIds = new Set(selectedIds)
     const newVisibleIds = new Set(visibleIds)
@@ -90,14 +94,6 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
       setVisibleIds(allIds)
     }
   }
-
-  const selectedSessions = useMemo(
-    () =>
-      sessions
-        .filter((session) => visibleIds.has(session.id))
-        .map((session) => session.id),
-    [sessions, visibleIds],
-  )
 
   const isMapVisible = selectedIds.size > 0
   const areAllSelected =
@@ -192,7 +188,7 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
               </ResizablePanel>
               <ResizableHandle withHandle className="z-[999]" />
               <ResizablePanel defaultSize={50} minSize={30}>
-                <TripMap selectedIds={selectedSessions} />
+                <TripMap selectedIds={Array.from(visibleIds)} />
               </ResizablePanel>
             </ResizablePanelGroup>
           ) : (
