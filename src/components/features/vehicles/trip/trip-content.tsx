@@ -49,7 +49,7 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
   const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
   const [pageParams, setPageParams] = useState<VehicleTripsPaginationParams>({
     page: 1,
-    limit: 10,
+    limit: 6,
     //status: 'completed',
   })
 
@@ -138,7 +138,7 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
   return (
     <div className="flex-1 w-full bg-background text-foreground flex flex-col">
       <header className="flex items-center justify-between mb-8  shrink-0">
-        <h1 className="text-xl font-bold sm:text-4xl tracking-tight">
+        <h1 className="text-xl font-semibold leading-none sm:text-3xl tracking-tight">
           Trips History
         </h1>
         <DateRangePicker />
