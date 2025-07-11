@@ -15,6 +15,8 @@ export async function GET(request: NextRequest) {
     const page = searchParams.get('page') ?? '1'
     const limit = searchParams.get('limit') ?? '10'
     const status = searchParams.get('status') ?? 'completed'
+    const start_date = searchParams.get('start_date') ?? ''
+    const end_date = searchParams.get('end_date') ?? ''
     const id = searchParams.get('id') ?? ''
 
     const { token } = tokenData
@@ -22,6 +24,8 @@ export async function GET(request: NextRequest) {
       page,
       limit,
       status,
+      start_date,
+      end_date,
     })
     try {
       const response = await fetchJson<
@@ -38,10 +42,7 @@ export async function GET(request: NextRequest) {
           'Failed to fetch trips from external API',
         )
       }
-      return createSuccessResponse(
-        response.data,
-        'trips fetched successfully',
-      )
+      return createSuccessResponse(response.data, 'trips fetched successfully')
     } catch (err) {
       logger.error('Error fetching trips:', err)
 

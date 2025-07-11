@@ -51,6 +51,8 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
     page: 1,
     limit: 6,
     status: '',
+    start_date: undefined,
+    end_date: undefined,
   })
 
   const { data, isLoading } = useVehicleTripsPaginated({
@@ -91,6 +93,19 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
       const allIds = new Set(sessions.map((s) => s.id))
       setSelectedIds(allIds)
       setVisibleIds(allIds)
+    }
+  }
+
+  const handleDateRangeChange = (
+    dateRange: { from: string; to: string } | null,
+  ) => {
+    logger.log('dateRange', dateRange)
+    if (dateRange) {
+      setPageParams((old) => ({
+        ...old,
+        start_date: dateRange.from,
+        end_date: dateRange.to,
+      }))
     }
   }
 
@@ -141,7 +156,7 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
         <h1 className="text-xl font-semibold leading-none sm:text-3xl tracking-tight">
           Trips History
         </h1>
-        <DateRangePicker />
+        <DateRangePicker onDateChange={handleDateRangeChange} />
       </header>
       <main className="flex-grow flex-1 overflow-hidden flex flex-col">
         <TripOverview

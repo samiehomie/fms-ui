@@ -160,7 +160,9 @@ export type VehicleTripStatus = 'active' | 'completed' | 'cancelled' | ''
 export interface VehicleTripsPaginationParams {
   page: number
   limit: number
-  status?: VehicleTripStatus
+  status: VehicleTripStatus
+  start_date?: string
+  end_date?: string
 }
 
 export interface VehicleTripsPathParams {

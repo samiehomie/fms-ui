@@ -7,7 +7,7 @@ import type {
   VehiclesSearchPaginationParams,
   VehicleTripsParams,
   VehicleTripsByTripIdParams,
-  VehicleTripsByTripIdResponse
+  VehicleTripsByTripIdResponse,
 } from '@/types/api/vehicle.types'
 import { logger } from '../utils'
 
@@ -131,7 +131,9 @@ export const vehiclesApi = {
       new URLSearchParams({
         page: params.page.toString(),
         limit: params.limit.toString(),
-        status: params.status ?? 'completed',
+        status: params.status,
+        start_date: params.start_date ?? '',
+        end_date: params.end_date ?? '',
       })
 
     const response = await fetchJson<

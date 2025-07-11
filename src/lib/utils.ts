@@ -1,5 +1,32 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import type { DateRange } from 'react-day-picker'
+
+export interface DateRangeFormatted {
+  from: string
+  to: string
+}
+
+export function formatDateRangeForAPI(
+  dateRange: DateRange | undefined,
+): DateRangeFormatted | null {
+  if (!dateRange?.from) {
+    return null
+  }
+
+  // from 날짜: 해당 날짜의 시작 시간 (00:00:00)
+  const fromDate = new Date(dateRange.from)
+  fromDate.setHours(0, 0, 0, 0)
+
+  // to 날짜: 해당 날짜의 끝 시간 (23:59:59) 또는 from과 동일한 날짜
+  const toDate = new Date(dateRange.to || dateRange.from)
+  toDate.setHours(23, 59, 59, 999)
+
+  return {
+    from: fromDate.toISOString(),
+    to: toDate.toISOString(),
+  }
+}
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
