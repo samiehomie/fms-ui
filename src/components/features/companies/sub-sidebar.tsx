@@ -2,7 +2,14 @@
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { ChevronsLeft, Filter, Car, FileDown } from 'lucide-react'
+import {
+  Building,
+  Users,
+  Truck,
+  Settings,
+  Cpu,
+  ChevronsLeft,
+} from 'lucide-react'
 import Link from 'next/link'
 
 interface TripHistorySidebarProps {
@@ -11,9 +18,10 @@ interface TripHistorySidebarProps {
 }
 
 const menuItems = [
-  { icon: Filter, label: 'Filters' },
-  { icon: Car, label: 'Vehicle Details' },
-  { icon: FileDown, label: 'Export Data' },
+  { icon: Building, label: 'Company' },
+  { icon: Users, label: 'Users' },
+  { icon: Truck, label: 'Vehicles' },
+  { icon: Cpu, label: 'Devices' },
 ]
 
 export function TripHistorySidebar({
@@ -24,39 +32,45 @@ export function TripHistorySidebar({
     <div
       className={cn(
         'relative h-full bg-[#f8fafc]/40 border-r transition-all duration-300 ease-in-out',
-        isCollapsed ? 'w-12' : 'w-45',
+        isCollapsed ? 'w-14' : 'w-43',
       )}
     >
       <Button
         variant="ghost"
         size="icon"
         onClick={onToggle}
-        className="absolute top-4 -right-3 z-10 bg-background border rounded-full h-6 w-6"
+        className="absolute top-4 -right-[.625rem] z-10 bg-background border rounded-full h-5 w-5"
       >
         <ChevronsLeft
           className={cn(
-            'h-3 w-3 transition-transform',
+            'h-2 w-2 transition-transform',
             isCollapsed && 'rotate-180',
           )}
         />
       </Button>
-      <div className="p-4"></div>
-      <nav className="mt-4 px-2">
-        {menuItems.map((item) => (
+
+      <nav className="mt-14 pl-4 flex flex-col gap-y-5 w-full">
+        {menuItems.map((item, index) => (
           <Link
             key={item.label}
             href="#"
-            className="flex items-center p-2 rounded-lg hover:bg-background"
+            className="flex items-center relative w-full"
           >
-            <item.icon className="h-4 w-4 shrink-0" />
+            <item.icon className="h-6 w-6 shrink-0 p-1 border rounded-6 bg-[#f5f5f5]" />
             <span
               className={cn(
-                'ml-4 font-medium transition-all text-sm',
-                isCollapsed && 'opacity-0 w-0',
+                'ml-[.65rem] transition-all text-sm overflow-hidden whitespace-nowrap',
+                isCollapsed && 'hidden',
               )}
             >
               {item.label}
             </span>
+            <div
+              className={cn(
+                'absolute bg-gray-900/60 h-[1.39rem] w-[.1rem] right-0 top-[.05rem] translate-x-[100%]',
+                index !== 0 && 'hidden',
+              )}
+            />
           </Link>
         ))}
       </nav>
