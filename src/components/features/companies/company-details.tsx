@@ -6,7 +6,7 @@ import type React from 'react'
 import type { CompanyDetail } from '@/types/api/company.types'
 import CompanyVehiclesContent from '@/components/features/companies/vehicles/company-vehicles-content'
 import SubSidebar from './sub-sidebar'
-import CompanyDetailContent from './company-detail-content'
+import CompanyDetailContent from './detail/company-detail-content'
 
 export type NavItems = 'Company' | 'Users' | 'Vehicles' | 'Devices'
 
@@ -106,9 +106,7 @@ export default function CompanyDetails({
         {activeNavItem === 'Vehicles' && (
           <CompanyVehiclesContent companyId={companyId} />
         )}
-        {activeNavItem === 'Company' && (
-          <CompanyDetailContent company={detail.company} />
-        )}
+        {activeNavItem === 'Company' && <CompanyDetailContent company={detail.company}/>}
       </div>
     </div>
   )

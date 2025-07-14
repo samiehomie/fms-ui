@@ -27,7 +27,10 @@ const CompanyVehiclesContent = ({ companyId }: { companyId: number }) => {
   }
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col gap-y-4">
+      <div className='text-2xl tracking-[-0.01em] font-semibold'>
+        <h3>Vehicles</h3>
+      </div>
       <DataTable
         columns={columns}
         data={data.data.vehicles}
