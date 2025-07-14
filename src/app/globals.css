@@ -175,3 +175,7 @@
   background: none !important;
   border: none !important;
 }
+
+.ant-picker-time-panel {
+  display: none !important;
+}

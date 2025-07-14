@@ -58,6 +58,17 @@ export function DateRangePicker({
         style={{ width: 260 }}
         placeholder={['Start date', 'End date']}
         allowClear={true}
+        showTime={{
+          hideDisabledOptions: true,
+          defaultValue: [
+            dayjs('00:00:00', 'HH:mm:ss'),
+            dayjs('23:59:59', 'HH:mm:ss'),
+          ],
+          format: 'HH:mm:ss',
+          showHour: false,
+          showMinute: false,
+          showSecond: false,
+        }}
       />
     </div>
   )

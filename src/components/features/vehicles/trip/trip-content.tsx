@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import {
   ResizableHandle,
@@ -43,17 +43,20 @@ const TripMap = dynamic(
   },
 )
 
-export default function TripContent({ vehicleId }: { vehicleId: number }) {
+export default function TripContent({
+  vehicleId,
+  pageParams,
+  setPageParams,
+}: {
+  vehicleId: number
+  pageParams: VehicleTripsPaginationParams
+  setPageParams: React.Dispatch<
+    React.SetStateAction<VehicleTripsPaginationParams>
+  >
+}) {
   const [sessions, setSessions] = useState<TripSession[]>([])
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
-  const [pageParams, setPageParams] = useState<VehicleTripsPaginationParams>({
-    page: 1,
-    limit: 6,
-    status: '',
-    start_date: undefined,
-    end_date: undefined,
-  })
 
   const { data, isLoading } = useVehicleTripsPaginated({
     ...pageParams,
@@ -93,19 +96,6 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
       const allIds = new Set(sessions.map((s) => s.id))
       setSelectedIds(allIds)
       setVisibleIds(allIds)
-    }
-  }
-
-  const handleDateRangeChange = (
-    dateRange: { from: string; to: string } | null,
-  ) => {
-    logger.log('dateRange', dateRange)
-    if (dateRange) {
-      setPageParams((old) => ({
-        ...old,
-        start_date: dateRange.from,
-        end_date: dateRange.to,
-      }))
     }
   }
 
@@ -151,63 +141,26 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
   }
 
   return (
-    <div className="flex-1 w-full bg-background text-foreground flex flex-col">
-      <header className="flex items-center justify-between mb-8  shrink-0">
-        <h1 className="text-xl font-semibold leading-none sm:text-3xl tracking-tight">
-          Trips History
-        </h1>
-        <DateRangePicker onDateChange={handleDateRangeChange} />
-      </header>
-      <main className="flex-grow flex-1 overflow-hidden flex flex-col">
-        <TripOverview
-          totalDriveTime={totalDriveTime}
-          totalIdleTime={'100'}
-          totalDistance={'100'}
-          totalTrips={data.data.trips.length}
-          vehicleName={`Vehicle-${vehicleId}`}
-          onToggleSelectAll={handleToggleSelectAll}
-          areAllSelected={areAllSelected}
-        />
-        <div className="flex-grow flex-1 overflow-hidden flex flex-col">
-          {isMapVisible ? (
-            <ResizablePanelGroup
-              direction="horizontal"
-              className="h-full w-full"
+    <main className="flex-grow flex-1 overflow-hidden flex flex-col">
+      <TripOverview
+        totalDriveTime={totalDriveTime}
+        totalIdleTime={'100'}
+        totalDistance={'100'}
+        totalTrips={data.data.trips.length}
+        vehicleName={`Vehicle-${vehicleId}`}
+        onToggleSelectAll={handleToggleSelectAll}
+        areAllSelected={areAllSelected}
+      />
+      <div className="flex-grow flex-1 overflow-hidden flex flex-col">
+        {isMapVisible ? (
+          <ResizablePanelGroup direction="horizontal" className="h-full w-full">
+            <ResizablePanel
+              defaultSize={50}
+              minSize={40}
+              maxSize={60}
+              className="flex flex-col flex-1"
             >
-              <ResizablePanel
-                defaultSize={50}
-                minSize={40}
-                maxSize={60}
-                className="flex flex-col flex-1"
-              >
-                <div className="flex-1 flex flex-col overflow-y-auto pl-1 pr-4 pt-4 pb-4">
-                  <TripHistoryTable
-                    sessions={sessions}
-                    selectedIds={selectedIds}
-                    visibleIds={visibleIds}
-                    onRowClick={handleRowClick}
-                    onVisibilityToggle={handleVisibilityToggle}
-                  />
-                  <TripPagination
-                    currentPage={pageParams.page}
-                    totalPages={data.data.pagination.pages}
-                    onPageChange={(page) => {
-                      setPageParams({
-                        ...pageParams,
-                        page,
-                      })
-                    }}
-                  />
-                </div>
-              </ResizablePanel>
-              <ResizableHandle withHandle className="z-[999]" />
-              <ResizablePanel defaultSize={50} minSize={30}>
-                <TripMap selectedIds={Array.from(visibleIds)} />
-              </ResizablePanel>
-            </ResizablePanelGroup>
-          ) : (
-            <div className="flex-1 flex flex-col pl-1 pr-4 pt-4 pb-4 ">
-              <div className="flex-grow overflow-y-auto">
+              <div className="flex-1 flex flex-col overflow-y-auto pl-1 pr-4 pt-4 pb-4">
                 <TripHistoryTable
                   sessions={sessions}
                   selectedIds={selectedIds}
@@ -215,21 +168,47 @@ export default function TripContent({ vehicleId }: { vehicleId: number }) {
                   onRowClick={handleRowClick}
                   onVisibilityToggle={handleVisibilityToggle}
                 />
+                <TripPagination
+                  currentPage={pageParams.page}
+                  totalPages={data.data.pagination.pages}
+                  onPageChange={(page) => {
+                    setPageParams({
+                      ...pageParams,
+                      page,
+                    })
+                  }}
+                />
               </div>
-              <TripPagination
-                currentPage={pageParams.page}
-                totalPages={data.data.pagination.pages}
-                onPageChange={(page) => {
-                  setPageParams({
-                    ...pageParams,
-                    page,
-                  })
-                }}
+            </ResizablePanel>
+            <ResizableHandle withHandle className="z-[999]" />
+            <ResizablePanel defaultSize={50} minSize={30}>
+              <TripMap selectedIds={Array.from(visibleIds)} />
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        ) : (
+          <div className="flex-1 flex flex-col pl-1 pr-4 pt-4 pb-4 ">
+            <div className="flex-grow overflow-y-auto">
+              <TripHistoryTable
+                sessions={sessions}
+                selectedIds={selectedIds}
+                visibleIds={visibleIds}
+                onRowClick={handleRowClick}
+                onVisibilityToggle={handleVisibilityToggle}
               />
             </div>
-          )}
-        </div>
-      </main>
-    </div>
+            <TripPagination
+              currentPage={pageParams.page}
+              totalPages={data.data.pagination.pages}
+              onPageChange={(page) => {
+                setPageParams({
+                  ...pageParams,
+                  page,
+                })
+              }}
+            />
+          </div>
+        )}
+      </div>
+    </main>
   )
 }

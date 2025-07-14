@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import TripContent from '@/components/features/vehicles/trip/trip-content'
+import TripContainer from '@/components/features/vehicles/trip/trip-container'
 
 type CompanyIdParams = {
   params: Promise<{ id: string }>
@@ -8,7 +8,7 @@ type CompanyIdParams = {
 const Page: FC<CompanyIdParams> = async ({ params }) => {
   const { id } = await params
 
-  return <TripContent vehicleId={parseInt(id)} />
+  return <TripContainer vehicleId={parseInt(id)} />
 }
 
 export default Page

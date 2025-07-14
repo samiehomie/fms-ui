@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
       start_date,
       end_date,
     })
+    logger.log('date api', apiUrl)
     try {
       const response = await fetchJson<
         ApiResponseType<'GET /vehicles/trips/vehicle/id'>
