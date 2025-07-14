@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import type { ApiResponseType } from '@/types/api'
 import type React from 'react'
 import type { CompanyDetail } from '@/types/api/company.types'
@@ -23,7 +24,12 @@ import {
 import DataTree from './data-tree'
 import { VerifiedBadge, UnVerifiedBadge } from '@/components/ui/custom-badges'
 import CompanyVehiclesContent from '@/components/features/companies/vehicles/company-vehicles-content'
-
+import { TripHistorySidebar } from './sub-sidebar'
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/components/ui/sidebar'
 
 const vehicleData = {
   vehicle_name: 'Fleet Vehicle 01',
@@ -121,22 +127,30 @@ const InfoRow = ({
 
 export default function CompanyDetails({
   detail,
-  companyId
+  companyId,
 }: {
   detail: ApiResponseType<'GET /companies/id'>
   companyId: number
 }) {
   const { company } = detail
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
 
   return (
-    <div className="flex-1 flex flex-col">
-      <div className="flex-1 grid gap-x-12 lg:grid-cols-11">
-        <div className="lg:col-span-2 h-full flex flex-col relative">
-          <DataTree detail={detail} />
-          <div className="absolute bg-gray-200/90 w-[1px] h-[100%] -translate-y-1/2 top-1/2 right-[-23px]" />
-        </div>
-        <div className="lg:col-span-9 space-y-5 grid grid-cols-3 gap-x-5 self-start">
-          {/* <Card className="shadow-none px-3 gap-3">
+    <div className="flex flex-1">
+      <TripHistorySidebar
+        isCollapsed={isSidebarCollapsed}
+        onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+      />
+      <div className="flex-1 flex flex-col pl-[1.625rem] pt-5">
+        <CompanyVehiclesContent companyId={companyId} />
+        {/* <div className="flex-1 grid gap-x-12 lg:grid-cols-11">
+            <div className="lg:col-span-2 h-full flex flex-col relative">
+              <DataTree detail={detail} />
+
+              <div className="absolute bg-gray-200/90 w-[1px] h-[100%] -translate-y-1/2 top-1/2 right-[-23px]" />
+            </div>
+            <div className="lg:col-span-9 space-y-5 grid grid-cols-3 gap-x-5 self-start">
+              <Card className="shadow-none px-3 gap-3">
             <CardHeader>
               <div className="flex gap-x-3 items-start">
                 <div>
@@ -262,9 +276,9 @@ export default function CompanyDetails({
                 />
               </div>
             </CardContent>
-          </Card> */}
-          <CompanyVehiclesContent companyId={companyId} />
-        </div>
+          </Card>
+            </div>
+          </div> */}
       </div>
     </div>
   )

@@ -16,7 +16,7 @@ const Page: FC<CompanyIdParams> = async ({ params }) => {
   )
 
   return (
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1 -ml-6 -mt-6 -mb-6">
       <CompanyDetails detail={response.data} companyId={parseInt(id)} />
     </div>
   )

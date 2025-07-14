@@ -103,8 +103,7 @@ export function DataTable<TData, TValue>({
   //const selectedFilesCount = selectedFiles.length
 
   return (
-    <div className="flex flex-col gap-y-3 ">
-    
+    <div className="flex flex-col gap-y-3 flex-1">
       <div className="text-slate-900 ">
         <Table className="border-none">
           <TableHeader className="bg-slate-50  border border-slate-300">
@@ -158,16 +157,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between py-4 px-1">
-        <div className="text-sm text-muted-foreground flex items-center">
-          {/* {selectedFilesCount} of {table.getFilteredRowModel().rows.length}{' '}
-          row(s) selected */}
-          {/* <Button
-            className="ml-4"
-            variant="secondary"
-            // onClick={handleDelete}
-          >{`${selectedFilesCount} row(s) delete`}</Button> */}
-        </div>
+      <div className="flex items-center justify-end py-5 px-1">
         <DataTablePagination table={table} />
       </div>
     </div>

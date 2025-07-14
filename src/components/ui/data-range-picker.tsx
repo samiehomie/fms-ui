@@ -24,10 +24,7 @@ export function DateRangePicker({
   ])
 
   const handleDateChange = useCallback(
-    (
-      dates: [Dayjs | null, Dayjs | null] | null,
-      dateStrings: [string, string],
-    ) => {
+    (dates: [Dayjs | null, Dayjs | null] | null) => {
       if (dates && dates[0] && dates[1]) {
         setDateRange([dates[0], dates[1]])
         // Convert to Date objects for formatDateRangeForAPI
