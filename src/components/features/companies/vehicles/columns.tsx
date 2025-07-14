@@ -109,7 +109,7 @@ export const columns: ColumnDef<VehiclesByCompany>[] = [
 
             <DropdownMenuItem
               onClick={() => {
-                router.push(`/companies/${companyId}`)
+                router.push(`/vehicles/${companyId}`)
               }}
             >
               View Details
