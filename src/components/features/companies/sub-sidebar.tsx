@@ -2,32 +2,36 @@
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import {
-  Building,
-  Users,
-  Truck,
-  Settings,
-  Cpu,
-  ChevronsLeft,
-} from 'lucide-react'
+import { Building, Users, Truck, Cpu, ChevronsLeft } from 'lucide-react'
 import Link from 'next/link'
+import type { NavItems } from './company-details'
+import type { LucideProps } from 'lucide-react'
 
-interface TripHistorySidebarProps {
+interface SubSidebarProps {
   isCollapsed: boolean
   onToggle: () => void
+  activeNavItem: NavItems
+  setActiveNavItem: React.Dispatch<React.SetStateAction<NavItems>>
 }
 
-const menuItems = [
+const menuItems: {
+  icon: React.ForwardRefExoticComponent<
+    Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
+  >
+  label: NavItems
+}[] = [
   { icon: Building, label: 'Company' },
   { icon: Users, label: 'Users' },
   { icon: Truck, label: 'Vehicles' },
   { icon: Cpu, label: 'Devices' },
 ]
 
-export function TripHistorySidebar({
+export default function SubSidebar({
   isCollapsed,
   onToggle,
-}: TripHistorySidebarProps) {
+  activeNavItem,
+  setActiveNavItem,
+}: SubSidebarProps) {
   return (
     <div
       className={cn(
@@ -50,11 +54,11 @@ export function TripHistorySidebar({
       </Button>
 
       <nav className="mt-14 pl-4 flex flex-col gap-y-5 w-full">
-        {menuItems.map((item, index) => (
-          <Link
+        {menuItems.map((item) => (
+          <button
             key={item.label}
-            href="#"
-            className="flex items-center relative w-full"
+            onClick={() => setActiveNavItem(item.label)}
+            className="flex items-center relative w-full cursor-pointer"
           >
             <item.icon className="h-6 w-6 shrink-0 p-1 border rounded-6 bg-[#f5f5f5]" />
             <span
@@ -68,10 +72,10 @@ export function TripHistorySidebar({
             <div
               className={cn(
                 'absolute bg-gray-900/60 h-[1.39rem] w-[.1rem] right-0 top-[.05rem] translate-x-[100%]',
-                index !== 0 && 'hidden',
+                item.label !== activeNavItem && 'hidden',
               )}
             />
-          </Link>
+          </button>
         ))}
       </nav>
     </div>
