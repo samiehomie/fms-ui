@@ -27,21 +27,21 @@ import { AddCompanyForm } from '../features/companies/add-company-form'
 import { Tag } from 'antd'
 import { Switch } from 'antd'
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData, TValue, TPagination = any> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  pagination: CompaniesPaginationParams
-  setPagination: React.Dispatch<React.SetStateAction<CompaniesPaginationParams>>
+  pagination: TPagination
+  setPagination: React.Dispatch<React.SetStateAction<TPagination>>
   totalCount: number
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData, TValue, TPagination extends Record<string, any>>({
   columns,
   data,
   totalCount,
   pagination,
   setPagination,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData, TValue, TPagination>) {
   const [search, setSearch] = useState('')
   const [sorting, setSorting] = useState<SortingState>([])
   const [tablePagination, setTablePagination] = useState<PaginationState>({

@@ -7,7 +7,7 @@ import {
   Building,
   Users,
   Truck,
-  Settings,
+  Cpu,
   LogOut,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -21,7 +21,7 @@ const navigationItems = [
   { name: 'Companies', href: '/companies', icon: Building },
   { name: 'Users', href: '/users', icon: Users },
   { name: 'Vehicles', href: '/vehicles', icon: Truck },
-  { name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'Devices', href: '/devices', icon: Cpu },
 ]
 
 export function Sidebar() {
