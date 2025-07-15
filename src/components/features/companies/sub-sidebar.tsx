@@ -2,10 +2,10 @@
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { Building, Users, Truck, Cpu, ChevronsLeft } from 'lucide-react'
-import Link from 'next/link'
+import { Building, Users, Truck, Cpu, ChevronsLeft, Undo2 } from 'lucide-react'
 import type { NavItems } from './company-details'
 import type { LucideProps } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 interface SubSidebarProps {
   isCollapsed: boolean
@@ -18,12 +18,13 @@ const menuItems: {
   icon: React.ForwardRefExoticComponent<
     Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
   >
-  label: NavItems
+  label: NavItems | 'Back to List'
 }[] = [
   { icon: Building, label: 'Company' },
   { icon: Users, label: 'Users' },
   { icon: Truck, label: 'Vehicles' },
   { icon: Cpu, label: 'Devices' },
+  { icon: Undo2, label: 'Back to List' },
 ]
 
 export default function SubSidebar({
@@ -32,6 +33,7 @@ export default function SubSidebar({
   activeNavItem,
   setActiveNavItem,
 }: SubSidebarProps) {
+  const router = useRouter()
   return (
     <div
       className={cn(
@@ -57,7 +59,13 @@ export default function SubSidebar({
         {menuItems.map((item) => (
           <button
             key={item.label}
-            onClick={() => setActiveNavItem(item.label)}
+            onClick={() => {
+              if (item.label === 'Back to List') {
+                router.back()
+              } else {
+                setActiveNavItem(item.label)
+              }
+            }}
             className="flex items-center relative w-full cursor-pointer"
           >
             <item.icon className="h-6 w-6 shrink-0 p-1 border rounded-6 bg-[#f5f5f5]" />

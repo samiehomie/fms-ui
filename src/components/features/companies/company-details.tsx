@@ -102,7 +102,7 @@ export default function CompanyDetails({
         onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         setActiveNavItem={setActiveNavItem}
       />
-      <div className="flex-1 flex flex-col pl-[1.8rem] pt-5">
+      <div className="flex-1 flex flex-col pl-[1.8rem] pt-5 pb-10">
         {activeNavItem === 'Vehicles' && (
           <CompanyVehiclesContent companyId={companyId} />
         )}
