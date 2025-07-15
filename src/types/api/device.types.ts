@@ -28,9 +28,9 @@ export type DevicesResponse = PaginatedResponseWithKey<Device, 'edge_devices'>
 export interface DevicesPaginationParams {
   page: number
   limit: number
-  verified: boolean
-  terminated: boolean
-  type: DeviceTypes
+  verified?: boolean
+  terminated?: boolean
+  type?: DeviceTypes
 }
 
 export interface DeviceCreateRequest {

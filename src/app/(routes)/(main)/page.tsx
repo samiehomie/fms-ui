@@ -4,6 +4,7 @@ import { StatCard } from '@/components/features/dashboard/stat-card'
 import { RecentCompaniesList } from '@/components/features/dashboard/recent-companies-list'
 import { VehicleStatusList } from '@/components/features/dashboard/vehicle-status-list'
 import { Globe, Users, Truck, RefreshCw } from 'lucide-react'
+import DashboardContent from '@/components/features/dashboard/dashboard-content'
 
 export default function DashboardPage() {
   const { user, isLoading } = useAuth()
@@ -22,34 +23,7 @@ export default function DashboardPage() {
           Welcome, {user?.name || user?.username || 'User'}!
         </p>
       </div>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          title="Total Companies"
-          value="3"
-          description="Companies in system"
-          Icon={Globe}
-        />
-        <StatCard
-          title="Total Users"
-          value="4"
-          description="Registered users"
-          Icon={Users}
-        />
-        <StatCard
-          title="Total Vehicles"
-          value="3"
-          description="Fleet vehicles"
-          Icon={Truck}
-        />
-        <StatCard
-          title="Active Vehicles"
-          value="2"
-          description="Currently active"
-          Icon={RefreshCw}
-        />
-      </div>
-
+      <DashboardContent />
       <div className="grid gap-6 md:grid-cols-2">
         <RecentCompaniesList />
         <VehicleStatusList />

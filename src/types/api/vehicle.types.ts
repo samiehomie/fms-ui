@@ -244,6 +244,25 @@ export interface VehicleTripsByTripIdParams {
   tripId: number
 }
 
+export interface ActiveTrip {
+  id: number
+  plate_number: string
+  start_time: string
+  end_time: string
+  status: 'active'
+  created_at: string
+  updated_at: string
+}
+
+export interface VehicleActiveTripsPaginationParams {
+  page: number
+  limit: number
+}
+export type ActiveTripsResponse = PaginatedResponseWithKey<
+  ActiveTrip,
+  'active_trips'
+>
+
 export interface VehicleApiTypes {
   'GET /vehicles': {
     request: {}
