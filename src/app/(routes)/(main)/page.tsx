@@ -27,7 +27,7 @@ export default function DashboardPage() {
         <StatCard
           title="Total Companies"
           value="3"
-          description="Active companies in system"
+          description="Companies in system"
           Icon={Globe}
         />
         <StatCard

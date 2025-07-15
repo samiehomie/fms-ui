@@ -51,8 +51,10 @@ const InfoItem = ({
 
 export default function CompanyDetailContent({
   company,
+  handleClick,
 }: {
   company: CompanyByIdResponse['company']
+  handleClick: () => void
 }) {
   const { name, verified, users = [], vehicles = [], address } = company
 
@@ -187,6 +189,7 @@ export default function CompanyDetailContent({
                   </p>
                 )}
                 <Button
+                  onClick={handleClick}
                   variant="outline"
                   size="sm"
                   className="w-full mt-auto bg-transparent"

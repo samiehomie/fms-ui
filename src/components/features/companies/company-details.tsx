@@ -106,7 +106,12 @@ export default function CompanyDetails({
         {activeNavItem === 'Vehicles' && (
           <CompanyVehiclesContent companyId={companyId} />
         )}
-        {activeNavItem === 'Company' && <CompanyDetailContent company={detail.company}/>}
+        {activeNavItem === 'Company' && (
+          <CompanyDetailContent
+            company={detail.company}
+            handleClick={() => setActiveNavItem('Vehicles')}
+          />
+        )}
       </div>
     </div>
   )
