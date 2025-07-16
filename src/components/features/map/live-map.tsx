@@ -8,7 +8,7 @@ import 'leaflet-defaulticon-compatibility'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-markercluster'
 import L from 'leaflet'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { MovingVehicleMarker } from './moving-vehicle-marker'
 
 interface Vehicle {
