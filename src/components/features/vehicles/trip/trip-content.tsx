@@ -169,7 +169,7 @@ export default function TripContent({
                   onVisibilityToggle={handleVisibilityToggle}
                 />
                 <TripPagination
-                  currentPage={pageParams.page}
+                  currentPage={pageParams.page ?? 1}
                   totalPages={data.data.pagination.pages}
                   onPageChange={(page) => {
                     setPageParams({
@@ -197,7 +197,7 @@ export default function TripContent({
               />
             </div>
             <TripPagination
-              currentPage={pageParams.page}
+              currentPage={pageParams.page ?? 1}
               totalPages={data.data.pagination.pages}
               onPageChange={(page) => {
                 setPageParams({
