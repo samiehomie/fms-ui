@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getAuthData } from './lib/api/auth'
 
 const PUBLIC_ROUTES = ['/login', '/signup']
-const PROTECTED_ROUTES = ['/companies', '/vehicles']
+const PROTECTED_ROUTES = ['/companies', '/vehicles', '/users', '/devices']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -14,6 +14,12 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(`${process.env.NEXT_PUBLIC_FRONT_URL}/`)
     }
     return NextResponse.next()
+  }
+
+  if (pathname === '/') {
+    if (!auth) {
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_FRONT_URL}/login`)
+    }
   }
 
   // 보호된 경로 접근 시 미인증 사용자 리다이렉트

@@ -133,3 +133,11 @@ export const getInitials = (name?: string, username?: string) => {
   }
   return 'CN'
 }
+
+export function capitalizeFirstLetter(segment: string) {
+  const segmentSplited = segment.split('-')
+  const sementJoined = segmentSplited
+    .map((s) => s[0].toUpperCase() + s.slice(1))
+    .join(' ')
+  return sementJoined
+}

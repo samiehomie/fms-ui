@@ -1,18 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from 'lucide-react'
+import { ChartGantt, CarFront, Building, User, Cpu } from 'lucide-react'
 
 import { NavMain } from './nav-main'
 import { NavUser } from './nav-user'
@@ -35,13 +24,13 @@ const data = {
     {
       title: 'Dashboard',
       url: '/',
-      icon: SquareTerminal,
+      icon: ChartGantt,
     },
     {
       title: 'Vehicles',
       url: '/vehicles',
       isActive: true,
-      icon: BookOpen,
+      icon: CarFront,
       items: [
         {
           title: 'Total',
@@ -56,18 +45,18 @@ const data = {
     {
       title: 'Companies',
       url: '/companies',
-      icon: Bot,
+      icon: Building,
     },
     {
       title: 'Users',
       url: '/users',
-      icon: Settings2,
+      icon: User,
     },
 
     {
       title: 'Devices',
       url: '/devices',
-      icon: Settings2,
+      icon: Cpu,
     },
   ],
 }
@@ -78,8 +67,8 @@ function SidebarLogo() {
   return (
     <SidebarHeader
       className={cn(
-        'ml-2 mt-[.625rem] mb-[.525rem]',
-        state === 'collapsed' && 'ml-0 mb-0',
+        'pl-4 pt-[1.025rem] pb-[.825rem]',
+        state === 'collapsed' && 'p-[1.025rem_0px_10px_0px]',
       )}
     >
       <Link href="/">
@@ -88,7 +77,7 @@ function SidebarLogo() {
             src={banfShortLogoWEBP}
             alt="logo"
             width={20}
-            className="mx-auto"
+            className="mx-auto "
           />
         ) : (
           <Image src={banfleetLogoSVG} alt="logo" />

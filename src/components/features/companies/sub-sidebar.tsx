@@ -24,7 +24,7 @@ const menuItems: {
   { icon: Users, label: 'Users' },
   { icon: Truck, label: 'Vehicles' },
   { icon: Cpu, label: 'Devices' },
-  { icon: Undo2, label: 'Back to List' },
+  // { icon: Undo2, label: 'Back to List' },
 ]
 
 export default function SubSidebar({
