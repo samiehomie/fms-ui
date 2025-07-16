@@ -15,7 +15,8 @@ import type {
 } from '@/types/api/vehicle.types'
 import { ApiResponseType, ApiRequestType } from '@/types/api'
 import { toast } from 'sonner'
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
+import { logger } from '@/lib/utils'
 
 type CreateVehicleResponse = ApiResponseType<'POST /vehicles'>
 type CreateVehicleRequest = ApiRequestType<'POST /vehicles'>
@@ -123,5 +124,55 @@ export function useAllVehicleTripsPaginated(
     queryKey: ['all trips', params],
     queryFn: () => vehiclesApi.getAllVehicleTrips(params),
     staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
+interface Vehicle {
+  id: number
+  plate_number: string
+  lat: number
+  lng: number
+  heading: number
+}
+
+export function useLiveVehicles() {
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    const eventSource = new EventSource('/api/vehicles/live')
+    eventSource.onmessage = (event) => {
+      const updates: Vehicle[] = JSON.parse(event.data)
+      // Update TanStack Query cache directly
+      queryClient.setQueryData<Map<number, Vehicle>>(
+        ['live-vehicles'],
+        (oldData) => {
+          const newData = oldData ? new Map(oldData) : new Map()
+          updates.forEach((vehicle) => {
+            newData.set(vehicle.id, vehicle)
+          })
+          return newData
+        },
+      )
+    }
+
+    // Basic error handling with reconnection logic
+    eventSource.onerror = () => {
+      // Here you would implement exponential backoff for retries
+      logger.error(
+        'SSE connection error. Closing and will be retried by browser.',
+      )
+      eventSource.close()
+    }
+
+    // Cleanup on component unmount
+    return () => {
+      eventSource.close()
+    }
+  }, [queryClient])
+
+  return useQuery<Map<number, Vehicle>>({
+    queryKey: ['live-vehicles'],
+    initialData: new Map(),
+    staleTime: Number.POSITIVE_INFINITY, // Data is live, no need to refetch via standard means
   })
 }
