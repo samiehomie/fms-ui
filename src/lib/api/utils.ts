@@ -101,3 +101,21 @@ export const buildURL = (
 
   return url.toString()
 }
+
+export function buildSearchParams(params: Record<string, any>): URLSearchParams {
+  const filteredParams: Record<string, string> = {}
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      if (typeof value === 'number') {
+        filteredParams[key] = value.toString()
+      } else if (typeof value === 'boolean') {
+        filteredParams[key] = value.toString()
+      } else if (typeof value === 'string') {
+        filteredParams[key] = value
+      }
+    }
+  })
+
+  return new URLSearchParams(filteredParams)
+}

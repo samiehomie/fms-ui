@@ -5,7 +5,8 @@ import { useDashboard } from '@/lib/hooks/queries/useDashboard'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default function DashboardContent() {
-  const { companies, vehicles, users, devices, isLoading } = useDashboard()
+  const { companies, vehicles, users, devices, isLoading, activeTrips } =
+    useDashboard()
 
   if (isLoading) {
     return (
@@ -39,7 +40,7 @@ export default function DashboardContent() {
       />
       <StatCard
         title="Active Vehicles"
-        value="2"
+        value={activeTrips?.data.pagination.total ?? 0}
         description="Currently active"
         Icon={RefreshCw}
       />

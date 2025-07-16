@@ -8,8 +8,10 @@ import type {
   VehicleTripsParams,
   VehicleTripsByTripIdParams,
   VehicleTripsByTripIdResponse,
+  VehicleTripsPaginationParams,
 } from '@/types/api/vehicle.types'
 import { logger } from '../utils'
+import { buildSearchParams } from './utils'
 
 export const vehiclesApi = {
   getVehiclesPaginated: async (
@@ -126,15 +128,7 @@ export const vehiclesApi = {
   ): Promise<
     ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/vehicle/id'>>
   > => {
-    const searchParams =
-      params &&
-      new URLSearchParams({
-        page: params.page.toString(),
-        limit: params.limit.toString(),
-        status: params.status,
-        start_date: params.start_date ?? '',
-        end_date: params.end_date ?? '',
-      })
+    const searchParams = buildSearchParams(params)
 
     const response = await fetchJson<
       ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/vehicle/id'>>
@@ -156,6 +150,23 @@ export const vehiclesApi = {
       ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/id'>>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/trips/details?id=${params.tripId}`,
+    )
+
+    if (!response.success) {
+      throw new Error('Failed to fetch trips')
+    }
+
+    return response.data
+  },
+
+  getAllVehicleTrips: async (
+    params: VehicleTripsPaginationParams,
+  ): Promise<ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips'>>> => {
+    const searchParams = buildSearchParams(params)
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips'>>
+    >(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/trips?type=all&${searchParams}`,
     )
 
     if (!response.success) {

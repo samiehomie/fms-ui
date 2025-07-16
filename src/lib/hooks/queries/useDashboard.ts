@@ -1,5 +1,8 @@
 import { useCompaniesPaginated } from './useCompanies'
-import { useVehiclesPaginated } from './useVehicles'
+import {
+  useVehiclesPaginated,
+  useAllVehicleTripsPaginated,
+} from './useVehicles'
 import { useUsersPaginated } from './useUsers'
 import { useDevicesPaginated } from './useDevices'
 
@@ -13,14 +16,22 @@ export const useDashboard = () => {
   const vehiclesQuery = useVehiclesPaginated(paramsAllData)
   const usersQuery = useUsersPaginated(paramsAllData)
   const devicesQuery = useDevicesPaginated(paramsAllData)
+  const activeTripsQuery = useAllVehicleTripsPaginated({
+    status: 'active',
+  })
 
   return {
     companies: companiesQuery.data,
     vehicles: vehiclesQuery.data,
     users: usersQuery.data,
     devices: devicesQuery.data,
-    isLoading: [companiesQuery, vehiclesQuery, usersQuery, devicesQuery].some(
-      (query) => query.isPending,
-    ),
+    activeTrips: activeTripsQuery.data,
+    isLoading: [
+      companiesQuery,
+      vehiclesQuery,
+      usersQuery,
+      devicesQuery,
+      activeTripsQuery,
+    ].some((query) => query.isPending),
   }
 }

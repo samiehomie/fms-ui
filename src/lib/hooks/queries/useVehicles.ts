@@ -10,7 +10,8 @@ import type {
   VehiclesPaginationParams,
   VehiclesSearchPaginationParams,
   VehicleTripsParams,
-  VehicleTripsByTripIdResponse
+  VehicleTripsByTripIdResponse,
+  VehicleTripsPaginationParams,
 } from '@/types/api/vehicle.types'
 import { ApiResponseType, ApiRequestType } from '@/types/api'
 import { toast } from 'sonner'
@@ -113,4 +114,14 @@ export function useVehicleTripDetailsBatch(tripIds: number[]) {
     errors,
     isSuccess,
   }
+}
+
+export function useAllVehicleTripsPaginated(
+  params: VehicleTripsPaginationParams,
+) {
+  return useQuery({
+    queryKey: ['all trips', params],
+    queryFn: () => vehiclesApi.getAllVehicleTrips(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
 }

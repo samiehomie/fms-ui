@@ -158,9 +158,9 @@ export type VehiclesSearchResponse = VehiclesResponse & {
 
 export type VehicleTripStatus = 'active' | 'completed' | 'cancelled' | ''
 export interface VehicleTripsPaginationParams {
-  page: number
-  limit: number
-  status: VehicleTripStatus
+  page?: number
+  limit?: number
+  status?: VehicleTripStatus
   start_date?: string
   end_date?: string
 }
@@ -287,5 +287,9 @@ export interface VehicleApiTypes {
   'GET /vehicles/trips/id': {
     request: {}
     response: VehicleTripsByTripIdResponse
+  }
+  'GET /vehicles/trips': {
+    request: {}
+    response: VehicleTripsResponse
   }
 }
