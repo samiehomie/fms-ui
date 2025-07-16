@@ -12,7 +12,10 @@ const paramsAllData = {
 }
 
 export const useDashboard = () => {
-  const companiesQuery = useCompaniesPaginated(paramsAllData)
+  const companiesQuery = useCompaniesPaginated({
+    page: 1,
+    limit: 6,
+  })
   const vehiclesQuery = useVehiclesPaginated(paramsAllData)
   const usersQuery = useUsersPaginated(paramsAllData)
   const devicesQuery = useDevicesPaginated(paramsAllData)

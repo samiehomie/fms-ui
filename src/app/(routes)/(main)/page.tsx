@@ -1,9 +1,5 @@
 'use client'
 import { useAuth } from '@/components/features/auth/auth-provider'
-import { StatCard } from '@/components/features/dashboard/stat-card'
-import { RecentCompaniesList } from '@/components/features/dashboard/recent-companies-list'
-import { VehicleStatusList } from '@/components/features/dashboard/vehicle-status-list'
-import { Globe, Users, Truck, RefreshCw } from 'lucide-react'
 import DashboardContent from '@/components/features/dashboard/dashboard-content'
 
 export default function DashboardPage() {
@@ -24,10 +20,6 @@ export default function DashboardPage() {
         </p>
       </div>
       <DashboardContent />
-      <div className="grid gap-6 md:grid-cols-2">
-        <RecentCompaniesList />
-        <VehicleStatusList />
-      </div>
     </div>
   )
 }

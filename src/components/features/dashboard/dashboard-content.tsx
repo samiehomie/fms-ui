@@ -1,8 +1,10 @@
 'use client'
 import { StatCard } from '@/components/features/dashboard/stat-card'
-import { Globe, Users, Truck, RefreshCw } from 'lucide-react'
+import { Globe, Users, Truck, Cpu } from 'lucide-react'
 import { useDashboard } from '@/lib/hooks/queries/useDashboard'
 import { Skeleton } from '@/components/ui/skeleton'
+import { RecentCompaniesList } from '@/components/features/dashboard/recent-companies-list'
+import { VehicleStatusList } from '@/components/features/dashboard/vehicle-status-list'
 
 export default function DashboardContent() {
   const { companies, vehicles, users, devices, isLoading, activeTrips } =
@@ -19,31 +21,44 @@ export default function DashboardContent() {
     )
   }
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <StatCard
-        title="Total Companies"
-        value={companies?.data.companies.length ?? 0}
-        description="Companies in system"
-        Icon={Globe}
-      />
-      <StatCard
-        title="Total Users"
-        value={users?.data.users.length ?? 0}
-        description="Registered users"
-        Icon={Users}
-      />
-      <StatCard
-        title="Total Vehicles"
-        value={vehicles?.data.vehicles.length ?? 0}
-        description="Fleet vehicles"
-        Icon={Truck}
-      />
-      <StatCard
-        title="Active Vehicles"
-        value={activeTrips?.data.pagination.total ?? 0}
-        description="Currently active"
-        Icon={RefreshCw}
-      />
-    </div>
+    <>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Total Companies"
+          value={companies?.data.companies.length ?? 0}
+          description="Companies in system"
+          Icon={Globe}
+        />
+        <StatCard
+          title="Total Users"
+          value={users?.data.users.length ?? 0}
+          description="Registered users"
+          Icon={Users}
+        />
+        <StatCard
+          title="Total Vehicles"
+          value={vehicles?.data.vehicles.length ?? 0}
+          description="Fleet vehicles"
+          Icon={Truck}
+        />
+        <StatCard
+          title="Total Devices"
+          value={devices?.data.edge_devices.length ?? 0}
+          description="Registered devices"
+          Icon={Cpu}
+        />
+      </div>
+      <div className="grid gap-6 md:grid-cols-2">
+        <RecentCompaniesList
+          companies={
+            companies?.data.companies.map((company) => ({
+              name: company.name,
+              type: company.type,
+            })) ?? []
+          }
+        />
+        <VehicleStatusList />
+      </div>
+    </>
   )
 }
