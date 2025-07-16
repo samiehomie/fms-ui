@@ -22,7 +22,13 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  useSidebar,
 } from '@/components/ui/sidebar'
+import { cn } from '@/lib/utils'
+import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
+import banfShortLogoWEBP from '@/../public/logos/banf-short.webp'
+import Link from 'next/link'
+import Image from 'next/image'
 
 const data = {
   navMain: [
@@ -66,12 +72,38 @@ const data = {
   ],
 }
 
+function SidebarLogo() {
+  const { state } = useSidebar()
+
+  return (
+    <SidebarHeader
+      className={cn(
+        'ml-2 mt-[.625rem] mb-[.525rem]',
+        state === 'collapsed' && 'ml-0 mb-0',
+      )}
+    >
+      <Link href="/">
+        {state === 'collapsed' ? (
+          <Image
+            src={banfShortLogoWEBP}
+            alt="logo"
+            width={20}
+            className="mx-auto"
+          />
+        ) : (
+          <Image src={banfleetLogoSVG} alt="logo" />
+        )}
+      </Link>
+    </SidebarHeader>
+  )
+}
+
 export function SidebarMain({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader></SidebarHeader>
+      <SidebarLogo />
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
