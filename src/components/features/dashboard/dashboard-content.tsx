@@ -49,14 +49,7 @@ export default function DashboardContent() {
         />
       </div>
       <div className="grid gap-6 md:grid-cols-2">
-        <RecentCompaniesList
-          companies={
-            companies?.data.companies.map((company) => ({
-              name: company.name,
-              type: company.type,
-            })) ?? []
-          }
-        />
+        <RecentCompaniesList companies={companies?.data.companies ?? []} />
         <VehicleStatusList />
       </div>
     </>

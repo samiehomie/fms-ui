@@ -66,6 +66,8 @@ export async function GET(request: NextRequest) {
       apiUrl = buildURL(`/vehicles/trips/vehicle/${id}`, commonParams)
     }
 
+    logger.info('date range-->', apiUrl)
+
     return fetchTripsData(apiUrl, token)
   })
 }

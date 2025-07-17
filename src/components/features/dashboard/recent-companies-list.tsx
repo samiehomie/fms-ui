@@ -7,16 +7,10 @@ import {
 } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Building2 } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import type { Company } from '@/types/api/company.types'
 
-export function RecentCompaniesList({
-  companies,
-}: {
-  companies: {
-    name: string
-    type: string
-    logo?: string
-  }[]
-}) {
+export function RecentCompaniesList({ companies }: { companies: Company[] }) {
   return (
     <Card className="bg-white dark:bg-slate-900 shadow-sm">
       <CardHeader>
@@ -40,12 +34,18 @@ export function RecentCompaniesList({
               </AvatarFallback>
             </Avatar> */}
             <div className="flex-1">
-              <p className="text-sm font-medium text-[#0f172a] dark:text-slate-50">
-                {company.name}
-              </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                {company.type}
-              </p>
+              <div className="flex items-center gap-x-3">
+                <p className="text-sm font-medium text-[#0f172a] dark:text-slate-50">
+                  {company.name}
+                </p>
+                <Badge
+                  variant={'outline'}
+                  className="text-[9px] py-[3px] px-[5px] font-[400]"
+                >
+                  {company.type}
+                </Badge>
+              </div>
+              <div className=' text-muted-foreground text-xs'>{company.website}</div>
             </div>
           </div>
         ))}

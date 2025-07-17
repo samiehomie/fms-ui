@@ -172,6 +172,15 @@ export interface VehicleTripsPathParams {
 export type VehicleTripsParams = VehicleTripsPaginationParams &
   VehicleTripsPathParams
 
+export interface VehicleTripEvent {
+  id: number
+  created_at: string
+  updated_at: string
+  event_type: string
+  event_time: string
+  event_count: number
+  details: string
+}
 export interface VehicleTrip {
   id: number
   created_at: string
@@ -179,7 +188,13 @@ export interface VehicleTrip {
   start_time: string
   end_time: string
   status: VehicleTripStatus
+  distance_in_kph: string | null
+  duration_in_secs: string | null
+  fuel_consumed: string | null
   vehicle_id: VehicleReference
+  start_point: string | null
+  end_point: string | null
+  events: VehicleTripEvent[]
 }
 
 export type VehicleTripsResponse = PaginatedResponseWithKey<

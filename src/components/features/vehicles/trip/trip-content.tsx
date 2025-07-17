@@ -14,7 +14,10 @@ import {
   useVehicleTripsPaginated,
   useVehicleTripDetailsBatch,
 } from '@/lib/hooks/queries/useVehicles'
-import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
+import type {
+  VehicleTripsPaginationParams,
+  VehicleTripEvent,
+} from '@/types/api/vehicle.types'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TripPagination } from './trip-pagination'
 import { logger } from '@/lib/utils'
@@ -27,7 +30,7 @@ export interface TripSession {
   driveTime: string // in minutes
   idleTime: string // in minutes
   distance: string // in km
-  events: string[]
+  events: VehicleTripEvent[]
   status: string
 }
 
@@ -112,7 +115,7 @@ export default function TripContent({
         driveTime: formatDuration(trip.start_time, trip.end_time),
         idleTime: '10',
         distance: '10',
-        events: ['test'],
+        events: trip.events,
         status: trip.status,
       }))
       setSessions(newSessions)
@@ -146,7 +149,7 @@ export default function TripContent({
         totalDriveTime={totalDriveTime}
         totalIdleTime={'100'}
         totalDistance={'100'}
-        totalTrips={data.data.trips.length}
+        totalTrips={data.data.pagination.total}
         vehicleName={`Vehicle-${vehicleId}`}
         onToggleSelectAll={handleToggleSelectAll}
         areAllSelected={areAllSelected}

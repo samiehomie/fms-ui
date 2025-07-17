@@ -124,9 +124,9 @@ export function TripHistoryTable({
               </TableCell>
               <TableCell>
                 <div className="flex flex-wrap gap-1">
-                  {session.events.map((event, index) => (
-                    <Badge key={index} variant="secondary">
-                      {event}
+                  {session.events.map((event) => (
+                    <Badge key={event.id} variant="secondary">
+                      {event.details}
                     </Badge>
                   ))}
                 </div>
