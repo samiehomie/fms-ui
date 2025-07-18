@@ -1,21 +1,17 @@
 import { fetchJson } from '@/lib/api/fetch'
-import type { ApiRequestType, ApiResponseType } from '@/types/api'
-import { ApiSuccessResponse } from '@/types/api/route.types'
 import type {
-  VehiclesPaginationParams,
-  VehiclesByCompanyIdPaginationParams,
-  VehiclesSearchPaginationParams,
-  VehicleTripsParams,
-  VehicleTripsByTripIdParams,
-  VehicleTripsByTripIdResponse,
-  VehicleTripsPaginationParams,
-} from '@/types/api/vehicle.types'
+  ApiRequestType,
+  ApiResponseType,
+  ApiParamsType,
+} from '@/types/api'
+import { ApiSuccessResponse } from '@/types/api/route.types'
+import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
 import { logger } from '../utils'
 import { buildSearchParams } from './utils'
 
 export const vehiclesApi = {
   getVehiclesPaginated: async (
-    params: VehiclesPaginationParams,
+    params: ApiParamsType<'GET /vehicles'>,
     cookie?: string,
   ): Promise<ApiSuccessResponse<ApiResponseType<'GET /vehicles'>>> => {
     const searchParams =
@@ -46,7 +42,7 @@ export const vehiclesApi = {
     return response.data
   },
   getVehiclesSearchPaginated: async (
-    params: VehiclesSearchPaginationParams,
+    params: ApiParamsType<'GET /vehicles/search'>,
     cookie?: string,
   ): Promise<ApiSuccessResponse<ApiResponseType<'GET /vehicles/search'>>> => {
     const searchParams =
@@ -97,9 +93,27 @@ export const vehiclesApi = {
 
     return response.data
   },
+  deleteVehicle: async (
+    id: string,
+  ): Promise<ApiSuccessResponse<ApiResponseType<'DELETE /vehicles/{id}'>>> => {
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'DELETE /vehicles/{id}'>>
+    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: id,
+    })
+
+    if (!response.success) {
+      throw new Error('Failed to delete vehicle')
+    }
+    return response.data
+  },
   // 페이지네이션된 회사 목록 조회
   getVehiclesByCompanyIdPaginated: async (
-    params: VehiclesByCompanyIdPaginationParams,
+    params: ApiParamsType<'GET /vehicles/company/{company_id}'>,
     id: number,
   ): Promise<
     ApiSuccessResponse<ApiResponseType<'GET /vehicles/company/{company_id}'>>
@@ -124,7 +138,7 @@ export const vehiclesApi = {
     return response.data
   },
   getVehicleTripsByVehicleIdPaginated: async (
-    params: VehicleTripsParams,
+    params: ApiParamsType<'GET /vehicles/trips/vehicle/{vehicle_id}'>,
   ): Promise<
     ApiSuccessResponse<
       ApiResponseType<'GET /vehicles/trips/vehicle/{vehicle_id}'>
@@ -148,7 +162,7 @@ export const vehiclesApi = {
   },
 
   getVehicleTripsByTripId: async (
-    params: VehicleTripsByTripIdParams,
+    params: ApiParamsType<'GET /vehicles/trips/{id}'>,
   ): Promise<
     ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/{id}'>>
   > => {

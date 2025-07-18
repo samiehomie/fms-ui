@@ -52,10 +52,12 @@ export interface JWTAuthPayload {
 
 export interface AuthApiTypes {
   'POST /auth/login': {
+     params: {}
     request: LoginRequest
     response: LoginResponse
   }
   'POST /auth/refresh': {
+     params: {}
     request: RefreshTokenRequest
     response: RefreshTokenResponse
   }

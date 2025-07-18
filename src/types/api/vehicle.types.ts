@@ -90,7 +90,7 @@ export interface VehiclesByCompanyIdPaginationParams {
   limit: number
 }
 
-export interface VehiclesCreateRequest {
+export interface VehicleCreateRequest {
   vehicle: {
     vehicle_name: string
     plate_number: string
@@ -105,7 +105,7 @@ export interface VehiclesCreateRequest {
   }
 }
 
-export interface VehiclesCreateResponse {
+export interface VehicleCreateResponse {
   message: string
   vehicle: {
     id: number
@@ -278,32 +278,53 @@ export type ActiveTripsResponse = PaginatedResponseWithKey<
   'active_trips'
 >
 
+export interface VehicleDeleteParams {
+  id: string
+}
+
+export interface VehicleDeleteResponse {
+  message: string
+  deleted_at: string
+}
+
 export interface VehicleApiTypes {
   'GET /vehicles': {
+    params: VehiclesPaginationParams
     request: {}
     response: VehiclesResponse
   }
+  'DELETE /vehicles/{id}': {
+    params: VehicleDeleteParams
+    request: {}
+    response: VehicleDeleteResponse
+  }
   'GET /vehicles/search': {
+    params: VehiclesSearchPaginationParams
     request: {}
     response: VehiclesSearchResponse
   }
   'GET /vehicles/company/{company_id}': {
+    params: VehiclesByCompanyIdPaginationParams
     request: {}
     response: VehiclesByCompanyIdResponse
   }
   'POST /vehicles': {
-    request: VehiclesCreateRequest
-    response: VehiclesCreateResponse
+    params: {}
+    request: VehicleCreateRequest
+    response: VehicleCreateResponse
   }
   'GET /vehicles/trips/vehicle/{vehicle_id}': {
+    params: VehicleTripsParams
     request: {}
     response: VehicleTripsResponse
   }
   'GET /vehicles/trips/{id}': {
+    params: VehicleTripsByTripIdParams
     request: {}
     response: VehicleTripsByTripIdResponse
   }
   'GET /vehicles/trips': {
+    params: VehicleTripsParams
     request: {}
     response: VehicleTripsResponse
   }

@@ -1,9 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { companiesApi } from '@/lib/api/company'
 import type { CompaniesPaginationParams } from '@/types/api/company.types'
-import { ApiResponseType, ApiRequestType } from '@/types/api'
+import { ApiResponseType, ApiRequestType, ApiParamsType } from '@/types/api'
 import { toast } from 'sonner'
-import type { VehiclesByCompanyIdPaginationParams } from '@/types/api/vehicle.types'
 import { vehiclesApi } from '@/lib/api/vehicle'
 
 type CreateCompanyResponse = ApiResponseType<'POST /companies'>
@@ -136,7 +135,7 @@ export function useVerifyCompany(id: number) {
 
 export function useCompanyVehiclesPaginated(
   companyId: number,
-  params: VehiclesByCompanyIdPaginationParams,
+  params: ApiParamsType<'GET /vehicles/company/{company_id}'>,
 ) {
   return useQuery({
     queryKey: ['vehicles', params, companyId],

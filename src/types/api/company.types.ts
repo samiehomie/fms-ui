@@ -187,26 +187,32 @@ export interface CompaniesVerifyResponse {
 
 export interface CompanyApiTypes {
   'POST /companies': {
+    params: {}
     request: CompaniesCreateRequest
     response: CompaniesCreateResponse
   }
   'GET /companies': {
+    params: {}
     request: {}
     response: CompaniesResponse
   }
   'GET /companies/{id}': {
+    params: {}
     request: {}
     response: CompanyByIdResponse
   }
   'DELETE /companies': {
+    params: {}
     request: CompaniesDeleteRequest
     response: CompaniesDeleteResponse
   }
   'PUT /companies': {
+    params: {}
     request: CompaniesCreateRequest
     response: CompaniesCreateResponse
   }
   'PATCH /companies/{id}/verify': {
+    params: {}
     request: CompaniesVerifyRequest
     response: CompaniesVerifyResponse
   }

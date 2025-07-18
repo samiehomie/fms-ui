@@ -1,17 +1,17 @@
 'use client'
 import { DataTable } from '@/components/ui/data-table'
-import type { VehiclesPaginationParams } from '@/types/api/vehicle.types'
 import { useState } from 'react'
 import { useVehiclesPaginated } from '@/lib/hooks/queries/useVehicles'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'
+import type { ApiParamsType } from '@/types/api'
 
 const VehiclesContent = () => {
-  const [pageParams, setPageParams] = useState<VehiclesPaginationParams>({
+  const [pageParams, setPageParams] = useState<ApiParamsType<'GET /vehicles'>>({
     page: 1,
     limit: 10,
-    include_deleted: false,
+    include_deleted: true,
   })
 
   const { data, isLoading } = useVehiclesPaginated(pageParams)
@@ -40,6 +40,9 @@ const VehiclesContent = () => {
         pagination={pageParams}
         setPagination={setPageParams}
         totalCount={data.data.pagination.total}
+        hiddenColumns={{
+          isDeleted: false,
+        }}
       />
     </div>
   )

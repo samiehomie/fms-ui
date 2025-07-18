@@ -10,6 +10,7 @@ import {
   getSortedRowModel,
   useReactTable,
   PaginationState,
+  VisibilityState,
 } from '@tanstack/react-table'
 import {
   Table,
@@ -19,13 +20,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
 import { DataTablePagination } from '../features/companies/data-table-pagination'
-import { Input } from '@/components/ui/input'
-import { CompaniesPaginationParams } from '@/types/api/company.types'
-import { AddCompanyForm } from '../features/companies/add-company-form'
-import { Tag } from 'antd'
-import { Switch } from 'antd'
+import { cn } from '@/lib/utils'
 
 interface DataTableProps<TData, TValue, TPagination = any> {
   columns: ColumnDef<TData, TValue>[]
@@ -33,14 +29,20 @@ interface DataTableProps<TData, TValue, TPagination = any> {
   pagination: TPagination
   setPagination: React.Dispatch<React.SetStateAction<TPagination>>
   totalCount: number
+  hiddenColumns?: VisibilityState
 }
 
-export function DataTable<TData, TValue, TPagination extends Record<string, any>>({
+export function DataTable<
+  TData,
+  TValue,
+  TPagination extends Record<string, any>,
+>({
   columns,
   data,
   totalCount,
   pagination,
   setPagination,
+  hiddenColumns,
 }: DataTableProps<TData, TValue, TPagination>) {
   const [search, setSearch] = useState('')
   const [sorting, setSorting] = useState<SortingState>([])
@@ -50,6 +52,9 @@ export function DataTable<TData, TValue, TPagination extends Record<string, any>
   })
   const [rowSelection, setRowSelection] = useState({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+    hiddenColumns ?? {},
+  )
 
   const table = useReactTable({
     data,
@@ -81,7 +86,9 @@ export function DataTable<TData, TValue, TPagination extends Record<string, any>
       columnFilters,
       rowSelection,
       pagination: tablePagination,
+      columnVisibility,
     },
+    onColumnVisibilityChange: setColumnVisibility,
   })
 
   // const selectedFiles = Object.keys(rowSelection).map((rowId) => {
@@ -129,21 +136,27 @@ export function DataTable<TData, TValue, TPagination extends Record<string, any>
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="text-xs">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+              table.getRowModel().rows.map((row) => {
+                const isDeleted = row.getValue('isDeleted') as boolean
+                return (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                    className={cn(
+                      isDeleted && 'opacity-30 text-muted-foreground',
+                    )}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="text-xs">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                )
+              })
             ) : (
               <TableRow>
                 <TableCell

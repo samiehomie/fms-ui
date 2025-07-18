@@ -101,3 +101,40 @@ export async function POST(request: NextRequest) {
     }
   })
 }
+
+export async function DELETE(request: NextRequest) {
+  return await withAuth(async (tokenData) => {
+    const { token } = tokenData
+    const id = (await request.json()) as string
+    const apiUrl = buildURL(`/vehicles/${id}`)
+
+    try {
+      const response = await fetchJson<
+        ApiResponseType<'DELETE /vehicles/{id}'>
+      >(apiUrl, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      if (!response.success) {
+        return createErrorResponse(
+          'INTERNAL_ERROR',
+          'Failed to delete vehicle from external API',
+        )
+      }
+      return createSuccessResponse(
+        response.data,
+        'A vehicle deleted successfully',
+      )
+    } catch (err) {
+      logger.error('Error deleting a vehicle:', err)
+
+      return createErrorResponse(
+        'INTERNAL_ERROR',
+        'An unexpected error occurred while deleting a vehicle',
+      )
+    }
+  })
+}

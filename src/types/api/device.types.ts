@@ -77,10 +77,12 @@ export interface DeviceCreateResponse {
 
 export interface DeviceApiTypes {
   'GET /devices/edge-devices': {
+    params: {}
     request: {}
     response: DevicesResponse
   }
   'POST /devices/edge-devices': {
+    params: {}
     request: DeviceCreateRequest
     response: DeviceCreateResponse
   }

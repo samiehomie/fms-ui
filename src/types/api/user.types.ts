@@ -55,14 +55,17 @@ export interface UsersCreateResponse {
 
 export interface UserApiTypes {
   'GET /users': {
+    params: {}
     request: {}
     response: UsersResponse
   }
   'POST /users': {
+    params: {}
     request: UsersCreateRequest
     response: UsersCreateResponse
   }
   'POST /users/verify': {
+    params: {}
     request: UsersVerifyRequest
     response: UsersVerifyResponse
   }

@@ -7,13 +7,10 @@ import {
 } from '@tanstack/react-query'
 import { vehiclesApi } from '@/lib/api/vehicle'
 import type {
-  VehiclesPaginationParams,
-  VehiclesSearchPaginationParams,
-  VehicleTripsParams,
   VehicleTripsByTripIdResponse,
   VehicleTripsPaginationParams,
 } from '@/types/api/vehicle.types'
-import { ApiResponseType, ApiRequestType } from '@/types/api'
+import { ApiResponseType, ApiRequestType, ApiParamsType } from '@/types/api'
 import { toast } from 'sonner'
 import { useMemo, useEffect } from 'react'
 import { logger } from '@/lib/utils'
@@ -21,7 +18,7 @@ import { logger } from '@/lib/utils'
 type CreateVehicleResponse = ApiResponseType<'POST /vehicles'>
 type CreateVehicleRequest = ApiRequestType<'POST /vehicles'>
 
-export function useVehiclesPaginated(params: VehiclesPaginationParams) {
+export function useVehiclesPaginated(params: ApiParamsType<'GET /vehicles'>) {
   return useQuery({
     queryKey: ['vehicles', params],
     queryFn: () => vehiclesApi.getVehiclesPaginated(params),
@@ -31,7 +28,7 @@ export function useVehiclesPaginated(params: VehiclesPaginationParams) {
 
 // TODO: useVehiclesPaginated와 통합될 예정
 export function useVehiclesSearchPaginated(
-  params: VehiclesSearchPaginationParams,
+  params: ApiParamsType<'GET /vehicles/search'>,
 ) {
   return useQuery({
     queryKey: ['vehicles', params],
@@ -65,7 +62,38 @@ export function useCreateVehicle() {
   })
 }
 
-export function useVehicleTripsPaginated(params: VehicleTripsParams) {
+export function useDeleteVehicle() {
+  const queryClient = useQueryClient()
+  return useMutation<
+    ApiResponseType<'DELETE /vehicles/{id}'>,
+    Error,
+    ApiParamsType<'DELETE /vehicles/{id}'>
+  >({
+    mutationFn: async (deleteParams) => {
+      const { data } = await vehiclesApi.deleteVehicle(deleteParams.id)
+      return data
+    },
+    onSuccess: () => {
+      // 회사 목록 쿼리 무효화
+      queryClient.invalidateQueries({
+        queryKey: ['vehicles'],
+      })
+      toast.success('A vehicle deleted.', {
+        position: 'bottom-center',
+      })
+    },
+    onError: (error) => {
+      toast.error('Deleting a vehicle failed.', {
+        position: 'bottom-center',
+      })
+      logger.error('Delete vehicle error:', error)
+    },
+  })
+}
+
+export function useVehicleTripsPaginated(
+  params: ApiParamsType<'GET /vehicles/trips/vehicle/{vehicle_id}'>,
+) {
   return useQuery({
     queryKey: ['trips', params],
     queryFn: () => vehiclesApi.getVehicleTripsByVehicleIdPaginated(params),

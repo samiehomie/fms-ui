@@ -21,6 +21,7 @@ import { IconDotsVertical } from '@tabler/icons-react'
 import { logger } from '@/lib/utils'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
 import type { Vehicle } from '@/types/api/vehicle.types'
+import { useDeleteVehicle } from '@/lib/hooks/queries/useVehicles'
 
 export const columns: ColumnDef<Vehicle>[] = [
   {
@@ -95,27 +96,21 @@ export const columns: ColumnDef<Vehicle>[] = [
     id: 'actions',
     cell: ({ row }) => {
       const router = useRouter()
-      const companyId = row.original.id
+      const { isdeleted, id: companyId } = row.original
+      const mutationDelete = useDeleteVehicle()
 
       const [open, setOpen] = useState(false)
 
-      // const handleVerifyAction = async () => {
-      //   try {
-      //     await mutationVerify.mutateAsync({ verified: !verified })
-      //     setOpen(false) // 메뉴 닫기
-      //   } catch (error) {
-      //     logger.error('Verify action failed:', error)
-      //   }
-      // }
-
-      // const handleDeleteAction = async () => {
-      //   try {
-      //     await mutationDelete.mutateAsync(companyId)
-      //     setOpen(false) // 메뉴 닫기
-      //   } catch (error) {
-      //     logger.error('Delete action failed:', error)
-      //   }
-      // }
+      const handleDeleteAction = async () => {
+        try {
+          await mutationDelete.mutateAsync({
+            id: companyId.toString(),
+          })
+          setOpen(false) // 메뉴 닫기
+        } catch (error) {
+          logger.error('Delete action failed:', error)
+        }
+      }
 
       return (
         <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -129,36 +124,45 @@ export const columns: ColumnDef<Vehicle>[] = [
               <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-32">
-            {/* <ModifyCompanyForm id={companyId} onClose={() => setOpen(false)} /> */}
-            {/* <ConfirmDialog
-              onClose={() => setOpen(false)}
-              handleClick={handleVerifyAction}
-            >
-              <div className="text-sm p-2 hover:bg-gray-100/90 rounded-sm">
-                {verified ? 'Unverify' : 'Verify'}
-              </div>
-            </ConfirmDialog> */}
-
-            <DropdownMenuItem
-              onClick={() => {
-                router.push(`/vehicles/${companyId}`)
-              }}
-            >
-              View Details
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            {/* <ConfirmDialog
-              onClose={() => setOpen(false)}
-              handleClick={handleDeleteAction}
-            >
-              <div className="text-sm p-2 text-red-500 hover:bg-gray-100/90 rounded-sm">
-                Delete
-              </div>
-            </ConfirmDialog> */}
-          </DropdownMenuContent>
+          {isdeleted ? (
+            <DropdownMenuContent align="end" className="w-32">
+              <ConfirmDialog
+                onClose={() => setOpen(false)}
+                handleClick={handleDeleteAction}
+              >
+                <div className="text-sm p-2 text-red-500 hover:bg-gray-100/90 rounded-sm">
+                  Restore
+                </div>
+              </ConfirmDialog>
+            </DropdownMenuContent>
+          ) : (
+            <DropdownMenuContent align="end" className="w-32">
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push(`/vehicles/${companyId}`)
+                }}
+              >
+                View Details
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <ConfirmDialog
+                onClose={() => setOpen(false)}
+                handleClick={handleDeleteAction}
+              >
+                <div className="text-sm p-2 text-red-500 hover:bg-gray-100/90 rounded-sm">
+                  Delete
+                </div>
+              </ConfirmDialog>
+            </DropdownMenuContent>
+          )}
         </DropdownMenu>
       )
     },
+  },
+  // 숨겨진 열 (스타일링용)
+  {
+    id: 'isDeleted',
+    accessorKey: 'isdeleted', // 실제 데이터 키
+    header: 'isDeleted',
   },
 ]
