@@ -11,8 +11,8 @@ type CreateCompanyRequest = ApiRequestType<'POST /companies'>
 type DeleteCompanyResponse = ApiResponseType<'DELETE /companies'>
 type ModifyCompanyResponse = ApiResponseType<'PUT /companies'>
 type ModifyCompanyRequest = ApiRequestType<'PUT /companies'>
-type VerifyCompanyRequest = ApiRequestType<'PATCH /companies/id'>
-type VerifyCompanyRespone = ApiResponseType<'PATCH /companies/id'>
+type VerifyCompanyRequest = ApiRequestType<'PATCH /companies/{id}/verify'>
+type VerifyCompanyRespone = ApiResponseType<'PATCH /companies/{id}/verify'>
 
 export function useCompaniesPaginated(params: CompaniesPaginationParams) {
   return useQuery({
@@ -133,7 +133,6 @@ export function useVerifyCompany(id: number) {
     },
   })
 }
-
 
 export function useCompanyVehiclesPaginated(
   companyId: number,

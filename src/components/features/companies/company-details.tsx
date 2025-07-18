@@ -88,7 +88,7 @@ export default function CompanyDetails({
   detail,
   companyId,
 }: {
-  detail: ApiResponseType<'GET /companies/id'>
+  detail: ApiResponseType<'GET /companies/{id}'>
   companyId: number
 }) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)

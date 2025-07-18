@@ -43,9 +43,9 @@ export const companiesApi = {
   getCompanyById: async (
     id: number,
     cookie?: string,
-  ): Promise<ApiSuccessResponse<ApiResponseType<'GET /companies/id'>>> => {
+  ): Promise<ApiSuccessResponse<ApiResponseType<'GET /companies/{id}'>>> => {
     const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'GET /companies/id'>>
+      ApiSuccessResponse<ApiResponseType<'GET /companies/{id}'>>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`,
       cookie
@@ -137,10 +137,10 @@ export const companiesApi = {
 
   verifyCompany: async (
     id: number,
-    verified: ApiRequestType<'PATCH /companies/id'>,
+    verified: ApiRequestType<'PATCH /companies/{id}/verify'>,
   ) => {
     const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'PATCH /companies/id'>>
+      ApiSuccessResponse<ApiResponseType<'PATCH /companies/{id}/verify'>>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`, {
       method: 'PATCH',
       headers: {

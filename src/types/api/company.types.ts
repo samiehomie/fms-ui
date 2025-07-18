@@ -194,7 +194,7 @@ export interface CompanyApiTypes {
     request: {}
     response: CompaniesResponse
   }
-  'GET /companies/id': {
+  'GET /companies/{id}': {
     request: {}
     response: CompanyByIdResponse
   }
@@ -206,7 +206,7 @@ export interface CompanyApiTypes {
     request: CompaniesCreateRequest
     response: CompaniesCreateResponse
   }
-  'PATCH /companies/id': {
+  'PATCH /companies/{id}/verify': {
     request: CompaniesVerifyRequest
     response: CompaniesVerifyResponse
   }

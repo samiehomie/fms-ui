@@ -185,20 +185,19 @@ export async function PATCH(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const id = searchParams.get('id')
     const apiUrl = buildURL(`/companies/${id}/verify`)
-    const requestBody = await request.json() as ({verified: boolean})
+    const requestBody = (await request.json()) as { verified: boolean }
 
     try {
-      const response = await fetchJson<ApiResponseType<'PATCH /companies/id'>>(
-        apiUrl,
-        {
-          method: 'PATCH',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestBody),
+      const response = await fetchJson<
+        ApiResponseType<'PATCH /companies/{id}/verify'>
+      >(apiUrl, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-      )
+        body: JSON.stringify(requestBody),
+      })
       if (!response.success) {
         return createErrorResponse(
           'INTERNAL_ERROR',

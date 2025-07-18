@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     const apiUrl = buildURL(`/vehicles/company/${id}`, { page, limit })
     try {
       const response = await fetchJson<
-        ApiResponseType<'GET /vehicles/company/id'>
+        ApiResponseType<'GET /vehicles/company/{company_id}'>
       >(apiUrl, {
         headers: {
           Authorization: `Bearer ${token}`,

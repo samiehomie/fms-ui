@@ -102,7 +102,7 @@ export const vehiclesApi = {
     params: VehiclesByCompanyIdPaginationParams,
     id: number,
   ): Promise<
-    ApiSuccessResponse<ApiResponseType<'GET /vehicles/company/id'>>
+    ApiSuccessResponse<ApiResponseType<'GET /vehicles/company/{company_id}'>>
   > => {
     const searchParams =
       params &&
@@ -112,7 +112,7 @@ export const vehiclesApi = {
       })
 
     const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'GET /vehicles/company/id'>>
+      ApiSuccessResponse<ApiResponseType<'GET /vehicles/company/{company_id}'>>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies/vehicles?id=${id}&${searchParams}`,
     )
@@ -126,12 +126,16 @@ export const vehiclesApi = {
   getVehicleTripsByVehicleIdPaginated: async (
     params: VehicleTripsParams,
   ): Promise<
-    ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/vehicle/id'>>
+    ApiSuccessResponse<
+      ApiResponseType<'GET /vehicles/trips/vehicle/{vehicle_id}'>
+    >
   > => {
     const searchParams = buildSearchParams(params)
 
     const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/vehicle/id'>>
+      ApiSuccessResponse<
+        ApiResponseType<'GET /vehicles/trips/vehicle/{vehicle_id}'>
+      >
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/trips?id=${params.id}&${searchParams}`,
     )
@@ -145,9 +149,11 @@ export const vehiclesApi = {
 
   getVehicleTripsByTripId: async (
     params: VehicleTripsByTripIdParams,
-  ): Promise<ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/id'>>> => {
+  ): Promise<
+    ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/{id}'>>
+  > => {
     const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/id'>>
+      ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/{id}'>>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/trips/details?id=${params.tripId}`,
     )

@@ -74,7 +74,7 @@ const companyData: CompanyDetail = {
 export default function DataTree({
   detail,
 }: {
-  detail: ApiResponseType<'GET /companies/id'>
+  detail: ApiResponseType<'GET /companies/{id}'>
 }) {
   const { company } = detail
 

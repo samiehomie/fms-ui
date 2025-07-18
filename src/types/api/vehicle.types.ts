@@ -287,7 +287,7 @@ export interface VehicleApiTypes {
     request: {}
     response: VehiclesSearchResponse
   }
-  'GET /vehicles/company/id': {
+  'GET /vehicles/company/{company_id}': {
     request: {}
     response: VehiclesByCompanyIdResponse
   }
@@ -295,11 +295,11 @@ export interface VehicleApiTypes {
     request: VehiclesCreateRequest
     response: VehiclesCreateResponse
   }
-  'GET /vehicles/trips/vehicle/id': {
+  'GET /vehicles/trips/vehicle/{vehicle_id}': {
     request: {}
     response: VehicleTripsResponse
   }
-  'GET /vehicles/trips/id': {
+  'GET /vehicles/trips/{id}': {
     request: {}
     response: VehicleTripsByTripIdResponse
   }
