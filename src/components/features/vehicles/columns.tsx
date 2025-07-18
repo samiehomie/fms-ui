@@ -130,6 +130,7 @@ export const columns: ColumnDef<Vehicle>[] = [
                 onClose={() => setOpen(false)}
                 handleClick={handleDeleteAction}
               >
+                {/* 리스토어 기능 구현 앋뇜 */}
                 <div className="text-sm p-2 text-red-500 hover:bg-gray-100/90 rounded-sm">
                   Restore
                 </div>
