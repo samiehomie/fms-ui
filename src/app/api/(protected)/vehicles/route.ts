@@ -138,3 +138,40 @@ export async function DELETE(request: NextRequest) {
     }
   })
 }
+
+export async function PATCH(request: NextRequest) {
+  return await withAuth(async (tokenData) => {
+    const { token } = tokenData
+    const id = (await request.json()) as string
+    const apiUrl = buildURL(`/vehicles/${id}/restore`)
+
+    try {
+      const response = await fetchJson<
+        ApiResponseType<'PATCH /vehicles/{id}/restore'>
+      >(apiUrl, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      if (!response.success) {
+        return createErrorResponse(
+          'INTERNAL_ERROR',
+          'Failed to restore vehicle from external API',
+        )
+      }
+      return createSuccessResponse(
+        response.data,
+        'A vehicle retored successfully',
+      )
+    } catch (err) {
+      logger.error('Error restoring a vehicle:', err)
+
+      return createErrorResponse(
+        'INTERNAL_ERROR',
+        'An unexpected error occurred while restoring a vehicle',
+      )
+    }
+  })
+}

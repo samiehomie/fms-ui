@@ -287,6 +287,15 @@ export interface VehicleDeleteResponse {
   deleted_at: string
 }
 
+export interface VehicleRestoreParams {
+  id: string
+}
+
+export interface VehicleRestoreResponse {
+  message: string
+  vehicle: VehicleCreateResponse
+}
+
 export interface VehicleApiTypes {
   'GET /vehicles': {
     params: VehiclesPaginationParams
@@ -327,5 +336,10 @@ export interface VehicleApiTypes {
     params: VehicleTripsParams
     request: {}
     response: VehicleTripsResponse
+  }
+  'PATCH /vehicles/{id}/restore': {
+    params: VehicleRestoreParams
+    request: {}
+    response: VehicleRestoreResponse
   }
 }

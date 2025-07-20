@@ -111,6 +111,26 @@ export const vehiclesApi = {
     }
     return response.data
   },
+  restoreVehicle: async (
+    id: string,
+  ): Promise<
+    ApiSuccessResponse<ApiResponseType<'PATCH /vehicles/{id}/restore'>>
+  > => {
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'PATCH /vehicles/{id}/restore'>>
+    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: id,
+    })
+
+    if (!response.success) {
+      throw new Error('Failed to restore vehicle')
+    }
+    return response.data
+  },
   // 페이지네이션된 회사 목록 조회
   getVehiclesByCompanyIdPaginated: async (
     params: ApiParamsType<'GET /vehicles/company/{company_id}'>,

@@ -91,6 +91,35 @@ export function useDeleteVehicle() {
   })
 }
 
+export function useRestoreVehicle() {
+  const queryClient = useQueryClient()
+  return useMutation<
+    ApiResponseType<'PATCH /vehicles/{id}/restore'>,
+    Error,
+    ApiParamsType<'PATCH /vehicles/{id}/restore'>
+  >({
+    mutationFn: async (restoreParams) => {
+      const { data } = await vehiclesApi.restoreVehicle(restoreParams.id)
+      return data
+    },
+    onSuccess: () => {
+      // 회사 목록 쿼리 무효화
+      queryClient.invalidateQueries({
+        queryKey: ['vehicles'],
+      })
+      toast.success('A vehicle restored.', {
+        position: 'bottom-center',
+      })
+    },
+    onError: (error) => {
+      toast.error('Restoring a vehicle failed.', {
+        position: 'bottom-center',
+      })
+      logger.error('Restore vehicle error:', error)
+    },
+  })
+}
+
 export function useVehicleTripsPaginated(
   params: ApiParamsType<'GET /vehicles/trips/vehicle/{vehicle_id}'>,
 ) {

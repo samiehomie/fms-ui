@@ -137,7 +137,10 @@ export function DataTable<
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => {
-                const isDeleted = row.getValue('isDeleted') as boolean
+                let isDeleted = false
+                if (hiddenColumns && 'isDeleted' in hiddenColumns) {
+                  isDeleted = row.getValue('isDeleted') as boolean
+                }
                 return (
                   <TableRow
                     key={row.id}

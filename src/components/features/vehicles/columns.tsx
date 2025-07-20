@@ -18,10 +18,13 @@ import { IconCircleCheckFilled } from '@tabler/icons-react'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { IconDotsVertical } from '@tabler/icons-react'
-import { logger } from '@/lib/utils'
+import { logger, cn } from '@/lib/utils'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
 import type { Vehicle } from '@/types/api/vehicle.types'
-import { useDeleteVehicle } from '@/lib/hooks/queries/useVehicles'
+import {
+  useDeleteVehicle,
+  useRestoreVehicle,
+} from '@/lib/hooks/queries/useVehicles'
 
 export const columns: ColumnDef<Vehicle>[] = [
   {
@@ -96,19 +99,31 @@ export const columns: ColumnDef<Vehicle>[] = [
     id: 'actions',
     cell: ({ row }) => {
       const router = useRouter()
-      const { isdeleted, id: companyId } = row.original
+      const { isdeleted, id: vehicleId } = row.original
       const mutationDelete = useDeleteVehicle()
+      const mutationRestore = useRestoreVehicle()
 
       const [open, setOpen] = useState(false)
 
       const handleDeleteAction = async () => {
         try {
           await mutationDelete.mutateAsync({
-            id: companyId.toString(),
+            id: vehicleId.toString(),
           })
           setOpen(false) // 메뉴 닫기
         } catch (error) {
           logger.error('Delete action failed:', error)
+        }
+      }
+
+      const handleRestoreAction = async () => {
+        try {
+          await mutationRestore.mutateAsync({
+            id: vehicleId.toString(),
+          })
+          setOpen(false) // 메뉴 닫기
+        } catch (error) {
+          logger.error('Restore action failed:', error)
         }
       }
 
@@ -124,38 +139,32 @@ export const columns: ColumnDef<Vehicle>[] = [
               <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
-          {isdeleted ? (
-            <DropdownMenuContent align="end" className="w-32">
-              <ConfirmDialog
-                onClose={() => setOpen(false)}
-                handleClick={handleDeleteAction}
+
+          <DropdownMenuContent align="end" className="w-32">
+            <DropdownMenuItem
+              onClick={() => {
+                router.push(`/vehicles/${vehicleId}`)
+              }}
+            >
+              View Details
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <ConfirmDialog
+              onClose={() => setOpen(false)}
+              handleClick={
+                !isdeleted ? handleDeleteAction : handleRestoreAction
+              }
+            >
+              <div
+                className={cn(
+                  'text-sm p-2 text-red-500 hover:bg-gray-100/90 rounded-sm',
+                  isdeleted && 'text-blue-500',
+                )}
               >
-                {/* 리스토어 기능 구현 앋뇜 */}
-                <div className="text-sm p-2 text-red-500 hover:bg-gray-100/90 rounded-sm">
-                  Restore
-                </div>
-              </ConfirmDialog>
-            </DropdownMenuContent>
-          ) : (
-            <DropdownMenuContent align="end" className="w-32">
-              <DropdownMenuItem
-                onClick={() => {
-                  router.push(`/vehicles/${companyId}`)
-                }}
-              >
-                View Details
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <ConfirmDialog
-                onClose={() => setOpen(false)}
-                handleClick={handleDeleteAction}
-              >
-                <div className="text-sm p-2 text-red-500 hover:bg-gray-100/90 rounded-sm">
-                  Delete
-                </div>
-              </ConfirmDialog>
-            </DropdownMenuContent>
-          )}
+                {isdeleted ? 'Restore' : 'Delete'}
+              </div>
+            </ConfirmDialog>
+          </DropdownMenuContent>
         </DropdownMenu>
       )
     },
