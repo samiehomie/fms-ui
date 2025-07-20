@@ -41,6 +41,7 @@ export interface VehiclesPaginationParams {
   page: number
   limit: number
   include_deleted?: boolean
+  search?: string
 }
 
 export interface VehiclesByCompany {

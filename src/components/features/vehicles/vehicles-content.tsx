@@ -12,6 +12,7 @@ const VehiclesContent = () => {
     page: 1,
     limit: 10,
     include_deleted: true,
+    search: '',
   })
 
   const { data, isLoading } = useVehiclesPaginated(pageParams)

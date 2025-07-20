@@ -14,14 +14,7 @@ export const vehiclesApi = {
     params: ApiParamsType<'GET /vehicles'>,
     cookie?: string,
   ): Promise<ApiSuccessResponse<ApiResponseType<'GET /vehicles'>>> => {
-    const searchParams =
-      params &&
-      new URLSearchParams({
-        page: params.page.toString(),
-        limit: params.limit.toString(),
-        include_deleted: `${params.include_deleted ?? false}`,
-      })
-
+    const searchParams = buildSearchParams(params)
     const response = await fetchJson<
       ApiSuccessResponse<ApiResponseType<'GET /vehicles'>>
     >(
@@ -41,39 +34,6 @@ export const vehiclesApi = {
 
     return response.data
   },
-  getVehiclesSearchPaginated: async (
-    params: ApiParamsType<'GET /vehicles/search'>,
-    cookie?: string,
-  ): Promise<ApiSuccessResponse<ApiResponseType<'GET /vehicles/search'>>> => {
-    const searchParams =
-      params &&
-      new URLSearchParams({
-        query: params.query.toString(),
-        page: params.page.toString(),
-        limit: params.limit.toString(),
-        include_deleted: `${params.include_deleted ?? false}`,
-      })
-
-    const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'GET /vehicles/search'>>
-    >(
-      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/search?${searchParams}`,
-      cookie
-        ? {
-            headers: {
-              Cookie: cookie,
-            },
-          }
-        : { revalidate: false },
-    )
-
-    if (!response.success) {
-      throw new Error('Failed to fetch vehicles')
-    }
-
-    return response.data
-  },
-
   createVehicle: async (
     vehicle: ApiRequestType<'POST /vehicles'>,
   ): Promise<ApiSuccessResponse<ApiResponseType<'POST /vehicles'>>> => {

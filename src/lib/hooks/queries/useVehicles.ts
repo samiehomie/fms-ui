@@ -26,17 +26,6 @@ export function useVehiclesPaginated(params: ApiParamsType<'GET /vehicles'>) {
   })
 }
 
-// TODO: useVehiclesPaginated와 통합될 예정
-export function useVehiclesSearchPaginated(
-  params: ApiParamsType<'GET /vehicles/search'>,
-) {
-  return useQuery({
-    queryKey: ['vehicles', params],
-    queryFn: () => vehiclesApi.getVehiclesSearchPaginated(params),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  })
-}
-
 export function useCreateVehicle() {
   const queryClient = useQueryClient()
   return useMutation<CreateVehicleResponse, Error, CreateVehicleRequest>({
