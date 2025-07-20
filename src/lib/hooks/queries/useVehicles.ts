@@ -25,7 +25,18 @@ export function useVehiclesPaginated(params: ApiParamsType<'GET /vehicles'>) {
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
-
+export function useVehicleById(id: number) {
+  return useQuery({
+    queryKey: ['vehicle', id],
+    queryFn: () =>
+      vehiclesApi.getVehicleById({
+        vehicle: {
+          id,
+        },
+      }),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
 export function useCreateVehicle() {
   const queryClient = useQueryClient()
   return useMutation<CreateVehicleResponse, Error, CreateVehicleRequest>({
@@ -76,6 +87,41 @@ export function useDeleteVehicle() {
         position: 'bottom-center',
       })
       logger.error('Delete vehicle error:', error)
+    },
+  })
+}
+
+export function useUpdateVehicle(id: number) {
+  const queryClient = useQueryClient()
+  return useMutation<
+    ApiResponseType<'PUT /vehicles/{id}'>,
+    Error,
+    ApiRequestType<'PUT /vehicles/{id}'>
+  >({
+    mutationFn: async (vehicle) => {
+      const { data } = await vehiclesApi.updateVehicle(
+        { id: id.toString() },
+        vehicle,
+      )
+      return data
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['vehicles'],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['vehicle', id],
+      })
+      toast.success('A new vehicle added', {
+        description: `${data.vehicle.vehicle_name}`,
+        position: 'bottom-center',
+      })
+    },
+    onError: (error) => {
+      toast.error('Adding a new vehicle failed.', {
+        position: 'bottom-center',
+        description: error.message,
+      })
     },
   })
 }

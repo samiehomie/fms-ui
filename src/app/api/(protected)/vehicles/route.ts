@@ -68,7 +68,6 @@ export async function POST(request: NextRequest) {
     const { token } = tokenData
     const apiUrl = buildURL(`/vehicles`)
     const requestBody = await request.json()
-    logger.log('post companies', requestBody)
     try {
       const response = await fetchJson<ApiResponseType<'POST /vehicles'>>(
         apiUrl,
@@ -171,6 +170,47 @@ export async function PATCH(request: NextRequest) {
       return createErrorResponse(
         'INTERNAL_ERROR',
         'An unexpected error occurred while restoring a vehicle',
+      )
+    }
+  })
+}
+
+export async function PUT(request: NextRequest) {
+  return await withAuth(async (tokenData) => {
+    const { token } = tokenData
+    const searchParams = request.nextUrl.searchParams
+    const id = searchParams.get('id')
+    const apiUrl = buildURL(`/vehicles/${id}`)
+    const requestBody = await request.json()
+
+    try {
+      const response = await fetchJson<ApiResponseType<'PUT /vehicles/{id}'>>(
+        apiUrl,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        },
+      )
+      if (!response.success) {
+        return createErrorResponse(
+          'INTERNAL_ERROR',
+          'Failed to update vehicle from external API',
+        )
+      }
+      return createSuccessResponse(
+        response.data,
+        'A vehicle updated successfully',
+      )
+    } catch (err) {
+      logger.error('Error updating a vehicle:', err)
+
+      return createErrorResponse(
+        'INTERNAL_ERROR',
+        'An unexpected error occurred while updating a vehicle',
       )
     }
   })

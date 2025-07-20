@@ -13,10 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-
-import { IconCircleCheckFilled } from '@tabler/icons-react'
-import { Badge } from '@/components/ui/badge'
-import { Checkbox } from '@/components/ui/checkbox'
 import { IconDotsVertical } from '@tabler/icons-react'
 import { logger, cn } from '@/lib/utils'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
@@ -25,6 +21,7 @@ import {
   useDeleteVehicle,
   useRestoreVehicle,
 } from '@/lib/hooks/queries/useVehicles'
+import { UpdateVehicleForm } from './update-vehicle-form'
 
 export const columns: ColumnDef<Vehicle>[] = [
   {
@@ -139,8 +136,8 @@ export const columns: ColumnDef<Vehicle>[] = [
               <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
-
           <DropdownMenuContent align="end" className="w-32">
+            <UpdateVehicleForm id={vehicleId} onClose={() => setOpen(false)} />
             <DropdownMenuItem
               onClick={() => {
                 router.push(`/vehicles/${vehicleId}`)

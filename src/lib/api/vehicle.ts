@@ -10,6 +10,23 @@ import { logger } from '../utils'
 import { buildSearchParams } from './utils'
 
 export const vehiclesApi = {
+  getVehicleById: async (body: ApiRequestType<'POST /vehicles/get'>) => {
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'POST /vehicles/get'>>
+    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/get`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+
+    if (!response.success) {
+      throw new Error('Failed to update a vehicle')
+    }
+
+    return response.data
+  },
   getVehiclesPaginated: async (
     params: ApiParamsType<'GET /vehicles'>,
     cookie?: string,
@@ -88,6 +105,25 @@ export const vehiclesApi = {
 
     if (!response.success) {
       throw new Error('Failed to restore vehicle')
+    }
+    return response.data
+  },
+  updateVehicle: async (
+    params: ApiParamsType<'PUT /vehicles/{id}'>,
+    body: ApiRequestType<'PUT /vehicles/{id}'>,
+  ) => {
+    const response = await fetchJson<
+      ApiSuccessResponse<ApiResponseType<'PUT /vehicles/{id}'>>
+    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles?id=${params.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+
+    if (!response.success) {
+      throw new Error('Failed to update vehicle')
     }
     return response.data
   },

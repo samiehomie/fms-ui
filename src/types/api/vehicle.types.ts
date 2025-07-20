@@ -297,6 +297,29 @@ export interface VehicleRestoreResponse {
   vehicle: VehicleCreateResponse
 }
 
+export interface VehicleUpdateParams {
+  id: string
+}
+
+export interface VehicleUpdateRequest {
+  vehicle: {
+    vehicle_name: string
+    brand: string
+    model: string
+    fuel_type: string
+  }
+}
+
+export interface VehicleRequest {
+  vehicle: {
+    id: number
+  }
+}
+
+export type VehicleResponse = VehicleCreateResponse['vehicle']
+
+export type VehicleUpdateResponse = VehicleCreateResponse
+
 export interface VehicleApiTypes {
   'GET /vehicles': {
     params: VehiclesPaginationParams
@@ -342,5 +365,15 @@ export interface VehicleApiTypes {
     params: VehicleRestoreParams
     request: {}
     response: VehicleRestoreResponse
+  }
+  'PUT /vehicles/{id}': {
+    params: VehicleUpdateParams
+    request: VehicleUpdateRequest
+    response: VehicleUpdateResponse
+  }
+  'POST /vehicles/get': {
+    params: {}
+    request: VehicleRequest
+    response: VehicleResponse
   }
 }

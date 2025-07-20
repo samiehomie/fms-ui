@@ -44,7 +44,6 @@ import { useModifyCompany } from '@/lib/hooks/queries/useCompanies'
 import { useCompanyById } from '@/lib/hooks/queries/useCompanies'
 import { Skeleton } from '@/components/ui/skeleton'
 import { logger } from '@/lib/utils'
-import { IconPlus } from '@tabler/icons-react'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
 const companySchema = z.object({
