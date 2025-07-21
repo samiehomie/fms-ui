@@ -37,8 +37,8 @@ const data = {
           url: '/vehicles',
         },
         {
-          title: 'Active',
-          url: '/vehicles',
+          title: 'Live Map',
+          url: '/live',
         },
       ],
     },
