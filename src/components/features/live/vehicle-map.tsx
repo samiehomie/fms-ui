@@ -1,12 +1,16 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   APIProvider,
   Map,
-  AdvancedMarker,
   useMap,
+  useMapsLibrary,
 } from '@vis.gl/react-google-maps'
+import {
+  MarkerClusterer,
+  SuperClusterAlgorithm,
+} from '@googlemaps/markerclusterer'
 import { Vehicle } from '@/lib/hooks/queries/useVehicleStream'
 
 interface VehicleMapProps {
@@ -28,65 +32,143 @@ const getMarkerColor = (type: Vehicle['type'], status: Vehicle['status']) => {
   return colors[type] || '#3B82F6'
 }
 
-const VehicleMarker: React.FC<{
-  vehicle: Vehicle
-  isSelected: boolean
-  onVehicleClick: (vehicleId: string) => void
-}> = ({ vehicle, isSelected, onVehicleClick }) => {
-  const color = getMarkerColor(vehicle.type, vehicle.status)
-
-  const markerContent = (
-    <div
-      style={{
-        width: isSelected ? 50 : 40,
-        height: isSelected ? 50 : 40,
-        cursor: 'pointer',
-        transform: `rotate(${vehicle.heading}deg)`,
-      }}
-      onClick={() => onVehicleClick(vehicle.id)}
-    >
-      <svg
-        viewBox="0 0 40 40"
-        width={isSelected ? 50 : 40}
-        height={isSelected ? 50 : 40}
-      >
-        <path
-          d="M20 5 L30 30 L20 25 L10 30 Z"
-          fill={color}
-          stroke="white"
-          strokeWidth="2"
-        />
-        {isSelected && (
-          <circle
-            cx="20"
-            cy="20"
-            r="18"
-            fill="none"
-            stroke="#FF6B6B"
-            strokeWidth="3"
-          />
-        )}
+// 클러스터 렌더러
+class ClusterRenderer {
+  render({ count, position }: { count: number; position: google.maps.LatLng }) {
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="60" height="60">
+        <circle cx="30" cy="30" r="25" fill="#4285F4" opacity="0.9"/>
+        <circle cx="30" cy="30" r="20" fill="#FFFFFF" opacity="0.3"/>
+        <text x="30" y="35" text-anchor="middle" fill="white" font-size="16" font-weight="bold">${count}</text>
       </svg>
-    </div>
-  )
+    `
 
-  return (
-    <AdvancedMarker
-      position={{ lat: vehicle.lat, lng: vehicle.lng }}
-      title={vehicle.name}
-      zIndex={isSelected ? 1000 : 1}
-    >
-      {markerContent}
-    </AdvancedMarker>
-  )
+    const div = document.createElement('div')
+    div.innerHTML = svg
+    div.style.position = 'absolute'
+    div.style.transform = 'translate(-50%, -50%)'
+    div.style.cursor = 'pointer'
+
+    return new google.maps.marker.AdvancedMarkerElement({
+      position,
+      content: div,
+      zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count,
+    })
+  }
 }
 
-const VehicleMap: React.FC<VehicleMapProps> = ({
+// 차량 마커들을 관리하는 컴포넌트
+const VehicleMarkers: React.FC<VehicleMapProps> = ({
   vehicles,
   selectedVehicleId,
   onVehicleClick,
 }) => {
   const map = useMap()
+  const markerLibrary = useMapsLibrary('marker')
+  const clustererRef = useRef<MarkerClusterer | null>(null)
+  const markersRef = useRef<{
+    [key: string]: google.maps.marker.AdvancedMarkerElement
+  }>({})
+
+  // 마커 생성 함수
+  const createMarker = (
+    vehicle: Vehicle,
+  ): google.maps.marker.AdvancedMarkerElement | null => {
+    if (!markerLibrary) return null
+
+    const isSelected = vehicle.id === selectedVehicleId
+    const color = getMarkerColor(vehicle.type, vehicle.status)
+
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="${
+        isSelected ? 50 : 40
+      }" height="${isSelected ? 50 : 40}">
+        <g transform="rotate(${vehicle.heading} 20 20)">
+          <path d="M20 5 L30 30 L20 25 L10 30 Z" fill="${color}" stroke="white" stroke-width="2"/>
+        </g>
+        ${
+          isSelected
+            ? '<circle cx="20" cy="20" r="18" fill="none" stroke="#FF6B6B" stroke-width="3"/>'
+            : ''
+        }
+      </svg>
+    `
+
+    const div = document.createElement('div')
+    div.innerHTML = svg
+    div.style.cursor = 'pointer'
+    div.style.position = 'absolute'
+    div.style.transform = 'translate(-50%, -50%)'
+
+    div.addEventListener('click', () => {
+      onVehicleClick(vehicle.id)
+    })
+
+    return new google.maps.marker.AdvancedMarkerElement({
+      position: { lat: vehicle.lat, lng: vehicle.lng },
+      content: div,
+      title: vehicle.name,
+      zIndex: isSelected ? 1000 : 1,
+    })
+  }
+
+  // 클러스터러 초기화
+  useEffect(() => {
+    if (!map || !markerLibrary) return
+
+    // 클러스터러가 없으면 생성
+    if (!clustererRef.current) {
+      clustererRef.current = new MarkerClusterer({
+        map,
+        markers: [],
+        renderer: new ClusterRenderer(),
+        algorithm: new SuperClusterAlgorithm({
+          radius: 80, // 클러스터 반경 (픽셀)
+          maxZoom: 15, // 이 줌 레벨 이상에서는 클러스터링 안함
+          minPoints: 3, // 최소 3개 이상 모여야 클러스터 생성
+        }),
+        onClusterClick: (event, cluster, map) => {
+          if (cluster.bounds) {
+            map.fitBounds(cluster.bounds)
+          }
+        },
+      })
+    }
+
+    return () => {
+      if (clustererRef.current) {
+        clustererRef.current.clearMarkers()
+        clustererRef.current.setMap(null)
+        clustererRef.current = null
+      }
+    }
+  }, [map, markerLibrary])
+
+  // 차량 데이터가 변경될 때 마커 업데이트
+  useEffect(() => {
+    if (!map || !markerLibrary || !clustererRef.current) return
+
+    // 기존 마커들 제거
+    Object.values(markersRef.current).forEach((marker) => {
+      marker.map = null
+    })
+    markersRef.current = {}
+
+    // 새 마커들 생성
+    const newMarkers: google.maps.marker.AdvancedMarkerElement[] = []
+
+    vehicles.forEach((vehicle) => {
+      const marker = createMarker(vehicle)
+      if (marker) {
+        markersRef.current[vehicle.id] = marker
+        newMarkers.push(marker)
+      }
+    })
+
+    // 클러스터러에 새 마커들 설정
+    clustererRef.current.clearMarkers()
+    clustererRef.current.addMarkers(newMarkers)
+  }, [vehicles, selectedVehicleId, map, markerLibrary, onVehicleClick])
 
   // 선택된 차량으로 맵 이동
   useEffect(() => {
@@ -99,23 +181,15 @@ const VehicleMap: React.FC<VehicleMapProps> = ({
     }
   }, [map, selectedVehicleId, vehicles])
 
-  return (
-    <>
-      {vehicles.map((vehicle) => (
-        <VehicleMarker
-          key={vehicle.id}
-          vehicle={vehicle}
-          isSelected={vehicle.id === selectedVehicleId}
-          onVehicleClick={onVehicleClick}
-        />
-      ))}
-    </>
-  )
+  return null
 }
 
 export default function VehicleMapWrapper(props: VehicleMapProps) {
   return (
-    <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}>
+    <APIProvider
+      apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+      libraries={['marker']}
+    >
       <Map
         defaultCenter={{ lat: 37.5665, lng: 126.978 }}
         defaultZoom={12}
@@ -124,7 +198,7 @@ export default function VehicleMapWrapper(props: VehicleMapProps) {
         disableDefaultUI={false}
         clickableIcons={false}
       >
-        <VehicleMap {...props} />
+        <VehicleMarkers {...props} />
       </Map>
     </APIProvider>
   )
