@@ -29,7 +29,7 @@ export default function VehicleTrackingContent() {
   )
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col lg:-mx-6 -mt-5">
       {/* 연결 상태 표시 */}
       {!isConnected && (
         <Alert className="m-4 border-orange-200 bg-orange-50">

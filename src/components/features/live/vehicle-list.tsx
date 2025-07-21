@@ -54,11 +54,10 @@ export default function VehicleList({
   const [searchTerm, setSearchTerm] = React.useState('')
   const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0)
   const containerRef = useRef<HTMLDivElement>(null)
-  const headerRef = useRef<HTMLDivElement>(null)
   const rafRef = useRef<number>(null)
 
   const calculateHeight = useCallback(() => {
-    if (!containerRef.current || !headerRef.current) return
+    if (!containerRef.current) return
 
     // 이전 RAF 취소
     if (rafRef.current) {
@@ -67,10 +66,9 @@ export default function VehicleList({
 
     // RAF로 다음 프레임에 실행
     rafRef.current = requestAnimationFrame(() => {
-      if (containerRef.current && headerRef.current) {
+      if (containerRef.current) {
         const containerHeight = containerRef.current.clientHeight
-        const headerHeight = headerRef.current.clientHeight
-        const availableHeight = containerHeight - headerHeight
+        const availableHeight = containerHeight - 129
 
         // 최소값 체크
         const newHeight = Math.max(0, availableHeight)
@@ -95,7 +93,7 @@ export default function VehicleList({
 
   // 1. ResizeObserver로 크기 변화 감지 (가장 정확)
   useEffect(() => {
-    if (!containerRef.current || !headerRef.current) return
+    if (!containerRef.current) return
 
     const resizeObserver = new ResizeObserver(() => {
       calculateHeight()
@@ -103,7 +101,6 @@ export default function VehicleList({
 
     // 두 요소 모두 관찰
     resizeObserver.observe(containerRef.current)
-    resizeObserver.observe(headerRef.current)
 
     // 초기 계산
     calculateHeight()
@@ -125,8 +122,8 @@ export default function VehicleList({
 
   return (
     <div ref={containerRef} className="h-full">
-      <div ref={headerRef} className="p-4 border-b">
-        <h2 className="text-lg font-semibold mb-3">차량 목록</h2>
+      <div className="px-5 py-3 h-[129px] border-b">
+        <h2 className="text-lg font-semibold mb-2 ml-[.125rem]">차량 목록</h2>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
@@ -137,18 +134,18 @@ export default function VehicleList({
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <div className="mt-3 text-sm text-gray-600">
+        <div className="mt-3 text-sm text-gray-600 ml-1">
           총 {filteredVehicles.length}대 / {vehicles.length}대
         </div>
       </div>
 
       <ScrollArea
-        // className=" overflow-hidden"
+        // className="h-[calc(100%-129px)] overflow-hidden"
         style={{
           height: scrollAreaHeight > 0 ? `${scrollAreaHeight - 10}px` : '0px',
         }}
       >
-        <div className="p-4 space-y-2">
+        <div className="p-4 space-y-4">
           {filteredVehicles.map((vehicle) => (
             <Card
               key={vehicle.id}
