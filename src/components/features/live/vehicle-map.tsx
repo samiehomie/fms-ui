@@ -70,16 +70,15 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
     [key: string]: google.maps.marker.AdvancedMarkerElement
   }>({})
 
-  // 마커 생성 함수
-  const createMarker = (
-    vehicle: Vehicle,
-  ): google.maps.marker.AdvancedMarkerElement | null => {
-    if (!markerLibrary) return null
+  // 마커 생성 함수 (메모이제이션으로 최적화)
+  const createMarker = React.useCallback(
+    (vehicle: Vehicle): google.maps.marker.AdvancedMarkerElement | null => {
+      if (!markerLibrary) return null
 
-    const isSelected = vehicle.id === selectedVehicleId
-    const color = getMarkerColor(vehicle.type, vehicle.status)
+      const isSelected = vehicle.id === selectedVehicleId
+      const color = getMarkerColor(vehicle.type, vehicle.status)
 
-    const svg = `
+      const svg = `
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="${
         isSelected ? 50 : 40
       }" height="${isSelected ? 50 : 40}">
@@ -94,23 +93,32 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
       </svg>
     `
 
-    const div = document.createElement('div')
-    div.innerHTML = svg
-    div.style.cursor = 'pointer'
-    div.style.position = 'absolute'
-    div.style.transform = 'translate(-50%, -50%)'
+      const div = document.createElement('div')
+      div.innerHTML = svg
+      div.style.cursor = 'pointer'
+      div.style.position = 'absolute'
+      div.style.transform = 'translate(-50%, -50%)'
 
-    div.addEventListener('click', () => {
-      onVehicleClick(vehicle.id)
-    })
+      // 이벤트 리스너는 한 번만 추가
+      const handleClick = () => onVehicleClick(vehicle.id)
+      div.addEventListener('click', handleClick)
 
-    return new google.maps.marker.AdvancedMarkerElement({
-      position: { lat: vehicle.lat, lng: vehicle.lng },
-      content: div,
-      title: vehicle.name,
-      zIndex: isSelected ? 1000 : 1,
-    })
-  }
+      const marker = new google.maps.marker.AdvancedMarkerElement({
+        position: { lat: vehicle.lat, lng: vehicle.lng },
+        content: div,
+        title: vehicle.name,
+        zIndex: isSelected ? 1000 : 1,
+      })
+
+      // 클린업을 위해 참조 저장
+      ;(marker as any)._cleanup = () => {
+        div.removeEventListener('click', handleClick)
+      }
+
+      return marker
+    },
+    [markerLibrary, selectedVehicleId, onVehicleClick],
+  )
 
   // 클러스터러 초기화
   useEffect(() => {
@@ -141,45 +149,88 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
         clustererRef.current.setMap(null)
         clustererRef.current = null
       }
+
+      // 모든 마커 클린업
+      Object.values(markersRef.current).forEach((marker) => {
+        if ((marker as any)._cleanup) {
+          ;(marker as any)._cleanup()
+        }
+        marker.map = null
+      })
+      markersRef.current = {}
     }
   }, [map, markerLibrary])
 
-  // 차량 데이터가 변경될 때 마커 업데이트
+  // 차량 데이터가 변경될 때 마커 업데이트 (최적화)
   useEffect(() => {
     if (!map || !markerLibrary || !clustererRef.current) return
 
-    // 기존 마커들 제거
-    Object.values(markersRef.current).forEach((marker) => {
-      marker.map = null
-    })
-    markersRef.current = {}
+    // 기존 마커들과 새 차량 데이터 비교
+    const currentMarkerIds = new Set(Object.keys(markersRef.current))
+    const newVehicleIds = new Set(vehicles.map((v) => v.id))
 
-    // 새 마커들 생성
-    const newMarkers: google.maps.marker.AdvancedMarkerElement[] = []
-
-    vehicles.forEach((vehicle) => {
-      const marker = createMarker(vehicle)
-      if (marker) {
-        markersRef.current[vehicle.id] = marker
-        newMarkers.push(marker)
+    // 제거된 차량의 마커 삭제
+    currentMarkerIds.forEach((id) => {
+      if (!newVehicleIds.has(id)) {
+        const marker = markersRef.current[id]
+        if (marker) {
+          if ((marker as any)._cleanup) {
+            ;(marker as any)._cleanup()
+          }
+          marker.map = null
+          delete markersRef.current[id]
+        }
       }
     })
 
-    // 클러스터러에 새 마커들 설정
-    clustererRef.current.clearMarkers()
-    clustererRef.current.addMarkers(newMarkers)
+    // 새 차량이나 업데이트된 차량의 마커 생성/업데이트
+    const markersToAdd: google.maps.marker.AdvancedMarkerElement[] = []
+
+    vehicles.forEach((vehicle) => {
+      const existingMarker = markersRef.current[vehicle.id]
+      const isSelected = vehicle.id === selectedVehicleId
+
+      // 기존 마커가 있고 선택 상태가 변경되지 않았다면 위치만 업데이트
+      if (existingMarker && existingMarker.zIndex === (isSelected ? 1000 : 1)) {
+        existingMarker.position = { lat: vehicle.lat, lng: vehicle.lng }
+        return
+      }
+
+      // 기존 마커 제거 (선택 상태 변경 시)
+      if (existingMarker) {
+        if ((existingMarker as any)._cleanup) {
+          ;(existingMarker as any)._cleanup()
+        }
+        existingMarker.map = null
+        delete markersRef.current[vehicle.id]
+      }
+
+      // 새 마커 생성
+      const marker = createMarker(vehicle)
+      if (marker) {
+        markersRef.current[vehicle.id] = marker
+        markersToAdd.push(marker)
+      }
+    })
+
+    // 변경된 마커들만 클러스터러에 추가
+    if (markersToAdd.length > 0) {
+      clustererRef.current.clearMarkers()
+      clustererRef.current.addMarkers(Object.values(markersRef.current))
+    }
   }, [vehicles, selectedVehicleId, map, markerLibrary, onVehicleClick])
 
-  // 선택된 차량으로 맵 이동
+  // 선택된 차량으로 한 번만 이동 (추적하지 않음)
   useEffect(() => {
     if (!map || !selectedVehicleId) return
 
     const selectedVehicle = vehicles.find((v) => v.id === selectedVehicleId)
     if (selectedVehicle) {
+      // 한 번만 이동하고 추적하지 않음
       map.panTo({ lat: selectedVehicle.lat, lng: selectedVehicle.lng })
       map.setZoom(16)
     }
-  }, [map, selectedVehicleId, vehicles])
+  }, [map, selectedVehicleId]) // vehicles 의존성 제거로 추적 방지
 
   return null
 }
