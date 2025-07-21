@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react'
 import { Vehicle } from '@/lib/hooks/queries/useVehicleStream'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Input } from '@/components/ui/input'
@@ -52,6 +52,34 @@ export default function VehicleList({
   onVehicleSelect,
 }: VehicleListProps) {
   const [searchTerm, setSearchTerm] = React.useState('')
+  const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const rafRef = useRef<number>(null)
+
+  const calculateHeight = useCallback(() => {
+    if (!containerRef.current || !headerRef.current) return
+
+    // 이전 RAF 취소
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current)
+    }
+
+    // RAF로 다음 프레임에 실행
+    rafRef.current = requestAnimationFrame(() => {
+      if (containerRef.current && headerRef.current) {
+        const containerHeight = containerRef.current.clientHeight
+        const headerHeight = headerRef.current.clientHeight
+        const availableHeight = containerHeight - headerHeight
+
+        // 최소값 체크
+        const newHeight = Math.max(0, availableHeight)
+
+        // 실제 변화가 있을 때만 업데이트
+        setScrollAreaHeight((prev) => (prev !== newHeight ? newHeight : prev))
+      }
+    })
+  }, [])
 
   const filteredVehicles = useMemo(() => {
     if (!searchTerm) return vehicles
@@ -65,9 +93,39 @@ export default function VehicleList({
     )
   }, [vehicles, searchTerm])
 
+  // 1. ResizeObserver로 크기 변화 감지 (가장 정확)
+  useEffect(() => {
+    if (!containerRef.current || !headerRef.current) return
+
+    const resizeObserver = new ResizeObserver(() => {
+      calculateHeight()
+    })
+
+    // 두 요소 모두 관찰
+    resizeObserver.observe(containerRef.current)
+    resizeObserver.observe(headerRef.current)
+
+    // 초기 계산
+    calculateHeight()
+
+    return () => {
+      resizeObserver.disconnect()
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+      }
+    }
+  }, [calculateHeight])
+
+  // 2. 윈도우 리사이즈 처리
+  useEffect(() => {
+    const handleResize = () => calculateHeight()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [calculateHeight])
+
   return (
-    <div className="h-full flex flex-col">
-      <div className="p-4 border-b">
+    <div ref={containerRef} className="h-full">
+      <div ref={headerRef} className="p-4 border-b">
         <h2 className="text-lg font-semibold mb-3">차량 목록</h2>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -84,7 +142,12 @@ export default function VehicleList({
         </div>
       </div>
 
-      <ScrollArea className="h-[500px]">
+      <ScrollArea
+        // className=" overflow-hidden"
+        style={{
+          height: scrollAreaHeight > 0 ? `${scrollAreaHeight - 10}px` : '0px',
+        }}
+      >
         <div className="p-4 space-y-2">
           {filteredVehicles.map((vehicle) => (
             <Card
