@@ -31,16 +31,49 @@ export async function GET() {
 
   const stream = new ReadableStream({
     async start(controller) {
+      const abortController = new AbortController()
+      const { signal } = abortController
+
+      const safeEnqueue = (data: Uint8Array): boolean => {
+        // 연결 상태 확인
+        if (signal.aborted) {
+          return false
+        }
+
+        if (controller.desiredSize === null) {
+          return false
+        }
+
+        try {
+          if (controller.desiredSize === null) {
+            return false
+          }
+          controller.enqueue(data)
+          return true
+        } catch (err) {
+          logger.error('Enqueue failed: ', err)
+          abortController.abort()
+          return false
+        }
+      }
       // 초기 데이터 전송
       const initialData = `data: ${JSON.stringify({
         type: 'initial',
         vehicles: vehicles,
         timestamp: new Date().toISOString(),
       })}\n\n`
-      controller.enqueue(encoder.encode(initialData))
+
+      if (!safeEnqueue(encoder.encode(initialData))) {
+        return
+      }
 
       // 2초마다 차량 위치 업데이트
       const interval = setInterval(() => {
+        if (signal.aborted) {
+          clearInterval(interval)
+          return
+        }
+
         // 차량 위치 업데이트
         vehicles = vehicles.map((vehicle) => {
           const deltaLat = (Math.random() - 0.5) * 0.001
@@ -68,23 +101,29 @@ export async function GET() {
           timestamp: new Date().toISOString(),
         })}\n\n`
 
-        controller.enqueue(encoder.encode(updateData))
+        if (!safeEnqueue(encoder.encode(updateData))) {
+          clearInterval(interval)
+        }
       }, 2000)
 
       // 30초마다 heartbeat
       const heartbeatInterval = setInterval(() => {
-        controller.enqueue(encoder.encode('data: {"type":"heartbeat"}\n\n'))
-      }, 30000)
+        if (signal.aborted) {
+          clearInterval(heartbeatInterval)
+          return
+        }
 
-      // Cleanup on close
-      const cleanup = () => {
-        clearInterval(interval)
-        clearInterval(heartbeatInterval)
-      }
+        if (!safeEnqueue(encoder.encode('data: {"type":"heartbeat"}\n\n'))) {
+          clearInterval(heartbeatInterval)
+        }
+      }, 30000)
 
       // Handle client disconnect
       return () => {
-        cleanup()
+        abortController.abort()
+        clearInterval(interval)
+        clearInterval(heartbeatInterval)
+        logger.log('SSE connection cleaned up')
       }
     },
   })
