@@ -23,7 +23,6 @@ import {
   useDeleteCompany,
   useVerifyCompany,
 } from '@/lib/hooks/queries/useCompanies'
-import { logger } from '@/lib/utils'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
 
 export const columns: ColumnDef<Company>[] = [

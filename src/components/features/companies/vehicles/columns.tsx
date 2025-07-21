@@ -3,8 +3,6 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
-import { formatDateTime, getCompanyTypeColor } from '@/lib/utils'
-import { ArrowUpDown, CircleSlash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -13,13 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-
-import { IconCircleCheckFilled } from '@tabler/icons-react'
-import { Badge } from '@/components/ui/badge'
-import { Checkbox } from '@/components/ui/checkbox'
 import { IconDotsVertical } from '@tabler/icons-react'
-import { logger } from '@/lib/utils'
-import ConfirmDialog from '@/components/ui/confirm-dialog'
 import type { VehiclesByCompany } from '@/types/api/vehicle.types'
 
 export const columns: ColumnDef<VehiclesByCompany>[] = [

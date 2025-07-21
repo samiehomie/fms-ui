@@ -1,7 +1,6 @@
 'use server'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { logger } from '../utils'
 import {
   AUTH_TOKEN_COOKIE_NAME,
   AUTH_EXPIRE_COOKIE_NAME,

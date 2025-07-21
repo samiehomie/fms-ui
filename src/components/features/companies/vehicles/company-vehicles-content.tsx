@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useCompanyVehiclesPaginated } from '@/lib/hooks/queries/useCompanies'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
-import { logger } from '@/lib/utils'
 import { ApiParamsType } from '@/types/api'
 
 const CompanyVehiclesContent = ({ companyId }: { companyId: number }) => {

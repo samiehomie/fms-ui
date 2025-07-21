@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { useCompaniesPaginated } from '@/lib/hooks/queries/useCompanies'
 import { columns } from '@/components/features/companies/columns'
 import { Skeleton } from '@/components/ui/skeleton'
-import { logger } from '@/lib/utils'
 import DataTableHeader from './data-table-header'
 
 const CompaniesContent = () => {

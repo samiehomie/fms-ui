@@ -16,7 +16,6 @@ import {
 import { useVerifyUser } from '@/lib/hooks/queries/useUsers'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
-import { logger } from '@/lib/utils'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
 import type { User } from '@/types/api/user.types'
 import { IconCircleCheckFilled, IconDotsVertical } from '@tabler/icons-react'

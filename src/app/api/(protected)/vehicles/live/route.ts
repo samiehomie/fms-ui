@@ -7,7 +7,6 @@ import {
   createErrorResponse,
   createSuccessResponse,
 } from '@/lib/route/route.heplers'
-import { logger } from '@/lib/utils'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'

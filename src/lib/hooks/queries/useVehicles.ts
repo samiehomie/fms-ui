@@ -13,7 +13,6 @@ import type {
 import { ApiResponseType, ApiRequestType, ApiParamsType } from '@/types/api'
 import { toast } from 'sonner'
 import { useMemo, useEffect } from 'react'
-import { logger } from '@/lib/utils'
 
 type CreateVehicleResponse = ApiResponseType<'POST /vehicles'>
 type CreateVehicleRequest = ApiRequestType<'POST /vehicles'>

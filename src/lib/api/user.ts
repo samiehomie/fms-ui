@@ -2,7 +2,6 @@ import { fetchJson } from '@/lib/api/fetch'
 import type { ApiRequestType, ApiResponseType } from '@/types/api'
 import { ApiSuccessResponse } from '@/types/api/route.types'
 import type { UsersPaginationParams } from '@/types/api/user.types'
-import { logger } from '../utils'
 
 export const usersApi = {
   // 페이지네이션된 회사 목록 조회

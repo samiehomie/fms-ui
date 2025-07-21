@@ -45,7 +45,6 @@ import {
   useVehicleById,
 } from '@/lib/hooks/queries/useVehicles'
 import { Skeleton } from '@/components/ui/skeleton'
-import { logger } from '@/lib/utils'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
 const vehicleSchema = z.object({

@@ -1,25 +1,12 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
-import { formatDateTime, getCompanyTypeColor } from '@/lib/utils'
+import { formatDateTime } from '@/lib/utils'
 import { ArrowUpDown, CircleSlash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { useVerifyUser } from '@/lib/hooks/queries/useUsers'
 import { Badge } from '@/components/ui/badge'
-import { Checkbox } from '@/components/ui/checkbox'
-import { logger } from '@/lib/utils'
-import ConfirmDialog from '@/components/ui/confirm-dialog'
 import type { Device } from '@/types/api/device.types'
-import { IconCircleCheckFilled, IconDotsVertical } from '@tabler/icons-react'
+import { IconCircleCheckFilled } from '@tabler/icons-react'
 
 export const columns: ColumnDef<Device>[] = [
   {

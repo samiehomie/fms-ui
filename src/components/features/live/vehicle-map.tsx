@@ -237,6 +237,7 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
 }
 
 export default function VehicleMapWrapper(props: VehicleMapProps) {
+  logger.log('test')
   return (
     <APIProvider
       apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}

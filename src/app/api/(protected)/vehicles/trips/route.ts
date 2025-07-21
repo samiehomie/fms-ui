@@ -3,7 +3,6 @@ import type { ApiResponseType } from '@/types/api'
 import { withAuth } from '@/lib/api/auth'
 import { fetchJson } from '@/lib/api/fetch'
 import { buildURL } from '@/lib/api/utils'
-import { logger } from '@/lib/utils'
 import {
   createErrorResponse,
   createSuccessResponse,

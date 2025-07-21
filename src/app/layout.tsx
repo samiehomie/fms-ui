@@ -18,7 +18,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  logger.log('test')
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>

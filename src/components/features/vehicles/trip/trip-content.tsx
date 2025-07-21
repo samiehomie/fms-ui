@@ -20,7 +20,6 @@ import type {
 } from '@/types/api/vehicle.types'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TripPagination } from './trip-pagination'
-import { logger } from '@/lib/utils'
 import { formatDuration, formatTotalDuration } from '@/lib/api/utils'
 
 export interface TripSession {

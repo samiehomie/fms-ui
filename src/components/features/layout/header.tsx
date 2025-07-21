@@ -14,7 +14,7 @@ import {
 import { Bell, Search, Menu, LayoutDashboard, LogOut } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useAuth } from '../auth/auth-provider'
-import { logger, getInitials } from '@/lib/utils'
+import { getInitials } from '@/lib/utils'
 
 export function Header() {
   const { user, isLoading } = useAuth()
@@ -23,7 +23,6 @@ export function Header() {
     return <div>Loading...</div>
   }
 
-  // logger.info('user', user)
   return (
     <header className="sticky top-0 z-30 flex items-center h-16 px-4 bg-white border-b border-slate-200 dark:bg-slate-950 dark:border-slate-700 lg:px-6">
       <div className="lg:hidden">

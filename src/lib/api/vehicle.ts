@@ -6,7 +6,6 @@ import type {
 } from '@/types/api'
 import { ApiSuccessResponse } from '@/types/api/route.types'
 import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
-import { logger } from '../utils'
 import { buildSearchParams } from './utils'
 
 export const vehiclesApi = {

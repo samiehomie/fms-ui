@@ -11,11 +11,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { logger } from '@/lib/utils'
 
 export default function BreadcrumbMain() {
   const segments = useSelectedLayoutSegments()
-  logger.log('segments', segments)
+
   if (!segments) return null
 
   if (segments.length === 0) {
@@ -30,6 +29,7 @@ export default function BreadcrumbMain() {
     )
   }
 
+  logger.log('test-2')
   return (
     <Breadcrumb>
       <BreadcrumbList>
