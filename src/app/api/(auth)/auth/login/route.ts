@@ -7,7 +7,6 @@ import {
   AUTH_TOKEN_COOKIE_NAME,
   AUTH_EXPIRE_COOKIE_NAME,
 } from '@/constants/auth'
-import { logger } from '@/lib/utils'
 
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies()

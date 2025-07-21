@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/sonner'
+import '@/lib/global'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,6 +18,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  logger.log('test')
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>

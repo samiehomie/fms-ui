@@ -150,35 +150,30 @@ export default function VehicleList({
             <Card
               key={vehicle.id}
               className={cn(
-                'p-3 cursor-pointer transition-all hover:shadow-md',
+                'px-4 py-2 cursor-pointer transition-all hover:shadow-md',
                 selectedVehicleId === vehicle.id &&
                   'ring-2 ring-blue-500 bg-blue-50',
               )}
               onClick={() => onVehicleSelect(vehicle.id)}
             >
               <div className="flex items-start justify-between">
-                <div className="flex items-center gap-2">
-                  <VehicleIcon type={vehicle.type} />
-                  <div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <VehicleIcon type={vehicle.type} />
                     <div className="font-medium">{vehicle.name}</div>
-                    <div className="text-sm text-gray-600">
-                      {vehicle.driver}
-                    </div>
                   </div>
                 </div>
+
                 <StatusBadge status={vehicle.status} />
               </div>
 
-              <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+              <div className="mt-1 grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <div className="text-sm text-gray-600">{vehicle.driver}</div>
+                </div>
                 <div>
                   <span className="text-gray-500">속도:</span>
                   <span className="ml-1 font-medium">{vehicle.speed}km/h</span>
-                </div>
-                <div>
-                  <span className="text-gray-500">연료:</span>
-                  <span className="ml-1 font-medium">
-                    {vehicle.fuel.toFixed(0)}%
-                  </span>
                 </div>
               </div>
 

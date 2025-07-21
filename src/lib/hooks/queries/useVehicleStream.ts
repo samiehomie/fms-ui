@@ -55,11 +55,11 @@ export const useVehicleStream = () => {
             if (data.vehicles) {
               setVehicles(data.vehicles)
               // 쿼리 캐시에도 업데이트
-              queryClient.setQueryData(['vehicles'], data.vehicles)
+              // queryClient.setQueryData(['vehicles'], data.vehicles)
             }
           }
         } catch (err) {
-          console.error('Failed to parse SSE data:', err)
+          logger.error('Failed to parse SSE data:', err)
         }
       }
 
@@ -81,7 +81,7 @@ export const useVehicleStream = () => {
       }
     } catch (err) {
       setError('SSE 연결을 생성할 수 없습니다.')
-      console.error('SSE connection error:', err)
+      logger.error('SSE connection error:', err)
     }
   }, [queryClient])
 
