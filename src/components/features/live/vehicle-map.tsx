@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import {
   APIProvider,
   Map,
@@ -12,6 +12,7 @@ import {
   SuperClusterAlgorithm,
 } from '@googlemaps/markerclusterer'
 import { Vehicle } from '@/lib/hooks/queries/useVehicleStream'
+import { mapId } from '@/constants/map'
 
 interface VehicleMapProps {
   vehicles: Vehicle[]
@@ -244,9 +245,14 @@ export default function VehicleMapWrapper(props: VehicleMapProps) {
       <Map
         defaultCenter={{ lat: 37.5665, lng: 126.978 }}
         defaultZoom={12}
-        mapId="VEHICLE_TRACKING_MAP"
-        gestureHandling="greedy"
+        mapId={mapId}
+        gestureHandling={'greedy'}
         disableDefaultUI={false}
+        fullscreenControl={false}
+        streetViewControl={false}
+        mapTypeControl={false}
+        controlSize={0}
+        disableDoubleClickZoom={true}
         clickableIcons={false}
       >
         <VehicleMarkers {...props} />
