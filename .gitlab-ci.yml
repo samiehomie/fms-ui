@@ -46,7 +46,7 @@ build-dev:
     - docker push $FULL_IMAGE_NAME_DEV
     - echo "DEV image published → $FULL_IMAGE_NAME_DEV"
   rules:
-    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_COMMIT_BRANCH == "main"
       when: always
     - when: never
 
