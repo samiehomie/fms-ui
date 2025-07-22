@@ -43,7 +43,6 @@ spec:
             periodSeconds: 30
             timeoutSeconds: 5 # timeout 추가
           env:
-            # Database Configuration
             - name: FMS_WEB_DOMAIN
               value: '__FMS_WEB_DOMAIN__'
             - name: FMS_WEB_STATIC_IP
