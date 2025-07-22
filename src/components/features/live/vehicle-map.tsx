@@ -13,6 +13,7 @@ import {
 } from '@googlemaps/markerclusterer'
 import { Vehicle } from '@/lib/hooks/queries/useVehicleStream'
 import { mapId } from '@/constants/map'
+import type { LatLngLiteral } from 'leaflet'
 
 interface VehicleMapProps {
   vehicles: Vehicle[]
@@ -22,13 +23,13 @@ interface VehicleMapProps {
 
 // 차량 타입별 마커 색상
 const getMarkerColor = (type: Vehicle['type'], status: Vehicle['status']) => {
-  if (status === 'maintenance') return '#0078d3' // gray
+  if (status === 'maintenance') return '#666666' // gray
 
   const colors = {
     sedan: '#0078d3', // blue
-    truck: '#0078d3', // red
-    bus: '#0078d3', // green
-    van: '#0078d3', // yellow
+    truck: '#dc2626', // red
+    bus: '#16a34a', // green
+    van: '#ca8a04', // yellow
   }
   return colors[type] || '#0078d3'
 }
@@ -77,43 +78,137 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
       if (!markerLibrary) return null
 
       const isSelected = vehicle.id === selectedVehicleId
-      const color = getMarkerColor(vehicle.type, vehicle.status)
+      const markerSize = isSelected ? 44 : 36
+      const labelOffset = 25
 
-      const svg = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="${
-        isSelected ? 50 : 40
-      }" height="${isSelected ? 50 : 40}">
-        <g transform="rotate(${vehicle.heading} 20 20)">
-          <path d="M20 5 L30 30 L20 25 L10 30 Z" fill="${color}" stroke="white" stroke-width="2"/>
-        </g>
-        ${
-          isSelected
-            ? '<circle cx="20" cy="20" r="18" fill="none" stroke="#FF6B6B" stroke-width="3"/>'
-            : ''
+      // 차량 이름의 텍스트 길이에 따른 라벨 너비 계산
+      const textLength = vehicle.name.length
+      const labelWidth = Math.max(60, textLength * 8 + 16)
+
+      // 전체 컨테이너 생성
+      const container = document.createElement('div')
+      container.style.position = 'absolute'
+      container.style.cursor = 'pointer'
+      container.style.transform = 'translate(-50%, -100%)'
+      container.style.zIndex = isSelected ? '1000' : '1'
+      container.style.transition = 'all 0.2s ease-in-out'
+
+      // SVG 마커와 라벨을 포함하는 전체 구조
+      container.innerHTML = `
+        <div style="position: relative; width: ${Math.max(
+          markerSize,
+          labelWidth,
+        )}px; height: ${markerSize + labelOffset + 30}px;">
+          <!-- 라벨 -->
+          <div class="vehicle-label" style="
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            min-width: 60px;
+            text-align: center;
+            transition: all 0.2s ease-in-out;
+            z-index: 2;
+          ">${vehicle.name}</div>
+          
+          <!-- 연결선 -->
+          <div style="
+            position: absolute;
+            top: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: ${labelOffset}px;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+          "></div>
+          
+          <!-- 마커 -->
+          <div class="vehicle-marker" style="
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.2s ease-in-out;
+          ">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="${markerSize}" height="${markerSize}">
+              <!-- 외부 원 (파란색) -->
+              <circle cx="20" cy="20" r="18" fill="#0078d3" stroke="white" stroke-width="2"/>
+              
+              <!-- 화살표 (회전 적용) -->
+              <g transform="rotate(${vehicle.heading} 20 20)">
+                <path d="M20 8 L26 28 L20 24 L14 28 Z" fill="white"/>
+              </g>
+              
+              <!-- 선택 상태 표시 -->
+              ${
+                isSelected
+                  ? '<circle cx="20" cy="20" r="22" fill="none" stroke="#FF6B6B" stroke-width="3"/>'
+                  : ''
+              }
+            </svg>
+          </div>
+        </div>
+      `
+
+      // 호버 이벤트 처리
+      const markerElement = container.querySelector(
+        '.vehicle-marker',
+      ) as HTMLElement
+      const labelElement = container.querySelector(
+        '.vehicle-label',
+      ) as HTMLElement
+
+      const handleMouseEnter = () => {
+        container.style.zIndex = '999'
+        if (markerElement) {
+          markerElement.style.transform = 'translateX(-50%) scale(1.15)'
         }
-      </svg>
-    `
+        if (labelElement) {
+          labelElement.style.backgroundColor = 'rgba(255, 255, 255, 1)'
+          labelElement.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.25)'
+        }
+      }
 
-      const div = document.createElement('div')
-      div.innerHTML = svg
-      div.style.cursor = 'pointer'
-      div.style.position = 'absolute'
-      div.style.transform = 'translate(-50%, -50%)'
+      const handleMouseLeave = () => {
+        container.style.zIndex = isSelected ? '1000' : '1'
+        if (markerElement) {
+          markerElement.style.transform = 'translateX(-50%) scale(1)'
+        }
+        if (labelElement) {
+          labelElement.style.backgroundColor = 'rgba(255, 255, 255, 0.95)'
+          labelElement.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.15)'
+        }
+      }
 
-      // 이벤트 리스너는 한 번만 추가
       const handleClick = () => onVehicleClick(vehicle.id)
-      div.addEventListener('click', handleClick)
+
+      // 이벤트 리스너 추가
+      container.addEventListener('mouseenter', handleMouseEnter)
+      container.addEventListener('mouseleave', handleMouseLeave)
+      container.addEventListener('click', handleClick)
 
       const marker = new google.maps.marker.AdvancedMarkerElement({
         position: { lat: vehicle.lat, lng: vehicle.lng },
-        content: div,
+        content: container,
         title: vehicle.name,
         zIndex: isSelected ? 1000 : 1,
       })
 
       // 클린업을 위해 참조 저장
       ;(marker as any)._cleanup = () => {
-        div.removeEventListener('click', handleClick)
+        container.removeEventListener('mouseenter', handleMouseEnter)
+        container.removeEventListener('mouseleave', handleMouseLeave)
+        container.removeEventListener('click', handleClick)
       }
 
       return marker
@@ -191,13 +286,21 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
       const existingMarker = markersRef.current[vehicle.id]
       const isSelected = vehicle.id === selectedVehicleId
 
-      // 기존 마커가 있고 선택 상태가 변경되지 않았다면 위치만 업데이트
+      // 기존 마커가 있고 선택 상태나 위치가 변경되지 않았다면 위치만 업데이트
       if (existingMarker && existingMarker.zIndex === (isSelected ? 1000 : 1)) {
+        const currentPos = existingMarker.position as LatLngLiteral
+        if (
+          currentPos &&
+          Math.abs(currentPos.lat - vehicle.lat) < 0.0001 &&
+          Math.abs(currentPos.lng - vehicle.lng) < 0.0001
+        ) {
+          return // 위치 변화가 미미하면 업데이트하지 않음
+        }
         existingMarker.position = { lat: vehicle.lat, lng: vehicle.lng }
         return
       }
 
-      // 기존 마커 제거 (선택 상태 변경 시)
+      // 기존 마커 제거 (선택 상태 변경이나 큰 위치 변경 시)
       if (existingMarker) {
         if ((existingMarker as any)._cleanup) {
           ;(existingMarker as any)._cleanup()
