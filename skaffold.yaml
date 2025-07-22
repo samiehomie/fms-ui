@@ -1,0 +1,23 @@
+apiVersion: skaffold/v4beta3
+kind: Config
+metadata:
+  name: fms-web-deployment
+deploy:
+  kubectl: {}
+profiles:
+  - name: dev
+    manifests:
+      rawYaml:
+        - deployment.yaml
+        - frontend_config.yaml
+        - service.yaml
+        - managed_certificate.yaml
+        - ingress.yaml
+  - name: prod
+    manifests:
+      rawYaml:
+        - deployment.yaml
+        - frontend_config.yaml
+        - service.yaml
+        - managed_certificate.yaml
+        - ingress.yaml

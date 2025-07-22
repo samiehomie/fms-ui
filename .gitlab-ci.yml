@@ -1,0 +1,263 @@
+stages:
+  - build
+  - deploy-dev
+  - deploy-prod
+
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_DRIVER: overlay2
+  DOCKER_IMAGE_NAME: "fms_web"
+  DOCKER_IMAGE_TAG: "${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}"
+  GCP_ARTIFACT_REGISTRY_HOST: "${FMS_GCP_ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev"
+  FULL_IMAGE_NAME_DEV: "${FMS_GCP_ARTIFACT_REGISTRY_HOST}/${FMS_GCP_PROJECT_ID}/${FMS_GCP_ARTIFACT_REGISTRY_REPO}/${DOCKER_IMAGE_NAME}:dev-${DOCKER_IMAGE_TAG}"
+  FULL_IMAGE_NAME_PROD: "${FMS_GCP_ARTIFACT_REGISTRY_HOST}/${FMS_GCP_PROJECT_ID}/${FMS_GCP_ARTIFACT_REGISTRY_REPO}/${DOCKER_IMAGE_NAME}:prod-${DOCKER_IMAGE_TAG}"
+
+# Common template
+.docker-job:
+  image: docker:24.0.9
+  tags:
+    - fms-web
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo "$FMS_GCP_SERVICE_ACCOUNT_KEY" | base64 -d > $HOME/gcp-key.json
+    - docker login -u _json_key -p "$(cat $HOME/gcp-key.json)" "https://${FMS_GCP_ARTIFACT_REGISTRY_HOST}"
+    - rm $HOME/gcp-key.json
+
+# Combined build and push job
+build-dev:
+  extends: .docker-job
+  stage: build
+  script:
+    - pwd
+    - ls -la
+    - ls -R .
+    - 'echo "Building Docker image: $FULL_IMAGE_NAME_DEV"'
+    - |
+      docker build \
+        --build-arg FMS_WEB_DOMAIN="$FMS_WEB_DOMAIN_DEV" \
+        --build-arg FMS_WEB_STATIC_IP="$FMS_WEB_STATIC_IP_DEV" \
+        --build-arg FMS_WEB_CERT="$FMS_WEB_CERT_DEV" \
+        --build-arg FMS_WEB_CERT="$FMS_WEB_CERT_DEV" \
+        --build-arg NEXT_PUBLIC_GOOGLE_MAPS_API_KEY="$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" \
+        -t $FULL_IMAGE_NAME_DEV \
+        -f ./Dockerfile \
+        .
+    - 'echo "Pushing Docker image to GCP Artifact Registry"'
+    - docker push $FULL_IMAGE_NAME_DEV
+    - echo "DEV image published → $FULL_IMAGE_NAME_DEV"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+      when: always
+    - when: never
+
+build-prod:
+  extends: .docker-job
+  stage: build
+  script:
+    - pwd
+    - ls -la
+    - ls -R .
+    - 'echo "Building Docker image: $FULL_IMAGE_NAME_PROD"'
+    - |
+      docker build \
+        --build-arg FMS_WEB_DOMAIN="$FMS_WEB_DOMAIN" \
+        --build-arg FMS_WEB_STATIC_IP="$FMS_WEB_STATIC_IP" \
+        --build-arg FMS_WEB_CERT="$FMS_WEB_CERT" \
+        --build-arg NEXT_PUBLIC_GOOGLE_MAPS_API_KEY="$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" \
+        -t $FULL_IMAGE_NAME_PROD \
+        -f ./Dockerfile \
+        .
+    - 'echo "Pushing Docker image to GCP Artifact Registry"'
+    - docker push $FULL_IMAGE_NAME_PROD
+    - echo "PROD image published → $FULL_IMAGE_NAME_PROD"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: on_success
+    - when: never
+
+deploy-dev:
+  stage: deploy-dev
+  image: google/cloud-sdk
+  needs:
+    - build-dev
+  tags:
+    - fms-web
+  before_script:
+    - echo "$FMS_GCP_SERVICE_ACCOUNT_KEY" | base64 -d > $HOME/gcp-key.json
+    - gcloud auth activate-service-account --key-file=$HOME/gcp-key.json
+    - gcloud config set project $FMS_GCP_PROJECT_ID
+    - rm $HOME/gcp-key.json
+  script:
+    - gcloud deploy apply --file cd/deploy.yaml --region=asia-northeast3
+    - gcloud deploy apply --file cd/dev.yaml --region=asia-northeast3
+    - gcloud deploy apply --file cd/prod.yaml --region=asia-northeast3
+  # Function to escape special characters for sed
+    - |
+      escape_sed() {
+        printf '%s\n' "$1" | sed 's/[[\.*^$()+?{|]/\\&/g'
+      }
+      declare -A common_map=(
+        [FMS_WEB_DOMAIN]=FMS_WEB_DOMAIN
+        [FMS_WEB_STATIC_IP]=FMS_WEB_STATIC_IP
+        [FMS_WEB_CERT]=FMS_WEB_CERT
+        [NEXT_PUBLIC_GOOGLE_MAPS_API_KEY]=NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+      )
+    # Prepare manifests for DEV environment
+    - |
+      echo "=== Preparing DEV deployment ==="
+      mkdir -p rendered-k8s-dev
+
+      cp kubernetes/common/deployment.yaml rendered-k8s-dev/deployment.yaml
+
+      cp kubernetes/common/{frontend_config.yaml,ingress.yaml,managed_certificate.yaml} \
+        kubernetes/dev/service.yaml \
+        rendered-k8s-dev/
+      cp ./skaffold.yaml rendered-k8s-dev/
+
+      # Substitute variables for DEV
+      echo "Substituting image: $FULL_IMAGE_NAME_DEV"
+      sed -i "s#__FULL_IMAGE_NAME__#${FULL_IMAGE_NAME_DEV}#g" rendered-k8s-dev/*.yaml
+
+      declare -A map
+      for key in "${!common_map[@]}"; do
+        map[$key]=${common_map[$key]}
+      done
+      
+      map[FMS_WEB_DOMAIN]=FMS_WEB_DOMAIN_DEV
+      map[FMS_WEB_STATIC_IP]=FMS_WEB_STATIC_IP_DEV
+      map[FMS_WEB_CERT]=FMS_WEB_CERT_DEV
+      map[NEXT_PUBLIC_GOOGLE_MAPS_API_KEY]=NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+
+      for placeholder in "${!map[@]}"; do
+        varname=${map[$placeholder]}
+        value=${!varname}
+          echo "placeholder=__${placeholder}__"
+          echo "  varname=${varname}"
+          echo "  value=${value}" 
+        if [[ "$placeholder" == "FMS_API_SERVICE_PORT" ]]; then
+          sed -i "s|__${placeholder}__|${value}|g" rendered-k8s-dev/*.yaml
+        else
+          esc=$(escape_sed "$value")
+          sed -i "s#__${placeholder}__#${esc}#g" rendered-k8s-dev/*.yaml
+        fi
+      done
+
+      echo "=== Checking for leftover __FMS_API_CERT__ in DEV manifests ==="
+      ls rendered-k8s-dev/*.yaml
+      grep "__FMS_API_CERT__" rendered-k8s-dev/*.yaml \
+      && echo "❌ __FMS_API_CERT__ still exists!" \
+      || echo "✅ __FMS_API_CERT__ not found"
+    - |
+      echo "=== Verifying DEV substitutions ==="
+      if grep -n "__.*__" rendered-k8s-dev/*.yaml; then
+        echo "ERROR: Found unsubstituted placeholders in DEV!"
+        exit 1
+      fi
+    # Create releases for both environments
+    - |
+      TIMESTAMP=$(date +%s)
+      BASE_RELEASE_NAME="release-${CI_COMMIT_SHORT_SHA}"
+
+      echo "=== Creating DEV release ==="
+      DEV_RELEASE_NAME="${BASE_RELEASE_NAME}-dev-${TIMESTAMP}"
+      gcloud deploy releases create $DEV_RELEASE_NAME \
+        --delivery-pipeline=fms-cicd-pipeline \
+        --region=asia-northeast3 \
+        --source=rendered-k8s-dev/ \
+        --to-target=dev \
+        --annotations="environment=dev,commit-sha=${CI_COMMIT_SHA}"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: on_success
+    - when: never
+
+deploy-prod:
+  stage: deploy-prod
+  image: google/cloud-sdk
+  needs:
+    - build-prod
+  tags:
+    - fms-web
+  before_script:
+    - echo "$FMS_GCP_SERVICE_ACCOUNT_KEY" | base64 -d > $HOME/gcp-key.json
+    - gcloud auth activate-service-account --key-file=$HOME/gcp-key.json
+    - gcloud config set project $FMS_GCP_PROJECT_ID
+    - rm $HOME/gcp-key.json
+  script:
+    - gcloud deploy apply --file cd/deploy.yaml --region=asia-northeast3
+    - gcloud deploy apply --file cd/dev.yaml --region=asia-northeast3
+    - gcloud deploy apply --file cd/prod.yaml --region=asia-northeast3
+     # Function to escape special characters for sed
+    - |
+      escape_sed() {
+        printf '%s\n' "$1" | sed 's/[[\.*^$()+?{|]/\\&/g'
+      }
+      declare -A common_map=(
+        [FMS_WEB_DOMAIN]=FMS_WEB_DOMAIN
+        [FMS_WEB_STATIC_IP]=FMS_WEB_STATIC_IP
+        [FMS_WEB_CERT]=FMS_WEB_CERT
+        [NEXT_PUBLIC_GOOGLE_MAPS_API_KEY]=NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+      )
+     # Prepare manifests for PROD environment
+    - |
+      echo "=== Preparing PROD deployment ==="
+      mkdir -p rendered-k8s-prod
+      cp kubernetes/common/deployment.yaml rendered-k8s-prod/deployment.yaml
+
+      cp kubernetes/common/{frontend_config.yaml,ingress.yaml,managed_certificate.yaml} \
+        kubernetes/prod/service.yaml \
+        rendered-k8s-prod/
+      cp ./skaffold.yaml rendered-k8s-prod/
+
+
+      # Substitute variables for PROD
+      echo "Substituting image: $FULL_IMAGE_NAME_PROD"
+      sed -i "s#__FULL_IMAGE_NAME__#${FULL_IMAGE_NAME_PROD}#g" rendered-k8s-prod/*.yaml
+
+      declare -A map
+      for key in "${!common_map[@]}"; do
+        map[$key]=${common_map[$key]}
+      done
+      
+      map[FMS_WEB_DOMAIN]=FMS_WEB_DOMAIN
+      map[FMS_WEB_STATIC_IP]=FMS_WEB_STATIC_IP
+      map[FMS_WEB_CERT]=FMS_WEB_CERT
+      map[NEXT_PUBLIC_GOOGLE_MAPS_API_KEY]=NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+
+      for placeholder in "${!map[@]}"; do
+        varname=${map[$placeholder]}
+        value=${!varname}
+          echo "placeholder=__${placeholder}__"
+          echo "  varname=${varname}"
+          echo "  value=${value}" 
+        if [[ "$placeholder" == "FMS_API_SERVICE_PORT" ]]; then
+          sed -i "s|__${placeholder}__|${value}|g" rendered-k8s-prod/*.yaml
+        else
+          esc=$(escape_sed "$value")
+          sed -i "s#__${placeholder}__#${esc}#g" rendered-k8s-prod/*.yaml
+        fi
+      done
+    # Verify substitutions
+    - |
+      echo "=== Verifying PROD substitutions ==="
+      if grep -n "__.*__" rendered-k8s-prod/*.yaml; then
+        echo "ERROR: Found unsubstituted placeholders in PROD!"
+        exit 1
+      fi
+    # Create releases for both environments
+    - |
+      TIMESTAMP=$(date +%s)
+      BASE_RELEASE_NAME="release-${CI_COMMIT_SHORT_SHA}"
+
+      echo "=== Creating PROD release ==="
+      PROD_RELEASE_NAME="${BASE_RELEASE_NAME}-prod-${TIMESTAMP}"
+      gcloud deploy releases create $PROD_RELEASE_NAME \
+        --delivery-pipeline=fms-cicd-pipeline \
+        --region=asia-northeast3 \
+        --source=rendered-k8s-prod/ \
+        --to-target=prod \
+        --annotations="environment=prod,commit-sha=${CI_COMMIT_SHA}"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+    - when: never
