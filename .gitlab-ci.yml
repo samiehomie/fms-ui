@@ -35,6 +35,8 @@ build-dev:
     - |
       docker build \
         --build-arg FMS_WEB_DOMAIN="$FMS_WEB_DOMAIN_DEV" \
+        --build-arg NEXT_PUBLIC_FRONT_URL="https://${FMS_WEB_DOMAIN_DEV}" \
+        --build-arg NEXT_PUBLIC_API_BASE_URL="https://${FMS_WEB_DOMAIN_DEV}" \
         --build-arg FMS_WEB_STATIC_IP="$FMS_WEB_STATIC_IP_DEV" \
         --build-arg FMS_WEB_CERT="$FMS_WEB_CERT_DEV" \
         --build-arg NEXT_PUBLIC_GOOGLE_MAPS_API_KEY="$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" \
@@ -60,6 +62,8 @@ build-prod:
     - |
       docker build \
         --build-arg FMS_WEB_DOMAIN="$FMS_WEB_DOMAIN" \
+        --build-arg NEXT_PUBLIC_FRONT_URL="https://${FMS_WEB_DOMAIN}" \
+        --build-arg NEXT_PUBLIC_API_BASE_URL="https://${FMS_WEB_DOMAIN}" \
         --build-arg FMS_WEB_STATIC_IP="$FMS_WEB_STATIC_IP" \
         --build-arg FMS_WEB_CERT="$FMS_WEB_CERT" \
         --build-arg NEXT_PUBLIC_GOOGLE_MAPS_API_KEY="$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" \
