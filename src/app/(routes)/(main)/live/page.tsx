@@ -50,13 +50,13 @@ export default function VehicleTrackingContent() {
 
       <div className="flex-1 flex">
         {/* 좌측 차량 목록 (30%) */}
-        <div className="w-[30%] border-r bg-white h-full">
+       
           <VehicleList
             vehicles={vehicles}
             selectedVehicleId={selectedVehicleId}
             onVehicleSelect={setSelectedVehicleId}
           />
-        </div>
+     
 
         {/* 우측 지도 (70%) */}
         <div className="flex-1">

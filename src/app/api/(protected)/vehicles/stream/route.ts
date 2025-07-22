@@ -10,12 +10,12 @@ const generateVehicles = (count: number) => {
   for (let i = 0; i < count; i++) {
     vehicles.push({
       id: `vehicle-${i + 1}`,
-      name: `차량 ${i + 1}`,
+      name: `Vehicle ${i + 1}`,
       type: ['sedan', 'truck', 'bus', 'van'][Math.floor(Math.random() * 4)],
       status: ['active', 'idle', 'maintenance'][Math.floor(Math.random() * 3)],
       speed: Math.floor(Math.random() * 80),
       fuel: Math.floor(Math.random() * 100),
-      driver: `운전자 ${i + 1}`,
+      driver: `driver ${i + 1}`,
       lat: centerLat + (Math.random() - 0.5) * 0.2,
       lng: centerLng + (Math.random() - 0.5) * 0.2,
       heading: Math.floor(Math.random() * 360),
