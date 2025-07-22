@@ -25,13 +25,13 @@ spec:
             - containerPort: 3000
           readinessProbe:
             httpGet:
-              path: /login
+              path: /api/health 
               port: 3000
             initialDelaySeconds: 3
             periodSeconds: 10
           livenessProbe: # 추가된 liveness probe
             httpGet:
-              path: /login
+              path: /api/health 
               port: 3000
             initialDelaySeconds: 30
             periodSeconds: 30

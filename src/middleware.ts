@@ -8,6 +8,10 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const auth = await getAuthData()
 
+  if (pathname === '/api/health') {
+    return NextResponse.next()
+  }
+
   // 공개 경로 접근 시 로그인 사용자 리다이렉트
   if (PUBLIC_ROUTES.includes(pathname)) {
     if (auth) {
