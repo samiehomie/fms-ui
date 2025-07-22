@@ -22,15 +22,15 @@ interface VehicleMapProps {
 
 // 차량 타입별 마커 색상
 const getMarkerColor = (type: Vehicle['type'], status: Vehicle['status']) => {
-  if (status === 'maintenance') return '#6B7280' // gray
+  if (status === 'maintenance') return '#0078d3' // gray
 
   const colors = {
-    sedan: '#3B82F6', // blue
-    truck: '#EF4444', // red
-    bus: '#10B981', // green
-    van: '#F59E0B', // yellow
+    sedan: '#0078d3', // blue
+    truck: '#0078d3', // red
+    bus: '#0078d3', // green
+    van: '#0078d3', // yellow
   }
-  return colors[type] || '#3B82F6'
+  return colors[type] || '#0078d3'
 }
 
 // 클러스터 렌더러
