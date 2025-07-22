@@ -1,0 +1,14 @@
+# deploy.yaml
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+  name: fms-cicd-pipeline
+  labels:
+    app: cicd
+description: FMS CI/CD delivery pipeline
+serialPipeline:
+  stages:
+    - targetId: dev
+      profiles: ["dev"]
+    - targetId: prod
+      profiles: ["prod"]

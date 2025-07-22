@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fms-web-ingress
+  namespace: "service"
+  annotations:
+    # GKE Ingress class (deprecated but still works)
+    kubernetes.io/ingress.class: "gce"
+    # Managed SSL certificate
+    networking.gke.io/managed-certificates: __FMS_WEB_CERT__
+    # Static IP
+    kubernetes.io/ingress.global-static-ip-name: __FMS_WEB_STATIC_IP__
+    # HTTP to HTTPS redirect
+    #networking.gke.io/redirect-to-https: "true"
+    # Force SSL redirect (additional layer)
+    #ingress.gcp.kubernetes.io/force-ssl-redirect: "true"
+    # Load balancer type
+    ingress.gcp.kubernetes.io/load-balancer-type: "External"
+    networking.gke.io/frontend-config: fms-web-frontend-config
+    kubernetes.io/ingress.allow-http: "false"
+spec:
+  ingressClassName: gce
+  rules:
+    - host: __FMS_WEB_DOMAIN__
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fms-web-service
+                port:
+                  number: 80

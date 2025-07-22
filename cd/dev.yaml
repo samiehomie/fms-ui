@@ -1,0 +1,14 @@
+# dev-updated.yaml
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: dev
+description: dev
+gke:
+  cluster: projects/banf-fms-459900/locations/asia-northeast3-a/clusters/fms-cluster-dev
+executionConfigs:
+  - usages:
+      - RENDER
+      - DEPLOY
+    workerPool: projects/banf-fms-459900/locations/asia-northeast3/workerPools/fms-deploy-pool
+    serviceAccount: gitlab-runner@banf-fms-459900.iam.gserviceaccount.com
