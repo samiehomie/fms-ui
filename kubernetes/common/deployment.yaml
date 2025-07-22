@@ -1,47 +1,47 @@
-apiVersion: "apps/v1"
-kind: "Deployment"
+apiVersion: 'apps/v1'
+kind: 'Deployment'
 metadata:
-  name: "fms-web"
-  namespace: "service"
+  name: 'fms-web'
+  namespace: 'service'
   labels:
-    app-type: "fms-web"
+    app-type: 'fms-web'
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app-type: "fms-web"
+      app-type: 'fms-web'
   template:
     metadata:
       labels:
-        app-type: "fms-web"
+        app-type: 'fms-web'
     spec:
       nodeSelector:
         cloud.google.com/gke-nodepool: service
       containers:
-        - name: "fms-web"
+        - name: 'fms-web'
           image: __FULL_IMAGE_NAME__
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
           readinessProbe:
             httpGet:
-              path: /
+              path: /login
               port: 3000
             initialDelaySeconds: 3
             periodSeconds: 10
           livenessProbe: # 추가된 liveness probe
             httpGet:
-              path: /
+              path: /login
               port: 3000
             initialDelaySeconds: 30
             periodSeconds: 30
           env:
             # Database Configuration
             - name: FMS_WEB_DOMAIN
-              value: "__FMS_WEB_DOMAIN__"
+              value: '__FMS_WEB_DOMAIN__'
             - name: FMS_WEB_STATIC_IP
-              value: "__FMS_WEB_STATIC_IP__"
+              value: '__FMS_WEB_STATIC_IP__'
             - name: FMS_WEB_CERT
-              value: "__FMS_WEB_CERT__"
+              value: '__FMS_WEB_CERT__'
             - name: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-              value: "__NEXT_PUBLIC_GOOGLE_MAPS_API_KEY__"
+              value: '__NEXT_PUBLIC_GOOGLE_MAPS_API_KEY__'
