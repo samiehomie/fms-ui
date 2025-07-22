@@ -165,15 +165,21 @@ export function useVehicleTripsPaginated(
 }
 
 export function useVehicleTripDetailsBatch(tripIds: number[]) {
-  const queries = useQueries({
-    queries: tripIds.map((tripId) => ({
-      queryKey: ['trip details', tripId],
-      queryFn:
-        tripIds.length > 0
-          ? () => vehiclesApi.getVehicleTripsByTripId({ tripId })
-          : skipToken,
+  // tripIds가 비어있으면 빈 배열, 아니면 쿼리 배열 생성
+  const queryConfigs = useMemo(() => {
+    if (tripIds.length === 0) {
+      return []
+    }
+
+    return tripIds.map((tripId) => ({
+      queryKey: ['trip details', tripId] as const,
+      queryFn: () => vehiclesApi.getVehicleTripsByTripId({ tripId }),
       staleTime: 5 * 60 * 1000, // 5 minutes
-    })),
+    }))
+  }, [tripIds])
+
+  const queries = useQueries({
+    queries: queryConfigs,
   })
 
   // tripId와 결과를 매핑하여 객체로 반환
@@ -199,8 +205,8 @@ export function useVehicleTripDetailsBatch(tripIds: number[]) {
   const isSuccess = queries.every((query) => query.isSuccess)
 
   return {
-    data: mappedData, // { 1: tripData1, 2: tripData2, ... }
-    queries, // 원본 쿼리 배열 (필요시 사용)
+    data: mappedData,
+    queries,
     isLoading,
     isError,
     errors,
