@@ -23,18 +23,25 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
+              protocol: TCP
           readinessProbe:
             httpGet:
               path: /login
               port: 3000
-            initialDelaySeconds: 3
+              scheme: HTTP
+            initialDelaySeconds: 10
             periodSeconds: 10
-          livenessProbe: # 추가된 liveness probe
+            timeoutSeconds: 5 # 1초에서 5초로 증가
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
             httpGet:
               path: /login
               port: 3000
-            initialDelaySeconds: 30
+              scheme: HTTP
+            initialDelaySeconds: 60 # 30초에서 60초로 증가
             periodSeconds: 30
+            timeoutSeconds: 5 # timeout 추가
           env:
             # Database Configuration
             - name: FMS_WEB_DOMAIN
