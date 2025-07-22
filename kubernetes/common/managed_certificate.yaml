@@ -5,4 +5,4 @@ metadata:
   namespace: "service"
 spec:
   domains:
-    - __FMS_WEB_DOMAIN__
+    - fms.banf.ai
