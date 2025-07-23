@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils'
 import type { TripSession } from './trip-content'
 import { Eye, EyeOff, MoveRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useReverseGeocode } from '@/lib/hooks/queries/useGeocoding'
+import { useReverseGeocode } from '@/lib/queries/useGeocoding'
 import { format, parseISO } from 'date-fns'
 
 interface TripHistoryTableProps {

@@ -2,7 +2,7 @@
 import { DataTable } from '@/components/ui/data-table'
 import type { UsersPaginationParams } from '@/types/api/user.types'
 import { useState } from 'react'
-import { useUsersPaginated } from '@/lib/hooks/queries/useUsers'
+import { useUsersPaginated } from '@/lib/queries/useUsers'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'

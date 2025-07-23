@@ -2,7 +2,7 @@
 import { DataTable } from '../../ui/data-table'
 import type { CompaniesPaginationParams } from '@/types/api/company.types'
 import { useState } from 'react'
-import { useCompaniesPaginated } from '@/lib/hooks/queries/useCompanies'
+import { useCompaniesPaginated } from '@/lib/queries/useCompanies'
 import { columns } from '@/components/features/companies/columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'

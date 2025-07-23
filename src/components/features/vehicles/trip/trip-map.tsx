@@ -18,7 +18,7 @@ import {
 import type { LatLngExpression, Marker as LeafletMarker } from 'leaflet'
 import L from 'leaflet'
 import { useEffect, useRef } from 'react'
-import { useVehicleTripDetailsBatch } from '@/lib/hooks/queries/useVehicles'
+import { useVehicleTripDetailsBatch } from '@/lib/queries/useVehicles'
 import type { VehicleTripsByTripIdResponse } from '@/types/api/vehicle.types'
 
 interface TripMapProps {

@@ -40,10 +40,7 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import {
-  useUpdateVehicle,
-  useVehicleById,
-} from '@/lib/hooks/queries/useVehicles'
+import { useUpdateVehicle, useVehicleById } from '@/lib/queries/useVehicles'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 

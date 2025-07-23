@@ -40,8 +40,8 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { useModifyCompany } from '@/lib/hooks/queries/useCompanies'
-import { useCompanyById } from '@/lib/hooks/queries/useCompanies'
+import { useModifyCompany } from '@/lib/queries/useCompanies'
+import { useCompanyById } from '@/lib/queries/useCompanies'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 

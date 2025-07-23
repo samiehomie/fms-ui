@@ -39,7 +39,7 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { useCreateVehicle } from '@/lib/hooks/queries/useVehicles'
+import { useCreateVehicle } from '@/lib/queries/useVehicles'
 import { IconPlus } from '@tabler/icons-react'
 
 const vehicleSchema = z.object({

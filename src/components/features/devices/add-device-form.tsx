@@ -39,9 +39,9 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { useCreateDevice } from '@/lib/hooks/queries/useDevices'
+import { useCreateDevice } from '@/lib/queries/useDevices'
 import { IconPlus } from '@tabler/icons-react'
-import { useVehiclesPaginated } from '@/lib/hooks/queries/useVehicles'
+import { useVehiclesPaginated } from '@/lib/queries/useVehicles'
 
 const deviceSchema = z.object({
   name: z

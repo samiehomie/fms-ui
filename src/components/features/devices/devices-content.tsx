@@ -2,7 +2,7 @@
 import { DataTable } from '@/components/ui/data-table'
 import type { DevicesPaginationParams, Device } from '@/types/api/device.types'
 import { useState } from 'react'
-import { useDevicesPaginated } from '@/lib/hooks/queries/useDevices'
+import { useDevicesPaginated } from '@/lib/queries/useDevices'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'

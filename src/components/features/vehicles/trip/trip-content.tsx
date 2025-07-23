@@ -13,7 +13,7 @@ import { TripOverview } from '@/components/features/vehicles/trip/trip-overview'
 import {
   useVehicleTripsPaginated,
   useVehicleTripDetailsBatch,
-} from '@/lib/hooks/queries/useVehicles'
+} from '@/lib/queries/useVehicles'
 import type {
   VehicleTripsPaginationParams,
   VehicleTripEvent,

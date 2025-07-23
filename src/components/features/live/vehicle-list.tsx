@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react'
-import { Vehicle } from '@/lib/hooks/queries/useVehicleStream'
+import { Vehicle } from '@/lib/queries/useVehicleStream'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'

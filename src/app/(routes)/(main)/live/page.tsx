@@ -2,12 +2,13 @@
 
 import React, { useState } from 'react'
 import dynamic from 'next/dynamic'
-import { useVehicleStream } from '@/lib/hooks/queries/useVehicleStream'
+import { useVehicleStream } from '@/lib/queries/useVehicleStream'
 import VehicleList from '@/components/features/live/vehicle-list'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Loader2, WifiOff } from 'lucide-react'
 import { APIProvider } from '@vis.gl/react-google-maps'
+import { useClickOutside } from '@/hooks/use-clickoutside'
 
 // 클라이언트 사이드에서만 렌더링
 const VehicleMap = dynamic(
@@ -28,8 +29,17 @@ export default function VehicleTrackingContent() {
     null,
   )
 
+  // 마커 컨테이너 외부 클릭 시 선택 해제
+  const mapContainerRef = useClickOutside<HTMLDivElement>(
+    () => {
+      console.log('외부 클릭 감지 - 마커 선택 해제')
+      setSelectedVehicleId(null)
+    },
+    selectedVehicleId !== null, // 마커가 선택된 상태에서만 활성화
+  )
+
   return (
-    <div className="flex-1 flex flex-col lg:-mx-6 -mt-5">
+    <div className="flex-1 flex flex-col lg:-mx-6 -mt-5" ref={mapContainerRef}>
       {/* 연결 상태 표시 */}
       {!isConnected && (
         <Alert className="m-4 border-orange-200 bg-orange-50">

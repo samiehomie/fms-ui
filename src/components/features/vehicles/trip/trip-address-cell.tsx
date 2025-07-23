@@ -2,8 +2,8 @@
 
 import { useState, useEffect, FC } from 'react'
 import { MoveRight } from 'lucide-react'
-import { useVehicleTripDetailsBatch } from '@/lib/hooks/queries/useVehicles'
-import { useReverseGeocode } from '@/lib/hooks/queries/useGeocoding'
+import { useVehicleTripDetailsBatch } from '@/lib/queries/useVehicles'
+import { useReverseGeocode } from '@/lib/queries/useGeocoding'
 
 interface TripAddressCellProps {
   visibleIds: number[]

@@ -11,7 +11,7 @@ import {
   MarkerClusterer,
   SuperClusterAlgorithm,
 } from '@googlemaps/markerclusterer'
-import { Vehicle } from '@/lib/hooks/queries/useVehicleStream'
+import { Vehicle } from '@/lib/queries/useVehicleStream'
 import { mapId } from '@/constants/map'
 import type { LatLngLiteral } from 'leaflet'
 
@@ -77,6 +77,7 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
 
       // 전체 컨테이너 생성
       const container = document.createElement('div')
+      container.className = 'vehicle-container'
       container.style.position = 'absolute'
       container.style.cursor = 'pointer'
       container.style.transform = 'translate(-50%, -100%)'

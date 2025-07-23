@@ -19,10 +19,7 @@ import { ModifyCompanyForm } from './modify-company-form'
 import { IconCircleCheckFilled, IconDotsVertical } from '@tabler/icons-react'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  useDeleteCompany,
-  useVerifyCompany,
-} from '@/lib/hooks/queries/useCompanies'
+import { useDeleteCompany, useVerifyCompany } from '@/lib/queries/useCompanies'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
 
 export const columns: ColumnDef<Company>[] = [

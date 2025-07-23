@@ -17,10 +17,7 @@ import { IconDotsVertical } from '@tabler/icons-react'
 import { logger, cn } from '@/lib/utils'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
 import type { Vehicle } from '@/types/api/vehicle.types'
-import {
-  useDeleteVehicle,
-  useRestoreVehicle,
-} from '@/lib/hooks/queries/useVehicles'
+import { useDeleteVehicle, useRestoreVehicle } from '@/lib/queries/useVehicles'
 import { UpdateVehicleForm } from './update-vehicle-form'
 
 export const columns: ColumnDef<Vehicle>[] = [

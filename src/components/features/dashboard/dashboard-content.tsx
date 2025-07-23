@@ -1,7 +1,7 @@
 'use client'
 import { StatCard } from '@/components/features/dashboard/stat-card'
 import { Globe, Users, Truck, Cpu } from 'lucide-react'
-import { useDashboard } from '@/lib/hooks/queries/useDashboard'
+import { useDashboard } from '@/lib/queries/useDashboard'
 import { Skeleton } from '@/components/ui/skeleton'
 import { RecentCompaniesList } from '@/components/features/dashboard/recent-companies-list'
 import { VehicleStatusList } from '@/components/features/dashboard/vehicle-status-list'

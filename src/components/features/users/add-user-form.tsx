@@ -39,9 +39,9 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { useCreateUser } from '@/lib/hooks/queries/useUsers'
+import { useCreateUser } from '@/lib/queries/useUsers'
 import { IconPlus } from '@tabler/icons-react'
-import { useCompaniesPaginated } from '@/lib/hooks/queries/useCompanies'
+import { useCompaniesPaginated } from '@/lib/queries/useCompanies'
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
