@@ -47,10 +47,10 @@ build-dev:
     - docker push $FULL_IMAGE_NAME_DEV
     - echo "DEV image published → $FULL_IMAGE_NAME_DEV"
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"
       when: always
     - when: never
-
+ 
 build-prod:
   extends: .docker-job
   stage: build
@@ -101,6 +101,7 @@ deploy-dev:
       }
       declare -A common_map=(
         [FMS_WEB_DOMAIN]=FMS_WEB_DOMAIN
+        [FMS_API_DOMAIN]=FMS_API_DOMAIN
         [FMS_WEB_STATIC_IP]=FMS_WEB_STATIC_IP
         [FMS_WEB_CERT]=FMS_WEB_CERT
         [NEXT_PUBLIC_GOOGLE_MAPS_API_KEY]=NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
@@ -125,18 +126,19 @@ deploy-dev:
       for key in "${!common_map[@]}"; do
         map[$key]=${common_map[$key]}
       done
-      
+     
       map[FMS_WEB_DOMAIN]=FMS_WEB_DOMAIN_DEV
+      map[FMS_API_DOMAIN]=FMS_API_DOMAIN_DEV
       map[FMS_WEB_STATIC_IP]=FMS_WEB_STATIC_IP_DEV
       map[FMS_WEB_CERT]=FMS_WEB_CERT_DEV
       map[NEXT_PUBLIC_GOOGLE_MAPS_API_KEY]=NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-
+ 
       for placeholder in "${!map[@]}"; do
         varname=${map[$placeholder]}
         value=${!varname}
           echo "placeholder=__${placeholder}__"
           echo "  varname=${varname}"
-          echo "  value=${value}" 
+          echo "  value=${value}"
         if [[ "$placeholder" == "FMS_API_SERVICE_PORT" ]]; then
           sed -i "s|__${placeholder}__|${value}|g" rendered-k8s-dev/*.yaml
         else
@@ -144,7 +146,7 @@ deploy-dev:
           sed -i "s#__${placeholder}__#${esc}#g" rendered-k8s-dev/*.yaml
         fi
       done
-
+ 
       echo "=== Checking for leftover __FMS_API_CERT__ in DEV manifests ==="
       ls rendered-k8s-dev/*.yaml
       grep "__FMS_API_CERT__" rendered-k8s-dev/*.yaml \
@@ -160,7 +162,7 @@ deploy-dev:
     - |
       TIMESTAMP=$(date +%s)
       BASE_RELEASE_NAME="release-${CI_COMMIT_SHORT_SHA}"
-
+ 
       echo "=== Creating DEV release ==="
       DEV_RELEASE_NAME="${BASE_RELEASE_NAME}-dev-${TIMESTAMP}"
       gcloud deploy releases create $DEV_RELEASE_NAME \
@@ -170,10 +172,10 @@ deploy-dev:
         --to-target=dev \
         --annotations="environment=dev,commit-sha=${CI_COMMIT_SHA}"
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"
       when: on_success
     - when: never
-
+ 
 deploy-prod:
   stage: deploy-prod
   image: google/cloud-sdk
@@ -197,6 +199,7 @@ deploy-prod:
       }
       declare -A common_map=(
         [FMS_WEB_DOMAIN]=FMS_WEB_DOMAIN
+        [FMS_API_DOMAIN]=FMS_API_DOMAIN
         [FMS_WEB_STATIC_IP]=FMS_WEB_STATIC_IP
         [FMS_WEB_CERT]=FMS_WEB_CERT
         [NEXT_PUBLIC_GOOGLE_MAPS_API_KEY]=NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
@@ -206,33 +209,34 @@ deploy-prod:
       echo "=== Preparing PROD deployment ==="
       mkdir -p rendered-k8s-prod
       cp kubernetes/common/deployment.yaml rendered-k8s-prod/deployment.yaml
-
+ 
       cp kubernetes/common/{frontend_config.yaml,ingress.yaml,managed_certificate.yaml} \
         kubernetes/prod/service.yaml \
         rendered-k8s-prod/
       cp ./skaffold.yaml rendered-k8s-prod/
-
-
+ 
+ 
       # Substitute variables for PROD
       echo "Substituting image: $FULL_IMAGE_NAME_PROD"
       sed -i "s#__FULL_IMAGE_NAME__#${FULL_IMAGE_NAME_PROD}#g" rendered-k8s-prod/*.yaml
-
+ 
       declare -A map
       for key in "${!common_map[@]}"; do
         map[$key]=${common_map[$key]}
       done
-      
+     
       map[FMS_WEB_DOMAIN]=FMS_WEB_DOMAIN
+      map[FMS_API_DOMAIN]=FMS_API_DOMAIN
       map[FMS_WEB_STATIC_IP]=FMS_WEB_STATIC_IP
       map[FMS_WEB_CERT]=FMS_WEB_CERT
       map[NEXT_PUBLIC_GOOGLE_MAPS_API_KEY]=NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-
+ 
       for placeholder in "${!map[@]}"; do
         varname=${map[$placeholder]}
         value=${!varname}
           echo "placeholder=__${placeholder}__"
           echo "  varname=${varname}"
-          echo "  value=${value}" 
+          echo "  value=${value}"
         if [[ "$placeholder" == "FMS_API_SERVICE_PORT" ]]; then
           sed -i "s|__${placeholder}__|${value}|g" rendered-k8s-prod/*.yaml
         else
@@ -251,7 +255,7 @@ deploy-prod:
     - |
       TIMESTAMP=$(date +%s)
       BASE_RELEASE_NAME="release-${CI_COMMIT_SHORT_SHA}"
-
+ 
       echo "=== Creating PROD release ==="
       PROD_RELEASE_NAME="${BASE_RELEASE_NAME}-prod-${TIMESTAMP}"
       gcloud deploy releases create $PROD_RELEASE_NAME \
