@@ -47,7 +47,7 @@ build-dev:
     - docker push $FULL_IMAGE_NAME_DEV
     - echo "DEV image published → $FULL_IMAGE_NAME_DEV"
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"
       when: always
     - when: never
 
@@ -170,7 +170,7 @@ deploy-dev:
         --to-target=dev \
         --annotations="environment=dev,commit-sha=${CI_COMMIT_SHA}"
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"
       when: on_success
     - when: never
 
