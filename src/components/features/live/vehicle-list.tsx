@@ -31,13 +31,13 @@ const StatusBadge = ({ status }: { status: Vehicle['status'] }) => {
   const variants = {
     active: 'bg-green-500',
     idle: 'bg-yellow-500',
-    maintenance: 'bg-gray-500',
+    maintenance: 'bg-yellow-500',
   }
 
   const labels = {
-    active: '운행중',
-    idle: '대기중',
-    maintenance: '정비중',
+    active: 'Active',
+    idle: 'Idle',
+    maintenance: 'idle',
   }
 
   return (
@@ -62,7 +62,7 @@ export default function VehicleList({
   const moveToVehicle = (lat: number, lng: number) => {
     if (map) {
       map.panTo({ lat, lng })
-      map.setZoom(12)
+      map.setZoom(13)
     }
   }
 

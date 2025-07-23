@@ -7,7 +7,7 @@ export interface Vehicle {
   id: string
   name: string
   type: 'sedan' | 'truck' | 'bus' | 'van'
-  status: 'active' | 'idle' | 'maintenance'
+  status: 'active' | 'idle'
   speed: number
   fuel: number
   driver: string
@@ -65,7 +65,7 @@ export const useVehicleStream = () => {
 
       eventSource.onerror = () => {
         setIsConnected(false)
-        setError('연결이 끊어졌습니다. 재연결 중...')
+        setError('Connection lost. Reconnecting...')
         eventSource.close()
 
         // 지수 백오프로 재연결
@@ -80,7 +80,7 @@ export const useVehicleStream = () => {
         }, delay)
       }
     } catch (err) {
-      setError('SSE 연결을 생성할 수 없습니다.')
+      setError('SSE connection error')
       logger.error('SSE connection error:', err)
     }
   }, [queryClient])

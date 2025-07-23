@@ -40,23 +40,6 @@ export default function VehicleTrackingContent() {
 
   return (
     <div className="flex-1 flex flex-col lg:-mx-6 -mt-5" ref={mapContainerRef}>
-      {/* 연결 상태 표시 */}
-      {!isConnected && (
-        <Alert className="m-4 border-orange-200 bg-orange-50">
-          <WifiOff className="h-4 w-4" />
-          <AlertDescription className="flex items-center justify-between">
-            <span>{error || '서버에 연결 중...'}</span>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={reconnect}
-              className="ml-4"
-            >
-              재연결
-            </Button>
-          </AlertDescription>
-        </Alert>
-      )}
       <APIProvider
         apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
         libraries={['marker']}
@@ -71,7 +54,27 @@ export default function VehicleTrackingContent() {
           />
 
           {/* 우측 지도 (70%) */}
-          <div className="flex-1">
+          <div className="flex-1 relative">
+            {/* 연결 상태 표시 */}
+            {!isConnected && (
+              <Alert className="m-4 border-orange-200 bg-orange-50 absolute w-1/3 z-30">
+                <AlertDescription className="flex items-center justify-between">
+                  <div className="flex items-center gap-x-3">
+                    <WifiOff className="h-4 w-4" />
+                    <span>{error || 'Connecting...'}</span>
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={reconnect}
+                    className="ml-4"
+                  >
+                    Retry
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            )}
             <VehicleMap
               vehicles={vehicles}
               selectedVehicleId={selectedVehicleId}

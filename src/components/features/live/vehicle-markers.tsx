@@ -60,7 +60,7 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
 
       const isSelected = vehicle.id === selectedVehicleId
       const markerSize = 36 // 고정 크기
-      const labelOffset = 25
+      const labelOffset = 20
 
       // 차량 이름의 텍스트 길이에 따른 라벨 너비 계산
       const textLength = vehicle.name.length
@@ -84,7 +84,7 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
         <div style="position: relative; width: ${Math.max(
           markerSize,
           labelWidth,
-        )}px; height: ${markerSize + labelOffset + 30}px;">
+        )}px; height: ${markerSize + labelOffset + 20}px;">
           <!-- 라벨 -->
           <div class="vehicle-label" style="
             position: absolute;
