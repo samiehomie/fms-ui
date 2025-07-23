@@ -147,11 +147,11 @@ export default function VehicleList({
           onClick={() => {
             setIsCollapsed((old) => !old)
           }}
-          className="absolute w-5 h-8 top-1/2 right-0 translate-x-5 z-50 -translate-y-5 bg-white border-[1px_1px_1px_0px] cursor-pointer"
+          className="hover:bg-[#f5f9fd] absolute w-5 h-8 top-1/2 right-0 translate-x-5 z-50 -translate-y-5 bg-white border-[1px_1px_1px_0px] cursor-pointer"
         >
           <ChevronLeft
             className={cn(
-              'absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 transition-all duration-300',
+              'absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 transition-all duration-300 text-gray-500/90',
               isCollapsed && 'rotate-180',
             )}
           />
