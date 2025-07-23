@@ -78,12 +78,15 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
       if (!markerLibrary) return null
 
       const isSelected = vehicle.id === selectedVehicleId
-      const markerSize = isSelected ? 44 : 36
+      const markerSize = 36 // 고정 크기
       const labelOffset = 25
 
       // 차량 이름의 텍스트 길이에 따른 라벨 너비 계산
       const textLength = vehicle.name.length
       const labelWidth = Math.max(60, textLength * 8 + 16)
+
+      // 선택되지 않은 마커의 투명도 설정
+      const opacity = selectedVehicleId && !isSelected ? 0.3 : 1
 
       // 전체 컨테이너 생성
       const container = document.createElement('div')
@@ -92,6 +95,7 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
       container.style.transform = 'translate(-50%, -100%)'
       container.style.zIndex = isSelected ? '1000' : '1'
       container.style.transition = 'all 0.2s ease-in-out'
+      container.style.opacity = opacity.toString()
 
       // SVG 마커와 라벨을 포함하는 전체 구조
       container.innerHTML = `
@@ -148,13 +152,6 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
               <g transform="rotate(${vehicle.heading} 20 20)">
                 <path d="M20 8 L26 28 L20 24 L14 28 Z" fill="white"/>
               </g>
-              
-              <!-- 선택 상태 표시 -->
-              ${
-                isSelected
-                  ? '<circle cx="20" cy="20" r="22" fill="none" stroke="#FF6B6B" stroke-width="3"/>'
-                  : ''
-              }
             </svg>
           </div>
         </div>
@@ -169,7 +166,7 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
       ) as HTMLElement
 
       const handleMouseEnter = () => {
-        container.style.zIndex = '999'
+        container.style.zIndex = '9999'
         if (markerElement) {
           markerElement.style.transform = 'translateX(-50%) scale(1.15)'
         }
@@ -294,9 +291,21 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
           Math.abs(currentPos.lat - vehicle.lat) < 0.0001 &&
           Math.abs(currentPos.lng - vehicle.lng) < 0.0001
         ) {
+          // 투명도만 업데이트
+          const container = existingMarker.content as HTMLElement
+          if (container) {
+            const opacity = selectedVehicleId && !isSelected ? 0.3 : 1
+            container.style.opacity = opacity.toString()
+          }
           return // 위치 변화가 미미하면 업데이트하지 않음
         }
         existingMarker.position = { lat: vehicle.lat, lng: vehicle.lng }
+        // 투명도 업데이트
+        const container = existingMarker.content as HTMLElement
+        if (container) {
+          const opacity = selectedVehicleId && !isSelected ? 0.3 : 1
+          container.style.opacity = opacity.toString()
+        }
         return
       }
 
@@ -324,17 +333,18 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
     }
   }, [vehicles, selectedVehicleId, map, markerLibrary, onVehicleClick])
 
-  // 선택된 차량으로 한 번만 이동 (추적하지 않음)
+  // 선택된 차량 변경 시 모든 마커의 투명도 업데이트
   useEffect(() => {
-    if (!map || !selectedVehicleId) return
+    if (!selectedVehicleId) return
 
-    const selectedVehicle = vehicles.find((v) => v.id === selectedVehicleId)
-    if (selectedVehicle) {
-      // 한 번만 이동하고 추적하지 않음
-      map.panTo({ lat: selectedVehicle.lat, lng: selectedVehicle.lng })
-      map.setZoom(16)
-    }
-  }, [map, selectedVehicleId]) // vehicles 의존성 제거로 추적 방지
+    Object.entries(markersRef.current).forEach(([vehicleId, marker]) => {
+      const container = marker.content as HTMLElement
+      if (container) {
+        const opacity = vehicleId === selectedVehicleId ? 1 : 0.3
+        container.style.opacity = opacity.toString()
+      }
+    })
+  }, [selectedVehicleId])
 
   return null
 }
