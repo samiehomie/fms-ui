@@ -6,7 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
-import { Search, Truck, Car, Bus, ChevronLeft } from 'lucide-react'
+import { Search, Truck, Car, Bus, ChevronLeft, MapPin } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useMap } from '@vis.gl/react-google-maps'
 
@@ -41,7 +41,12 @@ const StatusBadge = ({ status }: { status: Vehicle['status'] }) => {
   }
 
   return (
-    <Badge className={cn('text-white', variants[status])}>
+    <Badge
+      className={cn(
+        'text-white text-[11px] leading-3 rounded-[4px] font-[400]',
+        variants[status],
+      )}
+    >
       {labels[status]}
     </Badge>
   )
@@ -178,7 +183,7 @@ export default function VehicleList({
               <Card
                 key={vehicle.id}
                 className={cn(
-                  'px-4 py-2 cursor-pointer transition-all hover:shadow-md',
+                  'px-4 py-3 cursor-pointer transition-all hover:shadow-md gap-y-0',
                   selectedVehicleId === vehicle.id &&
                     'ring-2 ring-blue-500 bg-blue-50',
                 )}
@@ -188,31 +193,41 @@ export default function VehicleList({
                 }}
               >
                 <div className="flex items-start justify-between">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <VehicleIcon type={vehicle.type} />
-                      <div className="font-medium">{vehicle.name}</div>
-                    </div>
-                  </div>
-
+                  <div className="font-medium text-sm">{vehicle.name}</div>
                   <StatusBadge status={vehicle.status} />
                 </div>
 
-                <div className="mt-1 grid grid-cols-2 gap-2 text-sm">
-                  <div>
-                    <div className="text-sm text-gray-600">
-                      {vehicle.driver}
-                    </div>
+                <div className="flex items-center justify-between gap-2 text-sm mt-3">
+                  <div className="text-gray-500/90 text-xs flex items-center gap-x-2">
+                    <Car size={17} />
+                    {'No driver assigned'}
                   </div>
-                  <div>
+
+                  {/* <div>
                     <span className="text-gray-500">speed:</span>
                     <span className="ml-1 font-medium">
                       {vehicle.speed}km/h
                     </span>
+                  </div> */}
+                </div>
+                <div className="flex items-center justify-between gap-2 text-sm mt-[6px]">
+                  <div className="text-gray-500/90 text-xs flex items-start gap-x-2">
+                    <MapPin size={16} />
+                    <div>
+                      <div>{`Las Vegas Blvd S, Sloan, NV 89054, USA`}</div>
+                      <div>{`(35.840305, -115.270782)`}</div>
+                    </div>
                   </div>
+
+                  {/* <div>
+                    <span className="text-gray-500">speed:</span>
+                    <span className="ml-1 font-medium">
+                      {vehicle.speed}km/h
+                    </span>
+                  </div> */}
                 </div>
 
-                <div className="mt-1 text-xs text-gray-400">
+                <div className="text-[11.5px] text-gray-400/90  mt-4 flex justify-end">
                   Last updated:{' '}
                   {new Date(vehicle.lastUpdate).toLocaleTimeString()}
                 </div>
