@@ -4,13 +4,13 @@ stages:
   - deploy-prod
 
 variables:
-  DOCKER_TLS_CERTDIR: ""
+  DOCKER_TLS_CERTDIR: ''
   DOCKER_DRIVER: overlay2
-  DOCKER_IMAGE_NAME: "fms_web"
-  DOCKER_IMAGE_TAG: "${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}"
-  GCP_ARTIFACT_REGISTRY_HOST: "${FMS_GCP_ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev"
-  FULL_IMAGE_NAME_DEV: "${FMS_GCP_ARTIFACT_REGISTRY_HOST}/${FMS_GCP_PROJECT_ID}/${FMS_GCP_ARTIFACT_REGISTRY_REPO}/${DOCKER_IMAGE_NAME}:dev-${DOCKER_IMAGE_TAG}"
-  FULL_IMAGE_NAME_PROD: "${FMS_GCP_ARTIFACT_REGISTRY_HOST}/${FMS_GCP_PROJECT_ID}/${FMS_GCP_ARTIFACT_REGISTRY_REPO}/${DOCKER_IMAGE_NAME}:prod-${DOCKER_IMAGE_TAG}"
+  DOCKER_IMAGE_NAME: 'fms_web'
+  DOCKER_IMAGE_TAG: '${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}'
+  GCP_ARTIFACT_REGISTRY_HOST: '${FMS_GCP_ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev'
+  FULL_IMAGE_NAME_DEV: '${FMS_GCP_ARTIFACT_REGISTRY_HOST}/${FMS_GCP_PROJECT_ID}/${FMS_GCP_ARTIFACT_REGISTRY_REPO}/${DOCKER_IMAGE_NAME}:dev-${DOCKER_IMAGE_TAG}'
+  FULL_IMAGE_NAME_PROD: '${FMS_GCP_ARTIFACT_REGISTRY_HOST}/${FMS_GCP_PROJECT_ID}/${FMS_GCP_ARTIFACT_REGISTRY_REPO}/${DOCKER_IMAGE_NAME}:prod-${DOCKER_IMAGE_TAG}'
 
 # Common template
 .docker-job:
@@ -47,7 +47,7 @@ build-dev:
     - docker push $FULL_IMAGE_NAME_DEV
     - echo "DEV image published → $FULL_IMAGE_NAME_DEV"
   rules:
-    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_COMMIT_BRANCH == "main"
       when: always
     - when: never
 
@@ -94,7 +94,7 @@ deploy-dev:
     - gcloud deploy apply --file cd/deploy.yaml --region=asia-northeast3
     - gcloud deploy apply --file cd/dev.yaml --region=asia-northeast3
     - gcloud deploy apply --file cd/prod.yaml --region=asia-northeast3
-  # Function to escape special characters for sed
+    # Function to escape special characters for sed
     - |
       escape_sed() {
         printf '%s\n' "$1" | sed 's/[[\.*^$()+?{|]/\\&/g'
@@ -125,7 +125,7 @@ deploy-dev:
       for key in "${!common_map[@]}"; do
         map[$key]=${common_map[$key]}
       done
-      
+
       map[FMS_WEB_DOMAIN]=FMS_WEB_DOMAIN_DEV
       map[FMS_WEB_STATIC_IP]=FMS_WEB_STATIC_IP_DEV
       map[FMS_WEB_CERT]=FMS_WEB_CERT_DEV
@@ -170,7 +170,7 @@ deploy-dev:
         --to-target=dev \
         --annotations="environment=dev,commit-sha=${CI_COMMIT_SHA}"
   rules:
-    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_COMMIT_BRANCH == "main"
       when: on_success
     - when: never
 
@@ -190,7 +190,7 @@ deploy-prod:
     - gcloud deploy apply --file cd/deploy.yaml --region=asia-northeast3
     - gcloud deploy apply --file cd/dev.yaml --region=asia-northeast3
     - gcloud deploy apply --file cd/prod.yaml --region=asia-northeast3
-     # Function to escape special characters for sed
+      # Function to escape special characters for sed
     - |
       escape_sed() {
         printf '%s\n' "$1" | sed 's/[[\.*^$()+?{|]/\\&/g'
@@ -201,7 +201,7 @@ deploy-prod:
         [FMS_WEB_CERT]=FMS_WEB_CERT
         [NEXT_PUBLIC_GOOGLE_MAPS_API_KEY]=NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
       )
-     # Prepare manifests for PROD environment
+      # Prepare manifests for PROD environment
     - |
       echo "=== Preparing PROD deployment ==="
       mkdir -p rendered-k8s-prod
@@ -221,7 +221,7 @@ deploy-prod:
       for key in "${!common_map[@]}"; do
         map[$key]=${common_map[$key]}
       done
-      
+
       map[FMS_WEB_DOMAIN]=FMS_WEB_DOMAIN
       map[FMS_WEB_STATIC_IP]=FMS_WEB_STATIC_IP
       map[FMS_WEB_CERT]=FMS_WEB_CERT
