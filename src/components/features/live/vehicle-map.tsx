@@ -21,19 +21,6 @@ interface VehicleMapProps {
   onVehicleClick: (vehicleId: string) => void
 }
 
-// 차량 타입별 마커 색상
-const getMarkerColor = (type: Vehicle['type'], status: Vehicle['status']) => {
-  if (status === 'maintenance') return '#666666' // gray
-
-  const colors = {
-    sedan: '#0078d3', // blue
-    truck: '#dc2626', // red
-    bus: '#16a34a', // green
-    van: '#ca8a04', // yellow
-  }
-  return colors[type] || '#0078d3'
-}
-
 // 클러스터 렌더러
 class ClusterRenderer {
   render({ count, position }: { count: number; position: google.maps.LatLng }) {
@@ -350,27 +337,21 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
 }
 
 export default function VehicleMapWrapper(props: VehicleMapProps) {
-  logger.log('test')
   return (
-    <APIProvider
-      apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
-      libraries={['marker']}
+    <Map
+      defaultCenter={{ lat: 37.5665, lng: 126.978 }}
+      defaultZoom={12}
+      mapId={mapId}
+      gestureHandling={'greedy'}
+      disableDefaultUI={false}
+      fullscreenControl={false}
+      streetViewControl={false}
+      mapTypeControl={false}
+      controlSize={0}
+      disableDoubleClickZoom={true}
+      clickableIcons={false}
     >
-      <Map
-        defaultCenter={{ lat: 37.5665, lng: 126.978 }}
-        defaultZoom={12}
-        mapId={mapId}
-        gestureHandling={'greedy'}
-        disableDefaultUI={false}
-        fullscreenControl={false}
-        streetViewControl={false}
-        mapTypeControl={false}
-        controlSize={0}
-        disableDoubleClickZoom={true}
-        clickableIcons={false}
-      >
-        <VehicleMarkers {...props} />
-      </Map>
-    </APIProvider>
+      <VehicleMarkers {...props} />
+    </Map>
   )
 }

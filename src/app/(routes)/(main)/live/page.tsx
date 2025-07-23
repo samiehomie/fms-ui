@@ -2,12 +2,12 @@
 
 import React, { useState } from 'react'
 import dynamic from 'next/dynamic'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useVehicleStream } from '@/lib/hooks/queries/useVehicleStream'
 import VehicleList from '@/components/features/live/vehicle-list'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Loader2, WifiOff } from 'lucide-react'
+import { APIProvider } from '@vis.gl/react-google-maps'
 
 // 클라이언트 사이드에서만 렌더링
 const VehicleMap = dynamic(
@@ -47,26 +47,29 @@ export default function VehicleTrackingContent() {
           </AlertDescription>
         </Alert>
       )}
+      <APIProvider
+        apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+        libraries={['marker']}
+      >
+        <div className="flex-1 flex">
+          {/* 좌측 차량 목록 (30%) */}
 
-      <div className="flex-1 flex">
-        {/* 좌측 차량 목록 (30%) */}
-       
           <VehicleList
             vehicles={vehicles}
             selectedVehicleId={selectedVehicleId}
             onVehicleSelect={setSelectedVehicleId}
           />
-     
 
-        {/* 우측 지도 (70%) */}
-        <div className="flex-1">
-          <VehicleMap
-            vehicles={vehicles}
-            selectedVehicleId={selectedVehicleId}
-            onVehicleClick={setSelectedVehicleId}
-          />
+          {/* 우측 지도 (70%) */}
+          <div className="flex-1">
+            <VehicleMap
+              vehicles={vehicles}
+              selectedVehicleId={selectedVehicleId}
+              onVehicleClick={setSelectedVehicleId}
+            />
+          </div>
         </div>
-      </div>
+      </APIProvider>
     </div>
   )
 }

@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Search, Truck, Car, Bus, ChevronLeft } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useMap } from '@vis.gl/react-google-maps'
 
 interface VehicleListProps {
   vehicles: Vehicle[]
@@ -56,6 +57,14 @@ export default function VehicleList({
   const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const rafRef = useRef<number>(null)
+  const map = useMap()
+
+  const moveToVehicle = (lat: number, lng: number) => {
+    if (map) {
+      map.panTo({ lat, lng })
+      map.setZoom(12)
+    }
+  }
 
   const calculateHeight = useCallback(() => {
     if (!containerRef.current) return
@@ -173,7 +182,10 @@ export default function VehicleList({
                   selectedVehicleId === vehicle.id &&
                     'ring-2 ring-blue-500 bg-blue-50',
                 )}
-                onClick={() => onVehicleSelect(vehicle.id)}
+                onClick={() => {
+                  moveToVehicle(vehicle.lat, vehicle.lng)
+                  onVehicleSelect(vehicle.id)
+                }}
               >
                 <div className="flex items-start justify-between">
                   <div>
