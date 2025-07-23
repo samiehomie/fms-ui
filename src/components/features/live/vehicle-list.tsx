@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react'
+import { useMemo, useState, useRef, useCallback, useEffect } from 'react'
 import { Vehicle } from '@/lib/queries/useVehicleStream'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Input } from '@/components/ui/input'
@@ -53,7 +53,7 @@ export default function VehicleList({
   onVehicleSelect,
 }: VehicleListProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const [searchTerm, setSearchTerm] = React.useState('')
+  const [searchTerm, setSearchTerm] = useState('')
   const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const rafRef = useRef<number>(null)

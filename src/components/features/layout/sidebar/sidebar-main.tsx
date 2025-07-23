@@ -33,7 +33,7 @@ const data = {
       icon: CarFront,
       items: [
         {
-          title: 'Total',
+          title: 'All Vehicles',
           url: '/vehicles',
         },
         {
