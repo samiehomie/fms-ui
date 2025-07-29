@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import {
   ResizableHandle,
@@ -8,11 +8,9 @@ import {
   ResizablePanelGroup,
 } from '@/components/ui/resizable'
 import { TripHistoryTable } from '@/components/features/vehicles/trip/trip-history-table'
-import { DateRangePicker } from '@/components/ui/data-range-picker'
 import { TripOverview } from '@/components/features/vehicles/trip/trip-overview'
 import {
   useVehicleTripsPaginated,
-  useVehicleTripDetailsBatch,
 } from '@/lib/queries/useVehicles'
 import type {
   VehicleTripsPaginationParams,
