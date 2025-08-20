@@ -85,24 +85,9 @@ export function formatDuration(
   return parts.join(' ')
 }
 
-export const buildURL = (
-  endpoint: string,
-  params?: Record<string, any>,
-): string => {
-  const url = new URL(endpoint, process.env.NEXT_PUBLIC_API_BASE_URL!)
-
-  if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        url.searchParams.append(key, String(value))
-      }
-    })
-  }
-
-  return url.toString()
-}
-
-export function buildSearchParams(params: Record<string, any>): URLSearchParams {
+export function buildSearchParams(
+  params: Record<string, any>,
+): URLSearchParams {
   const filteredParams: Record<string, string> = {}
 
   Object.entries(params).forEach(([key, value]) => {
@@ -118,4 +103,20 @@ export function buildSearchParams(params: Record<string, any>): URLSearchParams 
   })
 
   return new URLSearchParams(filteredParams)
+}
+
+export function isEmpty(obj: Object) {
+  return Object.keys(obj).length === 0
+}
+
+export const buildURL = (
+  endpoint: string,
+  params?: Record<string, any>,
+): string => {
+  const url = new URL(endpoint, process.env.NEXT_PUBLIC_API_BASE_URL!)
+
+  const filteredParams =
+    params && !isEmpty(params) ? `?${buildSearchParams(params)}` : ''
+
+  return `${url.toString()}${filteredParams}`
 }

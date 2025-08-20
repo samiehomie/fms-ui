@@ -60,13 +60,30 @@ export interface VehiclesByCompany {
   company_id: {
     id: number
     name: string
-    type: string
     reg_number: string
+    type: string
+    details: string
+    phone: string
+    email: string
+    website: string
+    contact_person: string
+    contact_phone: string
+    verified: boolean
+    isdeleted: boolean
+    deletedAt: string
+    created_at: string
+    updated_at: string
   }
   users: {
-    id: number
     name: string
     username: string
+    password: string
+    email: string
+    created_at: string
+    updated_at: string
+    verified: boolean
+    isdeleted: boolean
+    deletedAt: string
   }[]
   tires: {
     id: number
@@ -320,6 +337,63 @@ export type VehicleResponse = VehicleCreateResponse['vehicle']
 
 export type VehicleUpdateResponse = VehicleCreateResponse
 
+export interface VehicleInLiveStream {
+  id: number
+  vehicle_name: string
+  plate_number: string
+  brand: string
+  model: string
+  manuf_year: number
+  can_bitrate: string
+  fuel_type: string
+  gear_type: string
+  num_tire: number
+  isdeleted: boolean
+  users: {
+    id: number
+    name: string
+    username: string
+    email: string
+    verified: boolean
+    isdeleted: boolean
+  }[]
+  company_id: {
+    id: number
+    name: string
+    reg_number: string
+    type: string
+  }
+  // todo: trips이 계속 아래로 늘어나는 형태인지 - 실제 차량 데이터 확인은 언제할지
+  trips: {
+    id: number
+    start_time: string
+    end_time: string
+    status: VehicleTripStatus
+    distance_in_kph: number
+    duration_in_secs: number
+    fuel_consumed: number
+  }[]
+}
+export interface VehiclesLiveStreamParams {
+  companyId: number
+  page?: number // default: 1
+  limit?: number // default: 10, max: 1000
+  include_deleted?: boolean // default: false
+}
+
+export type VehiclesLiveStreamTypes = 'vehicle-update' | 'heartbeat' | 'error'
+
+export type VehiclesLiveStreamPagination = PaginatedResponseWithKey<
+  VehicleInLiveStream,
+  'vehicles'
+>
+
+export interface VehiclesLiveStreamData {
+  type: VehiclesLiveStreamTypes
+  data: Partial<VehiclesLiveStreamPagination>
+  timestamp: string
+}
+
 export interface VehicleApiTypes {
   'GET /vehicles': {
     params: VehiclesPaginationParams
@@ -375,5 +449,10 @@ export interface VehicleApiTypes {
     params: {}
     request: VehicleRequest
     response: VehicleResponse
+  }
+  'GET /sse/vehicles/live-stream/{company_id}': {
+    params: VehiclesLiveStreamParams
+    request: {}
+    response: VehiclesLiveStreamData
   }
 }

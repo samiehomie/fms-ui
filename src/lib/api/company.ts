@@ -1,4 +1,3 @@
-import { buildURL } from './utils'
 import { fetchJson } from '@/lib/api/fetch'
 import type { ApiRequestType, ApiResponseType } from '@/types/api'
 import type {

@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react'
 import dynamic from 'next/dynamic'
-import { useVehicleLiveStream } from '@/lib/queries/useVehiclesLiveStream'
-// import { useVehicleStream } from '@/lib/queries/useVehicleStream'
+import { useVehicleStream } from '@/lib/queries/useVehicleStream'
 import VehicleList from '@/components/features/live/vehicle-list'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -25,12 +24,7 @@ const VehicleMap = dynamic(
 )
 
 export default function VehicleTrackingContent() {
-  const { vehicles, isConnected, error, reconnect } = useVehicleLiveStream({
-    companyId: 1,
-    page: 1,
-    limit: 10,
-    include_deleted: true,
-  })
+  const { vehicles, isConnected, error, reconnect } = useVehicleStream()
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(
     null,
   )

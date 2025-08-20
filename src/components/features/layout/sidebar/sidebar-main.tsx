@@ -40,6 +40,10 @@ const data = {
           title: 'Live Map',
           url: '/live',
         },
+        {
+          title: 'Demo Map',
+          url: '/demo',
+        },
       ],
     },
     {
