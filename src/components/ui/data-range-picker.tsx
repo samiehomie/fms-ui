@@ -19,8 +19,8 @@ export function DateRangePicker({
   onDateChange,
 }: DateRangePickerProps) {
   const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>([
-    dayjs('2025-06-01'),
-    dayjs('2025-06-30'),
+    dayjs('2025-08-29'),
+    dayjs('2025-09-04'),
   ])
 
   const handleDateChange = useCallback(
