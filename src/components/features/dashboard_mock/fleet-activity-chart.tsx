@@ -15,7 +15,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Route, Car, Fuel } from "lucide-react"
-import type { ChartDataPoint } from "@/lib/data/dashboard"
+import type { ChartDataPoint } from "@/constants/mock_data/dashboard"
 
 interface FleetActivityChartProps {
   data: ChartDataPoint[]
