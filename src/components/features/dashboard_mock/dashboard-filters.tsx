@@ -30,7 +30,7 @@ export function DashboardFilters({ onFiltersChange }: DashboardFiltersProps) {
   }
 
   return (
-    <Card className=" border-none shadow-none py-0 mb-10 mt-4">
+    <Card className=" border-none shadow-none py-0 mb-7 mt-2">
       <CardContent className="p-0">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">

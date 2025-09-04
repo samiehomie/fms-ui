@@ -52,15 +52,15 @@ const getStatusColor = (status: Issue["status"]) => {
 
 export function RecentIssues({ issues }: RecentIssuesProps) {
   return (
-    <Card>
+    <Card className="gap-3">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-[17px]">
           <AlertTriangle className="h-5 w-5" />
           Recent Issues
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-y-3">
           {issues.map((issue) => {
             const IconComponent = getIssueIcon(issue.type)
             return (

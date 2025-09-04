@@ -78,16 +78,16 @@ export function FleetActivityChart({ data }: FleetActivityChartProps) {
   const currentConfig = getCurrentConfig()
 
   return (
-    <Card>
+    <Card className="gap-3">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-[17px]">
           <currentConfig.icon className="h-5 w-5" />
           Fleet Activity Overview
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-4">
+          <TabsList className="grid w-full grid-cols-3 mb-2">
             {chartConfigs.map((config) => (
               <TabsTrigger
                 key={config.key}
@@ -103,14 +103,8 @@ export function FleetActivityChart({ data }: FleetActivityChartProps) {
 
           {chartConfigs.map((config) => (
             <TabsContent key={config.key} value={config.key} className="mt-0">
-              <div className="mb-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: config.color }}
-                  />
-                  <h3 className="text-lg font-semibold">{config.label}</h3>
-                </div>
+              <div className="mb-5">
+ 
                 <p className="text-sm text-muted-foreground">
                   {config.description}
                 </p>
@@ -175,10 +169,10 @@ export function FleetActivityChart({ data }: FleetActivityChartProps) {
               </div>
 
               {/* Summary Stats */}
-              <div className="mt-4 grid grid-cols-3 gap-4 pt-4 border-t">
+              <div className="mt-3 grid grid-cols-3 mx-auto  ">
                 <div className="text-center">
                   <p
-                    className="text-2xl font-bold"
+                    className="text-xl font-bold"
                     style={{ color: config.color }}
                   >
                     {Math.max(
@@ -189,7 +183,7 @@ export function FleetActivityChart({ data }: FleetActivityChartProps) {
                 </div>
                 <div className="text-center">
                   <p
-                    className="text-2xl font-bold"
+                    className="text-xl font-bold"
                     style={{ color: config.color }}
                   >
                     {Math.round(
@@ -201,7 +195,7 @@ export function FleetActivityChart({ data }: FleetActivityChartProps) {
                 </div>
                 <div className="text-center">
                   <p
-                    className="text-2xl font-bold"
+                    className="text-xl font-bold"
                     style={{ color: config.color }}
                   >
                     {data

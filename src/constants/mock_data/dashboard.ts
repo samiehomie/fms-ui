@@ -40,9 +40,9 @@ export interface ChartDataPoint {
 export const dashboardMetrics: DashboardMetrics = {
   totalVehicles: 45,
   activeVehicles: 38,
-  totalDistance: 12847.5,
+  totalDistance: 10317,
   totalIssues: 7,
-  fuelConsumption: 2847.2,
+  fuelConsumption: 2205,
   averageSpeed: 42.3,
 }
 
@@ -57,7 +57,7 @@ export const vehicleStatuses: VehicleStatus[] = [
   },
   {
     id: 2,
-    plateNumber: "34나 5678",
+    plateNumber: "GHT-6610",
     status: "idle",
     location: "경기도 성남시",
     lastUpdate: "5 minutes ago",
@@ -65,7 +65,7 @@ export const vehicleStatuses: VehicleStatus[] = [
   },
   {
     id: 3,
-    plateNumber: "56다 7890",
+    plateNumber: "GHT-6610",
     status: "maintenance",
     location: "부산시 해운대구",
     lastUpdate: "1 hour ago",
@@ -93,37 +93,37 @@ export const recentIssues: Issue[] = [
   {
     id: 1,
     vehicleId: 3,
-    plateNumber: "56다 7890",
+    plateNumber: "RDT-1239",
     type: "maintenance",
     severity: "high",
     description: "Engine temperature warning",
-    timestamp: "2025-01-13T10:30:00Z",
+    timestamp: "2025-09-01T10:30:00Z",
     status: "in-progress",
   },
   {
     id: 2,
     vehicleId: 5,
-    plateNumber: "90마 5678",
+    plateNumber: "MLB-8005",
     type: "tire",
     severity: "medium",
     description: "Low tire pressure detected",
-    timestamp: "2025-01-13T09:15:00Z",
+    timestamp: "2025-08-31T09:15:00Z",
     status: "open",
   },
   {
     id: 3,
     vehicleId: 2,
-    plateNumber: "34나 5678",
+    plateNumber: "GHT-6610",
     type: "fuel",
     severity: "low",
     description: "Fuel level below 20%",
-    timestamp: "2025-01-13T08:45:00Z",
+    timestamp: "2025-08-29T08:45:00Z",
     status: "resolved",
   },
 ]
 
 export const chartData: ChartDataPoint[] = [
-  { date: "Jan 07", distance: 1250, vehicles: 35, fuelConsumption: 280, issues: 2 },
+  { date: "Jan 07", distance: 1250, vehicles: 35, fuelConsumption: 285, issues: 2 },
   { date: "Jan 08", distance: 1380, vehicles: 37, fuelConsumption: 310, issues: 1 },
   { date: "Jan 09", distance: 1420, vehicles: 39, fuelConsumption: 295, issues: 3 },
   { date: "Jan 10", distance: 1180, vehicles: 36, fuelConsumption: 265, issues: 1 },

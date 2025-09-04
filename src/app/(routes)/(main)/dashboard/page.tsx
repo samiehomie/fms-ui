@@ -27,7 +27,6 @@ export default function DashboardPage() {
       <main className="flex-1 overflow-y-auto space-y-6">
         {/* Filters */}
         <DashboardFilters />
-
         {/* Key Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           <MetricCard
@@ -65,7 +64,6 @@ export default function DashboardPage() {
             changeType="positive"
           />
         </div>
-
         {/* Charts and Map */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <FleetActivityChart data={chartData} />
