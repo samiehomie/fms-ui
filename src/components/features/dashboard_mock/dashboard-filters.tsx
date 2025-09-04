@@ -30,11 +30,10 @@ export function DashboardFilters({ onFiltersChange }: DashboardFiltersProps) {
   }
 
   return (
-    <Card>
-      <CardContent className="p-4">
+    <Card className=" border-none shadow-none py-0 mb-10 mt-4">
+      <CardContent className="p-0">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
             <DateRangePicker />
           </div>
 
@@ -76,11 +75,19 @@ export function DashboardFilters({ onFiltersChange }: DashboardFiltersProps) {
             />
             Refresh
           </Button>
-
-          <Button variant="outline" size="sm">
-            <Filter className="h-4 w-4 mr-2" />
-            More Filters
-          </Button>
+          <div className="text-xs self-end text-muted-foreground font-light pb-[.125rem]">
+            Last updated:{" "}
+            {new Date().toLocaleString("en-US", {
+              timeZone: "America/New_York",
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              hour12: true,
+            })}
+          </div>
         </div>
       </CardContent>
     </Card>

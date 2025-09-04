@@ -1,13 +1,19 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardAction,
+} from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import type { LucideIcon } from "lucide-react"
+import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
 
 interface MetricCardProps {
   title: string
   value: string | number
   change?: string
   changeType?: "positive" | "negative" | "neutral"
-  icon: LucideIcon
-  description?: string
 }
 
 export function MetricCard({
@@ -15,8 +21,6 @@ export function MetricCard({
   value,
   change,
   changeType,
-  icon: Icon,
-  description,
 }: MetricCardProps) {
   const getChangeColor = () => {
     switch (changeType) {
@@ -30,20 +34,24 @@ export function MetricCard({
   }
 
   return (
-    <Card>
+    <Card className="gap-3">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-muted-foreground" />
+        <CardTitle className="text-sm font-[400]">{title}</CardTitle>
+        {change && (
+          <CardAction>
+            <Badge variant="outline">
+              {change[0] === "-" ? <IconTrendingDown /> : <IconTrendingUp />}
+              {`${change}`}
+            </Badge>
+          </CardAction>
+        )}
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+        <div className="text-3xl font-bold">{value}</div>
         {change && (
-          <p className={`text-xs ${getChangeColor()}`}>
+          <p className={`text-xs mt-[.375rem] ${getChangeColor()}`}>
             {change} from last period
           </p>
-        )}
-        {description && (
-          <p className="text-xs text-muted-foreground mt-1">{description}</p>
         )}
       </CardContent>
     </Card>
