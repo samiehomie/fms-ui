@@ -25,13 +25,13 @@ spec:
             - containerPort: 3000
           readinessProbe:
             httpGet:
-              path: /api/health 
+              path: /api/health
               port: 3000
             initialDelaySeconds: 3
             periodSeconds: 10
           livenessProbe: # 추가된 liveness probe
             httpGet:
-              path: /api/health 
+              path: /api/health
               port: 3000
             initialDelaySeconds: 30
             periodSeconds: 30
@@ -43,5 +43,3 @@ spec:
               value: "__FMS_WEB_STATIC_IP__"
             - name: FMS_WEB_CERT
               value: "__FMS_WEB_CERT__"
-            - name: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-              value: "__NEXT_PUBLIC_GOOGLE_MAPS_API_KEY__"
