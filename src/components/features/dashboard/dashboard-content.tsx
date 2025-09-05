@@ -7,7 +7,7 @@ import { RecentCompaniesList } from '@/components/features/dashboard/recent-comp
 import { VehicleStatusList } from '@/components/features/dashboard/vehicle-status-list'
 
 export default function DashboardContent() {
-  const { companies, vehicles, users, devices, isLoading, activeTrips } =
+  const { companies, vehicles, users, devices, isLoading } =
     useDashboard()
 
   if (isLoading) {
