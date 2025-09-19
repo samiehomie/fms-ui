@@ -75,7 +75,7 @@ export function DashboardFilters({ onFiltersChange }: DashboardFiltersProps) {
             />
             Refresh
           </Button>
-          <div className="text-xs self-end text-muted-foreground font-light pb-[.125rem]">
+          {/* <div className="text-xs self-end text-muted-foreground font-light pb-[.125rem]">
             Last updated:{" "}
             {new Date().toLocaleString("en-US", {
               timeZone: "America/New_York",
@@ -87,7 +87,7 @@ export function DashboardFilters({ onFiltersChange }: DashboardFiltersProps) {
               second: "2-digit",
               hour12: true,
             })}
-          </div>
+          </div> */}
         </div>
       </CardContent>
     </Card>

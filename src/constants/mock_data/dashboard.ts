@@ -40,10 +40,10 @@ export interface ChartDataPoint {
 export const dashboardMetrics: DashboardMetrics = {
   totalVehicles: 45,
   activeVehicles: 38,
-  totalDistance: 10317,
-  totalIssues: 7,
+  totalDistance: 60317,
+  totalIssues: 5,
   fuelConsumption: 2205,
-  averageSpeed: 42.3,
+  averageSpeed: 23.2,
 }
 
 export const vehicleStatuses: VehicleStatus[] = [
@@ -96,7 +96,7 @@ export const recentIssues: Issue[] = [
     plateNumber: "RDT-1239",
     type: "maintenance",
     severity: "high",
-    description: "Engine temperature warning",
+    description: "Tire temperature warning",
     timestamp: "2025-09-01T10:30:00Z",
     status: "in-progress",
   },
@@ -110,26 +110,68 @@ export const recentIssues: Issue[] = [
     timestamp: "2025-08-31T09:15:00Z",
     status: "open",
   },
-  {
-    id: 3,
-    vehicleId: 2,
-    plateNumber: "GHT-6610",
-    type: "fuel",
-    severity: "low",
-    description: "Fuel level below 20%",
-    timestamp: "2025-08-29T08:45:00Z",
-    status: "resolved",
-  },
+  // {
+  //   id: 3,
+  //   vehicleId: 2,
+  //   plateNumber: "GHT-6610",
+  //   type: "fuel",
+  //   severity: "low",
+  //   description: "Fuel level below 20%",
+  //   timestamp: "2025-08-29T08:45:00Z",
+  //   status: "resolved",
+  // },
 ]
 
 export const chartData: ChartDataPoint[] = [
-  { date: "Jan 07", distance: 1250, vehicles: 35, fuelConsumption: 285, issues: 2 },
-  { date: "Jan 08", distance: 1380, vehicles: 37, fuelConsumption: 310, issues: 1 },
-  { date: "Jan 09", distance: 1420, vehicles: 39, fuelConsumption: 295, issues: 3 },
-  { date: "Jan 10", distance: 1180, vehicles: 36, fuelConsumption: 265, issues: 1 },
-  { date: "Jan 11", distance: 1650, vehicles: 41, fuelConsumption: 340, issues: 4 },
-  { date: "Jan 12", distance: 1590, vehicles: 40, fuelConsumption: 325, issues: 2 },
-  { date: "Jan 13", distance: 1847, vehicles: 38, fuelConsumption: 385, issues: 7 },
+  {
+    date: "Jan 07",
+    distance: 8250,
+    vehicles: 35,
+    fuelConsumption: 285,
+    issues: 2,
+  },
+  {
+    date: "Jan 08",
+    distance: 8380,
+    vehicles: 37,
+    fuelConsumption: 310,
+    issues: 1,
+  },
+  {
+    date: "Jan 09",
+    distance: 9420,
+    vehicles: 39,
+    fuelConsumption: 295,
+    issues: 3,
+  },
+  {
+    date: "Jan 10",
+    distance: 8180,
+    vehicles: 36,
+    fuelConsumption: 265,
+    issues: 1,
+  },
+  {
+    date: "Jan 11",
+    distance: 8650,
+    vehicles: 41,
+    fuelConsumption: 340,
+    issues: 4,
+  },
+  {
+    date: "Jan 12",
+    distance: 8590,
+    vehicles: 40,
+    fuelConsumption: 325,
+    issues: 2,
+  },
+  {
+    date: "Jan 13",
+    distance: 8847,
+    vehicles: 38,
+    fuelConsumption: 385,
+    issues: 7,
+  },
 ]
 
 export const vehicleStatusDistribution = [
