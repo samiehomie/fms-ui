@@ -27,7 +27,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>
 
-export function LoginForm() {
+export default function LoginForm() {
   const [apiError, setApiError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -101,7 +101,7 @@ export function LoginForm() {
                 </p>
               )}
             </div>
-            {apiError && <p className="text-sm text-red-500">{apiError}</p>}
+            {/* {apiError && <p className="text-sm text-red-500">{apiError}</p>} */}
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full mt-6" disabled={isLoading}>

@@ -1,5 +1,10 @@
-'use client' // This page uses hooks like useRouter and checks auth state
-import { LoginForm } from '@/components/features/auth/login-form'
+'use client'
+import dynamic from 'next/dynamic'
+
+const LoginForm = dynamic(
+  () => import('@/components/features/auth/login-form'),
+  { ssr: false },
+)
 
 export default function LoginPage() {
   return (
