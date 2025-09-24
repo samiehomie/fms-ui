@@ -172,6 +172,7 @@ export async function setAuthCookies(
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
+    expires: new Date(exp * 1000),
   })
 }
 
@@ -205,6 +206,7 @@ export async function withAuth(
     secure: process.env.NODE_ENV === 'production',
     path: '/',
     sameSite: 'lax',
+    expires: new Date(exp * 1000),
   })
 
   return response
