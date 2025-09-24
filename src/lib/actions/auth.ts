@@ -85,6 +85,7 @@ export async function refreshTokenIfNeeded(
 ): Promise<{
   newAccessToken: string
   newRefreshToken: string
+  newExpiresIn: number
 } | null> {
   if (!accessToken || !refreshToken) {
     console.log(
@@ -135,13 +136,21 @@ export async function refreshTokenIfNeeded(
       console.error(`인증 토큰 갱신실패: ${status} - ${message}`)
       return null
     }
-    const { token: newAccessToken, refreshToken: newRefreshToken } = result.data
+    const {
+      token: newAccessToken,
+      refreshToken: newRefreshToken,
+      expires_in: expiresIn,
+    } = result.data
 
     console.info('인증 토큰 갱신성공')
-    return { newAccessToken, newRefreshToken }
+    return { newAccessToken, newRefreshToken, newExpiresIn: expiresIn }
   }
   console.info('인증 토큰 갱신 필요없음. 기존 토큰 사용 유지.')
-  return { newAccessToken: accessToken, newRefreshToken: refreshToken }
+  return {
+    newAccessToken: accessToken,
+    newRefreshToken: refreshToken,
+    newExpiresIn: Math.round(timeUntilExpiry / 1000),
+  }
 }
 
 export async function setAuthCookies(
@@ -156,7 +165,7 @@ export async function setAuthCookies(
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-    maxAge: expiresIn,
+    expires: expiresIn,
   })
 
   cookieStore.set(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
@@ -173,6 +182,7 @@ export async function withAuth(
   const cookieStore = await cookies()
   const accessToken = cookieStore.get(AUTH_TOKEN_COOKIE_NAME)?.value
   const refreshToken = cookieStore.get(REFRESH_TOKEN_COOKIE_NAME)?.value
+
   const refreshTokenData = await refreshTokenIfNeeded(accessToken, refreshToken)
 
   if (!refreshTokenData) {
@@ -181,12 +191,14 @@ export async function withAuth(
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
   }
 
+  // TODO: 쿠키 설정이 
   const response = await handler(refreshTokenData.newAccessToken)
   cookieStore.set(AUTH_TOKEN_COOKIE_NAME, refreshTokenData.newAccessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     path: '/',
     sameSite: 'lax',
+    maxAge: refreshTokenData.newExpiresIn,
   })
   cookieStore.set(REFRESH_TOKEN_COOKIE_NAME, refreshTokenData.newRefreshToken, {
     httpOnly: true,
