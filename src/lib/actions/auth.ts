@@ -10,7 +10,6 @@ import {
 import { buildURL } from '@/lib/api/utils'
 import type { ApiResponseType, ApiRequestType } from '@/types/api'
 import { fetchJson } from '../api/fetch'
-import { decodeJwt } from 'jose'
 import type { JWTAuthPayload } from '@/types/api'
 import { redirect } from 'next/navigation'
 import { parseJWT } from '@/lib/api/utils'
@@ -159,13 +158,13 @@ export async function setAuthCookies(
   expiresIn: number,
 ) {
   const cookieStore = await cookies()
-
+  const { exp } = await parseJWT(accessToken)
   cookieStore.set(AUTH_TOKEN_COOKIE_NAME, accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-    expires: expiresIn,
+    expires: new Date(exp * 1000),
   })
 
   cookieStore.set(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
@@ -191,14 +190,15 @@ export async function withAuth(
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
   }
 
-  // TODO: 쿠키 설정이 
+  // TODO: 쿠키 설정이
   const response = await handler(refreshTokenData.newAccessToken)
+  const { exp } = await parseJWT(refreshTokenData.newAccessToken)
   cookieStore.set(AUTH_TOKEN_COOKIE_NAME, refreshTokenData.newAccessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     path: '/',
     sameSite: 'lax',
-    maxAge: refreshTokenData.newExpiresIn,
+    expires: new Date(exp * 1000),
   })
   cookieStore.set(REFRESH_TOKEN_COOKIE_NAME, refreshTokenData.newRefreshToken, {
     httpOnly: true,
