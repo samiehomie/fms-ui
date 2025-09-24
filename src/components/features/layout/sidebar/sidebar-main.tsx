@@ -36,13 +36,13 @@ const data = {
           title: 'All Vehicles',
           url: '/vehicles',
         },
+        // {
+        //   title: 'Live Map',
+        //   url: '/live',
+        // },
         {
           title: 'Live Map',
-          url: '/live',
-        },
-        {
-          title: 'Demo Map',
-          url: '/demo',
+          url: '/live-map',
         },
       ],
     },
