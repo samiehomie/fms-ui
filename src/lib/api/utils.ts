@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { differenceInSeconds } from 'date-fns'
+import { decodeJwt } from 'jose'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -119,4 +120,15 @@ export const buildURL = (
     params && !isEmpty(params) ? `?${buildSearchParams(params)}` : ''
 
   return `${url.toString()}${filteredParams}`
+}
+
+export async function parseJWT<T = any>(token: string): Promise<T | null> {
+  try {
+    const payload = decodeJwt(token) as T
+    console.log('JWT payload: ', payload)
+    return payload
+  } catch (error) {
+    console.error(error)
+    return null
+  }
 }

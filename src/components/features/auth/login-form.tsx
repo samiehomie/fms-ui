@@ -18,7 +18,7 @@ import {
 import Image from 'next/image'
 import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
 import { ApiRequestType } from '@/types/api'
-import { loginAction } from '@/lib/actions/login'
+import { loginAction } from '@/lib/actions/auth'
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
@@ -50,9 +50,10 @@ export default function LoginForm() {
       await loginAction(loginData)
       // Redirect is handled by the login mutation's onSuccess
     } catch (error: any) {
-      // Error from mutation's throw will be caught by loginError state in useAuthActions
-      // This catch is for other potential issues, though typically mutation handles it.
-      setApiError(error.message || 'An unexpected error occurred.')
+      if (error.message !== 'NEXT_REDIRECT') {
+        logger.error('login form error:', error)
+        setApiError(error.message || 'An unexpected error occurred.')
+      }
     }
     setIsLoading(false)
   }
@@ -101,7 +102,7 @@ export default function LoginForm() {
                 </p>
               )}
             </div>
-            {/* {apiError && <p className="text-sm text-red-500">{apiError}</p>} */}
+            {apiError && <p className="text-sm text-red-500">{apiError}</p>}
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full mt-6" disabled={isLoading}>

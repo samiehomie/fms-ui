@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import type { ApiResponseType } from '@/types/api'
-import { withAuth } from '@/lib/api/auth'
+import { withAuth } from '@/lib/actions/auth'
 import { fetchJson } from '@/lib/api/fetch'
 import { buildURL } from '@/lib/api/utils'
 import {
@@ -36,7 +36,7 @@ async function fetchTripsData(apiUrl: string, token: string) {
 }
 
 export async function GET(request: NextRequest) {
-  return await withAuth(async (tokenData) => {
+  return await withAuth(async (accessToken) => {
     const searchParams = request.nextUrl.searchParams
     const page = searchParams.get('page')
     const limit = searchParams.get('limit')
@@ -45,8 +45,6 @@ export async function GET(request: NextRequest) {
     const end_date = searchParams.get('end_date')
     const id = searchParams.get('id')
     const type = searchParams.get('type')
-
-    const { token } = tokenData
 
     // 공통 파라미터 객체
     const commonParams = {
@@ -64,6 +62,6 @@ export async function GET(request: NextRequest) {
     } else {
       apiUrl = buildURL(`/vehicles/trips/vehicle/${id}`, commonParams)
     }
-    return fetchTripsData(apiUrl, token)
+    return fetchTripsData(apiUrl, accessToken)
   })
 }

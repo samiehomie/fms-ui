@@ -1,3 +1,4 @@
+import { Role as RoleEnum } from '@/constants/enums/role.enum'
 export interface LoginRequest {
   username: string
   password: string
@@ -10,33 +11,28 @@ export interface Role {
 
 export interface LoginResponse {
   token: string
+  refreshToken: string
   expires_in: number
   user: {
     id: number
     name: string
     username: string
     email: string
-    role: Role
+    role: {
+      name: RoleEnum
+      description: string
+    }
+    ip: string
   }
 }
 
 export interface RefreshTokenRequest {
-  token: string
-  // TODO: API 구현 예정 현재는 빈 문자열 전달
-  refresh_token: string
+  accessToken: string
+  refreshToken: string
 }
 
-export interface RefreshTokenResponse {
-  token: string
-  expires_in: number
-  user: {
-    id: number
-    name: string
-    username: string
-    email: string
-    role: Role
-  }
-}
+// TODO: API - user에 IP가 빠져서 옴
+export type RefreshTokenResponse = LoginResponse
 
 export interface JWTAuthPayload {
   id: number
@@ -44,21 +40,27 @@ export interface JWTAuthPayload {
   username: string
   email: string
   role_id: number
-  role: string
+  role: RoleEnum
   company: string
+  ip: string
   iat: number
   exp: number
 }
 
 export interface AuthApiTypes {
   'POST /auth/login': {
-     params: {}
+    params: {}
     request: LoginRequest
     response: LoginResponse
   }
   'POST /auth/refresh': {
-     params: {}
+    params: {}
     request: RefreshTokenRequest
     response: RefreshTokenResponse
+  }
+  'POST /auth/logout': {
+    params: {}
+    request: {}
+    response: {}
   }
 }

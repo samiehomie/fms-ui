@@ -21,6 +21,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 import { useAuth } from '../../auth/auth-provider'
 import { useRouter } from 'next/navigation'
+import { logOutAction } from '@/lib/actions/auth'
 
 export function NavUser() {
   const { user, isLoading } = useAuth()
@@ -68,8 +69,7 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={async () => {
-                await fetch('/api/auth/logout', { method: 'POST' })
-                router.push('/login')
+                await logOutAction()
               }}
             >
               <LogOut />

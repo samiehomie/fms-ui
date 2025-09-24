@@ -8,7 +8,7 @@ import {
   ReactNode,
 } from 'react'
 import type { JWTAuthPayload } from '@/types/api'
-import { getAuthData } from '@/lib/api/auth'
+import { getAuthData } from '@/lib/actions/auth'
 
 type AuthContextType = {
   user: JWTAuthPayload | null

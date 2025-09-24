@@ -15,6 +15,7 @@ import { Bell, Search, Menu, LayoutDashboard, LogOut } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useAuth } from '../auth/auth-provider'
 import { getInitials } from '@/lib/utils'
+import { logOutAction } from '@/lib/actions/auth'
 
 export function Header() {
   const { user, isLoading } = useAuth()
@@ -118,8 +119,7 @@ export function Header() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={async () => {
-                  await fetch('/api/auth/logout', { method: 'POST' })
-                  window.location.reload()
+                  await logOutAction()
                 }}
                 className="text-[#ef4444] focus:text-[#ef4444] focus:bg-red-50 dark:focus:bg-red-900/30"
               >

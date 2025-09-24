@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
+import { logOutAction } from '@/lib/actions/auth'
 // import { useAuth } from '../auth/auth-provider'
 
 const navigationItems = [
@@ -60,8 +61,7 @@ export function Sidebar() {
           variant="ghost"
           className="w-full justify-start text-[#ef4444] hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-[#ef4444]"
           onClick={async () => {
-            await fetch('/api/auth/logout', { method: 'POST' })
-            window.location.reload()
+            await logOutAction()
           }}
         >
           <LogOut className="w-5 h-5 mr-3" />

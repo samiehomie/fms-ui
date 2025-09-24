@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { buildURL } from '@/lib/api/utils'
-import { withAuth } from '@/lib/api/auth'
+import { withAuth } from '@/lib/actions/auth'
 import { fetchJson } from '@/lib/api/fetch'
 import type { ApiResponseType, ApiRequestType } from '@/types/api'
 import {
@@ -12,8 +12,7 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
-  return await withAuth(async (tokenData) => {
-    const { token } = tokenData
+  return await withAuth(async (accessToken) => {
     const encoder = new TextEncoder()
     const apiUrl = buildURL('/vehicles/trips', { status: 'active' })
 
@@ -25,7 +24,7 @@ export async function GET(request: NextRequest) {
           try {
             const response = await fetchJson(apiUrl, {
               headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',
               },
             })

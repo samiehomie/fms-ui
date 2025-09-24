@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import type { ApiResponseType, ApiRequestType } from '@/types/api'
-import { withAuth } from '@/lib/api/auth'
+import { withAuth } from '@/lib/actions/auth'
 import { fetchJson } from '@/lib/api/fetch'
 import { buildURL } from '@/lib/api/utils'
 import {
@@ -9,8 +9,7 @@ import {
 } from '@/lib/route/route.heplers'
 
 export async function POST(request: NextRequest) {
-  return await withAuth(async (tokenData) => {
-    const { token } = tokenData
+  return await withAuth(async (accessToken) => {
     const apiUrl = buildURL(`/vehicles/get`)
     const requestBody = await request.json()
 
@@ -20,7 +19,7 @@ export async function POST(request: NextRequest) {
         {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(requestBody),

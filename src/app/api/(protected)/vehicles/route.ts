@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import type { ApiResponseType, ApiRequestType } from '@/types/api'
-import { withAuth } from '@/lib/api/auth'
+import { withAuth } from '@/lib/actions/auth'
 import { fetchJson } from '@/lib/api/fetch'
 import { buildURL } from '@/lib/api/utils'
 import {
@@ -9,7 +9,7 @@ import {
 } from '@/lib/route/route.heplers'
 
 export async function GET(request: NextRequest) {
-  return await withAuth(async (tokenData) => {
+  return await withAuth(async (accessToken) => {
     const searchParams = request.nextUrl.searchParams
     const page = searchParams.get('page') ?? ''
     const limit = searchParams.get('limit') ?? ''
@@ -19,7 +19,6 @@ export async function GET(request: NextRequest) {
     const id = searchParams.get('id')
     const include_deleted = searchParams.get('include_deleted')
 
-    const { token } = tokenData
     const apiUrl =
       typeof id === 'string'
         ? buildURL(`/vehicles/${id}`)
@@ -36,7 +35,7 @@ export async function GET(request: NextRequest) {
         apiUrl,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
           },
         },
@@ -63,8 +62,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  return await withAuth(async (tokenData) => {
-    const { token } = tokenData
+  return await withAuth(async (accessToken) => {
     const apiUrl = buildURL(`/vehicles`)
     const requestBody = await request.json()
     try {
@@ -73,7 +71,7 @@ export async function POST(request: NextRequest) {
         {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(requestBody),
@@ -101,8 +99,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  return await withAuth(async (tokenData) => {
-    const { token } = tokenData
+  return await withAuth(async (accessToken) => {
     const id = (await request.json()) as string
     const apiUrl = buildURL(`/vehicles/${id}`)
 
@@ -112,7 +109,7 @@ export async function DELETE(request: NextRequest) {
       >(apiUrl, {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
       })
@@ -138,8 +135,7 @@ export async function DELETE(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-  return await withAuth(async (tokenData) => {
-    const { token } = tokenData
+  return await withAuth(async (accessToken) => {
     const id = (await request.json()) as string
     const apiUrl = buildURL(`/vehicles/${id}/restore`)
 
@@ -149,7 +145,7 @@ export async function PATCH(request: NextRequest) {
       >(apiUrl, {
         method: 'PATCH',
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
       })
@@ -175,8 +171,7 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  return await withAuth(async (tokenData) => {
-    const { token } = tokenData
+  return await withAuth(async (accessToken) => {
     const searchParams = request.nextUrl.searchParams
     const id = searchParams.get('id')
     const apiUrl = buildURL(`/vehicles/${id}`)
@@ -188,7 +183,7 @@ export async function PUT(request: NextRequest) {
         {
           method: 'PUT',
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(requestBody),
