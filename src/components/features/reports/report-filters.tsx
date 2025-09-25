@@ -72,35 +72,91 @@ export function ReportFilters({
   const activeFilterCount = getActiveFilterCount()
 
   return (
-    <Card>
-      <CardContent className="p-4 space-y-4">
-        {/* Basic Filters */}
+    <div>
+      <div className="space-y-4">
         <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Search className="h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search reports..."
-              value={filters.search}
-              onChange={(e) => updateFilter('search', e.target.value)}
-              className="w-64"
-            />
-          </div>
-
           <DateRangePicker />
+          {availableStatuses.length > 0 && (
+            <Select
+              value={filters.status}
+              onValueChange={(value) => updateFilter('status', value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="All Statuses" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                {availableStatuses.map((status) => (
+                  <SelectItem key={status} value={status}>
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
 
-          <Button
-            variant="outline"
-            onClick={() => setShowAdvanced(!showAdvanced)}
-            className="gap-2"
-          >
-            <Filter className="h-4 w-4" />
-            Advanced Filters
-            {activeFilterCount > 0 && (
-              <Badge variant="secondary" className="ml-1">
-                {activeFilterCount}
-              </Badge>
-            )}
-          </Button>
+          {availableVehicles.length > 0 && (
+            <Select
+              value={filters.vehicle}
+              onValueChange={(value) => updateFilter('vehicle', value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="All Vehicles" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Vehicles</SelectItem>
+                {availableVehicles.map((vehicle) => (
+                  <SelectItem key={vehicle} value={vehicle}>
+                    <div className="flex items-center gap-2">
+                      <Truck className="h-4 w-4" />
+                      {vehicle}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+
+          {availableDrivers.length > 0 && (
+            <Select
+              value={filters.driver}
+              onValueChange={(value) => updateFilter('driver', value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="All Drivers" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Drivers</SelectItem>
+                {availableDrivers.map((driver) => (
+                  <SelectItem key={driver} value={driver}>
+                    <div className="flex items-center gap-2">
+                      <Users className="h-4 w-4" />
+                      {driver}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+
+          {availableCategories.length > 0 && (
+            <Select
+              value={filters.category}
+              onValueChange={(value) => updateFilter('category', value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                {availableCategories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
 
           {activeFilterCount > 0 && (
             <Button variant="ghost" onClick={clearFilters} className="gap-2">
@@ -109,94 +165,6 @@ export function ReportFilters({
             </Button>
           )}
         </div>
-
-        {/* Advanced Filters */}
-        {showAdvanced && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t">
-            {availableStatuses.length > 0 && (
-              <Select
-                value={filters.status}
-                onValueChange={(value) => updateFilter('status', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="All Statuses" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  {availableStatuses.map((status) => (
-                    <SelectItem key={status} value={status}>
-                      {status.charAt(0).toUpperCase() + status.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-
-            {availableVehicles.length > 0 && (
-              <Select
-                value={filters.vehicle}
-                onValueChange={(value) => updateFilter('vehicle', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="All Vehicles" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Vehicles</SelectItem>
-                  {availableVehicles.map((vehicle) => (
-                    <SelectItem key={vehicle} value={vehicle}>
-                      <div className="flex items-center gap-2">
-                        <Truck className="h-4 w-4" />
-                        {vehicle}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-
-            {availableDrivers.length > 0 && (
-              <Select
-                value={filters.driver}
-                onValueChange={(value) => updateFilter('driver', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="All Drivers" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Drivers</SelectItem>
-                  {availableDrivers.map((driver) => (
-                    <SelectItem key={driver} value={driver}>
-                      <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4" />
-                        {driver}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-
-            {availableCategories.length > 0 && (
-              <Select
-                value={filters.category}
-                onValueChange={(value) => updateFilter('category', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {availableCategories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category.charAt(0).toUpperCase() + category.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
-        )}
-
         {/* Active Filters Display */}
         {activeFilterCount > 0 && (
           <div className="flex flex-wrap gap-2 pt-2 border-t">
@@ -238,7 +206,7 @@ export function ReportFilters({
             )}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

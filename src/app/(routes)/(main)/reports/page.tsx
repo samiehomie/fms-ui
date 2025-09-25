@@ -659,21 +659,21 @@ export default function ReportsPage() {
           {/* Report Content */}
           {reportTabs.map((tab) => (
             <TabsContent key={tab.id} value={tab.id} className="space-y-6">
-              <Card className=' shadow-none'>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+              <div className=" shadow-none">
+                {/* <div>
+                  <div className="flex items-center gap-2">
                     <tab.icon className="h-5 w-5" />
                     {tab.label}
-                  </CardTitle>
+                  </div>
                   <p className="text-sm text-muted-foreground">
                     {tab.description}
                   </p>
-                </CardHeader>
-                <CardContent className="space-y-6">
+                </div> */}
+                <div className="space-y-6">
                   {/* {renderSummaryCards()} */}
                   {renderDataTable()}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </TabsContent>
           ))}
         </Tabs>

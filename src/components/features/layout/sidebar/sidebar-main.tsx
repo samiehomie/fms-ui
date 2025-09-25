@@ -1,7 +1,14 @@
 'use client'
 
 import * as React from 'react'
-import { ChartGantt, CarFront, Building, User, Cpu } from 'lucide-react'
+import {
+  ChartGantt,
+  CarFront,
+  Building,
+  User,
+  Cpu,
+  FileText,
+} from 'lucide-react'
 
 import { NavMain } from './nav-main'
 import { NavUser } from './nav-user'
@@ -61,6 +68,11 @@ const data = {
       title: 'Devices',
       url: '/devices',
       icon: Cpu,
+    },
+    {
+      title: 'Reports',
+      url: '/reports',
+      icon: FileText,
     },
   ],
 }
