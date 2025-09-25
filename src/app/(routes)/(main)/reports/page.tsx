@@ -612,15 +612,12 @@ export default function ReportsPage() {
   )
 
   return (
-    <div className="flex flex-col h-full">
-      <header className="flex items-center justify-between p-4 border-b shrink-0">
-        <h1 className="text-2xl font-bold">Reports & Analytics</h1>
-        <div className="text-sm text-muted-foreground">
-          Generate and export fleet management reports
-        </div>
-      </header>
-
-      <main className="flex-1 overflow-y-auto p-6">
+    <div className="container">
+      <h1 className="text-4xl font-bold tracking-tight">Reports</h1>
+      <p className=" tracking-tight text-[15px] font-[400] mt-2">
+        Generate and export fleet management reports
+      </p>
+      <main className="container mx-auto my-10 ">
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
@@ -631,9 +628,9 @@ export default function ReportsPage() {
               <TabsTrigger
                 key={tab.id}
                 value={tab.id}
-                className="flex flex-col items-center gap-1 p-3 h-auto"
+                className="flex flex-col items-center gap-1 py-2 px-3 h-auto"
               >
-                <tab.icon className="h-4 w-4" />
+                {/* <tab.icon className="h-4 w-4" /> */}
                 <span className="text-xs">{tab.label.split(' ')[0]}</span>
               </TabsTrigger>
             ))}
@@ -662,7 +659,7 @@ export default function ReportsPage() {
           {/* Report Content */}
           {reportTabs.map((tab) => (
             <TabsContent key={tab.id} value={tab.id} className="space-y-6">
-              <Card>
+              <Card className=' shadow-none'>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <tab.icon className="h-5 w-5" />
@@ -673,7 +670,7 @@ export default function ReportsPage() {
                   </p>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {renderSummaryCards()}
+                  {/* {renderSummaryCards()} */}
                   {renderDataTable()}
                 </CardContent>
               </Card>

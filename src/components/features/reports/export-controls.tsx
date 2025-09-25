@@ -63,7 +63,7 @@ export function ExportControls({
     selectedItems.length === allData.length && allData.length > 0
 
   return (
-    <div className="flex flex-wrap items-center gap-4 p-4 bg-muted/50 rounded-lg">
+    <div className="flex flex-wrap items-center gap-4 p-4 rounded-lg">
       <div className="flex items-center gap-2">
         <Checkbox
           checked={isAllSelected}
