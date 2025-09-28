@@ -175,10 +175,8 @@ function UserForm({ onClose }: { onClose: () => void }) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="1">Admin</SelectItem>
-                      <SelectItem value="2">Manager</SelectItem>
-                      <SelectItem value="3">User</SelectItem>
-                      <SelectItem value="4">Viewer</SelectItem>
+                      <SelectItem value="1">Super Admin</SelectItem>
+                      <SelectItem value="2">Company Owner</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

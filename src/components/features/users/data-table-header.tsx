@@ -3,12 +3,13 @@ import { useState, FC } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { AddUserForm } from './add-user-form'
+import type { UsersPaginationParams } from '@/types/api/user.types'
 import type { CompaniesPaginationParams } from '@/types/api/company.types'
 import { Tag, Switch } from 'antd'
 
 type DataTableHeaderProps = {
   pagination: CompaniesPaginationParams
-  setPagination: React.Dispatch<React.SetStateAction<CompaniesPaginationParams>>
+  setPagination: React.Dispatch<React.SetStateAction<UsersPaginationParams>>
 }
 
 const DataTableHeader: FC<DataTableHeaderProps> = ({

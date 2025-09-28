@@ -22,6 +22,8 @@ export type UsersResponse = PaginatedResponseWithKey<User, 'users'>
 export interface UsersPaginationParams {
   page: number
   limit: number
+  verified: boolean
+  search: string
 }
 
 export interface UsersCreateRequest {

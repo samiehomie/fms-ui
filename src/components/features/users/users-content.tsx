@@ -11,6 +11,8 @@ const UsersContent = () => {
   const [pageParams, setPageParams] = useState<UsersPaginationParams>({
     page: 1,
     limit: 10,
+    verified: true,
+    search: '',
   })
 
   const { data, isLoading } = useUsersPaginated(pageParams)
