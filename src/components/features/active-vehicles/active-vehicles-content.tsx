@@ -34,7 +34,7 @@ export default function ActiveVehiclesContent() {
         <VehicleList
           vehicles={vehicles}
           selectedVehicleId={selectedVehicleId}
-          onVehicleSelect={setSelectedVehicleId}
+          onVehicleSelectAction={setSelectedVehicleId}
         />
       </div>
 

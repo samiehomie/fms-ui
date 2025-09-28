@@ -10,7 +10,7 @@ import type { TPMSResultsResponse } from '@/types/api/vehicle.types'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   return await withAuth(async (accessToken) => {
     const searchParams = request.nextUrl.searchParams
@@ -18,8 +18,9 @@ export async function GET(
     const limit = searchParams.get('limit') ?? '1'
     const start_date = searchParams.get('start_date') ?? ''
     const end_date = searchParams.get('end_date') ?? ''
+    const { id } = await params
 
-    const apiUrl = buildURL(`/data/tpms-results/vehicle/${params.id}`, {
+    const apiUrl = buildURL(`/data/tpms-results/vehicle/${id}`, {
       page,
       limit,
       start_date,

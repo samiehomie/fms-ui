@@ -1,16 +1,15 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import type { VehicleReference } from '@/types/api/vehicle.types'
 
 interface VehicleListProps {
   vehicles: VehicleReference[]
   selectedVehicleId?: number
-  onVehicleSelect: (vehicleId: number) => void
+  onVehicleSelectAction: (vehicleId: number) => void
 }
 
-export default function VehicleList({ vehicles, selectedVehicleId, onVehicleSelect }: VehicleListProps) {
+export default function VehicleList({ vehicles, selectedVehicleId, onVehicleSelectAction }: VehicleListProps) {
   return (
     <div className="space-y-2">
       {vehicles.map((vehicle) => (
@@ -19,7 +18,7 @@ export default function VehicleList({ vehicles, selectedVehicleId, onVehicleSele
           className={`cursor-pointer transition-colors hover:bg-muted/50  ${
             selectedVehicleId === vehicle.id ? 'ring-2 ring-primary' : ''
           }`}
-          onClick={() => onVehicleSelect(vehicle.id)}
+          onClick={() => onVehicleSelectAction(vehicle.id)}
         >
           <CardHeader className="">
             <CardTitle className="text-lg">{vehicle.plate_number}</CardTitle>
