@@ -394,6 +394,51 @@ export interface VehiclesLiveStreamData {
   timestamp: string
 }
 
+export interface GPSWithVehicle {
+  id: number
+  created_at: string
+  updated_at: string
+  latitude: string
+  longitude: string
+  north_south: string
+  east_west: string
+  speed_over_grd: string
+  gps_time: string
+  vehicle_id: VehicleReference
+}
+
+export interface AIResult {
+  id: number
+  created_at: string
+  updated_at: string
+  model: string
+  model_result: string
+  pred_time: string
+  gps_id: GPSWithVehicle
+}
+
+export interface TPMSResult {
+  id: number
+  created_at: string
+  updated_at: string
+  pressure: string
+  temperature: string
+  slowleak: boolean
+  blowout: boolean
+  result_time: string
+  gps_id: GPSWithVehicle
+}
+
+export type AIResultsResponse = PaginatedResponseWithKey<AIResult, 'ai_results'>
+export type TPMSResultsResponse = PaginatedResponseWithKey<TPMSResult, 'tpms_results'>
+
+export interface VehicleDataParams {
+  page: number
+  limit: number
+  start_date: string
+  end_date: string
+}
+
 export interface VehicleApiTypes {
   'GET /vehicles': {
     params: VehiclesPaginationParams
@@ -454,5 +499,15 @@ export interface VehicleApiTypes {
     params: VehiclesLiveStreamParams
     request: {}
     response: VehiclesLiveStreamData
+  }
+  'GET /data/ai-results/vehicle/{id}': {
+    params: VehicleDataParams
+    request: {}
+    response: AIResultsResponse
+  }
+  'GET /data/tpms-results/vehicle/{id}': {
+    params: VehicleDataParams
+    request: {}
+    response: TPMSResultsResponse
   }
 }
