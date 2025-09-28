@@ -22,8 +22,6 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from '../features/companies/data-table-pagination'
 import { cn } from '@/lib/utils'
-import { Router } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 
 interface DataTableProps<TData, TValue, TPagination = any> {
   columns: ColumnDef<TData, TValue>[]
@@ -46,7 +44,6 @@ export function DataTable<
   setPagination,
   hiddenColumns,
 }: DataTableProps<TData, TValue, TPagination>) {
-  const router = useRouter()
   const [search, setSearch] = useState('')
   const [sorting, setSorting] = useState<SortingState>([])
   const [tablePagination, setTablePagination] = useState<PaginationState>({
@@ -148,11 +145,10 @@ export function DataTable<
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && 'selected'}
-                    onClick={() =>
-                      router.push(`/vehicles/${row.getValue('id')}`)
-                    }
+                    // onClick={() =>
+                    //   router.push(`/vehicles/${row.getValue('id')}`)
+                    // }
                     className={cn(
-                      'cursor-pointer',
                       isDeleted && 'opacity-30 text-muted-foreground',
                     )}
                   >
