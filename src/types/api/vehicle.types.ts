@@ -415,6 +415,12 @@ export interface AIResult {
   model_result: string
   pred_time: string
   gps_id: GPSWithVehicle
+  tire_id: {
+    id: number
+    created_at: string
+    updated_at: string
+    tire_location: string
+  }
 }
 
 export interface TPMSResult {

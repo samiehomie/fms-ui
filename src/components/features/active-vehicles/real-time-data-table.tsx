@@ -15,7 +15,7 @@ export default function RealTimeDataTable({
 }: RealTimeDataTableProps) {
   const params: VehicleDataParams = {
     page: 1,
-    limit: 1,
+    limit: 4,
     start_date: '2025-06-01T00:00:00Z',
     end_date: '2025-12-30T23:59:59Z',
   }
@@ -29,12 +29,9 @@ export default function RealTimeDataTable({
     data: tpmsData,
     isLoading: tpmsLoading,
     error: tpmsError,
-  } = useTPMSResults(vehicleId.toString(), {
-    ...params,
-    limit: 4,
-  })
+  } = useTPMSResults(vehicleId.toString(), params)
 
-  const aiResult = aiData?.data.ai_results?.[0]
+  const aiResult = aiData?.data.ai_results
   const tpmsResult = tpmsData?.data.tpms_results
 
   if (aiLoading || tpmsLoading) {
@@ -61,20 +58,27 @@ export default function RealTimeDataTable({
           <CardTitle>AI Load Detection</CardTitle>
         </CardHeader>
         <CardContent>
-          {aiResult ? (
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="font-medium">Model:</span> {aiResult.model}
+          {aiResult && aiResult.length > 0 ? (
+            aiResult.map((ai, index) => (
+              <div key={`${ai.id}-${index}`} className="grid grid-cols-2 gap-4">
+                <div>
+                  <span className="font-medium">Model:</span> {ai.model}
+                </div>
+                <div>
+                  <span className="font-medium">Result:</span> {ai.model_result}
+                </div>
+                <div>
+                  <span className="font-medium">Tire Location:</span>
+                  {ai.tire_id.tire_location}
+                </div>
+                {index === 3 && (
+                  <div className="col-span-2">
+                    <span className="font-medium">Prediction Time:</span>
+                    {ai.pred_time}
+                  </div>
+                )}
               </div>
-              <div>
-                <span className="font-medium">Result:</span>{' '}
-                {aiResult.model_result}
-              </div>
-              <div className="col-span-2">
-                <span className="font-medium">Prediction Time:</span>{' '}
-                {aiResult.pred_time}
-              </div>
-            </div>
+            ))
           ) : (
             <p className="text-muted-foreground">No AI data available</p>
           )}
@@ -90,33 +94,31 @@ export default function RealTimeDataTable({
             tpmsResult.map((tpms, index) => (
               <div
                 className="grid grid-cols-2 gap-4 border-b"
-                key={tpms.tire_id.tire_location}
+                key={tpms.tire_id.tire_location + index}
               >
                 <div>
                   <span className="font-medium">Pressure:</span> {tpms.pressure}
                 </div>
                 <div>
-                  <span className="font-medium">Temperature:</span>{' '}
+                  <span className="font-medium">Temperature:</span>
                   {tpms.temperature}°C
                 </div>
                 <div>
-                  <span className="font-medium">Slow Leak:</span>{' '}
+                  <span className="font-medium">Slow Leak:</span>
                   <Badge variant={tpms.slowleak ? 'destructive' : 'default'}>
                     {tpms.slowleak ? 'Detected' : 'Normal'}
                   </Badge>
                 </div>
                 <div>
-                  <span className="font-medium">Blowout:</span>{' '}
+                  <span className="font-medium">Blowout:</span>
                   <Badge variant={tpms.blowout ? 'destructive' : 'default'}>
                     {tpms.blowout ? 'Detected' : 'Normal'}
                   </Badge>
                 </div>
-                <div>
-                  {tpms.tire_id.tire_location}
-                </div>
+                <div>{tpms.tire_id.tire_location}</div>
                 {index === 3 && (
                   <div className="col-span-2">
-                    <span className="font-medium">Result Time:</span>{' '}
+                    <span className="font-medium">Result Time:</span>
                     {new Date(tpms.result_time)
                       .toISOString()
                       .replace('T', ' ')

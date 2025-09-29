@@ -2,9 +2,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { VehicleReference } from '@/types/api/vehicle.types'
+import type { Vehicle } from '@/types/api/vehicle.types'
 
 interface VehicleListProps {
-  vehicles: VehicleReference[]
+  vehicles: Vehicle[]
   selectedVehicleId?: number
   onVehicleSelectAction: (vehicleId: number) => void
 }
