@@ -67,7 +67,7 @@ export default function VehicleList({
   const moveToVehicle = (lat: number, lng: number) => {
     if (map) {
       map.panTo({ lat, lng })
-      map.setZoom(13)
+      map.setZoom(17)
     }
   }
 

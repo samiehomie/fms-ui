@@ -4,8 +4,8 @@ import { NextResponse } from 'next/server'
 // 더미 차량 데이터 생성
 const generateVehicles = (count: number) => {
   const vehicles = []
-  const centerLat = 37.5665
-  const centerLng = 126.978
+  const centerLat = 35.59673
+  const centerLng = 139.8169
 
   for (let i = 0; i < count; i++) {
     vehicles.push({
@@ -16,8 +16,8 @@ const generateVehicles = (count: number) => {
       speed: Math.floor(Math.random() * 80),
       fuel: Math.floor(Math.random() * 100),
       driver: `driver ${i + 1}`,
-      lat: centerLat + (Math.random() - 0.5) * 0.2,
-      lng: centerLng + (Math.random() - 0.5) * 0.2,
+      lat: centerLat + (Math.random() - 0.5) * 0.01,
+      lng: centerLng + (Math.random() - 0.5) * 0.012,
       heading: Math.floor(Math.random() * 360),
       lastUpdate: new Date().toISOString(),
     })
@@ -27,7 +27,7 @@ const generateVehicles = (count: number) => {
 
 export async function GET() {
   const encoder = new TextEncoder()
-  let vehicles = generateVehicles(50)
+  let vehicles = generateVehicles(30)
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -76,12 +76,12 @@ export async function GET() {
 
         // 차량 위치 업데이트
         vehicles = vehicles.map((vehicle) => {
-          const deltaLat = (Math.random() - 0.5) * 0.001
-          const deltaLng = (Math.random() - 0.5) * 0.001
-          const newHeading = vehicle.heading + (Math.random() - 0.5) * 20
+          const deltaLat = (Math.random() - 0.5) * 0.0002
+          const deltaLng = (Math.random() - 0.5) * 0.0002
+          const newHeading = vehicle.heading + (Math.random() - 0.5) * 2
           const newSpeed = Math.max(
             0,
-            Math.min(120, vehicle.speed + (Math.random() - 0.5) * 10),
+            Math.min(120, vehicle.speed + (Math.random() - 0.5) * 1),
           )
 
           return {
@@ -90,7 +90,7 @@ export async function GET() {
             lng: vehicle.lng + deltaLng,
             heading: newHeading % 360,
             speed: Math.floor(newSpeed),
-            fuel: Math.max(0, vehicle.fuel - Math.random() * 0.1),
+            fuel: Math.max(0, vehicle.fuel - Math.random() * 0.01),
             lastUpdate: new Date().toISOString(),
           }
         })

@@ -8,8 +8,8 @@ import VehicleMarkers, { VehicleMapProps } from './vehicle-markers'
 export default function VehicleMapWrapper(props: VehicleMapProps) {
   return (
     <Map
-      defaultCenter={{ lat: 37.5665, lng: 126.978 }}
-      defaultZoom={12}
+      defaultCenter={{ lat: 35.59673, lng: 139.8169 }}
+      defaultZoom={16}
       mapId={mapId}
       gestureHandling={'greedy'}
       disableDefaultUI={false}
@@ -19,6 +19,7 @@ export default function VehicleMapWrapper(props: VehicleMapProps) {
       controlSize={0}
       disableDoubleClickZoom={true}
       clickableIcons={false}
+      mapTypeId={'satellite'}
     >
       <VehicleMarkers {...props} />
     </Map>

@@ -55,7 +55,11 @@ export function LiveMap({ vehicles, selectedVehicleId }: LiveMapProps) {
   }
 
   return (
-    <MapContainer center={[37.505, 127.05]} zoom={14} className="h-full w-full">
+    <MapContainer
+      center={[35.59673, 139.8169]}
+      zoom={14}
+      className="h-full w-full"
+    >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
