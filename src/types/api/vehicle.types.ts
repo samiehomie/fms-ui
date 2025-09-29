@@ -17,6 +17,27 @@ export interface Vehicle {
     name: string
   }
   created_at: string
+  tires: {
+    id: number
+    created_at: string
+    updated_at: string
+    tire_location: string
+  }[]
+}
+
+export interface CombinedTireData {
+  tire_location: string
+  pressure?: string
+  temperature?: string
+  slowleak?: boolean
+  blowout?: boolean
+  result_time?: string
+  model?: string
+  model_result?: string
+  pred_time?: string
+  latitude?: string
+  longitude?: string
+  speed?: string
 }
 
 export interface VehicleReference {
