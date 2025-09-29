@@ -29,10 +29,13 @@ export default function RealTimeDataTable({
     data: tpmsData,
     isLoading: tpmsLoading,
     error: tpmsError,
-  } = useTPMSResults(vehicleId.toString(), params)
+  } = useTPMSResults(vehicleId.toString(), {
+    ...params,
+    limit: 4,
+  })
 
   const aiResult = aiData?.data.ai_results?.[0]
-  const tpmsResult = tpmsData?.data.tpms_results?.[0]
+  const tpmsResult = tpmsData?.data.tpms_results
 
   if (aiLoading || tpmsLoading) {
     return (
@@ -83,38 +86,45 @@ export default function RealTimeDataTable({
           <CardTitle>TPMS Data</CardTitle>
         </CardHeader>
         <CardContent>
-          {tpmsResult ? (
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="font-medium">Pressure:</span>{' '}
-                {tpmsResult.pressure}
+          {tpmsResult && tpmsResult.length > 0 ? (
+            tpmsResult.map((tpms, index) => (
+              <div
+                className="grid grid-cols-2 gap-4 border-b"
+                key={tpms.tire_id.tire_location}
+              >
+                <div>
+                  <span className="font-medium">Pressure:</span> {tpms.pressure}
+                </div>
+                <div>
+                  <span className="font-medium">Temperature:</span>{' '}
+                  {tpms.temperature}°C
+                </div>
+                <div>
+                  <span className="font-medium">Slow Leak:</span>{' '}
+                  <Badge variant={tpms.slowleak ? 'destructive' : 'default'}>
+                    {tpms.slowleak ? 'Detected' : 'Normal'}
+                  </Badge>
+                </div>
+                <div>
+                  <span className="font-medium">Blowout:</span>{' '}
+                  <Badge variant={tpms.blowout ? 'destructive' : 'default'}>
+                    {tpms.blowout ? 'Detected' : 'Normal'}
+                  </Badge>
+                </div>
+                <div>
+                  {tpms.tire_id.tire_location}
+                </div>
+                {index === 3 && (
+                  <div className="col-span-2">
+                    <span className="font-medium">Result Time:</span>{' '}
+                    {new Date(tpms.result_time)
+                      .toISOString()
+                      .replace('T', ' ')
+                      .slice(0, 19)}
+                  </div>
+                )}
               </div>
-              <div>
-                <span className="font-medium">Temperature:</span>{' '}
-                {tpmsResult.temperature}°C
-              </div>
-              <div>
-                <span className="font-medium">Slow Leak:</span>{' '}
-                <Badge
-                  variant={tpmsResult.slowleak ? 'destructive' : 'default'}
-                >
-                  {tpmsResult.slowleak ? 'Detected' : 'Normal'}
-                </Badge>
-              </div>
-              <div>
-                <span className="font-medium">Blowout:</span>{' '}
-                <Badge variant={tpmsResult.blowout ? 'destructive' : 'default'}>
-                  {tpmsResult.blowout ? 'Detected' : 'Normal'}
-                </Badge>
-              </div>
-              <div className="col-span-2">
-                <span className="font-medium">Result Time:</span>{' '}
-                {new Date(tpmsResult.result_time)
-                  .toISOString()
-                  .replace('T', ' ')
-                  .slice(0, 19)}
-              </div>
-            </div>
+            ))
           ) : (
             <p className="text-muted-foreground">No TPMS data available</p>
           )}

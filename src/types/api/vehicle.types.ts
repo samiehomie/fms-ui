@@ -427,10 +427,19 @@ export interface TPMSResult {
   blowout: boolean
   result_time: string
   gps_id: GPSWithVehicle
+  tire_id: {
+    id: number
+    created_at: string
+    updated_at: string
+    tire_location: string
+  }
 }
 
 export type AIResultsResponse = PaginatedResponseWithKey<AIResult, 'ai_results'>
-export type TPMSResultsResponse = PaginatedResponseWithKey<TPMSResult, 'tpms_results'>
+export type TPMSResultsResponse = PaginatedResponseWithKey<
+  TPMSResult,
+  'tpms_results'
+>
 
 export interface VehicleDataParams {
   page: number
