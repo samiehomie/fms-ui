@@ -76,8 +76,8 @@ export async function GET() {
 
         // 차량 위치 업데이트
         vehicles = vehicles.map((vehicle) => {
-          const deltaLat = (Math.random() - 0.5) * 0.0002
-          const deltaLng = (Math.random() - 0.5) * 0.0002
+          const deltaLat = (Math.random() - 0.5) * 0.00016
+          const deltaLng = (Math.random() - 0.5) * 0.00016
           const newHeading = vehicle.heading + (Math.random() - 0.5) * 2
           const newSpeed = Math.max(
             0,
