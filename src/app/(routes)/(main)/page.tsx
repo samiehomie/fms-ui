@@ -4,8 +4,12 @@ import dynamic from 'next/dynamic'
 
 const DashboardSkeleton = () => {
   return (
-    <div>
-      <Skeleton className="w-full h-10" />
+    <div className="flex flex-col gap-y-4">
+      <Skeleton className="w-full h-9" />
+      <Skeleton className="w-full h-12" />
+      <Skeleton className="w-full h-12" />
+      <Skeleton className="w-full h-12" />
+      <Skeleton className="w-full h-12" />
     </div>
   )
 }
