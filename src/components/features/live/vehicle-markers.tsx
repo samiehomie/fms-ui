@@ -59,7 +59,7 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
       if (!markerLibrary) return null
 
       const isSelected = vehicle.id === selectedVehicleId
-      const markerSize = 30 // 고정 크기
+      const markerSize = 40 // 고정 크기
       const labelOffset = 20
 
       // 차량 이름의 텍스트 길이에 따른 라벨 너비 계산
@@ -80,13 +80,9 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
       container.style.opacity = opacity.toString()
 
       // SVG 마커와 라벨을 포함하는 전체 구조
-      container.innerHTML = `
-        <div style="position: relative; width: ${Math.max(
-          markerSize,
-          labelWidth,
-        )}px; height: ${markerSize + labelOffset + 20}px;">
-          <!-- 라벨 -->
-          <div class="vehicle-label" style="
+
+      const markerLabel = `
+      <div class="vehicle-label" style="
             position: absolute;
             top: 0;
             left: 50%;
@@ -105,9 +101,7 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
             transition: all 0.2s ease-in-out;
             z-index: 2;
           ">${vehicle.name}</div>
-          
-          <!-- 연결선 -->
-          <div style="
+            <div style="
             position: absolute;
             top: 22px;
             left: 50%;
@@ -117,8 +111,14 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
             background-color: rgba(0, 0, 0, 0.3);
             z-index: 1;
           "></div>
-          
-          <!-- 마커 -->
+          `
+
+      const markerBg = `<circle cx="20" cy="20" r="14" fill="transparent" stroke="#16c950" stroke-width="2"/>`
+      container.innerHTML = `
+        <div style="position: relative; width: ${Math.max(
+          markerSize,
+          labelWidth,
+        )}px; height: ${markerSize + labelOffset + 20}px;">          
           <div class="vehicle-marker" style="
             position: absolute;
             bottom: 0;
@@ -128,11 +128,10 @@ const VehicleMarkers: React.FC<VehicleMapProps> = ({
           ">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="${markerSize}" height="${markerSize}">
               <!-- 외부 원 (파란색) -->
-              <circle cx="20" cy="20" r="18" fill="#0078d3" stroke="white" stroke-width="2"/>
-              
+              ${markerBg}
               <!-- 화살표 (회전 적용) -->
               <g transform="rotate(${vehicle.heading} 20 20)">
-                <path d="M20 8 L26 28 L20 24 L14 28 Z" fill="white"/>
+                <path d="M20 8 L26 28 L20 24 L14 28 Z" fill="#16c950"/>
               </g>
             </svg>
           </div>
