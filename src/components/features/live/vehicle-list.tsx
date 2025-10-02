@@ -199,8 +199,8 @@ export default function VehicleList({
 
                 <div className="flex items-center justify-between gap-2 text-sm mt-3">
                   <div className="text-gray-500/90 text-xs flex items-center gap-x-2">
-                    <Car size={17} />
-                    {'No driver assigned'}
+                    <Car size={16} />
+                    {`${vehicle.driver}`}
                   </div>
 
                   {/* <div>
@@ -212,7 +212,7 @@ export default function VehicleList({
                 </div>
                 <div className="flex items-center justify-between gap-2 text-sm mt-[6px]">
                   <div className="text-gray-500/90 text-xs flex items-start gap-x-2">
-                    <MapPin size={16} />
+                    <MapPin size={14} />
                     <div>
                       <div>{`Las Vegas Blvd S, Sloan, NV 89054, USA`}</div>
                       <div>{`(35.840305, -115.270782)`}</div>
