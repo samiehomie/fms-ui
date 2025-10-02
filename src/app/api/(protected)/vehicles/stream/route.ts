@@ -1,5 +1,6 @@
 // 테스트 목적으로 삭제 예정임
 import { NextResponse } from 'next/server'
+import { faker } from '@faker-js/faker/locale/en'
 
 // 더미 차량 데이터 생성
 const generateVehicles = (count: number) => {
@@ -8,19 +9,23 @@ const generateVehicles = (count: number) => {
   const centerLng = 139.8169
 
   for (let i = 0; i < count; i++) {
+    const lat = centerLat + (Math.random() - 0.5) * 0.01
+    const lng = centerLng + (Math.random() - 0.5) * 0.012
+
     vehicles.push({
       id: `vehicle-${i + 1}`,
       name: `Vehicle ${i + 1}`,
       type: ['sedan', 'truck', 'bus', 'van'][Math.floor(Math.random() * 4)],
-      status: ['active', 'idle', 'maintenance'][Math.floor(Math.random() * 3)],
+      status: ['active'],
+      //status: ['active', 'idle', 'maintenance'][Math.floor(Math.random() * 3)],
       speed: Math.floor(Math.random() * 80),
       fuel: Math.floor(Math.random() * 100),
-      driver: `driver ${i + 1}`,
-      lat: centerLat + (Math.random() - 0.5) * 0.01,
-      lng: centerLng + (Math.random() - 0.5) * 0.012,
+      driver: faker.person.fullName(),
+      lat,
+      lng,
       heading: Math.floor(Math.random() * 360),
       lastUpdate: new Date().toISOString(),
-      address: `${centerLat}, ${centerLng}`,
+      address: `${lat.toFixed(5)}, ${lng.toFixed(5)}`,
     })
   }
   return vehicles

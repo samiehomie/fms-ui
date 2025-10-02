@@ -37,6 +37,7 @@ export interface Vehicle {
   lng: number
   heading: number
   lastUpdate: string
+  address: string
 }
 
 // type Vehicles = NonNullable<
@@ -98,7 +99,7 @@ export const useVehicleLiveStream = (
                 lng: 0,
                 heading: 0,
                 lastUpdate: data.timestamp,
-              }))
+              })) as Vehicle[]
               setVehicles(vehicles)
               // 쿼리 캐시에도 업데이트
               // queryClient.setQueryData(['vehicles'], data.vehicles)
