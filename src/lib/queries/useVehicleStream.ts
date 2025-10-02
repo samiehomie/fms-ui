@@ -15,6 +15,7 @@ export interface Vehicle {
   lng: number
   heading: number
   lastUpdate: string
+  address: string
 }
 
 interface StreamData {

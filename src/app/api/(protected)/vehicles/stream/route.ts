@@ -20,6 +20,7 @@ const generateVehicles = (count: number) => {
       lng: centerLng + (Math.random() - 0.5) * 0.012,
       heading: Math.floor(Math.random() * 360),
       lastUpdate: new Date().toISOString(),
+      address: `${centerLat}, ${centerLng}`,
     })
   }
   return vehicles
@@ -92,6 +93,9 @@ export async function GET() {
             speed: Math.floor(newSpeed),
             fuel: Math.max(0, vehicle.fuel - Math.random() * 0.01),
             lastUpdate: new Date().toISOString(),
+            address: `${(vehicle.lat + deltaLat).toFixed(5)}, ${(
+              vehicle.lng + deltaLng
+            ).toFixed(5)}`,
           }
         })
 
