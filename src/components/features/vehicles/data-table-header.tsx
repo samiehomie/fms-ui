@@ -37,7 +37,7 @@ const DataTableHeader: FC<DataTableHeaderProps> = ({
     <div className="flex items-center justify-between gap-x-4">
       <div className="flex items-center gap-x-2 ">
         <Input
-          placeholder="Search in company name, reg number, or email"
+          placeholder="Search in vehicle name, model, or plate number"
           value={search}
           onChange={(event) => {
             //setPagination((old) => ({ ...old, search: event.target.value }))
