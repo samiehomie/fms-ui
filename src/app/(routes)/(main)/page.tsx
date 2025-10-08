@@ -1,6 +1,7 @@
+'use client'
 import { Skeleton } from '@/components/ui/skeleton'
+// TODO: 실제 구현시 수정할 내용임
 import dynamic from 'next/dynamic'
-// import DashboardMockContent from '@/components/features/dashboard_mock/dashboard-mock-content'
 
 const DashboardSkeleton = () => {
   return (
@@ -17,6 +18,7 @@ const DashboardSkeleton = () => {
 const DashboardMockContent = dynamic(
   () => import('@/components/features/dashboard_mock/dashboard-mock-content'),
   {
+    ssr: false,
     loading: () => <DashboardSkeleton />,
   },
 )

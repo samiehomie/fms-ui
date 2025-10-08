@@ -23,7 +23,6 @@ export interface LoginResponse {
 }
 
 export interface RefreshTokenRequest {
-  accessToken: string
   refreshToken: string
 }
 

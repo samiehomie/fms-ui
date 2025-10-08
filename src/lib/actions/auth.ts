@@ -48,30 +48,26 @@ export async function loginAction(
 }
 
 export async function logOutAction() {
-  // const apiUrl = buildURL('/auth/logout')
+  const apiUrl = buildURL('/auth/logout')
 
   try {
     const cookieStore = await cookies()
-    // const accessToken = cookieStore.get(AUTH_TOKEN_COOKIE_NAME)?.value
+    const accessToken = cookieStore.get(AUTH_TOKEN_COOKIE_NAME)?.value
 
     // TODO: API - 세션 하이브리드 방식이라 토큰 무효화 시키려면 로그아웃 동작 구현해야함 현재 없음
-    // const response = await fetchJson<ApiResponseType<'POST /auth/logout'>>(
-    //   apiUrl,
-    //   {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       Authorization: `Bearer ${accessToken}`,
-    //     },
-    //   },
-    // )
-
-    // if (!response.success) throw new Error('Authentication failed')
-
+    const response = await fetchJson<ApiResponseType<'POST /auth/logout'>>(
+      apiUrl,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    )
     cookieStore.delete(AUTH_TOKEN_COOKIE_NAME)
     cookieStore.delete(REFRESH_TOKEN_COOKIE_NAME)
-
-    // logger.log('login action', response)
+    if (!response.success) throw new Error('Authentication failed')
   } catch (error) {
     console.error('Logout error:', error)
   }
@@ -104,7 +100,6 @@ export async function refreshTokenIfNeeded(
   if (timeUntilExpiry < refreshThreshold) {
     const apiUrl = buildURL('/auth/refresh')
     const requestBody: ApiRequestType<'POST /auth/refresh'> = {
-      accessToken,
       refreshToken,
     }
 
@@ -114,7 +109,7 @@ export async function refreshTokenIfNeeded(
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(requestBody),
         revalidate: false,
@@ -122,6 +117,7 @@ export async function refreshTokenIfNeeded(
     )
 
     console.log(result)
+
     if (!result.success) {
       const error = result.error
       // If refresh fails (e.g. token expired or invalid), clear the cookie
@@ -140,7 +136,9 @@ export async function refreshTokenIfNeeded(
     console.info('인증 토큰 갱신성공')
     return { newAccessToken, newRefreshToken }
   }
-  // console.info('인증 토큰 갱신 필요없음. 기존 토큰 사용 유지.')
+
+  console.info('인증 토큰 갱신 필요없음. 기존 토큰 사용 유지.')
+
   return {
     newAccessToken: accessToken,
     newRefreshToken: refreshToken,
