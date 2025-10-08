@@ -14,4 +14,5 @@ export class HttpError extends Error {
 export interface NetworkError {
   type: 'network' | 'timeout' | 'invalid-json'
   message: string
+  status?: number
 }

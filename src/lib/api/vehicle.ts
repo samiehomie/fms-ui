@@ -7,7 +7,7 @@ import type {
 import { ApiSuccessResponse } from '@/types/api/route.types'
 import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
 import { buildSearchParams } from './utils'
-import { fetchApi } from './api-client'
+import { fetchApi } from './fetch-client'
 
 export const vehiclesApi = {
   getVehicleById: async (body: ApiRequestType<'POST /vehicles/get'>) => {

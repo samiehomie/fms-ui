@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import type { ApiResponseType, ApiRequestType } from '@/types/api'
+import type { ApiResponseType } from '@/types/api'
 import { withAuth } from '@/lib/actions/auth'
 import { fetchJson } from '@/lib/api/fetch'
 import { buildURL } from '@/lib/api/utils'
@@ -7,6 +7,8 @@ import {
   createErrorResponse,
   createSuccessResponse,
 } from '@/lib/route/route.heplers'
+
+// TODO: authorization 방식 말고 쿠키 검증방식으로 할 것 
 
 export async function GET(request: NextRequest) {
   return await withAuth(async (accessToken) => {
@@ -41,9 +43,11 @@ export async function GET(request: NextRequest) {
         },
       )
       if (!response.success) {
+        console.log(response.error.status)
         return createErrorResponse(
           'INTERNAL_ERROR',
           'Failed to fetch vehicles from external API',
+          response.error.status,
         )
       }
       return createSuccessResponse(
