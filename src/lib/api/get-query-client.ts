@@ -1,15 +1,39 @@
 import {
   QueryClient,
   defaultShouldDehydrateQuery,
+  QueryCache,
+  MutationCache,
   isServer,
 } from '@tanstack/react-query'
+import { logOutAction } from '../actions/auth'
 
-function makeQueryClient() {
+let isLoggingOut = false // 중복 로그아웃 방지
+
+async function handleUnauthorized() {
+  if (isLoggingOut) return
+
+  isLoggingOut = true
+
+  try {
+    await logOutAction()
+  } finally {
+    isLoggingOut = false
+  }
+}
+
+export function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
         staleTime: 3 * 60 * 1000, // 3분
         gcTime: 5 * 60 * 1000,
+        retry: (failureCount, error: any) => {
+          // 401 에러는 재시도하지 않음
+          if (error?.status === 401 || error?.message === 'UNAUTHORIZED') {
+            return false
+          }
+          return failureCount < 3
+        },
       },
       dehydrate: {
         // include pending queries in dehydration
@@ -18,6 +42,23 @@ function makeQueryClient() {
           query.state.status === 'pending',
       },
     },
+    queryCache: new QueryCache({
+      onError: (error: any) => {
+        console.log('------->>>>>>', error, typeof error)
+        // 모든 query 에러를 여기서 처리
+        if (error?.status === 401 || error?.message === 'UNAUTHORIZED') {
+          handleUnauthorized()
+        }
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (error: any) => {
+        // 모든 mutation 에러를 여기서 처리
+        if (error?.status === 401 || error?.message === 'UNAUTHORIZED') {
+          handleUnauthorized()
+        }
+      },
+    }),
   })
 }
 

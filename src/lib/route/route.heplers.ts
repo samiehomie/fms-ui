@@ -30,7 +30,6 @@ export function createSuccessResponse<T>(
 export function createErrorResponse(
   code: ApiErrorCode,
   message: string,
-  details?: Record<string, any>,
   status?: number,
 ): NextResponse<ApiErrorResponse> {
   const statusCode = status || getStatusCodeByErrorCode(code)
@@ -41,7 +40,6 @@ export function createErrorResponse(
       error: {
         code,
         message,
-        details,
         ...(process.env.NODE_ENV === 'development' && {
           stack: new Error().stack,
         }),

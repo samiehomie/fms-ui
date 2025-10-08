@@ -70,6 +70,7 @@ export async function logOutAction() {
     if (!response.success) throw new Error('Authentication failed')
   } catch (error) {
     console.error('Logout error:', error)
+    redirect('/login')
   }
   redirect('/login')
 }
