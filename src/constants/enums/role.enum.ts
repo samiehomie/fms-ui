@@ -1,4 +1,4 @@
-export enum Role {
+export enum RoleType {
   SUPER_ADMIN = 'super_admin',
   PLATFORM_ADMIN = 'platform_admin',
   COMPANY_OWNER = 'company_owner',

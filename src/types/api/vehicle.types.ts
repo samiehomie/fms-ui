@@ -1,28 +1,76 @@
-import type { PaginatedResponseWithKey } from './api.common'
+import type {
+  PaginatedResponseWithKey,
+  DefaultPaginatedResponse,
+} from './api.common'
+import { GearType, FuelType } from '@/constants/enums/vehicle.enum'
+import { CompanyType } from '@/constants/enums/company.enum'
+import { SensorStatus } from '@/constants/enums/sensor.enum'
+import { EdgeDeviceType } from '@/constants/enums/edge-device.enum'
 
 export interface Vehicle {
   id: number
-  vehicle_name: string
-  plate_number: string
+  createdAt: string
+  updatedAt: string
+  vehicleName: string
+  plateNumber: string
   brand: string
   model: string
-  manuf_year: number
-  can_bitrate: string
-  fuel_type: string
-  gear_type: string
-  num_tire: number
+  manufactureYear: number
+  canBitrate: string
+  fuelType: FuelType
+  gearType: GearType
+  numTire: number
   isdeleted: boolean
-  company_id: {
+  users: {
     id: number
     name: string
-  }
-  created_at: string
+    username: string
+    email: string
+    verified: boolean
+    isdeleted: boolean
+  }[]
   tires: {
     id: number
-    created_at: string
-    updated_at: string
-    tire_location: string
+    tireLocation: string
+    profiler: {
+      id: number
+      serialNumber: string
+      profilerFwVer: string
+      profilerRev: string
+      verified: boolean
+      isdeleted: boolean
+      status: SensorStatus
+    }
+    sensor: {
+      id: 1
+      serialNumber: string
+      sensorFwVer: string
+      sensorRev: string
+      verified: boolean
+      isdeleted: boolean
+      status: SensorStatus
+    }
   }[]
+  edgeDevices: {
+    id: number
+    name: string
+    serialNumber: string
+    type: EdgeDeviceType
+    wlanIpAddr: string
+    ethIpAddr: string
+    verified: boolean
+    terminated: boolean
+    terminatedAt?: string
+  }[]
+  company: {
+    id: number
+    name: string
+    regNumber: string
+    type: CompanyType
+    website: string
+    verified: boolean
+    isdeleted: boolean
+  }
 }
 
 export interface CombinedTireData {
@@ -57,7 +105,7 @@ export interface VehicleReference {
   deletedAt: string | null
 }
 
-export type VehiclesResponse = PaginatedResponseWithKey<Vehicle, 'vehicles'>
+export type VehiclesResponse = DefaultPaginatedResponse<Vehicle>
 export interface VehiclesPaginationParams {
   page: number
   limit: number

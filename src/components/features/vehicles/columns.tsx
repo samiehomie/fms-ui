@@ -3,8 +3,8 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
-import { formatDateTime, getCompanyTypeColor } from '@/lib/utils'
-import { ArrowUpDown, CircleSlash } from 'lucide-react'
+import { formatDateTime } from '@/lib/utils'
+import { ArrowUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -30,16 +30,16 @@ export const columns: ColumnDef<Vehicle>[] = [
     id: 'company',
     header: 'Company',
     cell: ({ row }) => {
-      const company = row.original.company_id
+      const company = row.original.company
       return <div>{company.name}</div>
     },
   },
   {
-    accessorKey: 'vehicle_name',
+    accessorKey: 'vehicleName',
     header: 'Name',
   },
   {
-    accessorKey: 'plate_number',
+    accessorKey: 'plateNumber',
     header: 'Plate No.',
   },
 
@@ -47,13 +47,13 @@ export const columns: ColumnDef<Vehicle>[] = [
     id: 'vehicle_info',
     header: 'Model',
     cell: ({ row }) => {
-      const { model, brand, manuf_year, fuel_type, gear_type } = row.original
+      const { model, brand, manufactureYear, fuelType, gearType } = row.original
       return (
         <div className="flex gap-1">
           <div className="font-[400]">
             {brand} {model}
             <span className="text-muted-foreground pl-1 font-normal">
-              {manuf_year} {gear_type} {fuel_type}
+              {manufactureYear} {gearType} {fuelType}
             </span>
           </div>
         </div>
@@ -61,15 +61,15 @@ export const columns: ColumnDef<Vehicle>[] = [
     },
   },
   {
-    accessorKey: 'can_bitrate',
+    accessorKey: 'canBitrate',
     header: 'Can Bitrate',
   },
   {
-    accessorKey: 'num_tire',
+    accessorKey: 'numTire',
     header: 'Tires',
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'createdAt',
     header: ({ column }) => (
       <Button
         variant={'ghost'}
@@ -81,7 +81,7 @@ export const columns: ColumnDef<Vehicle>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const createdAt = row.getValue('created_at') as string
+      const createdAt = row.getValue('createdAt') as string
       return (
         <div className="flex justify-center tracking-tight">
           {formatDateTime(createdAt)}

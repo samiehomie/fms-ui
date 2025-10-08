@@ -1,4 +1,4 @@
-import { Role as RoleEnum } from '@/constants/enums/role.enum'
+import { RoleType } from '@/constants/enums/role.enum'
 export interface LoginRequest {
   username: string
   password: string
@@ -10,20 +10,16 @@ export interface Role {
 }
 
 export interface LoginResponse {
-  token: string
-  refreshToken: string
-  expires_in: number
   user: {
     id: number
-    name: string
     username: string
+    name: string
     email: string
-    role: {
-      name: RoleEnum
-      description: string
-    }
-    ip: string
+    role: RoleType
+    company: string
   }
+  accessToken: string
+  refreshToken: string
 }
 
 export interface RefreshTokenRequest {
@@ -35,14 +31,17 @@ export interface RefreshTokenRequest {
 export type RefreshTokenResponse = LoginResponse
 
 export interface JWTAuthPayload {
-  id: number
-  name: string
+  sub: number
   username: string
-  email: string
-  role_id: number
-  role: RoleEnum
-  company: string
-  ip: string
+  role: RoleType
+  companyId: number
+  iat: number
+  exp: number
+}
+
+export interface JWTRefreshPayload {
+  sub: number
+  type: 'refresh'
   iat: number
   exp: number
 }

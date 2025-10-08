@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const type = searchParams.get('type') ?? ''
     const search = searchParams.get('search') ?? ''
     const id = searchParams.get('id')
-    const include_deleted = searchParams.get('include_deleted')
+    const includeDeleted = searchParams.get('include_deleted')
 
     const apiUrl =
       typeof id === 'string'
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
             verified,
             type,
             search,
-            include_deleted,
+            includeDeleted,
           })
     try {
       const response = await fetchJson<ApiResponseType<'GET /vehicles'>>(

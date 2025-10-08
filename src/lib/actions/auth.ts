@@ -38,8 +38,8 @@ export async function loginAction(
 
     if (!response.success) throw new Error('Authentication failed')
 
-    const { token, expires_in: expiresIn, refreshToken } = await response.data
-    await setAuthCookies(token, refreshToken, expiresIn)
+    const { accessToken, refreshToken } = await response.data
+    await setAuthCookies(accessToken, refreshToken)
   } catch (error) {
     return { error: (error as Error).message }
   }
@@ -84,7 +84,6 @@ export async function refreshTokenIfNeeded(
 ): Promise<{
   newAccessToken: string
   newRefreshToken: string
-  newExpiresIn: number
 } | null> {
   if (!accessToken || !refreshToken) {
     console.log(
@@ -135,27 +134,22 @@ export async function refreshTokenIfNeeded(
       console.error(`인증 토큰 갱신실패: ${status} - ${message}`)
       return null
     }
-    const {
-      token: newAccessToken,
-      refreshToken: newRefreshToken,
-      expires_in: expiresIn,
-    } = result.data
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+      result.data
 
     console.info('인증 토큰 갱신성공')
-    return { newAccessToken, newRefreshToken, newExpiresIn: expiresIn }
+    return { newAccessToken, newRefreshToken }
   }
   // console.info('인증 토큰 갱신 필요없음. 기존 토큰 사용 유지.')
   return {
     newAccessToken: accessToken,
     newRefreshToken: refreshToken,
-    newExpiresIn: Math.round(timeUntilExpiry / 1000),
   }
 }
 
 export async function setAuthCookies(
   accessToken: string,
   refreshToken: string,
-  expiresIn: number,
 ) {
   const cookieStore = await cookies()
   const { exp } = await parseJWT(accessToken)

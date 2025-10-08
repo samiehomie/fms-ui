@@ -15,9 +15,9 @@ const VehiclesContent = () => {
     search: '',
   })
 
-  const { data, isLoading } = useVehiclesPaginated(pageParams)
+  const { data: vehicleData, isLoading } = useVehiclesPaginated(pageParams)
 
-  if (isLoading || !data) {
+  if (isLoading || !vehicleData) {
     return (
       <div className="col-span-3 flex flex-col gap-y-2">
         <Skeleton className="w-full h-10" />
@@ -37,10 +37,10 @@ const VehiclesContent = () => {
       </div>
       <DataTable
         columns={columns}
-        data={data.data.vehicles}
+        data={vehicleData.data.data}
         pagination={pageParams}
         setPagination={setPageParams}
-        totalCount={data.data.pagination.total}
+        totalCount={vehicleData.data.pagination.total}
         hiddenColumns={{
           isDeleted: false,
         }}
