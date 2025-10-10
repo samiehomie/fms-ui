@@ -24,7 +24,9 @@ export function SessionMonitorProvider({
           error instanceof SessionExpiredError &&
           !sessionExpiredHandled.current
         ) {
-          handleSessionExpired(error.message)
+          handleSessionExpired(error.message).catch((err) => {
+            console.error('Session expired handling failed:', err)
+          })
         }
       }
     })
