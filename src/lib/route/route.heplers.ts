@@ -28,11 +28,11 @@ export function createSuccessResponse<T>(
 
 // 에러 응답 헬퍼
 export function createErrorResponse(
-  code: ApiErrorCode,
+  code: string,
   message: string,
   status?: number,
 ): NextResponse<ApiErrorResponse> {
-  const statusCode = status || getStatusCodeByErrorCode(code)
+  const statusCode = status || 500
 
   return NextResponse.json(
     {

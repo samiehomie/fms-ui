@@ -5,6 +5,13 @@ export interface FetchError extends Error {
   info?: any
 }
 
+export class SessionExpiredError extends Error {
+  constructor(message: string = 'Your session has expired') {
+    super(message)
+    this.name = 'SessionExpiredError'
+  }
+}
+
 export async function fetchClient<T>(
   endpoint: string,
   options?: RequestInit,
@@ -30,10 +37,14 @@ export async function fetchClient<T>(
 
     // 401 에러는 특별히 표시
     if (response.status === 401) {
-      error.message = 'UNAUTHORIZED'
+      throw new SessionExpiredError('Your session has been terminated.')
     }
 
-    throw error
+    if (response.status === 409) {
+      throw new SessionExpiredError(
+        'Your session has been terminated due to a new login from another device',
+      )
+    }
   }
 
   return response.json()

@@ -29,7 +29,7 @@ export function makeQueryClient() {
         gcTime: 5 * 60 * 1000,
         retry: (failureCount, error: any) => {
           // 401 에러는 재시도하지 않음
-          if (error?.status === 401 || error?.message === 'UNAUTHORIZED') {
+          if (error?.status === 401 || error?.status === 409 || error?.message === 'Unauthorized') {
             return false
           }
           return failureCount < 3
@@ -42,23 +42,21 @@ export function makeQueryClient() {
           query.state.status === 'pending',
       },
     },
-    queryCache: new QueryCache({
-      onError: (error: any) => {
-        console.log('------->>>>>>', error, typeof error)
-        // 모든 query 에러를 여기서 처리
-        if (error?.status === 401 || error?.message === 'UNAUTHORIZED') {
-          handleUnauthorized()
-        }
-      },
-    }),
-    mutationCache: new MutationCache({
-      onError: (error: any) => {
-        // 모든 mutation 에러를 여기서 처리
-        if (error?.status === 401 || error?.message === 'UNAUTHORIZED') {
-          handleUnauthorized()
-        }
-      },
-    }),
+    // queryCache: new QueryCache({
+    //   onError: (error: any) => {
+    //     console.log('------->>>>>>', error, typeof error)
+    //     if (error?.status === 401 || error?.message === 'Unauthorized') {
+    //       handleUnauthorized()
+    //     }
+    //   },
+    // }),
+    // mutationCache: new MutationCache({
+    //   onError: (error: any) => {
+    //     if (error?.status === 401 || error?.message === 'Unauthorized') {
+    //       handleUnauthorized()
+    //     }
+    //   },
+    // }),
   })
 }
 

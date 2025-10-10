@@ -43,10 +43,10 @@ export async function GET(request: NextRequest) {
         },
       )
       if (!response.success) {
-        console.log(response.error.status)
+        console.log('all vehicles--->>', response.error)
         return createErrorResponse(
-          'INTERNAL_ERROR',
-          'Failed to fetch vehicles from external API',
+          response.error.type,
+          response.error.message,
           response.error.status,
         )
       }
