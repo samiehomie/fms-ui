@@ -1,4 +1,3 @@
-// lib/api-client.ts
 'use client'
 
 export interface FetchError extends Error {
@@ -6,21 +5,18 @@ export interface FetchError extends Error {
   info?: any
 }
 
-export async function fetchApi<T>(
+export async function fetchClient<T>(
   endpoint: string,
   options?: RequestInit,
 ): Promise<T> {
-  const response = await fetch(
-    endpoint,
-    {
-      ...options,
-      credentials: 'include', // 쿠키 포함
-      headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers,
-      },
+  const response = await fetch(endpoint, {
+    ...options,
+    credentials: 'include', // 쿠키 포함
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
     },
-  )
+  })
 
   if (!response.ok) {
     const error: FetchError = new Error('An error occurred while fetching')

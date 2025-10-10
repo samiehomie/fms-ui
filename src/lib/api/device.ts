@@ -1,4 +1,4 @@
-import { fetchJson } from '@/lib/api/fetch'
+import { fetchServer } from '@/lib/api/fetch-server'
 import type { ApiRequestType, ApiResponseType } from '@/types/api'
 import { ApiSuccessResponse } from '@/types/api/route.types'
 import type { DevicesPaginationParams } from '@/types/api/device.types'
@@ -17,7 +17,7 @@ export const devicesApi = {
         limit: params.limit.toString(),
       })
 
-    const response = await fetchJson<
+    const response = await fetchServer<
       ApiSuccessResponse<ApiResponseType<'GET /devices/edge-devices'>>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/devices?${searchParams}`,
@@ -42,7 +42,7 @@ export const devicesApi = {
   ): Promise<
     ApiSuccessResponse<ApiResponseType<'POST /devices/edge-devices'>>
   > => {
-    const response = await fetchJson<
+    const response = await fetchServer<
       ApiSuccessResponse<ApiResponseType<'POST /devices/edge-devices'>>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/devices`, {
       method: 'POST',

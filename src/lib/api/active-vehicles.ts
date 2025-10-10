@@ -1,5 +1,9 @@
-import { fetchJson } from '@/lib/api/fetch'
-import type { AIResultsResponse, TPMSResultsResponse, VehicleDataParams } from '@/types/api/vehicle.types'
+import { fetchServer } from '@/lib/api/fetch-server'
+import type {
+  AIResultsResponse,
+  TPMSResultsResponse,
+  VehicleDataParams,
+} from '@/types/api/vehicle.types'
 import { ApiSuccessResponse } from '@/types/api/route.types'
 
 export const activeVehiclesApi = {
@@ -14,7 +18,7 @@ export const activeVehiclesApi = {
       end_date: params.end_date,
     })
 
-    const response = await fetchJson<ApiSuccessResponse<AIResultsResponse>>(
+    const response = await fetchServer<ApiSuccessResponse<AIResultsResponse>>(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/data/ai-results/vehicle/${vehicleId}?${searchParams}`,
     )
 
@@ -36,7 +40,7 @@ export const activeVehiclesApi = {
       end_date: params.end_date,
     })
 
-    const response = await fetchJson<ApiSuccessResponse<TPMSResultsResponse>>(
+    const response = await fetchServer<ApiSuccessResponse<TPMSResultsResponse>>(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/data/tpms-results/vehicle/${vehicleId}?${searchParams}`,
     )
 

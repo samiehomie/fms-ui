@@ -41,57 +41,67 @@ import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
 import { useCreateVehicle } from '@/lib/queries/useVehicles'
 import { IconPlus } from '@tabler/icons-react'
+import { GearType, FuelType } from '@/constants/enums/vehicle.enum'
+import { useAuth } from '../auth/auth-provider'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const vehicleSchema = z.object({
-  vehicle_name: z.string().min(1, 'Vehicle name is required'),
-  plate_number: z.string().min(1, 'Plate number is required'),
+  vehicleName: z.string().min(1, 'Vehicle name is required'),
+  plateNumber: z.string().min(1, 'Plate number is required'),
   brand: z.string().min(1, 'Brand is required'),
   model: z.string().min(1, 'Model is required'),
-  manuf_year: z
+  manufactureYear: z
     .number()
     .min(1900, 'Invalid manufacturing year')
     .max(
       new Date().getFullYear() + 1,
       'Manufacturing year cannot be in the future',
     ),
-  can_bitrate: z.string().min(1, 'CAN bitrate is required'),
-  fuel_type: z.string().min(1, 'Fuel type is required'),
-  gear_type: z.string().min(1, 'Gear type is required'),
-  num_tire: z.number().min(1, 'Number of tires must be at least 1'),
-  company_name: z.string().min(1, 'Company name is required'),
+  canBitrate: z.string().min(1, 'CAN bitrate is required'),
+  fuelType: z.nativeEnum(FuelType, {
+    errorMap: () => ({ message: 'Fuel type is required' }),
+  }),
+  gearType: z.nativeEnum(GearType, {
+    errorMap: () => ({ message: 'Gear type is required' }),
+  }),
+  numTire: z.number().min(1, 'Number of tires must be at least 1'),
+  companyId: z.number().min(1, 'Company name is required'),
 })
 
 type VehicleFormData = z.infer<typeof vehicleSchema>
 
-function CompanyForm({ onClose }: { onClose: () => void }) {
+function VehicleForm({ onClose }: { onClose: () => void }) {
+  const { user, isLoading } = useAuth()
   const mutation = useCreateVehicle()
   const form = useForm<VehicleFormData>({
     resolver: zodResolver(vehicleSchema),
     defaultValues: {
-      vehicle_name: '',
-      plate_number: '',
+      vehicleName: '',
+      plateNumber: '',
       brand: '',
       model: '',
-      manuf_year: 1900,
-      can_bitrate: '',
-      fuel_type: '',
-      gear_type: '',
-      num_tire: 4,
-      company_name: '',
+      manufactureYear: new Date().getFullYear(),
+      canBitrate: '',
+      fuelType: FuelType.GASOLINE,
+      gearType: GearType.AUTOMATIC,
+      numTire: 4,
+      companyId: user?.companyId ?? 1,
     },
   })
 
   const onSubmit = async (data: VehicleFormData) => {
     try {
-      await mutation.mutateAsync({
-        vehicle: data,
-      })
+      await mutation.mutateAsync(data)
       form.reset()
       onClose()
     } catch (error) {
       // Error is handled in the mutation
     }
   }
+
+  if (isLoading) return <Skeleton className="h-10 w-10" />
+
+  // TODO: 회사 정보를 가져와서 select 컴포넌트 구성하기
 
   return (
     <Form {...form}>
@@ -100,7 +110,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="vehicle_name"
+              name="vehicleName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Vehicle Name</FormLabel>
@@ -114,7 +124,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
 
             <FormField
               control={form.control}
-              name="plate_number"
+              name="plateNumber"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Plate Number</FormLabel>
@@ -160,7 +170,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="manuf_year"
+              name="manufactureYear"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Manufacturing Year</FormLabel>
@@ -189,7 +199,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
 
             <FormField
               control={form.control}
-              name="num_tire"
+              name="numTire"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Number of Tires</FormLabel>
@@ -220,7 +230,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="fuel_type"
+              name="fuelType"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Fuel Type</FormLabel>
@@ -228,17 +238,17 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
-                    <FormControl>
+                    <FormControl className="w-full">
                       <SelectTrigger>
                         <SelectValue placeholder="Select fuel type" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Gasoline">Gasoline</SelectItem>
-                      <SelectItem value="Diesel">Diesel</SelectItem>
-                      <SelectItem value="Electric">Electric</SelectItem>
-                      <SelectItem value="Hybrid">Hybrid</SelectItem>
-                      <SelectItem value="LPG">LPG</SelectItem>
+                      {Object.values(FuelType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -248,7 +258,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
 
             <FormField
               control={form.control}
-              name="gear_type"
+              name="gearType"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Gear Type</FormLabel>
@@ -256,15 +266,17 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
-                    <FormControl>
+                    <FormControl className="w-full">
                       <SelectTrigger>
                         <SelectValue placeholder="Select gear type" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Manual">Manual</SelectItem>
-                      <SelectItem value="Automatic">Automatic</SelectItem>
-                      <SelectItem value="CVT">CVT</SelectItem>
+                      {Object.values(GearType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -276,7 +288,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="can_bitrate"
+              name="canBitrate"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>CAN Bitrate</FormLabel>
@@ -284,7 +296,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
-                    <FormControl>
+                    <FormControl className="w-full">
                       <SelectTrigger>
                         <SelectValue placeholder="Select CAN bitrate" />
                       </SelectTrigger>
@@ -303,12 +315,24 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
 
             <FormField
               control={form.control}
-              name="company_name"
+              name="companyId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Company Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Associated company" {...field} />
+                    <Input
+                      placeholder="Associated company"
+                      {...field}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        if (value !== '') {
+                          const numValue = parseInt(value)
+                          if (!isNaN(numValue)) {
+                            field.onChange(numValue)
+                          }
+                        }
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -349,11 +373,11 @@ export function AddVehicleForm() {
           <DrawerHeader>
             <DrawerTitle>Add New Vehicle</DrawerTitle>
             <DrawerDescription>
-              Fill in the vehicle information to add it to your database.
+              Fill in the vehicle information.
             </DrawerDescription>
           </DrawerHeader>
           <div className="px-4 pb-4 overflow-y-auto">
-            <CompanyForm onClose={handleClose} />
+            <VehicleForm onClose={handleClose} />
           </div>
         </DrawerContent>
       </Drawer>
@@ -376,10 +400,10 @@ export function AddVehicleForm() {
         <DialogHeader>
           <DialogTitle>Add Vehicle</DialogTitle>
           <DialogDescription>
-            Fill in the vehicle information to add it to your database.
+            Fill in the vehicle information.
           </DialogDescription>
         </DialogHeader>
-        <CompanyForm onClose={handleClose} />
+        <VehicleForm onClose={handleClose} />
       </DialogContent>
     </Dialog>
   )

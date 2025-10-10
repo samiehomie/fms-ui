@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import type { ApiResponseType, ApiRequestType } from '@/types/api'
 import { withAuth } from '@/lib/actions/auth'
-import { fetchJson } from '@/lib/api/fetch'
+import { fetchServer } from '@/lib/api/fetch-server'
 import { buildURL } from '@/lib/api/utils'
 import {
   createErrorResponse,
@@ -29,12 +29,15 @@ export async function GET(request: NextRequest) {
             search,
           })
     try {
-      const response = await fetchJson<ApiResponseType<'GET /users'>>(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+      const response = await fetchServer<ApiResponseType<'GET /users'>>(
+        apiUrl,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
         },
-      })
+      )
       if (!response.success) {
         return createErrorResponse(
           'INTERNAL_ERROR',
@@ -62,14 +65,17 @@ export async function POST(request: NextRequest) {
     const requestBody = await request.json()
     logger.log('post users', requestBody)
     try {
-      const response = await fetchJson<ApiResponseType<'POST /users'>>(apiUrl, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+      const response = await fetchServer<ApiResponseType<'POST /users'>>(
+        apiUrl,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
         },
-        body: JSON.stringify(requestBody),
-      })
+      )
       if (!response.success) {
         return createErrorResponse(
           'INTERNAL_ERROR',

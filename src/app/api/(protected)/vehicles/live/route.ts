@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { buildURL } from '@/lib/api/utils'
 import { withAuth } from '@/lib/actions/auth'
-import { fetchJson } from '@/lib/api/fetch'
+import { fetchServer } from '@/lib/api/fetch-server'
 import type { ApiResponseType, ApiRequestType } from '@/types/api'
 import {
   createErrorResponse,
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
         // 원본 서버가 SSE를 지원하기 전까지 폴링 방식을 취한다.
         const pollInterval = setInterval(async () => {
           try {
-            const response = await fetchJson(apiUrl, {
+            const response = await fetchServer(apiUrl, {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',

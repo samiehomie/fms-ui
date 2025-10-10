@@ -9,7 +9,7 @@ import {
 } from '@/constants/auth'
 import { buildURL } from '@/lib/api/utils'
 import type { ApiResponseType, ApiRequestType } from '@/types/api'
-import { fetchJson } from '../api/fetch'
+import { fetchServer } from '../api/fetch-server'
 import type { JWTAuthPayload } from '@/types/api'
 import { redirect } from 'next/navigation'
 import { parseJWT } from '@/lib/api/utils'
@@ -25,7 +25,7 @@ export async function loginAction(
   const apiUrl = buildURL('/auth/login')
 
   try {
-    const response = await fetchJson<ApiResponseType<'POST /auth/login'>>(
+    const response = await fetchServer<ApiResponseType<'POST /auth/login'>>(
       apiUrl,
       {
         method: 'POST',
@@ -55,7 +55,7 @@ export async function logOutAction() {
     const accessToken = cookieStore.get(AUTH_TOKEN_COOKIE_NAME)?.value
 
     // TODO: API - 세션 하이브리드 방식이라 토큰 무효화 시키려면 로그아웃 동작 구현해야함 현재 없음
-    const response = await fetchJson<ApiResponseType<'POST /auth/logout'>>(
+    const response = await fetchServer<ApiResponseType<'POST /auth/logout'>>(
       apiUrl,
       {
         method: 'POST',
@@ -104,7 +104,7 @@ export async function refreshTokenIfNeeded(
       refreshToken,
     }
 
-    const result = await fetchJson<ApiResponseType<'POST /auth/refresh'>>(
+    const result = await fetchServer<ApiResponseType<'POST /auth/refresh'>>(
       apiUrl,
       {
         method: 'POST',

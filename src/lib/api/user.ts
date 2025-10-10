@@ -1,4 +1,4 @@
-import { fetchJson } from '@/lib/api/fetch'
+import { fetchServer } from '@/lib/api/fetch-server'
 import type { ApiRequestType, ApiResponseType } from '@/types/api'
 import { ApiSuccessResponse } from '@/types/api/route.types'
 import type { UsersPaginationParams } from '@/types/api/user.types'
@@ -16,7 +16,7 @@ export const usersApi = {
         limit: params.limit.toString(),
       })
 
-    const response = await fetchJson<
+    const response = await fetchServer<
       ApiSuccessResponse<ApiResponseType<'GET /users'>>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/users?${searchParams}`,
@@ -38,7 +38,7 @@ export const usersApi = {
   createUser: async (
     user: ApiRequestType<'POST /users'>,
   ): Promise<ApiSuccessResponse<ApiResponseType<'POST /users'>>> => {
-    const response = await fetchJson<
+    const response = await fetchServer<
       ApiSuccessResponse<ApiResponseType<'POST /users'>>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/users`, {
       method: 'POST',
@@ -56,7 +56,7 @@ export const usersApi = {
   },
 
   verifyUser: async (verified: ApiRequestType<'POST /users/verify'>) => {
-    const response = await fetchJson<
+    const response = await fetchServer<
       ApiSuccessResponse<ApiResponseType<'POST /users/verify'>>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/users/verify`, {
       method: 'POST',

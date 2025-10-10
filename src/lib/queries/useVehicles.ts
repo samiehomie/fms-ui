@@ -40,15 +40,15 @@ export function useCreateVehicle() {
   const queryClient = useQueryClient()
   return useMutation<CreateVehicleResponse, Error, CreateVehicleRequest>({
     mutationFn: async (newVehicle) => {
-      const { data } = await vehiclesApi.createVehicle(newVehicle)
-      return data
+      const res = await vehiclesApi.createVehicle(newVehicle)
+      return res
     },
-    onSuccess: (data) => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries({
         queryKey: ['vehicles'],
       })
       toast.success('A new vehicle added', {
-        description: `${data.vehicle.vehicle_name}`,
+        description: `${res.data.vehicleName}`,
         position: 'bottom-center',
       })
     },
@@ -69,8 +69,8 @@ export function useDeleteVehicle() {
     ApiParamsType<'DELETE /vehicles/{id}'>
   >({
     mutationFn: async (deleteParams) => {
-      const { data } = await vehiclesApi.deleteVehicle(deleteParams.id)
-      return data
+      const res = await vehiclesApi.deleteVehicle(deleteParams.id)
+      return res
     },
     onSuccess: () => {
       // 회사 목록 쿼리 무효화
@@ -98,13 +98,13 @@ export function useUpdateVehicle(id: number) {
     ApiRequestType<'PUT /vehicles/{id}'>
   >({
     mutationFn: async (vehicle) => {
-      const { data } = await vehiclesApi.updateVehicle(
+      const res = await vehiclesApi.updateVehicle(
         { id: id.toString() },
         vehicle,
       )
-      return data
+      return res
     },
-    onSuccess: (data) => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries({
         queryKey: ['vehicles'],
       })
@@ -112,7 +112,7 @@ export function useUpdateVehicle(id: number) {
         queryKey: ['vehicle', id],
       })
       toast.success('A new vehicle added', {
-        description: `${data.vehicle.vehicle_name}`,
+        description: `${res.data.vehicleName}`,
         position: 'bottom-center',
       })
     },
@@ -133,8 +133,8 @@ export function useRestoreVehicle() {
     ApiParamsType<'PATCH /vehicles/{id}/restore'>
   >({
     mutationFn: async (restoreParams) => {
-      const { data } = await vehiclesApi.restoreVehicle(restoreParams.id)
-      return data
+      const res = await vehiclesApi.restoreVehicle(restoreParams.id)
+      return res
     },
     onSuccess: () => {
       // 회사 목록 쿼리 무효화
@@ -189,7 +189,7 @@ export function useVehicleTripDetailsBatch(tripIds: number[]) {
     tripIds.forEach((tripId, index) => {
       const query = queries[index]
       if (query?.data) {
-        result[tripId] = query.data.data
+        result[tripId] = query.data
       }
     })
 

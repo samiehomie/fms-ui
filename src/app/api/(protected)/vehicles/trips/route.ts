@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import type { ApiResponseType } from '@/types/api'
 import { withAuth } from '@/lib/actions/auth'
-import { fetchJson } from '@/lib/api/fetch'
+import { fetchServer } from '@/lib/api/fetch-server'
 import { buildURL } from '@/lib/api/utils'
 import {
   createErrorResponse,
@@ -11,7 +11,7 @@ import {
 // 공통 API 호출 함수
 async function fetchTripsData(apiUrl: string, token: string) {
   try {
-    const response = await fetchJson(apiUrl, {
+    const response = await fetchServer(apiUrl, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',

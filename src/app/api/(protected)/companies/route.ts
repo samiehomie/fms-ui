@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import type { ApiResponseType, ApiRequestType } from '@/types/api'
 import { withAuth } from '@/lib/actions/auth'
-import { fetchJson } from '@/lib/api/fetch'
+import { fetchServer } from '@/lib/api/fetch-server'
 import { buildURL } from '@/lib/api/utils'
 import {
   createErrorResponse,
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
             search,
           })
     try {
-      const response = await fetchJson<ApiResponseType<'GET /companies'>>(
+      const response = await fetchServer<ApiResponseType<'GET /companies'>>(
         apiUrl,
         {
           headers: {
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     const requestBody = await request.json()
     logger.log('post companies', requestBody)
     try {
-      const response = await fetchJson<ApiResponseType<'POST /companies'>>(
+      const response = await fetchServer<ApiResponseType<'POST /companies'>>(
         apiUrl,
         {
           method: 'POST',
@@ -103,7 +103,7 @@ export async function DELETE(request: NextRequest) {
     const apiUrl = buildURL(`/companies/${id}`)
 
     try {
-      const response = await fetchJson<ApiResponseType<'DELETE /companies'>>(
+      const response = await fetchServer<ApiResponseType<'DELETE /companies'>>(
         apiUrl,
         {
           method: 'DELETE',
@@ -142,7 +142,7 @@ export async function PUT(request: NextRequest) {
     const requestBody = await request.json()
 
     try {
-      const response = await fetchJson<ApiResponseType<'PUT /companies'>>(
+      const response = await fetchServer<ApiResponseType<'PUT /companies'>>(
         apiUrl,
         {
           method: 'PUT',
@@ -182,7 +182,7 @@ export async function PATCH(request: NextRequest) {
     const requestBody = (await request.json()) as { verified: boolean }
 
     try {
-      const response = await fetchJson<
+      const response = await fetchServer<
         ApiResponseType<'PATCH /companies/{id}/verify'>
       >(apiUrl, {
         method: 'PATCH',

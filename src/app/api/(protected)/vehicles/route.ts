@@ -1,14 +1,14 @@
 import { NextRequest } from 'next/server'
 import type { ApiResponseType } from '@/types/api'
 import { withAuth } from '@/lib/actions/auth'
-import { fetchJson } from '@/lib/api/fetch'
+import { fetchServer } from '@/lib/api/fetch-server'
 import { buildURL } from '@/lib/api/utils'
 import {
   createErrorResponse,
   createSuccessResponse,
 } from '@/lib/route/route.heplers'
 
-// TODO: authorization 방식 말고 쿠키 검증방식으로 할 것 
+// TODO: authorization 방식 말고 쿠키 검증방식으로 할 것
 
 export async function GET(request: NextRequest) {
   return await withAuth(async (accessToken) => {
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
             includeDeleted,
           })
     try {
-      const response = await fetchJson<ApiResponseType<'GET /vehicles'>>(
+      const response = await fetchServer<ApiResponseType<'GET /vehicles'>>(
         apiUrl,
         {
           headers: {
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     const apiUrl = buildURL(`/vehicles`)
     const requestBody = await request.json()
     try {
-      const response = await fetchJson<ApiResponseType<'POST /vehicles'>>(
+      const response = await fetchServer<ApiResponseType<'POST /vehicles'>>(
         apiUrl,
         {
           method: 'POST',
@@ -108,7 +108,7 @@ export async function DELETE(request: NextRequest) {
     const apiUrl = buildURL(`/vehicles/${id}`)
 
     try {
-      const response = await fetchJson<
+      const response = await fetchServer<
         ApiResponseType<'DELETE /vehicles/{id}'>
       >(apiUrl, {
         method: 'DELETE',
@@ -121,6 +121,7 @@ export async function DELETE(request: NextRequest) {
         return createErrorResponse(
           'INTERNAL_ERROR',
           'Failed to delete vehicle from external API',
+          response.error.status,
         )
       }
       return createSuccessResponse(
@@ -144,7 +145,7 @@ export async function PATCH(request: NextRequest) {
     const apiUrl = buildURL(`/vehicles/${id}/restore`)
 
     try {
-      const response = await fetchJson<
+      const response = await fetchServer<
         ApiResponseType<'PATCH /vehicles/{id}/restore'>
       >(apiUrl, {
         method: 'PATCH',
@@ -182,7 +183,7 @@ export async function PUT(request: NextRequest) {
     const requestBody = await request.json()
 
     try {
-      const response = await fetchJson<ApiResponseType<'PUT /vehicles/{id}'>>(
+      const response = await fetchServer<ApiResponseType<'PUT /vehicles/{id}'>>(
         apiUrl,
         {
           method: 'PUT',

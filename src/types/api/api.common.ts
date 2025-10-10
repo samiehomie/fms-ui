@@ -1,8 +1,8 @@
-import { FetchJsonResult, FetchJsonError } from '@/lib/api/fetch'
+import { FetchServerResult, FetchError } from '@/lib/api/fetch-server'
 
-export type ApiResponse<T = any> = FetchJsonResult<T>
+export type ApiResponse<T = any> = FetchServerResult<T>
 
-export type ApiError = FetchJsonError
+export type ApiError = FetchError
 
 export interface PaginationParams {
   page: number
@@ -37,8 +37,6 @@ export type PaginatedResponseWithKey<T, K extends string> = {
 } & {
   pagination: PaginationMeta
 }
-
-
 
 // HTTP 메서드별 타입 헬퍼
 export type ApiRequest<T = any> = T

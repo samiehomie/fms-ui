@@ -1,4 +1,4 @@
-import { fetchJson } from '@/lib/api/fetch'
+import { fetchServer } from '@/lib/api/fetch-server'
 import type { ApiRequestType, ApiResponseType } from '@/types/api'
 import type {
   CompaniesPaginationParams,
@@ -24,7 +24,7 @@ export const companiesApi = {
         ...(params.search && { search: params.search }),
       })
 
-    const response = await fetchJson<
+    const response = await fetchServer<
       ApiSuccessResponse<ApiResponseType<'GET /companies'>>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?${
@@ -43,7 +43,7 @@ export const companiesApi = {
     id: number,
     cookie?: string,
   ): Promise<ApiSuccessResponse<ApiResponseType<'GET /companies/{id}'>>> => {
-    const response = await fetchJson<
+    const response = await fetchServer<
       ApiSuccessResponse<ApiResponseType<'GET /companies/{id}'>>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`,
@@ -75,7 +75,7 @@ export const companiesApi = {
   createCompany: async (
     company: ApiRequestType<'POST /companies'>,
   ): Promise<ApiSuccessResponse<ApiResponseType<'POST /companies'>>> => {
-    const response = await fetchJson<
+    const response = await fetchServer<
       ApiSuccessResponse<ApiResponseType<'POST /companies'>>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies`, {
       method: 'POST',
@@ -96,7 +96,7 @@ export const companiesApi = {
   deleteCompany: async (
     id: number,
   ): Promise<ApiSuccessResponse<ApiResponseType<'DELETE /companies'>>> => {
-    const response = await fetchJson<
+    const response = await fetchServer<
       ApiSuccessResponse<ApiResponseType<'DELETE /companies'>>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies`, {
       method: 'DELETE',
@@ -117,7 +117,7 @@ export const companiesApi = {
     id: number,
     company: ApiRequestType<'PUT /companies'>,
   ) => {
-    const response = await fetchJson<
+    const response = await fetchServer<
       ApiSuccessResponse<ApiResponseType<'POST /companies'>>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`, {
       method: 'PUT',
@@ -138,7 +138,7 @@ export const companiesApi = {
     id: number,
     verified: ApiRequestType<'PATCH /companies/{id}/verify'>,
   ) => {
-    const response = await fetchJson<
+    const response = await fetchServer<
       ApiSuccessResponse<ApiResponseType<'PATCH /companies/{id}/verify'>>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`, {
       method: 'PATCH',

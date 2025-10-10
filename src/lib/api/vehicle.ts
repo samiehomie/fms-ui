@@ -1,38 +1,33 @@
-import { fetchJson } from '@/lib/api/fetch'
 import type {
   ApiRequestType,
   ApiResponseType,
   ApiParamsType,
 } from '@/types/api'
-import { ApiSuccessResponse } from '@/types/api/route.types'
 import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
 import { buildSearchParams } from './utils'
-import { fetchApi } from './fetch-client'
+import { fetchClient } from './fetch-client'
 
 export const vehiclesApi = {
   getVehicleById: async (body: ApiRequestType<'POST /vehicles/get'>) => {
-    const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'POST /vehicles/get'>>
-    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/get`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetchClient<ApiResponseType<'POST /vehicles/get'>>(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/get`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
       },
-      body: JSON.stringify(body),
-    })
+    )
 
-    if (!response.success) {
-      throw new Error('Failed to update a vehicle')
-    }
-
-    return response.data
+    return response
   },
   getVehiclesPaginated: async (
     params: ApiParamsType<'GET /vehicles'>,
     cookie?: string,
   ): Promise<ApiResponseType<'GET /vehicles'>> => {
     const searchParams = buildSearchParams(params)
-    const response = await fetchApi<ApiResponseType<'GET /vehicles'>>(
+    const response = await fetchClient<ApiResponseType<'GET /vehicles'>>(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles?${searchParams}`,
       cookie
         ? {
@@ -40,35 +35,30 @@ export const vehiclesApi = {
               Cookie: cookie,
             },
           }
-        : {},
+        : undefined,
     )
 
     return response
   },
-  createVehicle: async (
-    vehicle: ApiRequestType<'POST /vehicles'>,
-  ): Promise<ApiSuccessResponse<ApiResponseType<'POST /vehicles'>>> => {
-    const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'POST /vehicles'>>
-    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+  createVehicle: async (vehicle: ApiRequestType<'POST /vehicles'>) => {
+    const response = await fetchClient<ApiResponseType<'POST /vehicles'>>(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(vehicle),
       },
-      body: JSON.stringify(vehicle),
-    })
+    )
 
-    if (!response.success) {
-      throw new Error('Failed to create vehicle')
-    }
-
-    return response.data
+    return response
   },
   deleteVehicle: async (
     id: string,
-  ): Promise<ApiSuccessResponse<ApiResponseType<'DELETE /vehicles/{id}'>>> => {
-    const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'DELETE /vehicles/{id}'>>
+  ): Promise<ApiResponseType<'DELETE /vehicles/{id}'>> => {
+    const response = await fetchClient<
+      ApiResponseType<'DELETE /vehicles/{id}'>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles`, {
       method: 'DELETE',
       headers: {
@@ -76,19 +66,13 @@ export const vehiclesApi = {
       },
       body: id,
     })
-
-    if (!response.success) {
-      throw new Error('Failed to delete vehicle')
-    }
-    return response.data
+    return response
   },
   restoreVehicle: async (
     id: string,
-  ): Promise<
-    ApiSuccessResponse<ApiResponseType<'PATCH /vehicles/{id}/restore'>>
-  > => {
-    const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'PATCH /vehicles/{id}/restore'>>
+  ): Promise<ApiResponseType<'PATCH /vehicles/{id}/restore'>> => {
+    const response = await fetchClient<
+      ApiResponseType<'PATCH /vehicles/{id}/restore'>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles`, {
       method: 'PATCH',
       headers: {
@@ -97,37 +81,30 @@ export const vehiclesApi = {
       body: id,
     })
 
-    if (!response.success) {
-      throw new Error('Failed to restore vehicle')
-    }
-    return response.data
+    return response
   },
   updateVehicle: async (
     params: ApiParamsType<'PUT /vehicles/{id}'>,
     body: ApiRequestType<'PUT /vehicles/{id}'>,
   ) => {
-    const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'PUT /vehicles/{id}'>>
-    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles?id=${params.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetchClient<ApiResponseType<'PUT /vehicles/{id}'>>(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles?id=${params.id}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
       },
-      body: JSON.stringify(body),
-    })
+    )
 
-    if (!response.success) {
-      throw new Error('Failed to update vehicle')
-    }
-    return response.data
+    return response
   },
   // 페이지네이션된 회사 목록 조회
   getVehiclesByCompanyIdPaginated: async (
     params: ApiParamsType<'GET /vehicles/company/{company_id}'>,
     id: number,
-  ): Promise<
-    ApiSuccessResponse<ApiResponseType<'GET /vehicles/company/{company_id}'>>
-  > => {
+  ) => {
     const searchParams =
       params &&
       new URLSearchParams({
@@ -135,74 +112,46 @@ export const vehiclesApi = {
         limit: params.limit.toString(),
       })
 
-    const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'GET /vehicles/company/{company_id}'>>
+    const response = await fetchClient<
+      ApiResponseType<'GET /vehicles/company/{company_id}'>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies/vehicles?id=${id}&${searchParams}`,
     )
 
-    if (!response.success) {
-      throw new Error('Failed to fetch vehicles')
-    }
-
-    return response.data
+    return response
   },
   getVehicleTripsByVehicleIdPaginated: async (
     params: ApiParamsType<'GET /vehicles/trips/vehicle/{vehicle_id}'>,
-  ): Promise<
-    ApiSuccessResponse<
-      ApiResponseType<'GET /vehicles/trips/vehicle/{vehicle_id}'>
-    >
-  > => {
+  ) => {
     const searchParams = buildSearchParams(params)
 
-    const response = await fetchJson<
-      ApiSuccessResponse<
-        ApiResponseType<'GET /vehicles/trips/vehicle/{vehicle_id}'>
-      >
+    const response = await fetchClient<
+      ApiResponseType<'GET /vehicles/trips/vehicle/{vehicle_id}'>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/trips?id=${params.id}&${searchParams}`,
     )
 
-    if (!response.success) {
-      throw new Error('Failed to fetch trips')
-    }
-
-    return response.data
+    return response
   },
 
   getVehicleTripsByTripId: async (
     params: ApiParamsType<'GET /vehicles/trips/{id}'>,
-  ): Promise<
-    ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/{id}'>>
-  > => {
-    const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips/{id}'>>
+  ) => {
+    const response = await fetchClient<
+      ApiResponseType<'GET /vehicles/trips/{id}'>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/trips/details?id=${params.tripId}`,
     )
 
-    if (!response.success) {
-      throw new Error('Failed to fetch trips')
-    }
-
-    return response.data
+    return response
   },
 
-  getAllVehicleTrips: async (
-    params: VehicleTripsPaginationParams,
-  ): Promise<ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips'>>> => {
+  getAllVehicleTrips: async (params: VehicleTripsPaginationParams) => {
     const searchParams = buildSearchParams(params)
-    const response = await fetchJson<
-      ApiSuccessResponse<ApiResponseType<'GET /vehicles/trips'>>
-    >(
+    const response = await fetchClient<ApiResponseType<'GET /vehicles/trips'>>(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/trips?type=all&${searchParams}`,
     )
 
-    if (!response.success) {
-      throw new Error('Failed to fetch trips')
-    }
-
-    return response.data
+    return response
   },
 }

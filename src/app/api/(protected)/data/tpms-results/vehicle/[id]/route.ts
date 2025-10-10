@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { withAuth } from '@/lib/actions/auth'
-import { fetchJson } from '@/lib/api/fetch'
+import { fetchServer } from '@/lib/api/fetch-server'
 import { buildURL } from '@/lib/api/utils'
 import {
   createErrorResponse,
@@ -28,7 +28,7 @@ export async function GET(
     })
 
     try {
-      const response = await fetchJson<TPMSResultsResponse>(apiUrl, {
+      const response = await fetchServer<TPMSResultsResponse>(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',

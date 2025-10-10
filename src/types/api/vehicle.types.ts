@@ -178,25 +178,23 @@ export interface VehiclesByCompanyIdPaginationParams {
 }
 
 export interface VehicleCreateRequest {
-  vehicle: {
-    vehicle_name: string
-    plate_number: string
-    brand: string
-    model: string
-    manuf_year: number
-    can_bitrate: string
-    fuel_type: string
-    gear_type: string
-    num_tire: number
-    company_name: string
-  }
+  vehicleName: string
+  plateNumber: string
+  brand: string
+  model: string
+  manufactureYear: number
+  canBitrate: string
+  fuelType: FuelType
+  gearType: GearType
+  numTire: number
+  companyId: number
 }
 
 export interface VehicleCreateResponse {
   message: string
-  vehicle: {
+  data: {
     id: number
-    vehicle_name: string
+    vehicleName: string
     plate_number: string
     brand: string
     model: string
@@ -402,7 +400,7 @@ export interface VehicleRequest {
   }
 }
 
-export type VehicleResponse = VehicleCreateResponse['vehicle']
+export type VehicleResponse = VehicleCreateResponse['data']
 
 export type VehicleUpdateResponse = VehicleCreateResponse
 

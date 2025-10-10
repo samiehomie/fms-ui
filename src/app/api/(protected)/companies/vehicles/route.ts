@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import type { ApiResponseType, ApiRequestType } from '@/types/api'
 import { withAuth } from '@/lib/actions/auth'
-import { fetchJson } from '@/lib/api/fetch'
+import { fetchServer } from '@/lib/api/fetch-server'
 import { buildURL } from '@/lib/api/utils'
 import {
   createErrorResponse,
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     const apiUrl = buildURL(`/vehicles/company/${id}`, { page, limit })
     try {
-      const response = await fetchJson<
+      const response = await fetchServer<
         ApiResponseType<'GET /vehicles/company/{company_id}'>
       >(apiUrl, {
         headers: {
