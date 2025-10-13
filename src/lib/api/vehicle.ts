@@ -4,20 +4,14 @@ import type {
   ApiParamsType,
 } from '@/types/api'
 import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
-import { buildSearchParams } from './utils'
+import { buildSearchParams, buildURL } from './utils'
 import { fetchClient } from './fetch-client'
 
 export const vehiclesApi = {
-  getVehicleById: async (body: ApiRequestType<'POST /vehicles/get'>) => {
-    const response = await fetchClient<ApiResponseType<'POST /vehicles/get'>>(
-      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/get`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      },
+  getVehicleById: async (params: ApiParamsType<'GET /vehicles/{id}'>) => {
+    const searchParams = buildSearchParams(params)
+    const response = await fetchClient<ApiResponseType<'GET /vehicles/{id}'>>(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles?${searchParams}`,
     )
 
     return response
@@ -25,10 +19,11 @@ export const vehiclesApi = {
   getVehiclesPaginated: async (
     params: ApiParamsType<'GET /vehicles'>,
   ): Promise<ApiResponseType<'GET /vehicles'>> => {
-    const searchParams = buildSearchParams(params)
-    const response = await fetchClient<ApiResponseType<'GET /vehicles'>>(
-      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles?${searchParams}`,
+    const apiUrl = buildURL(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles`,
+      params,
     )
+    const response = await fetchClient<ApiResponseType<'GET /vehicles'>>(apiUrl)
 
     return response
   },

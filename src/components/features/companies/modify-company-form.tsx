@@ -139,7 +139,7 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: number }) {
   useEffect(() => {
     const errors = form.formState.errors
     if (Object.keys(errors).length > 0) {
-      console.log('Form validation errors:', errors)
+      // console.log('Form validation errors:', errors)
     }
   }, [form.formState.errors])
 

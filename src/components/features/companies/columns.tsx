@@ -70,7 +70,7 @@ export const columns: ColumnDef<Company>[] = [
   //   ),
   // },
   { accessorKey: 'name', header: 'Company' },
-  { accessorKey: 'reg_number', header: 'Reg No' },
+  { accessorKey: 'regNumber', header: 'Reg No' },
   {
     accessorKey: 'type',
     header: ({ column }) => (
@@ -121,7 +121,7 @@ export const columns: ColumnDef<Company>[] = [
     },
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'createdAt',
     header: ({ column }) => (
       <Button
         variant={'ghost'}
@@ -133,7 +133,7 @@ export const columns: ColumnDef<Company>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const createdAt = row.getValue('created_at') as string
+      const createdAt = row.getValue('createdAt') as string
       return (
         <div className="flex justify-center tracking-tight">
           {formatDateTime(createdAt)}

@@ -6,20 +6,21 @@ import { useCompaniesPaginated } from '@/lib/queries/useCompanies'
 import { columns } from '@/components/features/companies/columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'
+import type { ApiParamsType } from '@/types/api'
 
 const CompaniesContent = () => {
-  const [pageParams, setPageParams] = useState<CompaniesPaginationParams>({
-    page: 1,
-    limit: 10,
-    search: '',
-    verified: true,
-    // sort: 'created_at',
-    // order: 'desc' as const,
-  })
-  logger.log('page', pageParams)
-  const { data, isLoading } = useCompaniesPaginated(pageParams)
+  const [pageParams, setPageParams] = useState<ApiParamsType<'GET /companies'>>(
+    {
+      page: 1,
+      limit: 10,
+      search: '',
+      verified: true,
+    },
+  )
 
-  if (isLoading || !data) {
+  const { data: companiesData, isLoading } = useCompaniesPaginated(pageParams)
+
+  if (isLoading || !companiesData) {
     return (
       <div className="mt-10 flex flex-col gap-y-2">
         <Skeleton className="w-full h-10" />
@@ -34,10 +35,10 @@ const CompaniesContent = () => {
       <DataTableHeader setPagination={setPageParams} pagination={pageParams} />
       <DataTable
         columns={columns}
-        data={data.data.companies}
+        data={companiesData.data}
         pagination={pageParams}
         setPagination={setPageParams}
-        totalCount={data.data.pagination.total}
+        totalCount={companiesData.pagination.total}
       />
     </div>
   )

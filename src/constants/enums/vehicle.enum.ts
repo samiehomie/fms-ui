@@ -14,3 +14,10 @@ export enum GearType {
   CVT = 'cvt',
   AMT = 'amt',
 }
+
+export enum CanBitrateType {
+  '125Kbps' = '125 Kbps',
+  '250Kbps' = '250 Kbps',
+  '500Kbps' = '500 Kbps',
+  '1Mbps' = '1 Mbps',
+}

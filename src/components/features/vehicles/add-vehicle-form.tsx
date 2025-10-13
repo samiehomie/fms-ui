@@ -41,9 +41,14 @@ import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
 import { useCreateVehicle } from '@/lib/queries/useVehicles'
 import { IconPlus } from '@tabler/icons-react'
-import { GearType, FuelType } from '@/constants/enums/vehicle.enum'
+import {
+  GearType,
+  FuelType,
+  CanBitrateType,
+} from '@/constants/enums/vehicle.enum'
 import { useAuth } from '../auth/auth-provider'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useCompaniesPaginated } from '@/lib/queries/useCompanies'
 
 const vehicleSchema = z.object({
   vehicleName: z.string().min(1, 'Vehicle name is required'),
@@ -71,6 +76,12 @@ const vehicleSchema = z.object({
 type VehicleFormData = z.infer<typeof vehicleSchema>
 
 function VehicleForm({ onClose }: { onClose: () => void }) {
+  const { data: companiesData, isLoading: companiesLoading } =
+    useCompaniesPaginated({
+      page: 1,
+      limit: 100,
+      search: '',
+    })
   const { user, isLoading } = useAuth()
   const mutation = useCreateVehicle()
   const form = useForm<VehicleFormData>({
@@ -95,13 +106,20 @@ function VehicleForm({ onClose }: { onClose: () => void }) {
       form.reset()
       onClose()
     } catch (error) {
+      console.log('mutation', error)
       // Error is handled in the mutation
     }
   }
 
-  if (isLoading) return <Skeleton className="h-10 w-10" />
-
-  // TODO: 회사 정보를 가져와서 select 컴포넌트 구성하기
+  if (companiesLoading || isLoading) {
+    return (
+      <div className="min-h-[51.125rem]  flex flex-col gap-y-4 overflow-y-hidden">
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+      </div>
+    )
+  }
 
   return (
     <Form {...form}>
@@ -291,49 +309,56 @@ function VehicleForm({ onClose }: { onClose: () => void }) {
               name="canBitrate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>CAN Bitrate</FormLabel>
+                  <FormLabel>Can Bitrate</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl className="w-full">
                       <SelectTrigger>
-                        <SelectValue placeholder="Select CAN bitrate" />
+                        <SelectValue placeholder="Select gear type" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="125kbps">125 kbps</SelectItem>
-                      <SelectItem value="250kbps">250 kbps</SelectItem>
-                      <SelectItem value="500kbps">500 kbps</SelectItem>
-                      <SelectItem value="1Mbps">1 Mbps</SelectItem>
+                      {Object.values(CanBitrateType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="companyId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Company Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Associated company"
-                      {...field}
-                      onChange={(e) => {
-                        const value = e.target.value
-                        if (value !== '') {
-                          const numValue = parseInt(value)
-                          if (!isNaN(numValue)) {
-                            field.onChange(numValue)
-                          }
-                        }
-                      }}
-                    />
-                  </FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={`${field.value}`}
+                  >
+                    <FormControl className="w-full">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select gear type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {companiesData?.data.map((company) => (
+                        <SelectItem key={company.id} value={`${company.id}`}>
+                          {company.name}
+                        </SelectItem>
+                      ))}
+                      {/* {Object.values(CanBitrateType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))} */}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

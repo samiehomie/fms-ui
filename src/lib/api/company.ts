@@ -1,49 +1,34 @@
-import { fetchServer } from '@/lib/api/fetch-server'
-import type { ApiRequestType, ApiResponseType } from '@/types/api'
 import type {
-  CompaniesPaginationParams,
-  Company,
-} from '@/types/api/company.types'
+  ApiRequestType,
+  ApiResponseType,
+  ApiParamsType,
+} from '@/types/api'
+import type { Company } from '@/types/api/company.types'
 import { ApiSuccessResponse } from '@/types/api/route.types'
+import { fetchClient } from './fetch-client'
+import { buildURL } from './utils'
 
 export const companiesApi = {
   // 페이지네이션된 회사 목록 조회
   getCompaniesPaginated: async (
-    params?: CompaniesPaginationParams,
-    id?: number,
-  ): Promise<ApiSuccessResponse<ApiResponseType<'GET /companies'>>> => {
-    const searchParams =
-      params &&
-      new URLSearchParams({
-        page: params.page.toString(),
-        limit: params.limit.toString(),
-        ...(typeof params.verified === 'boolean' && {
-          verified: `${params.verified}`,
-        }),
-        ...(params.type && { type: params.type }),
-        ...(params.search && { search: params.search }),
-      })
-
-    const response = await fetchServer<
-      ApiSuccessResponse<ApiResponseType<'GET /companies'>>
-    >(
-      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?${
-        typeof id === 'number' ? `id=${id}` : searchParams
-      }`,
+    params: ApiParamsType<'GET /companies'>,
+  ): Promise<ApiResponseType<'GET /companies'>> => {
+    const apiUrl = buildURL(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies`,
+      params,
     )
 
-    if (!response.success) {
-      throw new Error('Failed to fetch companies')
-    }
-
-    return response.data
+    const response = await fetchClient<ApiResponseType<'GET /companies'>>(
+      apiUrl,
+    )
+    return response
   },
 
   getCompanyById: async (
     id: number,
     cookie?: string,
   ): Promise<ApiSuccessResponse<ApiResponseType<'GET /companies/{id}'>>> => {
-    const response = await fetchServer<
+    const response = await fetchClient<
       ApiSuccessResponse<ApiResponseType<'GET /companies/{id}'>>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`,
@@ -60,22 +45,22 @@ export const companiesApi = {
       throw new Error('Failed to fetch companies')
     }
 
-    return response.data
+    return response
   },
 
   // 회사 배열만 추출하는 헬퍼 함수
-  getCompaniesArray: async (
-    params: CompaniesPaginationParams,
-  ): Promise<Company[]> => {
-    const response = await companiesApi.getCompaniesPaginated(params)
-    return response.data.companies
-  },
+  // getCompaniesArray: async (
+  //   params: CompaniesPaginationParams,
+  // ): Promise<Company[]> => {
+  //   const response = await companiesApi.getCompaniesPaginated(params)
+  //   return response.data.companies
+  // },
 
   // 새 회사 추가
   createCompany: async (
     company: ApiRequestType<'POST /companies'>,
   ): Promise<ApiSuccessResponse<ApiResponseType<'POST /companies'>>> => {
-    const response = await fetchServer<
+    const response = await fetchClient<
       ApiSuccessResponse<ApiResponseType<'POST /companies'>>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies`, {
       method: 'POST',
@@ -89,14 +74,14 @@ export const companiesApi = {
       throw new Error('Failed to create company')
     }
 
-    return response.data
+    return response
   },
 
   // 회사 삭제
   deleteCompany: async (
     id: number,
   ): Promise<ApiSuccessResponse<ApiResponseType<'DELETE /companies'>>> => {
-    const response = await fetchServer<
+    const response = await fetchClient<
       ApiSuccessResponse<ApiResponseType<'DELETE /companies'>>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies`, {
       method: 'DELETE',
@@ -110,14 +95,14 @@ export const companiesApi = {
       throw new Error('Failed to delete company')
     }
 
-    return response.data
+    return response
   },
 
   modifyCompany: async (
     id: number,
     company: ApiRequestType<'PUT /companies'>,
   ) => {
-    const response = await fetchServer<
+    const response = await fetchClient<
       ApiSuccessResponse<ApiResponseType<'POST /companies'>>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`, {
       method: 'PUT',
@@ -138,7 +123,7 @@ export const companiesApi = {
     id: number,
     verified: ApiRequestType<'PATCH /companies/{id}/verify'>,
   ) => {
-    const response = await fetchServer<
+    const response = await fetchClient<
       ApiSuccessResponse<ApiResponseType<'PATCH /companies/{id}/verify'>>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`, {
       method: 'PATCH',

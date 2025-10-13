@@ -44,7 +44,6 @@ export async function GET(request: NextRequest) {
       )
 
       if (!response.success) {
-        console.log('all vehicles error--->>', response.error)
         return createErrorResponse(
           response.error.type,
           response.error.message,
@@ -85,8 +84,9 @@ export async function POST(request: NextRequest) {
       )
       if (!response.success) {
         return createErrorResponse(
-          'INTERNAL_ERROR',
-          'Failed to create a vehicle from external API',
+          response.error.type,
+          response.error.message,
+          response.error.status,
         )
       }
       return createSuccessResponse(
@@ -143,44 +143,44 @@ export async function DELETE(request: NextRequest) {
   })
 }
 
+// export async function PATCH(request: NextRequest) {
+//   return await withAuth(async (accessToken) => {
+//     const id = (await request.json()) as string
+//     const apiUrl = buildURL(`/vehicles/${id}/restore`)
+
+//     try {
+//       const response = await fetchServer<
+//         ApiResponseType<'PATCH /vehicles/{id}/restore'>
+//       >(apiUrl, {
+//         method: 'PATCH',
+//         headers: {
+//           Authorization: `Bearer ${accessToken}`,
+//           'Content-Type': 'application/json',
+//         },
+//       })
+//       if (!response.success) {
+//         return createErrorResponse(
+//           'INTERNAL_ERROR',
+//           'Failed to restore vehicle from external API',
+//         )
+//       }
+//       return createSuccessResponse(
+//         response.data,
+//         response?.pagination,
+//         response?.message ?? 'A vehicle retored successfully',
+//       )
+//     } catch (err) {
+//       logger.error('Error restoring a vehicle:', err)
+
+//       return createErrorResponse(
+//         'INTERNAL_ERROR',
+//         'An unexpected error occurred while restoring a vehicle',
+//       )
+//     }
+//   })
+// }
+
 export async function PATCH(request: NextRequest) {
-  return await withAuth(async (accessToken) => {
-    const id = (await request.json()) as string
-    const apiUrl = buildURL(`/vehicles/${id}/restore`)
-
-    try {
-      const response = await fetchServer<
-        ApiResponseType<'PATCH /vehicles/{id}/restore'>
-      >(apiUrl, {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      })
-      if (!response.success) {
-        return createErrorResponse(
-          'INTERNAL_ERROR',
-          'Failed to restore vehicle from external API',
-        )
-      }
-      return createSuccessResponse(
-        response.data,
-        response?.pagination,
-        response?.message ?? 'A vehicle retored successfully',
-      )
-    } catch (err) {
-      logger.error('Error restoring a vehicle:', err)
-
-      return createErrorResponse(
-        'INTERNAL_ERROR',
-        'An unexpected error occurred while restoring a vehicle',
-      )
-    }
-  })
-}
-
-export async function PUT(request: NextRequest) {
   return await withAuth(async (accessToken) => {
     const searchParams = request.nextUrl.searchParams
     const id = searchParams.get('id')
@@ -201,8 +201,9 @@ export async function PUT(request: NextRequest) {
       )
       if (!response.success) {
         return createErrorResponse(
-          'INTERNAL_ERROR',
-          'Failed to update vehicle from external API',
+          response.error.type,
+          response.error.message,
+          response.error.status,
         )
       }
       return createSuccessResponse(

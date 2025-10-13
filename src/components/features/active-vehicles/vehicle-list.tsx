@@ -42,7 +42,7 @@ export function VehicleList({
     return 'Active'
   }
 
-  console.log('vehicles', vehicles)
+  // console.log('vehicles', vehicles)
   return (
     <Card className="h-full shadow-none border-none">
       <CardHeader>

@@ -105,7 +105,12 @@ export interface VehicleReference {
   deletedAt: string | null
 }
 
+export type DefaultResponse<T> = {
+  data: T
+} 
+
 export type VehiclesResponse = DefaultPaginatedResponse<Vehicle>
+export type VehicleResponse = DefaultResponse<Vehicle>
 export interface VehiclesPaginationParams {
   page: number
   limit: number
@@ -400,7 +405,7 @@ export interface VehicleRequest {
   }
 }
 
-export type VehicleResponse = VehicleCreateResponse['data']
+// export type VehicleResponse = VehicleCreateResponse['data']
 
 export type VehicleUpdateResponse = VehicleCreateResponse
 
@@ -526,6 +531,11 @@ export interface VehicleApiTypes {
     params: VehiclesPaginationParams
     request: {}
     response: VehiclesResponse
+  }
+  'GET /vehicles/{id}': {
+    params: { id: string }
+    request: {}
+    response: VehicleResponse
   }
   'DELETE /vehicles/{id}': {
     params: VehicleDeleteParams

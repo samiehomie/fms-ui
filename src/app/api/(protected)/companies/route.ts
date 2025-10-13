@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import type { ApiResponseType, ApiRequestType } from '@/types/api'
+import type { ApiResponseType } from '@/types/api'
 import { withAuth } from '@/lib/actions/auth'
 import { fetchServer } from '@/lib/api/fetch-server'
 import { buildURL } from '@/lib/api/utils'
@@ -40,13 +40,16 @@ export async function GET(request: NextRequest) {
       )
       if (!response.success) {
         return createErrorResponse(
-          'INTERNAL_ERROR',
-          'Failed to fetch companies from external API',
+          response.error.type,
+          response.error.message,
+          response.error.status,
         )
       }
+
       return createSuccessResponse(
         response.data,
-        'Companies fetched successfully',
+        response?.pagination,
+        response?.message ?? 'Companies fetched successfully',
       )
     } catch (err) {
       logger.error('Error fetching companies:', err)

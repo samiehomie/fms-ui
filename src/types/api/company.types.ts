@@ -1,4 +1,4 @@
-import { PaginatedResponseWithKey } from './api.common'
+import {  DefaultPaginatedResponse } from './api.common'
 export interface Address {
   id: number
   created_at: string
@@ -81,7 +81,7 @@ export interface CompaniesPaginationParams {
   search?: string
 }
 
-export type CompaniesResponse = PaginatedResponseWithKey<Company, 'companies'>
+export type CompaniesResponse = DefaultPaginatedResponse<Company>
 
 export interface CompanyByIdResponse {
   company: {
@@ -192,7 +192,7 @@ export interface CompanyApiTypes {
     response: CompaniesCreateResponse
   }
   'GET /companies': {
-    params: {}
+    params: CompaniesPaginationParams
     request: {}
     response: CompaniesResponse
   }

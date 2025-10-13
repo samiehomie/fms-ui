@@ -32,7 +32,6 @@ export default function VehicleTrackingContent() {
   // 마커 컨테이너 외부 클릭 시 선택 해제
   const mapContainerRef = useClickOutside<HTMLDivElement>(
     () => {
-      console.log('외부 클릭 감지 - 마커 선택 해제')
       setSelectedVehicleId(null)
     },
     selectedVehicleId !== null, // 마커가 선택된 상태에서만 활성화

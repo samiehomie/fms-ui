@@ -134,7 +134,7 @@ export const columns: ColumnDef<Vehicle>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-32">
-            <UpdateVehicleForm id={vehicleId} onClose={() => setOpen(false)} />
+            <UpdateVehicleForm id={vehicleId.toString()} onClose={() => setOpen(false)} />
             <DropdownMenuItem
               onClick={() => {
                 router.push(`/vehicles/${vehicleId}`)

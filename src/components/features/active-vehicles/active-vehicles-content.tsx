@@ -83,7 +83,7 @@ export default function ActiveVehiclesContent() {
 
   const vehicles = data?.data.vehicles
 
-  console.log('selectedVehicle?.id', selectedVehicle?.id)
+ // console.log('selectedVehicle?.id', selectedVehicle?.id)
   return (
     <div className="flex flex-col h-full">
       <main className="flex-1 overflow-hidden flex">

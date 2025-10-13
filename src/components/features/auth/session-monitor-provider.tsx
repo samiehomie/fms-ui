@@ -20,13 +20,10 @@ export function SessionMonitorProvider({
       if (event.type === 'observerResultsUpdated') {
         const error = event.query.state.error as FetchError
 
-        console.log('event.query.state.error', error)
-
         if (
           (error?.statusCode === 401 || error?.statusCode === 409) &&
           !sessionExpiredHandled.current
         ) {
-          console.log(error?.statusCode, !sessionExpiredHandled.current)
           handleSessionExpired(error?.statusText ?? '').catch((err) => {
             console.error('Session expired handling failed:', err)
           })

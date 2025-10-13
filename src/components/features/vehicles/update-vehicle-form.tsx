@@ -43,26 +43,64 @@ import { Loader2 } from 'lucide-react'
 import { useUpdateVehicle, useVehicleById } from '@/lib/queries/useVehicles'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
+import {
+  GearType,
+  FuelType,
+  CanBitrateType,
+} from '@/constants/enums/vehicle.enum'
+import { useAuth } from '../auth/auth-provider'
+import { useCompaniesPaginated } from '@/lib/queries/useCompanies'
 
 const vehicleSchema = z.object({
-  vehicle_name: z.string().min(1, 'Vehicle name is required'),
+  vehicleName: z.string().min(1, 'Vehicle name is required'),
+  plateNumber: z.string().min(1, 'Plate number is required'),
   brand: z.string().min(1, 'Brand is required'),
   model: z.string().min(1, 'Model is required'),
-  fuel_type: z.string().min(2, 'Fuel is required'),
+  manufactureYear: z
+    .number()
+    .min(1900, 'Invalid manufacturing year')
+    .max(
+      new Date().getFullYear() + 1,
+      'Manufacturing year cannot be in the future',
+    ),
+  canBitrate: z.string().min(1, 'CAN bitrate is required'),
+  fuelType: z.nativeEnum(FuelType, {
+    errorMap: () => ({ message: 'Fuel type is required' }),
+  }),
+  gearType: z.nativeEnum(GearType, {
+    errorMap: () => ({ message: 'Gear type is required' }),
+  }),
+  numTire: z.number().min(1, 'Number of tires must be at least 1'),
+  companyId: z.number().min(1, 'Company name is required'),
 })
 
 type VehicleFormData = z.infer<typeof vehicleSchema>
 
-function VehicleForm({ onClose, id }: { onClose: () => void; id: number }) {
-  const { data, isLoading } = useVehicleById(id)
+function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
+  // TODO: 전체 가져오기 다른 패턴 회사가 많아 졌을 경우 검색 UI 필요
+  const { data: companiesData, isLoading: companiesLoading } =
+    useCompaniesPaginated({
+      page: 1,
+      limit: 100,
+      search: '',
+    })
+  const { user, isLoading: userLoading } = useAuth()
+  const { data: vehicleData, isLoading } = useVehicleById(id)
   const mutation = useUpdateVehicle(id)
   const form = useForm<VehicleFormData>({
     resolver: zodResolver(vehicleSchema),
     defaultValues: {
-      vehicle_name: '',
-      brand: '',
-      model: '',
-      fuel_type: '',
+      vehicleName: vehicleData?.data?.vehicleName ?? '',
+      plateNumber: vehicleData?.data?.plateNumber ?? '',
+      brand: vehicleData?.data?.brand ?? '',
+      model: vehicleData?.data?.model ?? '',
+      manufactureYear:
+        vehicleData?.data?.manufactureYear ?? new Date().getFullYear(),
+      canBitrate: vehicleData?.data?.canBitrate ?? CanBitrateType['500Kbps'],
+      fuelType: vehicleData?.data?.fuelType ?? FuelType.GASOLINE,
+      gearType: vehicleData?.data?.gearType ?? GearType.AUTOMATIC,
+      numTire: vehicleData?.data?.numTire ?? 4,
+      companyId: user?.companyId ?? 1,
     },
   })
 
@@ -70,6 +108,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: number }) {
     logger.log('updating vehicle', data)
     try {
       await mutation.mutateAsync({
+        // @ts-ignore
         vehicle: data,
       })
       form.reset()
@@ -80,17 +119,22 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: number }) {
   }
 
   useEffect(() => {
-    if (data && data.data) {
-      const vehicle = data.data
-      logger.log('vehicle', vehicle)
+    if (vehicleData && vehicleData.data) {
+      const vehicle = vehicleData.data
       form.reset({
-        vehicle_name: vehicle.vehicle_name || '',
-        brand: vehicle.brand || '',
-        model: vehicle.model || '',
-        fuel_type: vehicle.fuel_type || 'gasoline',
+        vehicleName: vehicle.vehicleName,
+        plateNumber: vehicle.plateNumber,
+        brand: vehicle.brand,
+        model: vehicle.model,
+        manufactureYear: vehicle.manufactureYear,
+        canBitrate: vehicle.canBitrate,
+        fuelType: vehicle.fuelType,
+        gearType: vehicle.gearType,
+        numTire: vehicle.numTire,
+        companyId: user?.companyId ?? 1,
       })
     }
-  }, [data])
+  }, [vehicleData])
 
   // 폼 에러 확인
   useEffect(() => {
@@ -100,16 +144,9 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: number }) {
     }
   }, [form.formState.errors])
 
-  if (!data || isLoading) {
+  if (companiesLoading || userLoading || isLoading) {
     return (
       <div className="min-h-[51.125rem]  flex flex-col gap-y-4 overflow-y-hidden">
-        <Skeleton className="w-full h-10" />
-        <Skeleton className="w-full h-10" />
-        <Skeleton className="w-full h-10" />
-        <Skeleton className="w-full h-10" />
-        <Skeleton className="w-full h-10" />
-        <Skeleton className="w-full h-10" />
-        <Skeleton className="w-full h-10" />
         <Skeleton className="w-full h-10" />
         <Skeleton className="w-full h-10" />
         <Skeleton className="w-full h-10" />
@@ -121,19 +158,35 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: number }) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid gap-4">
-          <FormField
-            control={form.control}
-            name="vehicle_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Vehicle Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter vehicle name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="vehicleName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Vehicle Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter vehicle name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="plateNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Plate Number</FormLabel>
+                  <FormControl>
+                    <Input placeholder="ABC-1234" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
@@ -143,7 +196,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: number }) {
                 <FormItem>
                   <FormLabel>Brand</FormLabel>
                   <FormControl>
-                    <Input placeholder="Honda" {...field} />
+                    <Input placeholder="Toyota, Honda, etc." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -157,7 +210,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: number }) {
                 <FormItem>
                   <FormLabel>Model</FormLabel>
                   <FormControl>
-                    <Input placeholder="Accord" {...field} />
+                    <Input placeholder="Camry, Civic, etc." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -165,29 +218,186 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: number }) {
             />
           </div>
 
-          <FormField
-            control={form.control}
-            name="fuel_type"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Fuel Type</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="manufactureYear"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Manufacturing Year</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select fuel type" />
-                    </SelectTrigger>
+                    <Input
+                      type="number"
+                      placeholder="1900"
+                      value={field.value || 1900}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        if (value === '') {
+                          field.onChange(1900)
+                        } else {
+                          const numValue = parseInt(value)
+                          if (!isNaN(numValue)) {
+                            field.onChange(numValue)
+                          }
+                        }
+                      }}
+                    />
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="gasoline">Gasoline</SelectItem>
-                    <SelectItem value="diesel">Diesel</SelectItem>
-                    <SelectItem value="electric">Electric</SelectItem>
-                    <SelectItem value="hybrid">Hybrid</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="numTire"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Number of Tires</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="4"
+                      value={field.value || 4}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        if (value === '') {
+                          field.onChange(4)
+                        } else {
+                          const numValue = parseInt(value)
+                          if (!isNaN(numValue)) {
+                            field.onChange(numValue)
+                          }
+                        }
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="fuelType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Fuel Type</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl className="w-full">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select fuel type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Object.values(FuelType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="gearType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gear Type</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl className="w-full">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select gear type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Object.values(GearType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="canBitrate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Can Bitrate</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl className="w-full">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select gear type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Object.values(CanBitrateType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="companyId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Company Name</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={`${field.value}`}
+                  >
+                    <FormControl className="w-full">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select gear type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {companiesData?.data.map((company) => (
+                        <SelectItem key={company.id} value={`${company.id}`}>
+                          {company.name}
+                        </SelectItem>
+                      ))}
+                      {/* {Object.values(CanBitrateType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))} */}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
 
         <div className="flex justify-end gap-3 pt-4">
@@ -210,7 +420,7 @@ export function UpdateVehicleForm({
   id,
   onClose,
 }: {
-  id: number
+  id: string
   onClose: () => void
 }) {
   const [open, setOpen] = useState(false)
