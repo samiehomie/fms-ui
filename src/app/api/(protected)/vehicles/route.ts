@@ -42,10 +42,9 @@ export async function GET(request: NextRequest) {
           },
         },
       )
-      console.log('response', response)
 
       if (!response.success) {
-        console.log('all vehicles--->>', response.error)
+        console.log('all vehicles error--->>', response.error)
         return createErrorResponse(
           response.error.type,
           response.error.message,

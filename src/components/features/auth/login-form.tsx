@@ -47,6 +47,7 @@ export default function LoginForm() {
         username: data.username,
         password: data.password,
       }
+
       await loginAction(loginData)
       // Redirect is handled by the login mutation's onSuccess
     } catch (error: any) {

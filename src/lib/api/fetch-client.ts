@@ -1,15 +1,9 @@
 'use client'
 
 export interface FetchError extends Error {
-  status?: number
+  statusCode?: number
+  statusText?: string
   info?: any
-}
-
-export class SessionExpiredError extends Error {
-  constructor(message: string = 'Your session has expired') {
-    super(message)
-    this.name = 'SessionExpiredError'
-  }
 }
 
 export async function fetchClient<T>(
@@ -26,25 +20,18 @@ export async function fetchClient<T>(
   })
 
   if (!response.ok) {
-    const error: FetchError = new Error('An error occurred while fetching')
-    error.status = response.status
-
-    try {
-      error.info = await response.json()
-    } catch {
-      error.info = { message: response.statusText }
-    }
-
-    // 401 에러는 특별히 표시
+    console.log('fetch client', response)
+    const error: FetchError = new Error(response.statusText)
+    error.statusCode = response.status
+    error.statusText = response.statusText
     if (response.status === 401) {
-      throw new SessionExpiredError('Your session has been terminated.')
+      error.statusText = 'Your session has been terminated.'
     }
-
     if (response.status === 409) {
-      throw new SessionExpiredError(
-        'Your session has been terminated due to a new login from another device',
-      )
+      error.statusText =
+        'Your session has been terminated due to a new login from another device.'
     }
+    throw error
   }
 
   return response.json()

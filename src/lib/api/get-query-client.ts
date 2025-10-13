@@ -6,6 +6,7 @@ import {
   isServer,
 } from '@tanstack/react-query'
 import { logOutAction } from '../actions/auth'
+import { FetchError } from './fetch-client'
 
 let isLoggingOut = false // 중복 로그아웃 방지
 
@@ -27,9 +28,13 @@ export function makeQueryClient() {
       queries: {
         staleTime: 3 * 60 * 1000, // 3분
         gcTime: 5 * 60 * 1000,
-        retry: (failureCount, error: any) => {
-          // 401 에러는 재시도하지 않음
-          if (error?.status === 401 || error?.status === 409 || error?.message === 'Unauthorized') {
+        retry: (failureCount, error: FetchError) => {
+          // 401, 403 에러는 재시도하지 않음
+          if (
+            error?.statusCode === 401 ||
+            error?.statusCode === 409 ||
+            error?.statusText === 'Unauthorized'
+          ) {
             return false
           }
           return failureCount < 3
@@ -43,16 +48,15 @@ export function makeQueryClient() {
       },
     },
     // queryCache: new QueryCache({
-    //   onError: (error: any) => {
-    //     console.log('------->>>>>>', error, typeof error)
-    //     if (error?.status === 401 || error?.message === 'Unauthorized') {
+    //   onError: (error: FetchError) => {
+    //     if (error?.statusCode === 401 || error?.statusText === 'Unauthorized') {
     //       handleUnauthorized()
     //     }
     //   },
     // }),
     // mutationCache: new MutationCache({
     //   onError: (error: any) => {
-    //     if (error?.status === 401 || error?.message === 'Unauthorized') {
+    //     if (error?.statusCode === 401 || error?.statusText === 'Unauthorized') {
     //       handleUnauthorized()
     //     }
     //   },
