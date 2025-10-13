@@ -24,18 +24,10 @@ export const vehiclesApi = {
   },
   getVehiclesPaginated: async (
     params: ApiParamsType<'GET /vehicles'>,
-    cookie?: string,
   ): Promise<ApiResponseType<'GET /vehicles'>> => {
     const searchParams = buildSearchParams(params)
     const response = await fetchClient<ApiResponseType<'GET /vehicles'>>(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles?${searchParams}`,
-      cookie
-        ? {
-            headers: {
-              Cookie: cookie,
-            },
-          }
-        : undefined,
     )
 
     return response
