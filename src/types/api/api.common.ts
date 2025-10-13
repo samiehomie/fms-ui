@@ -14,7 +14,7 @@ export interface PaginationMeta {
   page: number
   limit: number
   total: number
-  pages: number
+  totalPages: number
 }
 
 // 동적 속성명을 지원하는 페이지네이션 응답 타입

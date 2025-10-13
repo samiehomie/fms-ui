@@ -6,20 +6,21 @@ import type {
   ApiErrorCode,
 } from '@/types/api/route.types'
 import { HTTP_STATUS, API_ERROR_CODES } from '@/types/api/route.types'
+import type { PaginationMeta } from '@/types/api/api.common'
 
 // 성공 응답 헬퍼
-export function createSuccessResponse<T>(
-  data: T,
+export function createSuccessResponse(
+  data: any,
+  pagination?: PaginationMeta, 
   message?: string,
-  meta?: ApiSuccessResponse<T>['meta'],
   status: number = HTTP_STATUS.OK,
-): NextResponse<ApiSuccessResponse<T>> {
+): NextResponse<ApiSuccessResponse<any>> {
   return NextResponse.json(
     {
       success: true,
       data,
+      pagination,
       message,
-      meta,
       timestamp: new Date().toISOString(),
     },
     { status },

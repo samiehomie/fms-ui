@@ -42,6 +42,8 @@ export async function GET(request: NextRequest) {
           },
         },
       )
+      console.log('response', response)
+
       if (!response.success) {
         console.log('all vehicles--->>', response.error)
         return createErrorResponse(
@@ -52,7 +54,8 @@ export async function GET(request: NextRequest) {
       }
       return createSuccessResponse(
         response.data,
-        'Vehicles fetched successfully',
+        response?.pagination,
+        response?.message ?? 'All vehicles fetched successfully',
       )
     } catch (err) {
       logger.error('Error fetching vehicles:', err)
@@ -89,7 +92,8 @@ export async function POST(request: NextRequest) {
       }
       return createSuccessResponse(
         response.data,
-        'A vehicle created successfully',
+        response?.pagination,
+        response?.message,
       )
     } catch (err) {
       logger.error('Error creating a vehicle:', err)
@@ -126,7 +130,8 @@ export async function DELETE(request: NextRequest) {
       }
       return createSuccessResponse(
         response.data,
-        'A vehicle deleted successfully',
+        response?.pagination,
+        response?.message ?? 'A vehicle deleted successfully',
       )
     } catch (err) {
       logger.error('Error deleting a vehicle:', err)
@@ -162,7 +167,8 @@ export async function PATCH(request: NextRequest) {
       }
       return createSuccessResponse(
         response.data,
-        'A vehicle retored successfully',
+        response?.pagination,
+        response?.message ?? 'A vehicle retored successfully',
       )
     } catch (err) {
       logger.error('Error restoring a vehicle:', err)
@@ -202,7 +208,8 @@ export async function PUT(request: NextRequest) {
       }
       return createSuccessResponse(
         response.data,
-        'A vehicle updated successfully',
+        response?.pagination,
+        response?.message ?? 'A vehicle updated successfully',
       )
     } catch (err) {
       logger.error('Error updating a vehicle:', err)

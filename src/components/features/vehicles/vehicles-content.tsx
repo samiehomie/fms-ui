@@ -37,10 +37,10 @@ const VehiclesContent = () => {
       </div>
       <DataTable
         columns={columns}
-        data={vehicleData.data.data}
+        data={vehicleData.data}
         pagination={pageParams}
         setPagination={setPageParams}
-        totalCount={vehicleData.data.pagination.total}
+        totalCount={vehicleData.pagination.total}
         hiddenColumns={{
           isDeleted: false,
         }}

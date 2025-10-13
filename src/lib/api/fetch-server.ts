@@ -1,3 +1,5 @@
+import type { PaginationMeta } from '@/types/api/api.common'
+
 export type FetchError =
   | { type: 'http'; status: number; message: string; details?: unknown }
   | { type: 'network'; message: string; cause?: unknown; status?: number }
@@ -6,7 +8,7 @@ export type FetchError =
   | { type: 'abort'; message: string; status?: number }
 
 export type FetchServerResult<T = any> =
-  | { success: true; data: T; headers?: Headers }
+  | { success: true; data: T; pagination?: PaginationMeta; message?: string }
   | { success: false; error: FetchError }
 
 // Extended options for Next.js 15
@@ -21,6 +23,17 @@ interface FetchServerOptions extends Omit<RequestInit, 'signal'> {
   }
   parseResponse?: boolean
   debug?: boolean
+}
+
+export interface ApiResponse<T> {
+  data: T
+  message: string
+  pagination?: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
 }
 
 // Default retry logic - only retry on network errors and 5xx
@@ -69,7 +82,6 @@ export async function fetchServer<T = unknown>(
     revalidate,
     tags,
     retry = {},
-    parseResponse = true,
     debug = process.env.NODE_ENV === 'development',
     ...fetchOptions
   } = options
@@ -156,18 +168,9 @@ export async function fetchServer<T = unknown>(
 
       // Handle non-OK responses
       if (!response.ok) {
+        console.log('error--->', response)
         let errorMessage = response.statusText || 'Unknown server error'
         let errorDetails: unknown = undefined
-
-        if (isJson && parseResponse) {
-          try {
-            const errorData = await response.json()
-            errorMessage = errorData.message || errorData.error || errorMessage
-            errorDetails = errorData.details || errorData
-          } catch {
-            // If JSON parsing fails, use default message
-          }
-        }
 
         const error: FetchError = {
           type: 'http',
@@ -190,16 +193,6 @@ export async function fetchServer<T = unknown>(
         return { success: false, error }
       }
 
-      // Parse successful response
-      if (!parseResponse) {
-        // Return raw response for non-JSON responses
-        return {
-          success: true,
-          data: response as any as T,
-          headers: response.headers,
-        }
-      }
-
       if (!isJson) {
         const text = await response.text()
         return {
@@ -214,11 +207,8 @@ export async function fetchServer<T = unknown>(
 
       try {
         const data = await response.json()
-        return {
-          success: true,
-          data: data as T,
-          headers: response.headers,
-        }
+        console.log('data', data.data)
+        return data
       } catch (error) {
         return {
           success: false,
