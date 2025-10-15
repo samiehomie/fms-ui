@@ -15,9 +15,9 @@ const UsersContent = () => {
     search: '',
   })
 
-  const { data, isLoading } = useUsersPaginated(pageParams)
+  const { data: usersData, isLoading } = useUsersPaginated(pageParams)
 
-  if (isLoading || !data) {
+  if (isLoading || !usersData) {
     return (
       <div className="col-span-3 flex flex-col gap-y-2">
         <Skeleton className="w-full h-10" />
@@ -37,10 +37,10 @@ const UsersContent = () => {
       </div>
       <DataTable
         columns={columns}
-        data={data.data.users}
+        data={usersData.data}
         pagination={pageParams}
         setPagination={setPageParams}
-        totalCount={data.data.pagination.total}
+        totalCount={usersData.pagination.total}
       />
     </div>
   )

@@ -1,75 +1,48 @@
-import { fetchServer } from '@/lib/api/fetch-server'
 import type { ApiRequestType, ApiResponseType } from '@/types/api'
 import { ApiSuccessResponse } from '@/types/api/route.types'
 import type { UsersPaginationParams } from '@/types/api/user.types'
+import { buildURL } from './utils'
+import { fetchClient } from './fetch-client'
 
 export const usersApi = {
   // 페이지네이션된 회사 목록 조회
-  getUsersPaginated: async (
-    params: UsersPaginationParams,
-    cookie?: string,
-  ): Promise<ApiSuccessResponse<ApiResponseType<'GET /users'>>> => {
-    const searchParams =
-      params &&
-      new URLSearchParams({
-        page: params.page.toString(),
-        limit: params.limit.toString(),
-      })
-
-    const response = await fetchServer<
-      ApiSuccessResponse<ApiResponseType<'GET /users'>>
-    >(
-      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/users?${searchParams}`,
-      cookie
-        ? {
-            headers: {
-              Cookie: cookie,
-            },
-          }
-        : { revalidate: false },
+  getUsersPaginated: async (params: UsersPaginationParams) => {
+    const apiUrl = buildURL(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/users`,
+      params,
     )
 
-    if (!response.success) {
-      throw new Error('Failed to fetch vehicles')
-    }
+    const response = await fetchClient<ApiResponseType<'GET /users'>>(apiUrl)
 
-    return response.data
+    return response
   },
-  createUser: async (
-    user: ApiRequestType<'POST /users'>,
-  ): Promise<ApiSuccessResponse<ApiResponseType<'POST /users'>>> => {
-    const response = await fetchServer<
-      ApiSuccessResponse<ApiResponseType<'POST /users'>>
-    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/users`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+  createUser: async (user: ApiRequestType<'POST /users'>) => {
+    const response = await fetchClient<ApiResponseType<'POST /users'>>(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/users`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
       },
-      body: JSON.stringify(user),
-    })
+    )
 
-    if (!response.success) {
-      throw new Error('Failed to create user')
-    }
-
-    return response.data
+    return response
   },
 
   verifyUser: async (verified: ApiRequestType<'POST /users/verify'>) => {
-    const response = await fetchServer<
-      ApiSuccessResponse<ApiResponseType<'POST /users/verify'>>
-    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/users/verify`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetchClient<ApiResponseType<'POST /users/verify'>>(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/users/verify`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(verified),
       },
-      body: JSON.stringify(verified),
-    })
+    )
 
-    if (!response.success) {
-      throw new Error('Failed to verify user')
-    }
-
-    return response.data
+    return response
   },
 }

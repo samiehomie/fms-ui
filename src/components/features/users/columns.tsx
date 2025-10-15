@@ -34,7 +34,7 @@ export const columns: ColumnDef<User>[] = [
     id: 'company',
     header: 'Company',
     cell: ({ row }) => {
-      const company = row.original.company_id
+      const company = row.original.company
       return <div>{company.name}</div>
     },
   },
@@ -50,7 +50,7 @@ export const columns: ColumnDef<User>[] = [
     id: 'role',
     header: 'Role',
     cell: ({ row }) => {
-      const role = row.original.role_id
+      const role = row.original.role
       return <div className="">{role.name}</div>
     },
   },
@@ -78,7 +78,7 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'createdAt',
     header: ({ column }) => (
       <Button
         variant={'ghost'}
@@ -90,7 +90,7 @@ export const columns: ColumnDef<User>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const createdAt = row.getValue('created_at') as string
+      const createdAt = row.getValue('createdAt') as string
       return (
         <div className="flex justify-center tracking-tight">
           {formatDateTime(createdAt)}

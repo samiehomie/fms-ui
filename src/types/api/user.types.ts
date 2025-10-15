@@ -1,4 +1,4 @@
-import { PaginatedResponseWithKey } from './api.common'
+import { DefaultPaginatedResponse } from './api.common'
 
 export interface User {
   id: number
@@ -6,19 +6,19 @@ export interface User {
   username: string
   email: string
   verified: boolean
-  role_id: {
+  role: {
     id: number
     name: string
   }
-  company_id: {
+  company: {
     id: number
     name: string
   }
-  created_at: string
-  updated_at: string
+  createdAt: string
+  updatedAt: string
 }
 
-export type UsersResponse = PaginatedResponseWithKey<User, 'users'>
+export type UsersResponse = DefaultPaginatedResponse<User>
 export interface UsersPaginationParams {
   page: number
   limit: number

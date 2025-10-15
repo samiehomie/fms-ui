@@ -21,8 +21,8 @@ export function useCreateUser() {
   const queryClient = useQueryClient()
   return useMutation<CreateUserResponse, Error, CreateUserRequest>({
     mutationFn: async (newUser) => {
-      const { data } = await usersApi.createUser(newUser)
-      return data
+      const res = await usersApi.createUser(newUser)
+      return res
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
@@ -46,8 +46,8 @@ export function useVerifyUser() {
   const queryClient = useQueryClient()
   return useMutation<VerifyUserResponse, Error, VerifyUserRequest>({
     mutationFn: async (user) => {
-      const { data } = await usersApi.verifyUser(user)
-      return data
+      const res = await usersApi.verifyUser(user)
+      return res
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
