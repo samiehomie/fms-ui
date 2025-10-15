@@ -87,8 +87,8 @@ export function useModifyCompany(id: number) {
   const queryClient = useQueryClient()
   return useMutation<ModifyCompanyResponse, Error, ModifyCompanyRequest>({
     mutationFn: async (newCompany) => {
-      const { data } = await companiesApi.modifyCompany(id, newCompany)
-      return data
+      const res = await companiesApi.modifyCompany(id, newCompany)
+      return res
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
@@ -112,8 +112,8 @@ export function useVerifyCompany(id: number) {
   const queryClient = useQueryClient()
   return useMutation<VerifyCompanyRespone, Error, VerifyCompanyRequest>({
     mutationFn: async (newCompany) => {
-      const { data } = await companiesApi.verifyCompany(id, newCompany)
-      return data
+      const res = await companiesApi.verifyCompany(id, newCompany)
+      return res
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
