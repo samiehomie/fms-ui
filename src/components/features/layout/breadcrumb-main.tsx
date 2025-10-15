@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/breadcrumb'
 
 export default function BreadcrumbMain() {
+  const onlyCapitalRoutes = ['tpms']
   const segments = useSelectedLayoutSegments()
 
   if (!segments) return null
@@ -28,16 +29,17 @@ export default function BreadcrumbMain() {
       </Breadcrumb>
     )
   }
-
-  logger.log('test-2')
+  const segmentsIndex = segments.length - 1
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {segments.slice(0, segments.length - 1).map((segment, index) => (
+        {segments.slice(0, segmentsIndex).map((segment, index) => (
           <Fragment key={index}>
             <BreadcrumbItem className="hidden md:block">
               <BreadcrumbLink href={`/${segment}`}>
-                {capitalizeFirstLetter(segment)}
+                {onlyCapitalRoutes.includes(segment)
+                  ? segment.toUpperCase()
+                  : capitalizeFirstLetter(segment)}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator className="hidden md:block" />
@@ -45,7 +47,9 @@ export default function BreadcrumbMain() {
         ))}
         <BreadcrumbItem>
           <BreadcrumbPage>
-            {capitalizeFirstLetter(segments[segments.length - 1])}
+            {onlyCapitalRoutes.includes(segments[segmentsIndex])
+              ? segments[segmentsIndex].toUpperCase()
+              : capitalizeFirstLetter(segments[segmentsIndex])}
           </BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>

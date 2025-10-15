@@ -7,18 +7,17 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable'
-import { TripHistoryTable } from '@/components/features/vehicles/trip/trip-history-table'
+import { TpmsHistoryTable } from './tpms-history-table'
 import { TripOverview } from '@/components/features/vehicles/trip/trip-overview'
-import {
-  useVehicleTripsPaginated,
-} from '@/lib/queries/useVehicles'
+// import { useVehicleTripsPaginated } from '@/lib/queries/useVehicles'
 import type {
   VehicleTripsPaginationParams,
   VehicleTripEvent,
 } from '@/types/api/vehicle.types'
 import { Skeleton } from '@/components/ui/skeleton'
-import { TripPagination } from './trip-pagination'
+import { TripPagination } from '../vehicles/trip/trip-pagination'
 import { formatDuration, formatTotalDuration } from '@/lib/api/utils'
+import { tpmsPaginationData } from './mock-data'
 
 export interface TripSession {
   id: number
@@ -31,19 +30,16 @@ export interface TripSession {
   status: string
 }
 
-const TripMap = dynamic(
-  () => import('@/components/features/vehicles/trip/trip-map'),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex h-full w-full items-center justify-center bg-muted">
-        <p>Loading Map...</p>
-      </div>
-    ),
-  },
-)
+const TripMap = dynamic(() => import('@/components/features/tpms/tpms-map'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-full w-full items-center justify-center bg-muted">
+      <p>Loading Map...</p>
+    </div>
+  ),
+})
 
-export default function TripContent({
+export default function TpmsContent({
   vehicleId,
   pageParams,
   setPageParams,
@@ -58,10 +54,12 @@ export default function TripContent({
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
 
-  const { data, isLoading } = useVehicleTripsPaginated({
-    ...pageParams,
-    id: vehicleId,
-  })
+  const tpmsData = tpmsPaginationData
+  const isLoading = false
+  //   const { data, isLoading } = useVehicleTripsPaginated({
+  //     ...pageParams,
+  //     id: vehicleId,
+  //   })
 
   const handleRowClick = (id: number) => {
     const newSelectedIds = new Set(selectedIds)
@@ -104,8 +102,8 @@ export default function TripContent({
     selectedIds.size > 0 && selectedIds.size === sessions.length
 
   useEffect(() => {
-    if (data) {
-      const newSessions: TripSession[] = data.trips.map((trip) => ({
+    if (tpmsData) {
+      const newSessions: TripSession[] = tpmsData.data.trips.map((trip) => ({
         id: trip.id,
         startTime: trip.start_time,
         endTime: trip.end_time,
@@ -117,20 +115,20 @@ export default function TripContent({
       }))
       setSessions(newSessions)
     }
-  }, [data])
+  }, [tpmsData])
 
   const totalDriveTime = useMemo(() => {
-    if (!data?.trips) return '0s'
+    if (!tpmsData?.data.trips) return '0s'
 
     return formatTotalDuration(
-      data.trips.map((trip) => ({
+      tpmsData.data.trips.map((trip) => ({
         created_at: trip.start_time,
         updated_at: trip.end_time,
       })),
     )
-  }, [data])
+  }, [tpmsData])
 
-  if (isLoading || !data) {
+  if (isLoading || !tpmsData) {
     return (
       <div className="col-span-3 flex flex-col gap-y-2">
         <Skeleton className="w-full h-10" />
@@ -146,7 +144,7 @@ export default function TripContent({
         totalDriveTime={totalDriveTime}
         totalIdleTime={'100'}
         totalDistance={'100'}
-        totalTrips={data.pagination.total}
+        totalTrips={tpmsData.data.pagination.total}
         vehicleName={`Vehicle-${vehicleId}`}
         onToggleSelectAll={handleToggleSelectAll}
         areAllSelected={areAllSelected}
@@ -161,7 +159,7 @@ export default function TripContent({
               className="flex flex-col flex-1"
             >
               <div className="flex-1 flex flex-col overflow-y-auto pl-1 pr-4 pt-4 pb-4">
-                <TripHistoryTable
+                <TpmsHistoryTable
                   sessions={sessions}
                   selectedIds={selectedIds}
                   visibleIds={visibleIds}
@@ -170,7 +168,7 @@ export default function TripContent({
                 />
                 <TripPagination
                   currentPage={pageParams.page ?? 1}
-                  totalPages={data.pagination.totalPages}
+                  totalPages={tpmsData.data.pagination.pages}
                   onPageChange={(page) => {
                     setPageParams({
                       ...pageParams,
@@ -188,7 +186,7 @@ export default function TripContent({
         ) : (
           <div className="flex-1 flex flex-col pl-1 pr-4 pt-4 pb-4 ">
             <div className="flex-grow overflow-y-auto">
-              <TripHistoryTable
+              <TpmsHistoryTable
                 sessions={sessions}
                 selectedIds={selectedIds}
                 visibleIds={visibleIds}
@@ -198,7 +196,7 @@ export default function TripContent({
             </div>
             <TripPagination
               currentPage={pageParams.page ?? 1}
-              totalPages={data.pagination.totalPages}
+              totalPages={tpmsData.data.pagination.pages}
               onPageChange={(page) => {
                 setPageParams({
                   ...pageParams,

@@ -3,9 +3,9 @@
 import { useState, useCallback } from 'react'
 import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
 import { DateRangePicker } from '@/components/ui/data-range-picker'
-import TpmsContent from '../../tpms/tpms-content'
+import TpmsContent from './tpms-content'
 
-export default function TripContainer({ vehicleId }: { vehicleId: number }) {
+export default function TpmsContainer({ vehicleId }: { vehicleId: number }) {
   const [pageParams, setPageParams] = useState<VehicleTripsPaginationParams>({
     page: 1,
     limit: 6,
