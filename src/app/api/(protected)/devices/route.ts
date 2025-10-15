@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import type { ApiResponseType, ApiRequestType } from '@/types/api'
+import type { ApiResponseType } from '@/types/api'
 import { withAuth } from '@/lib/actions/auth'
 import { fetchServer } from '@/lib/api/fetch-server'
 import { buildURL } from '@/lib/api/utils'
@@ -20,8 +20,8 @@ export async function GET(request: NextRequest) {
 
     const apiUrl =
       typeof id === 'string'
-        ? buildURL(`/devices/edge-devices/${id}`)
-        : buildURL(`/devices/edge-devices`, {
+        ? buildURL(`/edge-devices/${id}`)
+        : buildURL(`/edge-devices`, {
             page,
             limit,
             verified,
@@ -29,23 +29,26 @@ export async function GET(request: NextRequest) {
             type,
           })
     try {
-      const response = await fetchServer<
-        ApiResponseType<'GET /devices/edge-devices'>
-      >(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+      const response = await fetchServer<ApiResponseType<'GET /edge-devices'>>(
+        apiUrl,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
         },
-      })
+      )
       if (!response.success) {
         return createErrorResponse(
-          'INTERNAL_ERROR',
-          'Failed to fetch devices from external API',
+          response.error.type,
+          response.error.message,
+          response.error.status,
         )
       }
       return createSuccessResponse(
         response.data,
-        'Devices fetched successfully',
+        response?.pagination,
+        response?.message ?? 'All edgeDevices fetched successfully',
       )
     } catch (err) {
       logger.error('Error fetching devices:', err)
@@ -60,31 +63,33 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   return await withAuth(async (accessToken) => {
-    const apiUrl = buildURL(`/devices/edge-devices`)
+    const apiUrl = buildURL(`/edge-devices`)
     const requestBody = await request.json()
 
     try {
-      const response = await fetchServer<
-        ApiResponseType<'POST /devices/edge-devices'>
-      >(apiUrl, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+      const response = await fetchServer<ApiResponseType<'POST /edge-devices'>>(
+        apiUrl,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
         },
-        body: JSON.stringify(requestBody),
-      })
+      )
 
-      logger.log(response)
       if (!response.success) {
         return createErrorResponse(
-          'INTERNAL_ERROR',
-          'Failed to create a device from external API',
+          response.error.type,
+          response.error.message,
+          response.error.status,
         )
       }
       return createSuccessResponse(
         response.data,
-        'A device created successfully',
+        response?.pagination,
+        response?.message ?? 'A device created successfully',
       )
     } catch (err) {
       logger.error('Error creating a device:', err)

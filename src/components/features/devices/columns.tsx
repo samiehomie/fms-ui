@@ -19,15 +19,15 @@ export const columns: ColumnDef<Device>[] = [
     header: 'Name',
   },
   {
-    accessorKey: 'serial_number',
+    accessorKey: 'serialNumber',
     header: 'Serial Number',
   },
   {
     id: 'vehicle',
     header: 'Vehicle',
     cell: ({ row }) => {
-      const vehicle = row.original.vehicle_id
-      return <div>{vehicle.vehicle_name}</div>
+      const vehicle = row.original.vehicle
+      return <div>{vehicle.vehicleName}</div>
     },
   },
   {
@@ -35,7 +35,7 @@ export const columns: ColumnDef<Device>[] = [
     header: 'Type',
   },
   {
-    accessorKey: 'ip_addr',
+    accessorKey: 'ipAddr',
     header: 'IP',
   },
   // {
@@ -70,7 +70,7 @@ export const columns: ColumnDef<Device>[] = [
     },
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'createdAt',
     header: ({ column }) => (
       <Button
         variant={'ghost'}
@@ -82,7 +82,7 @@ export const columns: ColumnDef<Device>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const createdAt = row.getValue('created_at') as string
+      const createdAt = row.getValue('createdAt') as string
       return (
         <div className="flex justify-center tracking-tight">
           {formatDateTime(createdAt)}

@@ -1,29 +1,29 @@
-import type { PaginatedResponseWithKey } from './api.common'
+import type { DefaultPaginatedResponse } from './api.common'
 
 export type DeviceTypes = 'master' | 'slave' | 'gateway' | 'sensor' | 'logger'
 export interface Device {
   id: number
   name: string
-  serial_number: string
+  serialNumber: string
   type: DeviceTypes
-  user_name: string
-  ip_addr: string
+  username: string
+  ipAddr: string
   verified: boolean
   terminated: boolean
-  vehicle_id: {
+  vehicle: {
     id: number
-    vehicle_name: string
-    plate_number: string
+    vehicleName: string
+    plateNumber: string
   }
   modules: {
     id: number
     name: string
     version: string
   }[]
-  created_at: string
+  createdAt: string
 }
 
-export type DevicesResponse = PaginatedResponseWithKey<Device, 'edge_devices'>
+export type DevicesResponse = DefaultPaginatedResponse<Device>
 
 export interface DevicesPaginationParams {
   page: number
@@ -76,12 +76,12 @@ export interface DeviceCreateResponse {
 }
 
 export interface DeviceApiTypes {
-  'GET /devices/edge-devices': {
+  'GET /edge-devices': {
     params: {}
     request: {}
     response: DevicesResponse
   }
-  'POST /devices/edge-devices': {
+  'POST /edge-devices': {
     params: {}
     request: DeviceCreateRequest
     response: DeviceCreateResponse

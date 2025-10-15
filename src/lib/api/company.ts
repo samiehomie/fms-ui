@@ -3,7 +3,6 @@ import type {
   ApiResponseType,
   ApiParamsType,
 } from '@/types/api'
-import type { Company } from '@/types/api/company.types'
 import { ApiSuccessResponse } from '@/types/api/route.types'
 import { fetchClient } from './fetch-client'
 import { buildURL } from './utils'

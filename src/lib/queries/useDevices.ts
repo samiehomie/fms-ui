@@ -11,8 +11,8 @@ import { ApiResponseType, ApiRequestType } from '@/types/api'
 import { toast } from 'sonner'
 import { useMemo } from 'react'
 
-type CreateDeviceResponse = ApiResponseType<'POST /devices/edge-devices'>
-type CreateDeviceRequest = ApiRequestType<'POST /devices/edge-devices'>
+type CreateDeviceResponse = ApiResponseType<'POST /edge-devices'>
+type CreateDeviceRequest = ApiRequestType<'POST /edge-devices'>
 
 export function useDevicesPaginated(params: DevicesPaginationParams) {
   return useQuery({
@@ -26,15 +26,14 @@ export function useCreateDevice() {
   const queryClient = useQueryClient()
   return useMutation<CreateDeviceResponse, Error, CreateDeviceRequest>({
     mutationFn: async (newDevice) => {
-      const { data } = await devicesApi.createVehicle(newDevice)
-      return data
+      const res = await devicesApi.createVehicle(newDevice)
+      return res
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['devices'],
       })
       toast.success('A new device added', {
-        description: `${data.edge_device.name}`,
         position: 'bottom-center',
       })
     },

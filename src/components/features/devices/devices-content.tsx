@@ -11,14 +11,14 @@ const DevicesContent = () => {
   const [pageParams, setPageParams] = useState<DevicesPaginationParams>({
     page: 1,
     limit: 10,
-    verified: false,
+    verified: true,
     terminated: false,
-    type: 'master',
+    type: undefined,
   })
 
-  const { data, isLoading } = useDevicesPaginated(pageParams)
+  const { data: edgeDeviceData, isLoading } = useDevicesPaginated(pageParams)
 
-  if (isLoading || !data) {
+  if (isLoading || !edgeDeviceData) {
     return (
       <div className="col-span-3 flex flex-col gap-y-2">
         <Skeleton className="w-full h-10" />
@@ -38,10 +38,10 @@ const DevicesContent = () => {
       </div>
       <DataTable<Device, any, DevicesPaginationParams>
         columns={columns}
-        data={data.data.edge_devices}
+        data={edgeDeviceData.data}
         pagination={pageParams}
         setPagination={setPageParams}
-        totalCount={data.data.pagination.total}
+        totalCount={edgeDeviceData.pagination.total}
       />
     </div>
   )

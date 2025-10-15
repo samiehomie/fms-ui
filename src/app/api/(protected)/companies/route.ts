@@ -81,13 +81,15 @@ export async function POST(request: NextRequest) {
       )
       if (!response.success) {
         return createErrorResponse(
-          'INTERNAL_ERROR',
-          'Failed to create companies from external API',
+          response.error.type,
+          response.error.message,
+          response.error.status,
         )
       }
       return createSuccessResponse(
         response.data,
-        'Companies created successfully',
+        response?.pagination,
+        response?.message ?? 'Companies created successfully',
       )
     } catch (err) {
       logger.error('Error creating companies:', err)
@@ -118,13 +120,15 @@ export async function DELETE(request: NextRequest) {
       )
       if (!response.success) {
         return createErrorResponse(
-          'INTERNAL_ERROR',
-          'Failed to delete companies from external API',
+          response.error.type,
+          response.error.message,
+          response.error.status,
         )
       }
       return createSuccessResponse(
         response.data,
-        'Companies deleted successfully',
+        response?.pagination,
+        response?.message ?? 'Companies deleted successfully',
       )
     } catch (err) {
       logger.error('Error deleting companies:', err)
@@ -158,13 +162,15 @@ export async function PUT(request: NextRequest) {
       )
       if (!response.success) {
         return createErrorResponse(
-          'INTERNAL_ERROR',
-          'Failed to modify companies from external API',
+          response.error.type,
+          response.error.message,
+          response.error.status,
         )
       }
       return createSuccessResponse(
         response.data,
-        'Companies modified successfully',
+        response?.pagination,
+        response?.message ?? 'Companies modified successfully',
       )
     } catch (err) {
       logger.error('Error modifying companies:', err)
@@ -197,13 +203,15 @@ export async function PATCH(request: NextRequest) {
       })
       if (!response.success) {
         return createErrorResponse(
-          'INTERNAL_ERROR',
-          'Failed to modify companies from external API',
+          response.error.type,
+          response.error.message,
+          response.error.status,
         )
       }
       return createSuccessResponse(
         response.data,
-        'Companies modified successfully',
+        response?.pagination,
+        response?.message ?? 'Companies modified successfully',
       )
     } catch (err) {
       logger.error('Error modifying companies:', err)

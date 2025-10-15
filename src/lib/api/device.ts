@@ -1,61 +1,34 @@
-import { fetchServer } from '@/lib/api/fetch-server'
 import type { ApiRequestType, ApiResponseType } from '@/types/api'
 import { ApiSuccessResponse } from '@/types/api/route.types'
 import type { DevicesPaginationParams } from '@/types/api/device.types'
+import { fetchClient } from './fetch-client'
+import { buildURL } from './utils'
 
 export const devicesApi = {
-  getDevicesPaginated: async (
-    params: DevicesPaginationParams,
-    cookie?: string,
-  ): Promise<
-    ApiSuccessResponse<ApiResponseType<'GET /devices/edge-devices'>>
-  > => {
-    const searchParams =
-      params &&
-      new URLSearchParams({
-        page: params.page.toString(),
-        limit: params.limit.toString(),
-      })
-
-    const response = await fetchServer<
-      ApiSuccessResponse<ApiResponseType<'GET /devices/edge-devices'>>
-    >(
-      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/devices?${searchParams}`,
-      cookie
-        ? {
-            headers: {
-              Cookie: cookie,
-            },
-          }
-        : { revalidate: false },
+  getDevicesPaginated: async (params: DevicesPaginationParams) => {
+    const apiUrl = buildURL(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/devices`,
+      params,
+    )
+    const response = await fetchClient<ApiResponseType<'GET /edge-devices'>>(
+      apiUrl,
     )
 
-    if (!response.success) {
-      throw new Error('Failed to fetch devices')
-    }
-
-    return response.data
+    return response
   },
 
-  createVehicle: async (
-    device: ApiRequestType<'POST /devices/edge-devices'>,
-  ): Promise<
-    ApiSuccessResponse<ApiResponseType<'POST /devices/edge-devices'>>
-  > => {
-    const response = await fetchServer<
-      ApiSuccessResponse<ApiResponseType<'POST /devices/edge-devices'>>
-    >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/devices`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+  createVehicle: async (device: ApiRequestType<'POST /edge-devices'>) => {
+    const response = await fetchClient<ApiResponseType<'POST /edge-devices'>>(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/devices`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(device),
       },
-      body: JSON.stringify(device),
-    })
+    )
 
-    if (!response.success) {
-      throw new Error('Failed to create device')
-    }
-
-    return response.data
+    return response
   },
 }
