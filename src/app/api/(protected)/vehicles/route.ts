@@ -8,64 +8,6 @@ import {
   createSuccessResponse,
 } from '@/lib/route/route.heplers'
 
-// TODO: authorization 방식 말고 쿠키 검증방식으로 할 것
-
-export async function GET(request: NextRequest) {
-  return await withAuth(async (accessToken) => {
-    const searchParams = request.nextUrl.searchParams
-    const page = searchParams.get('page') ?? ''
-    const limit = searchParams.get('limit') ?? ''
-    const verified = searchParams.get('verified') ?? ''
-    const type = searchParams.get('type') ?? ''
-    const search = searchParams.get('search') ?? ''
-    const id = searchParams.get('id')
-    const includeDeleted = searchParams.get('include_deleted')
-
-    const apiUrl =
-      typeof id === 'string'
-        ? buildURL(`/vehicles/${id}`)
-        : buildURL(`/vehicles`, {
-            page,
-            limit,
-            verified,
-            type,
-            search,
-            includeDeleted,
-          })
-    try {
-      const response = await fetchServer<ApiResponseType<'GET /vehicles'>>(
-        apiUrl,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-        },
-      )
-
-      if (!response.success) {
-        return createErrorResponse(
-          response.error.type,
-          response.error.message,
-          response.error.status,
-        )
-      }
-      return createSuccessResponse(
-        response.data,
-        response?.pagination,
-        response?.message ?? 'All vehicles fetched successfully',
-      )
-    } catch (err) {
-      logger.error('Error fetching vehicles:', err)
-
-      return createErrorResponse(
-        'INTERNAL_ERROR',
-        'An unexpected error occurred while fetching vehicles',
-      )
-    }
-  })
-}
-
 export async function POST(request: NextRequest) {
   return await withAuth(async (accessToken) => {
     const apiUrl = buildURL(`/vehicles`)

@@ -13,6 +13,7 @@ import type {
 import { ApiResponseType, ApiRequestType, ApiParamsType } from '@/types/api'
 import { toast } from 'sonner'
 import { useMemo, useEffect } from 'react'
+import { getVehicles } from '../actions/vehicle.actions'
 
 type CreateVehicleResponse = ApiResponseType<'POST /vehicles'>
 type CreateVehicleRequest = ApiRequestType<'POST /vehicles'>
@@ -20,7 +21,15 @@ type CreateVehicleRequest = ApiRequestType<'POST /vehicles'>
 export function useVehiclesPaginated(params: ApiParamsType<'GET /vehicles'>) {
   return useQuery({
     queryKey: ['vehicles', params],
-    queryFn: () => vehiclesApi.getVehiclesPaginated(params),
+    queryFn: async () => {
+      const result = await getVehicles(params)
+
+      if (!result.success) {
+        throw new Error(result.error.message)
+      }
+
+      return result.data
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
