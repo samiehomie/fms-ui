@@ -110,10 +110,10 @@ export type DefaultResponse<T> = {
 }
 
 export type VehiclesResponse = DefaultPaginatedResponse<Vehicle>
-export type VehicleResponse = DefaultResponse<Vehicle>
+export type VehicleResponse = Vehicle
 export interface VehiclesPaginationParams {
-  page: number
-  limit: number
+  page?: number
+  limit?: number
   include_deleted?: boolean
   search?: string
   id?: string
@@ -197,43 +197,40 @@ export interface VehicleCreateRequest {
 }
 
 export interface VehicleCreateResponse {
-  message: string
-  data: {
+  id: number
+  vehicleName: string
+  plateNumber: string
+  brand: string
+  model: string
+  manuf_year: number
+  can_bitrate: string
+  fuel_type: string
+  gear_type: string
+  num_tire: number
+  isdeleted: boolean
+  deletedAt: string
+  company_id: {
     id: number
-    vehicleName: string
-    plate_number: string
-    brand: string
-    model: string
-    manuf_year: number
-    can_bitrate: string
-    fuel_type: string
-    gear_type: string
-    num_tire: number
-    isdeleted: boolean
-    deletedAt: string
-    company_id: {
-      id: number
-      name: string
-      type: string
-      reg_number: string
-    }
-    users: {
-      id: number
-      name: string
-      username: string
-    }[]
-    tires: {
-      id: number
-      tire_location: string
-    }[]
-    edge_devices: {
-      id: number
-      name: string
-      serial_number: string
-    }[]
-    created_at: string
-    updated_at: string
+    name: string
+    type: string
+    reg_number: string
   }
+  users: {
+    id: number
+    name: string
+    username: string
+  }[]
+  tires: {
+    id: number
+    tire_location: string
+  }[]
+  edge_devices: {
+    id: number
+    name: string
+    serial_number: string
+  }[]
+  created_at: string
+  updated_at: string
 }
 
 export interface VehiclesSearchPaginationParams {
@@ -382,22 +379,17 @@ export interface VehicleRestoreParams {
   id: string
 }
 
-export interface VehicleRestoreResponse {
-  message: string
-  vehicle: VehicleCreateResponse
-}
+export type VehicleRestoreResponse = VehicleCreateResponse
 
 export interface VehicleUpdateParams {
   id: string
 }
 
 export interface VehicleUpdateRequest {
-  vehicle: {
-    vehicle_name: string
-    brand: string
-    model: string
-    fuel_type: string
-  }
+  vehicleName?: string
+  brand?: string
+  model?: string
+  fuelType?: FuelType
 }
 
 export interface VehicleRequest {
@@ -578,7 +570,7 @@ export interface VehicleApiTypes {
     request: {}
     response: VehicleRestoreResponse
   }
-  'PUT /vehicles/{id}': {
+  'PATCH /vehicles/{id}': {
     params: VehicleUpdateParams
     request: VehicleUpdateRequest
     response: VehicleUpdateResponse

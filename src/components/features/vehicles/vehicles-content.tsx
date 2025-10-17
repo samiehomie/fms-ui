@@ -27,6 +27,8 @@ const VehiclesContent = () => {
     )
   }
 
+  if (!vehiclesData.success || !vehiclesData.pagination) return null
+
   return (
     <div className="col-span-3">
       <div className="mb-3">

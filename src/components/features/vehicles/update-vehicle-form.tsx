@@ -46,6 +46,7 @@ import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { GearType, FuelType, CanBitrateType } from '@/types/enums/vehicle.enum'
 import { useAuth } from '../auth/auth-provider'
 import { useCompaniesPaginated } from '@/lib/query-hooks/useCompanies'
+import { ApiRequestType } from '@/types/api'
 
 const vehicleSchema = z.object({
   vehicleName: z.string().min(1, 'Vehicle name is required'),
@@ -86,7 +87,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
   const form = useForm<VehicleFormData>({
     resolver: zodResolver(vehicleSchema),
     defaultValues: {
-      vehicleName: vehicleData?.data?.vehicleName ?? '',
+      vehicleName: vehicleData?.data.vehicleName ?? '',
       plateNumber: vehicleData?.data?.plateNumber ?? '',
       brand: vehicleData?.data?.brand ?? '',
       model: vehicleData?.data?.model ?? '',
@@ -100,12 +101,12 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
     },
   })
 
-  const onSubmit = async (data: VehicleFormData) => {
-    logger.log('updating vehicle', data)
+  const onSubmit = async (
+    data: Partial<ApiRequestType<'PATCH /vehicles/{id}'>>,
+  ) => {
     try {
       await mutation.mutateAsync({
-        // @ts-ignore
-        vehicle: data,
+        ...data,
       })
       form.reset()
       onClose()

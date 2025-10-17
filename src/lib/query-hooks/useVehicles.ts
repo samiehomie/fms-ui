@@ -13,30 +13,33 @@ import type {
 import { ApiResponseType, ApiRequestType, ApiParamsType } from '@/types/api'
 import { toast } from 'sonner'
 import { useMemo, useEffect } from 'react'
-import { getVehicles } from '../actions/vehicle.actions'
+import {
+  getAllVehicles,
+  getVehicle,
+  createVehicle,
+  updateVehicle,
+  deleteVehicle,
+  restoreVehicle,
+} from '../actions/vehicle.actions'
+import type { ServerActionResult } from '@/types/api'
 
-type CreateVehicleResponse = ApiResponseType<'POST /vehicles'>
+type CreateVehicleResponse = ServerActionResult<
+  ApiResponseType<'POST /vehicles'>
+>
 type CreateVehicleRequest = ApiRequestType<'POST /vehicles'>
 
 export function useAllVehicles(params: ApiParamsType<'GET /vehicles'>) {
   return useQuery({
     queryKey: ['vehicles', params],
     queryFn: async () => {
-      const result = await getVehicles(params)
+      const result = await getAllVehicles(params)
 
       if (!result.success) {
         throw new Error(result.error.message)
       }
 
-      return result.data
+      return result
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  })
-}
-export function useVehicleById(id: string) {
-  return useQuery({
-    queryKey: ['vehicle', id],
-    queryFn: () => vehiclesApi.getVehicleById({ id }),
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
@@ -45,16 +48,19 @@ export function useCreateVehicle() {
   const queryClient = useQueryClient()
   return useMutation<CreateVehicleResponse, Error, CreateVehicleRequest>({
     mutationFn: async (newVehicle) => {
-      const res = await vehiclesApi.createVehicle(newVehicle)
+      const res = await createVehicle(newVehicle)
       return res
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({
         queryKey: ['vehicles'],
       })
-      toast.success('A new vehicle added', {
-        position: 'bottom-center',
-      })
+      if (res.success) {
+        toast.success('A new vehicle added', {
+          description: `plate number: ${res.data.plateNumber}`,
+          position: 'bottom-center',
+        })
+      }
     },
     onError: (error) => {
       logger.log(error)
@@ -66,25 +72,42 @@ export function useCreateVehicle() {
   })
 }
 
+export function useVehicleById(id: string) {
+  return useQuery({
+    queryKey: ['vehicle', id],
+    queryFn: async () => {
+      const result = await getVehicle({ id })
+
+      if (!result.success) {
+        throw new Error(result.error.message)
+      }
+
+      return result
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
 export function useDeleteVehicle() {
   const queryClient = useQueryClient()
   return useMutation<
-    ApiResponseType<'DELETE /vehicles/{id}'>,
+    ServerActionResult<ApiResponseType<'DELETE /vehicles/{id}'>>,
     Error,
     ApiParamsType<'DELETE /vehicles/{id}'>
   >({
     mutationFn: async (deleteParams) => {
-      const res = await vehiclesApi.deleteVehicle(deleteParams.id)
+      const res = await deleteVehicle(deleteParams)
       return res
     },
-    onSuccess: () => {
-      // 회사 목록 쿼리 무효화
+    onSuccess: (res) => {
       queryClient.invalidateQueries({
         queryKey: ['vehicles'],
       })
-      toast.success('A vehicle deleted.', {
-        position: 'bottom-center',
-      })
+      if (res.success) {
+        toast.success('A vehicle deleted.', {
+          position: 'bottom-center',
+        })
+      }
     },
     onError: (error) => {
       toast.error('Deleting a vehicle failed.', {
@@ -98,15 +121,12 @@ export function useDeleteVehicle() {
 export function useUpdateVehicle(id: string) {
   const queryClient = useQueryClient()
   return useMutation<
-    ApiResponseType<'PUT /vehicles/{id}'>,
+    ServerActionResult<ApiResponseType<'PATCH /vehicles/{id}'>>,
     Error,
-    ApiRequestType<'PUT /vehicles/{id}'>
+    ApiRequestType<'PATCH /vehicles/{id}'>
   >({
     mutationFn: async (vehicle) => {
-      const res = await vehiclesApi.updateVehicle(
-        { id: id.toString() },
-        vehicle,
-      )
+      const res = await updateVehicle({ id }, vehicle)
       return res
     },
     onSuccess: (res) => {
@@ -116,10 +136,12 @@ export function useUpdateVehicle(id: string) {
       queryClient.invalidateQueries({
         queryKey: ['vehicle', id],
       })
-      toast.success('A new vehicle added', {
-        description: `${res.data.vehicleName}`,
-        position: 'bottom-center',
-      })
+      if (res.success) {
+        toast.success('A new vehicle added', {
+          description: `plate number: ${res.data.plateNumber}`,
+          position: 'bottom-center',
+        })
+      }
     },
     onError: (error) => {
       toast.error('Adding a new vehicle failed.', {
@@ -130,25 +152,31 @@ export function useUpdateVehicle(id: string) {
   })
 }
 
-export function useRestoreVehicle() {
+export function useRestoreVehicle(id: string) {
   const queryClient = useQueryClient()
   return useMutation<
-    ApiResponseType<'PATCH /vehicles/{id}/restore'>,
+    ServerActionResult<ApiResponseType<'PATCH /vehicles/{id}/restore'>>,
     Error,
     ApiParamsType<'PATCH /vehicles/{id}/restore'>
   >({
     mutationFn: async (restoreParams) => {
-      const res = await vehiclesApi.restoreVehicle(restoreParams.id)
+      const res = await restoreVehicle(restoreParams)
       return res
     },
-    onSuccess: () => {
-      // 회사 목록 쿼리 무효화
+    onSuccess: (res) => {
       queryClient.invalidateQueries({
         queryKey: ['vehicles'],
       })
-      toast.success('A vehicle restored.', {
-        position: 'bottom-center',
+      queryClient.invalidateQueries({
+        queryKey: ['vehicle', id],
       })
+
+      if (res.success) {
+        toast.success('A vehicle restored.', {
+          description: `plate number: ${res.data.plateNumber}`,
+          position: 'bottom-center',
+        })
+      }
     },
     onError: (error) => {
       toast.error('Restoring a vehicle failed.', {

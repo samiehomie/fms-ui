@@ -130,7 +130,7 @@ export async function PATCH(request: NextRequest) {
     const requestBody = await request.json()
 
     try {
-      const response = await fetchServer<ApiResponseType<'PUT /vehicles/{id}'>>(
+      const response = await fetchServer<ApiResponseType<'PATCH /vehicles/{id}'>>(
         apiUrl,
         {
           method: 'PUT',
