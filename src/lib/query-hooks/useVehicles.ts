@@ -56,7 +56,7 @@ export function useCreateVehicle() {
       })
     },
     onError: (error) => {
-      console.log(error)
+      logger.log(error)
       toast.error('Adding a new vehicle failed.', {
         position: 'bottom-center',
         description: error.message,

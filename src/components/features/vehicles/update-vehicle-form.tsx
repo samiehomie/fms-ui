@@ -40,16 +40,12 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { useUpdateVehicle, useVehicleById } from '@/lib/queries/useVehicles'
+import { useUpdateVehicle, useVehicleById } from '@/lib/query-hooks/useVehicles'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
-import {
-  GearType,
-  FuelType,
-  CanBitrateType,
-} from '@/constants/enums/vehicle.enum'
+import { GearType, FuelType, CanBitrateType } from '@/types/enums/vehicle.enum'
 import { useAuth } from '../auth/auth-provider'
-import { useCompaniesPaginated } from '@/lib/queries/useCompanies'
+import { useCompaniesPaginated } from '@/lib/query-hooks/useCompanies'
 
 const vehicleSchema = z.object({
   vehicleName: z.string().min(1, 'Vehicle name is required'),
@@ -140,7 +136,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
   useEffect(() => {
     const errors = form.formState.errors
     if (Object.keys(errors).length > 0) {
-      console.log('Form validation errors:', errors)
+      logger.log('Form validation errors:', errors)
     }
   }, [form.formState.errors])
 

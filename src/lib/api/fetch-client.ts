@@ -20,7 +20,7 @@ export async function fetchClient<T>(
   })
 
   if (!response.ok) {
-    console.log('fetch client', response)
+    logger.log('fetch client', response)
     const error: FetchError = new Error(response.statusText)
     error.statusCode = response.status
     error.statusText = response.statusText

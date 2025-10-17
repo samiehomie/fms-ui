@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(healthStatus, { status: 200 })
   } catch (error) {
-    console.error('Health check failed:', error)
+    logger.error('Health check failed:', error)
 
     return NextResponse.json(
       {

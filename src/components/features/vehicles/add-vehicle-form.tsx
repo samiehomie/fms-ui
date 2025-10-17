@@ -39,16 +39,12 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { useCreateVehicle } from '@/lib/queries/useVehicles'
+import { useCreateVehicle } from '@/lib/query-hooks/useVehicles'
 import { IconPlus } from '@tabler/icons-react'
-import {
-  GearType,
-  FuelType,
-  CanBitrateType,
-} from '@/constants/enums/vehicle.enum'
+import { GearType, FuelType, CanBitrateType } from '@/types/enums/vehicle.enum'
 import { useAuth } from '../auth/auth-provider'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useCompaniesPaginated } from '@/lib/queries/useCompanies'
+import { useCompaniesPaginated } from '@/lib/query-hooks/useCompanies'
 
 const vehicleSchema = z.object({
   vehicleName: z.string().min(1, 'Vehicle name is required'),
@@ -106,7 +102,7 @@ function VehicleForm({ onClose }: { onClose: () => void }) {
       form.reset()
       onClose()
     } catch (error) {
-      console.log('mutation', error)
+      logger.log('mutation', error)
       // Error is handled in the mutation
     }
   }

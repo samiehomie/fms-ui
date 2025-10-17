@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { ApiResponseType, ApiRequestType, ApiParamsType } from '@/types/api'
-import { buildURL } from '../api/utils'
+import { buildURL } from '../utils/build-url'
 
 // export interface Vehicle {
 //   id: string

@@ -1,6 +1,6 @@
 'use server'
 
-import { buildURL } from '../api/utils'
+import { buildURL } from '../utils/build-url'
 import type { ApiParamsType } from '@/types/api'
 import { withAuthAction } from './auth.actions'
 import type { ServerActionResult } from '@/types/api'

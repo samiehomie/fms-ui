@@ -1,7 +1,7 @@
 import type { ApiRequestType, ApiResponseType } from '@/types/api'
 import { ApiSuccessResponse } from '@/types/api/route.types'
 import type { UsersPaginationParams } from '@/types/api/user.types'
-import { buildURL } from './utils'
+import { buildURL } from '../utils/build-url'
 import { fetchClient } from './fetch-client'
 
 export const usersApi = {

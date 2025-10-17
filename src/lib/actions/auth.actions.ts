@@ -6,13 +6,13 @@ import {
   AUTH_TOKEN_COOKIE_NAME,
   REFRESH_TOKEN_COOKIE_NAME,
   AUTH_REFRESH_THRESHOLD,
-} from '@/constants/auth'
-import { buildURL } from '@/lib/api/utils'
+} from '@/lib/constants/auth'
+import { buildURL } from '@/lib/utils/build-url'
 import type { ApiResponseType, ApiRequestType } from '@/types/api'
 import { fetchServer } from '../api/fetch-server'
 import type { JWTAuthPayload } from '@/types/api'
 import { redirect } from 'next/navigation'
-import { parseJWT } from '@/lib/api/utils'
+import { parseJWT } from '@/lib/utils/build-url'
 import type { ServerActionResult } from '@/types/api'
 
 export async function loginAction(
@@ -35,7 +35,7 @@ export async function loginAction(
       },
     )
 
-    console.log('loginAction', response)
+    logger.log('loginAction', response)
 
     if (!response.success) throw new Error('Authentication failed')
 
@@ -70,7 +70,7 @@ export async function logOutAction() {
     cookieStore.delete(REFRESH_TOKEN_COOKIE_NAME)
     if (!response.success) throw new Error('Authentication failed')
   } catch (error) {
-    console.error('Logout error:', error)
+    logger.error('Logout error:', error)
     redirect('/login')
   }
   redirect('/login')
@@ -84,7 +84,7 @@ export async function refreshTokenIfNeeded(
   newRefreshToken: string
 } | null> {
   if (!accessToken || !refreshToken) {
-    console.log(
+    logger.log(
       `인증 토큰 갱신실패: ${AUTH_TOKEN_COOKIE_NAME}: ${accessToken} ${REFRESH_TOKEN_COOKIE_NAME}: ${refreshToken}`,
     )
     return null
@@ -118,7 +118,7 @@ export async function refreshTokenIfNeeded(
       },
     )
 
-    console.log(result)
+    logger.log(result)
 
     if (!result.success) {
       const error = result.error
@@ -129,17 +129,17 @@ export async function refreshTokenIfNeeded(
           ? error.serverMessage
           : error.message || 'Token refresh failed'
 
-      console.error(`인증 토큰 갱신실패: ${status} - ${message}`)
+      logger.error(`인증 토큰 갱신실패: ${status} - ${message}`)
       return null
     }
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       result.data
 
-    console.info('인증 토큰 갱신성공')
+    logger.info('인증 토큰 갱신성공')
     return { newAccessToken, newRefreshToken }
   }
 
-  // console.info('인증 토큰 갱신 필요없음. 기존 토큰 사용 유지.')
+  // logger.info('인증 토큰 갱신 필요없음. 기존 토큰 사용 유지.')
 
   return {
     newAccessToken: accessToken,
@@ -229,7 +229,6 @@ export async function clearAuthCookies() {
   cookieStore.delete(AUTH_TOKEN_COOKIE_NAME)
   cookieStore.delete(REFRESH_TOKEN_COOKIE_NAME)
 }
-
 
 export async function withAuthAction<T = unknown>(
   handler: (accessToken: string) => Promise<ServerActionResult<T>>,

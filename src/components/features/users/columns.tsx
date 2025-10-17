@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
-import { formatDateTime, getCompanyTypeColor } from '@/lib/utils'
+import { formatDateTime } from '@/lib/utils/date-formatter'
 import { ArrowUpDown, CircleSlash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useVerifyUser } from '@/lib/queries/useUsers'
+import { useVerifyUser } from '@/lib/query-hooks/useUsers'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import ConfirmDialog from '@/components/ui/confirm-dialog'

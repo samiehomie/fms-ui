@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { Map } from '@vis.gl/react-google-maps'
-import { mapId } from '@/constants/map'
+import { mapId } from '@/lib/constants/map'
 import VehicleMarkers, { VehicleMapProps } from './vehicle-markers'
 
 export default function VehicleMapWrapper(props: VehicleMapProps) {

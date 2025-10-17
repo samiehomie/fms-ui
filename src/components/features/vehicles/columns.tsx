@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
-import { formatDateTime } from '@/lib/utils'
+import { formatDateTime } from '@/lib/utils/date-formatter'
 import { ArrowUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,10 +14,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { IconDotsVertical } from '@tabler/icons-react'
-import { logger, cn } from '@/lib/utils'
+import { cn } from '@/lib/utils/utils'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
 import type { Vehicle } from '@/types/api/vehicle.types'
-import { useDeleteVehicle, useRestoreVehicle } from '@/lib/queries/useVehicles'
+import {
+  useDeleteVehicle,
+  useRestoreVehicle,
+} from '@/lib/query-hooks/useVehicles'
 import { UpdateVehicleForm } from './update-vehicle-form'
 
 export const columns: ColumnDef<Vehicle>[] = [
@@ -134,7 +137,10 @@ export const columns: ColumnDef<Vehicle>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-32">
-            <UpdateVehicleForm id={vehicleId.toString()} onClose={() => setOpen(false)} />
+            <UpdateVehicleForm
+              id={vehicleId.toString()}
+              onClose={() => setOpen(false)}
+            />
             <DropdownMenuItem
               onClick={() => {
                 router.push(`/vehicles/${vehicleId}`)

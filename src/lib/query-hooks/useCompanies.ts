@@ -78,7 +78,7 @@ export function useDeleteCompany() {
       toast.error('Deleting a comapny failed.', {
         position: 'bottom-center',
       })
-      console.error('Delete company error:', error)
+      logger.error('Delete company error:', error)
     },
   })
 }

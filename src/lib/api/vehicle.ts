@@ -4,7 +4,7 @@ import type {
   ApiParamsType,
 } from '@/types/api'
 import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
-import { buildSearchParams, buildURL } from './utils'
+import { buildSearchParams, buildURL } from '../utils/build-url'
 import { fetchClient } from './fetch-client'
 
 export const vehiclesApi = {

@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/card'
 import { Avatar } from '@/components/ui/avatar'
 import { Truck, Car } from 'lucide-react' // Using Car as a generic vehicle icon
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils/utils'
 
 type Status = 'green' | 'red' | 'yellow'
 

@@ -1,14 +1,13 @@
 'use client'
 import { StatCard } from '@/components/features/dashboard/stat-card'
 import { Globe, Users, Truck, Cpu } from 'lucide-react'
-import { useDashboard } from '@/lib/queries/useDashboard'
+import { useDashboard } from '@/lib/query-hooks/useDashboard'
 import { Skeleton } from '@/components/ui/skeleton'
 import { RecentCompaniesList } from '@/components/features/dashboard/recent-companies-list'
 import { VehicleStatusList } from '@/components/features/dashboard/vehicle-status-list'
 
 export default function DashboardContent() {
-  const { companies, vehicles, users, devices, isLoading } =
-    useDashboard()
+  const { companies, vehicles, users, devices, isLoading } = useDashboard()
 
   if (isLoading) {
     return (

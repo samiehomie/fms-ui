@@ -1,7 +1,7 @@
 'use client'
 import { DataTable } from '@/components/ui/data-table'
 import { useState } from 'react'
-import { useCompanyVehiclesPaginated } from '@/lib/queries/useCompanies'
+import { useCompanyVehiclesPaginated } from '@/lib/query-hooks/useCompanies'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ApiParamsType } from '@/types/api'

@@ -9,16 +9,14 @@ import {
 } from '@/components/ui/resizable'
 import { TripHistoryTable } from '@/components/features/vehicles/trip/trip-history-table'
 import { TripOverview } from '@/components/features/vehicles/trip/trip-overview'
-import {
-  useVehicleTripsPaginated,
-} from '@/lib/queries/useVehicles'
+import { useVehicleTripsPaginated } from '@/lib/query-hooks/useVehicles'
 import type {
   VehicleTripsPaginationParams,
   VehicleTripEvent,
 } from '@/types/api/vehicle.types'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TripPagination } from './trip-pagination'
-import { formatDuration, formatTotalDuration } from '@/lib/api/utils'
+import { formatDuration, formatTotalDuration } from '@/lib/utils/build-url'
 
 export interface TripSession {
   id: number

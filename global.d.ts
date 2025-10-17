@@ -1,4 +1,4 @@
-import { logger as loggerUtils } from '@/lib/utils'
+import { logger as loggerUtils } from '@/lib/utils/logger'
 
 declare global {
   var logger: typeof loggerUtils

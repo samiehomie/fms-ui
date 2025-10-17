@@ -2,7 +2,7 @@ import type { ApiRequestType, ApiResponseType } from '@/types/api'
 import { ApiSuccessResponse } from '@/types/api/route.types'
 import type { DevicesPaginationParams } from '@/types/api/device.types'
 import { fetchClient } from './fetch-client'
-import { buildURL } from './utils'
+import { buildURL } from '../utils/build-url'
 
 export const devicesApi = {
   getDevicesPaginated: async (params: DevicesPaginationParams) => {

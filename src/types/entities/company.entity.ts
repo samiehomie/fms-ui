@@ -2,7 +2,7 @@ import { BaseEntity } from './base.entity'
 import { User } from './user.entity'
 import { Vehicle } from './vehicle.entity'
 import { Address } from './address.entity'
-import { CompanyType } from '@/constants/enums/company.enum'
+import { CompanyType } from '@/types/enums/company.enum'
 
 export interface Company extends BaseEntity {
   name: string

@@ -9,11 +9,11 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils/utils'
 import type { TripSession } from './trip-content'
 import { Eye, EyeOff, MoveRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useReverseGeocode } from '@/lib/queries/useGeocoding'
+import { useReverseGeocode } from '@/lib/query-hooks/useGeocoding'
 import { format, parseISO } from 'date-fns'
 
 interface TripHistoryTableProps {

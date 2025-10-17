@@ -4,8 +4,11 @@ import { useState, useMemo } from 'react'
 import { VehicleList } from './vehicle-list'
 import { RealTimeDataTable } from './real-time-data-table'
 import type { Vehicle, CombinedTireData } from '@/types/api/vehicle.types'
-import { useVehiclesPaginated } from '@/lib/queries/useVehicles'
-import { useAIResults, useTPMSResults } from '@/lib/queries/useActiveVehicles'
+import { useVehiclesPaginated } from '@/lib/query-hooks/useVehicles'
+import {
+  useAIResults,
+  useTPMSResults,
+} from '@/lib/query-hooks/useActiveVehicles'
 import type { VehicleDataParams } from '@/types/api/vehicle.types'
 
 export default function ActiveVehiclesContent() {
@@ -83,7 +86,6 @@ export default function ActiveVehiclesContent() {
 
   const vehicles = data?.data.vehicles
 
- // console.log('selectedVehicle?.id', selectedVehicle?.id)
   return (
     <div className="flex flex-col h-full">
       <main className="flex-1 overflow-hidden flex">

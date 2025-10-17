@@ -20,7 +20,7 @@ import {
   SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils/utils'
 import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
 import banfShortLogoWEBP from '@/../public/logos/banf-short.webp'
 import Link from 'next/link'

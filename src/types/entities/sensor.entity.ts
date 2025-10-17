@@ -1,6 +1,6 @@
 import { BaseEntity } from './base.entity'
 import { Tire } from './tire.entity'
-import { SensorStatus } from '@/constants/enums/sensor.enum'
+import { SensorStatus } from '@/types/enums/sensor.enum'
 
 export interface Sensor extends BaseEntity {
   serialNumber: string

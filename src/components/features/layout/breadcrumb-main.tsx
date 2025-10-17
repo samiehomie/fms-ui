@@ -2,7 +2,7 @@
 
 import { Fragment } from 'react'
 import { useSelectedLayoutSegments } from 'next/navigation'
-import { capitalizeFirstLetter } from '@/lib/utils'
+import { capitalizeFirstLetter } from '@/lib/utils/utils'
 import {
   Breadcrumb,
   BreadcrumbItem,

@@ -5,8 +5,8 @@ import {
   MutationCache,
   isServer,
 } from '@tanstack/react-query'
-import { logOutAction } from '../actions/auth.actions'
-import { FetchError } from './fetch-client'
+import { logOutAction } from './actions/auth.actions'
+import { FetchError } from './api/fetch-client'
 
 let isLoggingOut = false // 중복 로그아웃 방지
 

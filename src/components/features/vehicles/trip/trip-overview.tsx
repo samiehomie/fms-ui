@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import type { TripSession } from './trip-content'
 import { Car, Clock, Route, List, ParkingCircle } from 'lucide-react'
-import { formatTotalDuration } from '@/lib/api/utils'
+import { formatTotalDuration } from '@/lib/utils/build-url'
 
 interface TripOverviewProps {
   totalDriveTime: string

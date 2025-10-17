@@ -6,7 +6,7 @@ import {
   MarkerClusterer,
   SuperClusterAlgorithm,
 } from '@googlemaps/markerclusterer'
-import { Vehicle } from '@/lib/queries/useVehicleStream'
+import { Vehicle } from '@/lib/query-hooks/useVehicleStream'
 import type { LatLngLiteral } from 'leaflet'
 
 export type VehicleMapProps = {

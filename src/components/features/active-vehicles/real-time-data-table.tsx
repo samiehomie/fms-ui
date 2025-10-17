@@ -98,7 +98,7 @@ export function RealTimeDataTable({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Truck className="h-5 w-5" />
-            {selectedVehicle.plate_number} - Real-Time Data
+            {selectedVehicle.plateNumber} - Real-Time Data
           </CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-full">
@@ -118,11 +118,11 @@ export function RealTimeDataTable({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Truck className="h-5 w-5" />
-          {selectedVehicle.plate_number} - Real-Time Data
+          {selectedVehicle.plateNumber} - Real-Time Data
         </CardTitle>
         <div className="text-sm text-muted-foreground">
           {selectedVehicle.brand} {selectedVehicle.model} •{' '}
-          {selectedVehicle.company_id.name}
+          {selectedVehicle.company.name}
         </div>
       </CardHeader>
       <CardContent>

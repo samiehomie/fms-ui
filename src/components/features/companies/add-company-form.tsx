@@ -40,7 +40,7 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { useCreateCompany } from '@/lib/queries/useCompanies'
+import { useCreateCompany } from '@/lib/query-hooks/useCompanies'
 
 import { IconPlus } from '@tabler/icons-react'
 

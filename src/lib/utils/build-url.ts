@@ -125,10 +125,9 @@ export const buildURL = (
 export async function parseJWT<T = any>(token: string): Promise<T | null> {
   try {
     const payload = decodeJwt(token) as T
-    // console.log('JWT payload: ', payload)
     return payload
   } catch (error) {
-    console.error(error)
+    logger.error(error)
     return null
   }
 }

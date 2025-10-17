@@ -5,7 +5,7 @@ import {
   TicketTypes,
   TicketPriority,
   TicketStatus,
-} from '@/constants/enums/ticket.enum'
+} from '@/types/enums/ticket.enum'
 
 export interface Ticket extends BaseEntity {
   ticketType: TicketTypes

@@ -12,7 +12,11 @@ import {
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { Download, FileSpreadsheet, FileText, Loader2 } from 'lucide-react'
-import { exportToCSV, exportToXLSX, type ExportColumn } from '@/lib/export'
+import {
+  exportToCSV,
+  exportToXLSX,
+  type ExportColumn,
+} from '@/lib/utils/report-export'
 
 interface ExportControlsProps {
   selectedItems: any[]
@@ -52,7 +56,7 @@ export function ExportControls({
         await exportToXLSX(selectedItems, columns, exportFilename)
       }
     } catch (error) {
-      console.error('Export failed:', error)
+      logger.error('Export failed:', error)
       alert('Export failed. Please try again.')
     } finally {
       setIsExporting(false)

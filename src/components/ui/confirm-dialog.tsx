@@ -51,7 +51,7 @@ const ConfirmDialog: FC<ConfirmDialogProps> = ({
       setOpen(false)
       onClose?.()
     } catch (error) {
-      console.error('Confirm action failed:', error)
+      logger.error('Confirm action failed:', error)
       // 에러 발생 시에도 dialog는 열린 상태 유지
     } finally {
       setLoading(false)

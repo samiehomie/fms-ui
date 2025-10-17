@@ -1,4 +1,4 @@
-import { RoleType } from '@/constants/enums/role.enum'
+import { RoleType } from '@/types/enums/role.enum'
 import type { PaginationMeta } from './common.types'
 
 export type ServerActionError = {

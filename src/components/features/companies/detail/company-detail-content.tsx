@@ -19,7 +19,7 @@ import {
 import dynamic from 'next/dynamic'
 import type { CompanyByIdResponse } from '@/types/api/company.types'
 import { VerifiedBadge, UnVerifiedBadge } from '@/components/ui/custom-badges'
-import { formatDateTime } from '@/lib/utils'
+import { formatDateTime } from '@/lib/utils/date-formatter'
 
 const CompanyLocationMap = dynamic(() => import('./company-location-map'), {
   ssr: false,

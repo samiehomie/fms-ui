@@ -23,7 +23,7 @@ import {
   type FilterState,
 } from '@/components/features/reports/report-filters'
 import { ExportControls } from '@/components/features/reports/export-controls'
-import { enhancedReportsData } from '@/constants/mock_data/enhanced-reports'
+import { enhancedReportsData } from '@/lib/mock_data/enhanced-reports'
 import {
   formatCurrency,
   formatDate,
@@ -31,8 +31,8 @@ import {
   formatNumber,
   formatDuration,
   type ExportColumn,
-} from '@/lib/export'
-import type { TripReport, VehicleReport } from '@/constants/mock_data/reports'
+} from '@/lib/utils/report-export'
+import type { TripReport, VehicleReport } from '@/lib/mock_data/reports'
 
 const reportTabs = [
   {

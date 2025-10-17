@@ -5,11 +5,7 @@ import { Trip } from './trip.entity'
 import { EdgeDevice } from './edge-device.entity'
 import { Gps } from './gps.entity'
 import { Tire } from './tire.entity'
-import {
-  GearType,
-  FuelType,
-  CanBitrateType,
-} from '@/constants/enums/vehicle.enum'
+import { GearType, FuelType, CanBitrateType } from '@/types/enums/vehicle.enum'
 
 export interface Vehicle extends BaseEntity {
   vehicleName: string

@@ -8,7 +8,7 @@ import {
   dashboardMetrics,
   recentIssues,
   chartData,
-} from '@/constants/mock_data/dashboard'
+} from '@/lib/mock_data/dashboard'
 
 export default function DashboardMockContent() {
   return (

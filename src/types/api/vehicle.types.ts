@@ -2,10 +2,10 @@ import type {
   PaginatedResponseWithKey,
   DefaultPaginatedResponse,
 } from './common.types'
-import { GearType, FuelType } from '@/constants/enums/vehicle.enum'
-import { CompanyType } from '@/constants/enums/company.enum'
-import { SensorStatus } from '@/constants/enums/sensor.enum'
-import { EdgeDeviceType } from '@/constants/enums/edge-device.enum'
+import { GearType, FuelType } from '@/types/enums/vehicle.enum'
+import { CompanyType } from '@/types/enums/company.enum'
+import { SensorStatus } from '@/types/enums/sensor.enum'
+import { EdgeDeviceType } from '@/types/enums/edge-device.enum'
 
 export interface Vehicle {
   id: number

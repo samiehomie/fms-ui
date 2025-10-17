@@ -40,8 +40,8 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { useModifyCompany } from '@/lib/queries/useCompanies'
-import { useCompanyById } from '@/lib/queries/useCompanies'
+import { useModifyCompany } from '@/lib/query-hooks/useCompanies'
+import { useCompanyById } from '@/lib/query-hooks/useCompanies'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
@@ -139,7 +139,7 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: number }) {
   useEffect(() => {
     const errors = form.formState.errors
     if (Object.keys(errors).length > 0) {
-      // console.log('Form validation errors:', errors)
+      // logger.log('Form validation errors:', errors)
     }
   }, [form.formState.errors])
 

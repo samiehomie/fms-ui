@@ -1,13 +1,13 @@
 'use client'
 
 import { useMemo, useState, useRef, useCallback, useEffect } from 'react'
-import { Vehicle } from '@/lib/queries/useVehicleStream'
+import { Vehicle } from '@/lib/query-hooks/useVehicleStream'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Search, Truck, Car, Bus, ChevronLeft, MapPin } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils/utils'
 import { useMap } from '@vis.gl/react-google-maps'
 
 interface VehicleListProps {

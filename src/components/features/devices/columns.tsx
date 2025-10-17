@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { formatDateTime } from '@/lib/utils'
+import { formatDateTime } from '@/lib/utils/date-formatter'
 import { ArrowUpDown, CircleSlash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'

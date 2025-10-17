@@ -4,7 +4,8 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import type { Company } from '@/types/api/company.types'
-import { formatDateTime, getCompanyTypeColor } from '@/lib/utils'
+import { formatDateTime } from '@/lib/utils/date-formatter'
+import { getCompanyTypeColor } from '@/lib/utils/utils'
 import { ArrowUpDown, CircleSlash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,7 +20,10 @@ import { ModifyCompanyForm } from './modify-company-form'
 import { IconCircleCheckFilled, IconDotsVertical } from '@tabler/icons-react'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
-import { useDeleteCompany, useVerifyCompany } from '@/lib/queries/useCompanies'
+import {
+  useDeleteCompany,
+  useVerifyCompany,
+} from '@/lib/query-hooks/useCompanies'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
 
 export const columns: ColumnDef<Company>[] = [

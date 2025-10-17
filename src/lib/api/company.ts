@@ -5,7 +5,7 @@ import type {
 } from '@/types/api'
 import { ApiSuccessResponse } from '@/types/api/route.types'
 import { fetchClient } from './fetch-client'
-import { buildURL } from './utils'
+import { buildURL } from '../utils/build-url'
 
 export const companiesApi = {
   // 페이지네이션된 회사 목록 조회

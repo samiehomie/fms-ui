@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
-import { useLiveVehicles } from '@/lib/queries/useVehicles'
+import { useLiveVehicles } from '@/lib/query-hooks/useVehicles'
 import { VehicleListSidebar } from '@/components/features/map/vehicle-list-sidebar'
 import SubSidebar from '@/components/features/companies/sub-sidebar'
 

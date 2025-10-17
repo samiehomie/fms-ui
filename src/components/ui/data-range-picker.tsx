@@ -5,7 +5,7 @@ import { DatePicker } from 'antd'
 import type { Dayjs } from 'dayjs'
 import dayjs from 'dayjs'
 
-import { logger, formatDateRangeForAPI } from '@/lib/utils'
+import { logger, formatDateRangeForAPI } from '@/lib/utils/utils'
 
 const { RangePicker } = DatePicker
 

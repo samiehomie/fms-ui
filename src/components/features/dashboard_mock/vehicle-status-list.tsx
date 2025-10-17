@@ -1,24 +1,24 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Car, User, MapPin, Clock } from "lucide-react"
-import type { VehicleStatus } from "@/constants/mock_data/dashboard"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Car, User, MapPin, Clock } from 'lucide-react'
+import type { VehicleStatus } from '@/lib/mock_data/dashboard'
 
 interface VehicleStatusListProps {
   vehicles: VehicleStatus[]
 }
 
-const getStatusColor = (status: VehicleStatus["status"]) => {
+const getStatusColor = (status: VehicleStatus['status']) => {
   switch (status) {
-    case "active":
-      return "bg-green-100 text-green-800"
-    case "idle":
-      return "bg-yellow-100 text-yellow-800"
-    case "maintenance":
-      return "bg-orange-100 text-orange-800"
-    case "offline":
-      return "bg-red-100 text-red-800"
+    case 'active':
+      return 'bg-green-100 text-green-800'
+    case 'idle':
+      return 'bg-yellow-100 text-yellow-800'
+    case 'maintenance':
+      return 'bg-orange-100 text-orange-800'
+    case 'offline':
+      return 'bg-red-100 text-red-800'
     default:
-      return "bg-gray-100 text-gray-800"
+      return 'bg-gray-100 text-gray-800'
   }
 }
 
@@ -34,7 +34,10 @@ export function VehicleStatusList({ vehicles }: VehicleStatusListProps) {
       <CardContent>
         <div className="space-y-3">
           {vehicles.map((vehicle) => (
-            <div key={vehicle.id} className="flex items-center justify-between p-3 border rounded-lg">
+            <div
+              key={vehicle.id}
+              className="flex items-center justify-between p-3 border rounded-lg"
+            >
               <div className="flex items-center space-x-3">
                 <Car className="h-4 w-4 text-muted-foreground" />
                 <div>
@@ -55,7 +58,10 @@ export function VehicleStatusList({ vehicles }: VehicleStatusListProps) {
                   </div>
                 </div>
               </div>
-              <Badge variant="outline" className={getStatusColor(vehicle.status)}>
+              <Badge
+                variant="outline"
+                className={getStatusColor(vehicle.status)}
+              >
                 {vehicle.status}
               </Badge>
             </div>
