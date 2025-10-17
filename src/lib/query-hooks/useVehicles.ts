@@ -18,7 +18,7 @@ import { getVehicles } from '../actions/vehicle.actions'
 type CreateVehicleResponse = ApiResponseType<'POST /vehicles'>
 type CreateVehicleRequest = ApiRequestType<'POST /vehicles'>
 
-export function useVehiclesPaginated(params: ApiParamsType<'GET /vehicles'>) {
+export function useAllVehicles(params: ApiParamsType<'GET /vehicles'>) {
   return useQuery({
     queryKey: ['vehicles', params],
     queryFn: async () => {
@@ -40,6 +40,7 @@ export function useVehicleById(id: string) {
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
+
 export function useCreateVehicle() {
   const queryClient = useQueryClient()
   return useMutation<CreateVehicleResponse, Error, CreateVehicleRequest>({

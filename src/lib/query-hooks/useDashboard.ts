@@ -1,7 +1,7 @@
-import { useCompaniesPaginated } from "./useCompanies"
-import { useVehiclesPaginated } from "./useVehicles"
-import { useUsersPaginated } from "./useUsers"
-import { useDevicesPaginated } from "./useDevices"
+import { useCompaniesPaginated } from './useCompanies'
+import { useAllVehicles } from './useVehicles'
+import { useUsersPaginated } from './useUsers'
+import { useDevicesPaginated } from './useDevices'
 
 const paramsAllData = {
   page: 1,
@@ -13,7 +13,7 @@ export const useDashboard = () => {
     page: 1,
     limit: 6,
   })
-  const vehiclesQuery = useVehiclesPaginated(paramsAllData)
+  const vehiclesQuery = useAllVehicles(paramsAllData)
   const usersQuery = useUsersPaginated(paramsAllData)
   const devicesQuery = useDevicesPaginated(paramsAllData)
 

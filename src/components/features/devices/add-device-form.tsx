@@ -41,7 +41,7 @@ import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
 import { useCreateDevice } from '@/lib/query-hooks/useDevices'
 import { IconPlus } from '@tabler/icons-react'
-import { useVehiclesPaginated } from '@/lib/query-hooks/useVehicles'
+import { useAllVehicles } from '@/lib/query-hooks/useVehicles'
 
 const deviceSchema = z.object({
   name: z
@@ -75,11 +75,10 @@ type DeviceFormData = z.infer<typeof deviceSchema>
 
 function DeviceForm({ onClose }: { onClose: () => void }) {
   const mutation = useCreateDevice()
-  const { data: vehiclesData, isLoading: isLoadingVehicles } =
-    useVehiclesPaginated({
-      page: 1,
-      limit: 10000, // 모든 회사를 가져오기 위해 충분히 큰 수로 설정
-    })
+  const { data: vehiclesData, isLoading: isLoadingVehicles } = useAllVehicles({
+    page: 1,
+    limit: 10000, // 모든 회사를 가져오기 위해 충분히 큰 수로 설정
+  })
 
   const form = useForm<DeviceFormData>({
     resolver: zodResolver(deviceSchema),

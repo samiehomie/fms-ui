@@ -1,7 +1,7 @@
 'use client'
 import { DataTable } from '@/components/ui/data-table'
 import { useState } from 'react'
-import { useVehiclesPaginated } from '@/lib/query-hooks/useVehicles'
+import { useAllVehicles } from '@/lib/query-hooks/useVehicles'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'
@@ -15,7 +15,7 @@ const VehiclesContent = () => {
     search: '',
   })
 
-  const { data: vehiclesData, isLoading } = useVehiclesPaginated(pageParams)
+  const { data: vehiclesData, isLoading } = useAllVehicles(pageParams)
 
   if (isLoading || !vehiclesData) {
     return (

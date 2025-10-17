@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import { VehicleList } from './vehicle-list'
 import { RealTimeDataTable } from './real-time-data-table'
 import type { Vehicle, CombinedTireData } from '@/types/api/vehicle.types'
-import { useVehiclesPaginated } from '@/lib/query-hooks/useVehicles'
+import { useAllVehicles } from '@/lib/query-hooks/useVehicles'
 import {
   useAIResults,
   useTPMSResults,
@@ -12,7 +12,7 @@ import {
 import type { VehicleDataParams } from '@/types/api/vehicle.types'
 
 export default function ActiveVehiclesContent() {
-  const { data, isLoading } = useVehiclesPaginated({
+  const { data, isLoading } = useAllVehicles({
     page: 1,
     limit: 100,
     include_deleted: false,
