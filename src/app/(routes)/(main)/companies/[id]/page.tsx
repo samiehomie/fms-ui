@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import CompanyDetails from '@/components/features/companies/company-details'
 import { companiesApi } from '@/lib/api/company'
-import { getAuthData } from '@/lib/actions/auth'
+import { getAuthData } from '@/lib/actions/auth.actions'
 
 type CompanyIdParams = {
   params: Promise<{ id: string }>

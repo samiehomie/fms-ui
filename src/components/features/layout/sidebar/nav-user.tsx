@@ -20,7 +20,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 
 import { useAuth } from '../../auth/auth-provider'
-import { logOutAction } from '@/lib/actions/auth'
+import { logOutAction } from '@/lib/actions/auth.actions'
 
 export function NavUser() {
   const { user, isLoading } = useAuth()

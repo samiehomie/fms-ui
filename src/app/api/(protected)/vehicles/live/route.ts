@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { buildURL } from '@/lib/api/utils'
-import { withAuth } from '@/lib/actions/auth'
+import { withAuth } from '@/lib/actions/auth.actions'
 import { fetchServer } from '@/lib/api/fetch-server'
 import type { ApiResponseType, ApiRequestType } from '@/types/api'
 import {

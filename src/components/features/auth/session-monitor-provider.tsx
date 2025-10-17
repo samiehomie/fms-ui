@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { logOutAction } from '@/lib/actions/auth'
+import { logOutAction } from '@/lib/actions/auth.actions'
 import type { FetchError } from '@/lib/api/fetch-client'
 
 export function SessionMonitorProvider({

@@ -13,6 +13,7 @@ import { fetchServer } from '../api/fetch-server'
 import type { JWTAuthPayload } from '@/types/api'
 import { redirect } from 'next/navigation'
 import { parseJWT } from '@/lib/api/utils'
+import type { ServerActionResult } from '@/types/api'
 
 export async function loginAction(
   loginData: ApiRequestType<'POST /auth/login'>,
@@ -227,4 +228,40 @@ export async function clearAuthCookies() {
   const cookieStore = await cookies()
   cookieStore.delete(AUTH_TOKEN_COOKIE_NAME)
   cookieStore.delete(REFRESH_TOKEN_COOKIE_NAME)
+}
+
+
+export async function withAuthAction<T = unknown>(
+  handler: (accessToken: string) => Promise<ServerActionResult<T>>,
+): Promise<ServerActionResult<T>> {
+  const cookieStore = await cookies()
+  const accessToken = cookieStore.get(AUTH_TOKEN_COOKIE_NAME)?.value
+  const refreshToken = cookieStore.get(REFRESH_TOKEN_COOKIE_NAME)?.value
+
+  const refreshTokenData = await refreshTokenIfNeeded(accessToken, refreshToken)
+
+  if (!refreshTokenData) {
+    cookieStore.delete(AUTH_TOKEN_COOKIE_NAME)
+    cookieStore.delete(REFRESH_TOKEN_COOKIE_NAME)
+    return { success: false, error: { message: 'Unauthorized', status: 401 } }
+  }
+
+  const response = await handler(refreshTokenData.newAccessToken)
+  const { exp } = await parseJWT(refreshTokenData.newAccessToken)
+  cookieStore.set(AUTH_TOKEN_COOKIE_NAME, refreshTokenData.newAccessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    sameSite: 'lax',
+    expires: new Date(exp * 1000),
+  })
+  cookieStore.set(REFRESH_TOKEN_COOKIE_NAME, refreshTokenData.newRefreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    sameSite: 'lax',
+    expires: new Date(exp * 1000),
+  })
+
+  return response
 }

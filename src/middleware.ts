@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAuthData } from './lib/actions/auth'
+import { getAuthData } from './lib/actions/auth.actions'
 
 const PUBLIC_ROUTES = ['/login', '/signup']
 const PROTECTED_ROUTES = ['/companies', '/vehicles', '/users', '/devices']

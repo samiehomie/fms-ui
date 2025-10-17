@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
-import { logOutAction } from '@/lib/actions/auth'
+import { logOutAction } from '@/lib/actions/auth.actions'
 // import { useAuth } from '../auth/auth-provider'
 
 const navigationItems = [

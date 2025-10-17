@@ -1,60 +1,9 @@
 'use server'
 
-import { getAuthData, refreshTokenIfNeeded } from './auth'
-import {
-  AUTH_TOKEN_COOKIE_NAME,
-  REFRESH_TOKEN_COOKIE_NAME,
-} from '@/constants/auth'
 import { buildURL } from '../api/utils'
-import type { PaginationMeta } from '@/types/api/common.types'
-import { cookies } from 'next/headers'
-import { parseJWT } from '@/lib/api/utils'
 import type { ApiParamsType } from '@/types/api'
-
-export type ServerActionError = {
-  message: string
-  status?: number
-  details?: unknown
-}
-
-export type ServerActionResult<T = any> =
-  | { success: true; data: T; pagination?: PaginationMeta; message?: string }
-  | { success: false; error: ServerActionError }
-
-export async function withAuthAction<T = unknown>(
-  handler: (accessToken: string) => Promise<ServerActionResult<T>>,
-): Promise<ServerActionResult<T>> {
-  const cookieStore = await cookies()
-  const accessToken = cookieStore.get(AUTH_TOKEN_COOKIE_NAME)?.value
-  const refreshToken = cookieStore.get(REFRESH_TOKEN_COOKIE_NAME)?.value
-
-  const refreshTokenData = await refreshTokenIfNeeded(accessToken, refreshToken)
-
-  if (!refreshTokenData) {
-    cookieStore.delete(AUTH_TOKEN_COOKIE_NAME)
-    cookieStore.delete(REFRESH_TOKEN_COOKIE_NAME)
-    return { success: false, error: { message: 'Unauthorized', status: 401 } }
-  }
-
-  const response = await handler(refreshTokenData.newAccessToken)
-  const { exp } = await parseJWT(refreshTokenData.newAccessToken)
-  cookieStore.set(AUTH_TOKEN_COOKIE_NAME, refreshTokenData.newAccessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    sameSite: 'lax',
-    expires: new Date(exp * 1000),
-  })
-  cookieStore.set(REFRESH_TOKEN_COOKIE_NAME, refreshTokenData.newRefreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    sameSite: 'lax',
-    expires: new Date(exp * 1000),
-  })
-
-  return response
-}
+import { withAuthAction } from './auth.actions'
+import type { ServerActionResult } from '@/types/api'
 
 export async function getVehicles<T = unknown>(
   params: ApiParamsType<'GET /vehicles'>,

@@ -1,4 +1,15 @@
 import { RoleType } from '@/constants/enums/role.enum'
+import type { PaginationMeta } from './common.types'
+
+export type ServerActionError = {
+  message: string
+  status?: number
+  details?: unknown
+}
+
+export type ServerActionResult<T = any> =
+  | { success: true; data: T; pagination?: PaginationMeta; message?: string }
+  | { success: false; error: ServerActionError }
 export interface LoginRequest {
   username: string
   password: string

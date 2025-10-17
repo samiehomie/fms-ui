@@ -18,7 +18,7 @@ import {
 import Image from 'next/image'
 import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
 import { ApiRequestType } from '@/types/api'
-import { loginAction } from '@/lib/actions/auth'
+import { loginAction } from '@/lib/actions/auth.actions'
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
