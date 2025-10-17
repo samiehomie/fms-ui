@@ -1,4 +1,4 @@
-import type { DefaultPaginatedResponse } from './api.common'
+import type { DefaultPaginatedResponse } from './common.types'
 
 export type DeviceTypes = 'master' | 'slave' | 'gateway' | 'sensor' | 'logger'
 export interface Device {

@@ -210,7 +210,7 @@ export function useVehicleTripDetailsBatch(tripIds: number[]) {
 }
 
 export function useAllVehicleTripsPaginated(
-  params: VehicleTripsPaginationParams,
+  params: ApiParamsType<'GET /vehicles/{id}/trips'>,
 ) {
   return useQuery({
     queryKey: ['all trips', params],

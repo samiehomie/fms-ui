@@ -1,4 +1,4 @@
-import { DefaultPaginatedResponse } from './api.common'
+import { DefaultPaginatedResponse } from './common.types'
 
 export interface User {
   id: number

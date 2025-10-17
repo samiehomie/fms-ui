@@ -4,14 +4,20 @@ import { useState, useCallback } from 'react'
 import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
 import { DateRangePicker } from '@/components/ui/data-range-picker'
 import TpmsContent from './tpms-content'
+import type { ApiParamsType } from '@/types/api'
+import { TripStatus } from '@/constants/enums/trip.enum'
 
 export default function TpmsContainer({ vehicleId }: { vehicleId: number }) {
-  const [pageParams, setPageParams] = useState<VehicleTripsPaginationParams>({
+  const [pageParams, setPageParams] = useState<
+    ApiParamsType<'GET /vehicles/{id}/trips'>
+  >({
+    id: vehicleId,
     page: 1,
     limit: 6,
-    status: '',
-    start_date: undefined,
-    end_date: undefined,
+    // status: undefined,
+    // startDate: undefined,
+    // endDate: undefined,
+    // search: undefined,
   })
 
   const handleDateRangeChange = useCallback(

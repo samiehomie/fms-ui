@@ -1,7 +1,7 @@
 import type {
   PaginatedResponseWithKey,
   DefaultPaginatedResponse,
-} from './api.common'
+} from './common.types'
 import { GearType, FuelType } from '@/constants/enums/vehicle.enum'
 import { CompanyType } from '@/constants/enums/company.enum'
 import { SensorStatus } from '@/constants/enums/sensor.enum'
@@ -107,7 +107,7 @@ export interface VehicleReference {
 
 export type DefaultResponse<T> = {
   data: T
-} 
+}
 
 export type VehiclesResponse = DefaultPaginatedResponse<Vehicle>
 export type VehicleResponse = DefaultResponse<Vehicle>

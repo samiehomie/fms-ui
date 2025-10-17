@@ -55,3 +55,14 @@ export type ApiGetPaginatedResponse<T, K extends string = 'data'> = ApiResponse<
 export type ApiGetDefaultPaginatedResponse<T> = ApiResponse<
   DefaultPaginatedResponse<T>
 >
+
+export interface PaginationResponse {
+  page?: number
+  limit?: number
+}
+
+export interface CommonData {
+  id: number
+  createdAt: string
+  updatedAt: string
+}

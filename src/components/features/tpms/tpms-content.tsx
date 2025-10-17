@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/resizable'
 import { TpmsHistoryTable } from './tpms-history-table'
 import { TripOverview } from '@/components/features/vehicles/trip/trip-overview'
-// import { useVehicleTripsPaginated } from '@/lib/queries/useVehicles'
+import { useAllVehicleTripsPaginated } from '@/lib/queries/useVehicles'
 import type {
   VehicleTripsPaginationParams,
   VehicleTripEvent,
@@ -18,6 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { TripPagination } from '../vehicles/trip/trip-pagination'
 import { formatDuration, formatTotalDuration } from '@/lib/api/utils'
 import { tpmsPaginationData } from './mock-data'
+import type { ApiParamsType } from '@/types/api'
 
 export interface TripSession {
   id: number
@@ -45,21 +46,16 @@ export default function TpmsContent({
   setPageParams,
 }: {
   vehicleId: number
-  pageParams: VehicleTripsPaginationParams
+  pageParams: ApiParamsType<'GET /vehicles/{id}/trips'>
   setPageParams: React.Dispatch<
-    React.SetStateAction<VehicleTripsPaginationParams>
+    React.SetStateAction<ApiParamsType<'GET /vehicles/{id}/trips'>>
   >
 }) {
   const [sessions, setSessions] = useState<TripSession[]>([])
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
 
-  const tpmsData = tpmsPaginationData
-  const isLoading = false
-  //   const { data, isLoading } = useVehicleTripsPaginated({
-  //     ...pageParams,
-  //     id: vehicleId,
-  //   })
+  const { data, isLoading } = useAllVehicleTripsPaginated(pageParams)
 
   const handleRowClick = (id: number) => {
     const newSelectedIds = new Set(selectedIds)
@@ -101,9 +97,10 @@ export default function TpmsContent({
   const areAllSelected =
     selectedIds.size > 0 && selectedIds.size === sessions.length
 
+    // 여기부터 데이터 정제
   useEffect(() => {
-    if (tpmsData) {
-      const newSessions: TripSession[] = tpmsData.data.trips.map((trip) => ({
+    if (data) {
+      const newSessions: TripSession[] = data.trips.map((trip) => ({
         id: trip.id,
         startTime: trip.start_time,
         endTime: trip.end_time,

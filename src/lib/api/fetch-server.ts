@@ -1,4 +1,4 @@
-import type { PaginationMeta } from '@/types/api/api.common'
+import type { PaginationMeta } from '@/types/api/common.types'
 
 export type FetchError =
   | { type: 'http'; status: number; message: string; details?: unknown }

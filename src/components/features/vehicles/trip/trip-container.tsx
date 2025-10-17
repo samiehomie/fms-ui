@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react'
 import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
 import { DateRangePicker } from '@/components/ui/data-range-picker'
-import TpmsContent from '../../tpms/tpms-content'
+import TripContent from './trip-content'
 
 export default function TripContainer({ vehicleId }: { vehicleId: number }) {
   const [pageParams, setPageParams] = useState<VehicleTripsPaginationParams>({
@@ -35,7 +35,7 @@ export default function TripContainer({ vehicleId }: { vehicleId: number }) {
         </h1>
         <DateRangePicker onDateChange={handleDateRangeChange} />
       </header>
-      <TpmsContent
+      <TripContent
         vehicleId={vehicleId}
         setPageParams={setPageParams}
         pageParams={pageParams}

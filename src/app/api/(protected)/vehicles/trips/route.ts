@@ -8,60 +8,43 @@ import {
   createSuccessResponse,
 } from '@/lib/route/route.heplers'
 
-// 공통 API 호출 함수
-async function fetchTripsData(apiUrl: string, token: string) {
-  try {
-    const response = await fetchServer(apiUrl, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
-
-    if (!response.success) {
-      return createErrorResponse(
-        'INTERNAL_ERROR',
-        'Failed to fetch trips from external API',
-      )
-    }
-
-    return createSuccessResponse(response.data, 'trips fetched successfully')
-  } catch (err) {
-    logger.error('Error fetching trips:', err)
-    return createErrorResponse(
-      'INTERNAL_ERROR',
-      'An unexpected error occurred while fetching trips',
-    )
-  }
-}
-
 export async function GET(request: NextRequest) {
   return await withAuth(async (accessToken) => {
     const searchParams = request.nextUrl.searchParams
-    const page = searchParams.get('page')
-    const limit = searchParams.get('limit')
-    const status = searchParams.get('status')
-    const start_date = searchParams.get('start_date')
-    const end_date = searchParams.get('end_date')
     const id = searchParams.get('id')
-    const type = searchParams.get('type')
+    const parmas = Object.fromEntries(searchParams)
+    delete parmas.id
+    const apiUrl = buildURL(`/vehicles/${id}/trips`, parmas)
 
-    // 공통 파라미터 객체
-    const commonParams = {
-      page,
-      limit,
-      status,
-      start_date,
-      end_date,
+    try {
+      const response = await fetchServer<
+        ApiResponseType<'GET /vehicles/{id}/trips'>
+      >(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.success) {
+        return createErrorResponse(
+          response.error.type,
+          response.error.message,
+          response.error.status,
+        )
+      }
+      return createSuccessResponse(
+        response.data,
+        response?.pagination,
+        response?.message ?? 'All trips fetched successfully',
+      )
+    } catch (err) {
+      logger.error('Error fetching vehicles:', err)
+
+      return createErrorResponse(
+        'INTERNAL_ERROR',
+        'An unexpected error occurred while fetching vehicles',
+      )
     }
-
-    let apiUrl: string
-
-    if (type === 'all') {
-      apiUrl = buildURL('/vehicles/trips', commonParams)
-    } else {
-      apiUrl = buildURL(`/vehicles/trips/vehicle/${id}`, commonParams)
-    }
-    return fetchTripsData(apiUrl, accessToken)
   })
 }

@@ -133,11 +133,16 @@ export const vehiclesApi = {
     return response
   },
 
-  getAllVehicleTrips: async (params: VehicleTripsPaginationParams) => {
-    const searchParams = buildSearchParams(params)
-    const response = await fetchClient<ApiResponseType<'GET /vehicles/trips'>>(
-      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/trips?type=all&${searchParams}`,
+  getAllVehicleTrips: async (
+    params: ApiParamsType<'GET /vehicles/{id}/trips'>,
+  ) => {
+    const apiUrl = buildURL(
+      `${process.env.NEXT_PUBLIC_FRONT_URL}/api/vehicles/trips`,
+      params,
     )
+    const response = await fetchClient<
+      ApiResponseType<'GET /vehicles/{id}/trips'>
+    >(apiUrl)
 
     return response
   },
