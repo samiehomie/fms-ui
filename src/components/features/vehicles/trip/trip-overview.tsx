@@ -2,14 +2,13 @@
 
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
-import type { TripSession } from './trip-content'
-import { Car, Clock, Route, List, ParkingCircle } from 'lucide-react'
-import { formatTotalDuration } from '@/lib/utils/build-url'
+import { Tractor, Clock, Route, List, ListCheck } from 'lucide-react'
+import { formatSeconds } from '@/lib/utils/date-formatter'
 
 interface TripOverviewProps {
-  totalDriveTime: string
-  totalIdleTime: string
-  totalDistance: string
+  totalDriveTime: number
+  activeTrips: number
+  totalDistance: number
   totalTrips: number
   vehicleName: string
   onToggleSelectAll: () => void
@@ -18,25 +17,25 @@ interface TripOverviewProps {
 
 const StatCard = ({
   icon: Icon,
-  label,
   value,
+  label,
 }: {
   icon: React.ElementType
-  label: string
-  value: string
+  value: string | number
+  label?: string
 }) => (
   <div className="flex items-center gap-2 text-xs">
     <Icon className="h-4 w-4 text-slate-300" />
     <div>
       <span className="font-medium">{value}</span>
-      <span className="text-slate-300 ml-1">{label}</span>
+      {label && <span className="text-slate-300 ml-1">{label}</span>}
     </div>
   </div>
 )
 
 export function TripOverview({
   totalDriveTime,
-  totalIdleTime,
+  activeTrips,
   totalDistance,
   totalTrips,
   vehicleName,
@@ -49,14 +48,18 @@ export function TripOverview({
     rounded-[4px_4px_0px_0px]"
     >
       <div className="flex items-center gap-2">
-        <Car className="h-5 w-5 text-primary" stroke="#fff" />
+        <Tractor className="h-5 w-5 text-primary" stroke="#fff" />
         <span className="font-semibold text-white text-sm ">{vehicleName}</span>
       </div>
       <div className="flex flex-wrap items-center justify-evenly flex-1 gap-y-2 text-white">
-        <StatCard icon={List} label="Trips" value={totalTrips.toString()} />
-        <StatCard icon={Clock} label="Driving" value={totalDriveTime} />
-        <StatCard icon={ParkingCircle} label="Idle" value={totalIdleTime} />
-        <StatCard icon={Route} label="Distance" value={totalDistance} />
+        <StatCard icon={List} label="Trips" value={totalTrips} />
+        <StatCard icon={ListCheck} label="Active" value={activeTrips} />
+        <StatCard
+          icon={Clock}
+          label="Driving"
+          value={formatSeconds(totalDriveTime)}
+        />
+        <StatCard icon={Route} label="km" value={totalDistance} />
       </div>
       <Button
         variant="outline"

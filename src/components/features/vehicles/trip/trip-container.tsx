@@ -1,30 +1,30 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import type { VehicleTripsPaginationParams } from '@/types/features/vehicle/vehicle.types'
 import { DateRangePicker } from '@/components/ui/data-range-picker'
 import TripContent from './trip-content'
+import type { VehicleTripsQuery } from '@/types/features/vehicle/vehicle.types'
 
-export default function TripContainer({ vehicleId }: { vehicleId: number }) {
-  const [pageParams, setPageParams] = useState<VehicleTripsPaginationParams>({
+export default function TripContainer({ vehicleId }: { vehicleId: string }) {
+  const [query, setQuery] = useState<Omit<VehicleTripsQuery, 'id'>>({
     page: 1,
     limit: 6,
-    status: '',
-    start_date: undefined,
-    end_date: undefined,
+    status: undefined,
+    startDate: undefined,
+    endDate: undefined,
   })
 
   const handleDateRangeChange = useCallback(
     (dateRange: { from: string; to: string } | null) => {
       if (dateRange) {
-        setPageParams((old) => ({
+        setQuery((old) => ({
           ...old,
           start_date: dateRange.from,
           end_date: dateRange.to,
         }))
       }
     },
-    [setPageParams],
+    [setQuery],
   )
 
   return (
@@ -37,8 +37,8 @@ export default function TripContainer({ vehicleId }: { vehicleId: number }) {
       </header>
       <TripContent
         vehicleId={vehicleId}
-        setPageParams={setPageParams}
-        pageParams={pageParams}
+        setQuery={setQuery}
+        query={query}
       />
     </div>
   )

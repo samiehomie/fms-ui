@@ -1,20 +1,18 @@
 import type {
-  DefaultPaginatedResponse,
   PaginatedResponseWithKey,
   CommonProperties,
   PaginationQuery,
 } from '../common.types'
-import { GearType, FuelType, CanBitrateType } from '@/types/enums/vehicle.enum'
-import { CompanyType } from '@/types/enums/company.enum'
-import { SensorStatus } from '@/types/enums/sensor.enum'
-import { EdgeDeviceType } from '@/types/enums/edge-device.enum'
-import { Vehicle } from '@/types/entities/vehicle.entity'
-import { Company } from '@/types/entities/company.entity'
-import { User } from '@/types/entities/user.entity'
-import { Tire } from '@/types/entities/tire.entity'
-import { SmartProfiler } from '@/types/entities/smart-profiler.entity'
-import { Sensor } from '@/types/entities/sensor.entity'
-import { EdgeDevice } from '@/types/entities/edge-device.entity'
+import { GearType, FuelType } from '@/types/enums/vehicle.enum'
+import type { Vehicle } from '@/types/entities/vehicle.entity'
+import type { Company } from '@/types/entities/company.entity'
+import type { User } from '@/types/entities/user.entity'
+import type { Tire } from '@/types/entities/tire.entity'
+import type { SmartProfiler } from '@/types/entities/smart-profiler.entity'
+import type { Sensor } from '@/types/entities/sensor.entity'
+import type { EdgeDevice } from '@/types/entities/edge-device.entity'
+import type { Trip } from '@/types/entities/trip.entity'
+import { TripStatus } from '@/types/enums/trip.enum'
 
 type VehicleData = Pick<
   Vehicle,
@@ -116,6 +114,39 @@ export type VehicleUpdateResponse = VehicleCreateResponse
 // PATCH /vehicles/{id}
 export interface VehicleUpdateQuery {
   id: string
+}
+
+// GET /vehicles/{id}/trips
+export type VehicleTripsResponse = {
+  vehicle: Pick<Vehicle, 'id' | 'plateNumber' | 'vehicleName'>
+  trips: Pick<
+    Trip,
+    | CommonProperties
+    | 'startTime'
+    | 'endTime'
+    | 'status'
+    | 'distanceInKph'
+    | 'durationInSecs'
+    | 'fuelConsumed'
+    | 'startPoint'
+    | 'endPoint'
+  >[]
+  stats: {
+    totalTrips: number
+    activeTrips: number
+    totalDistance: number
+    totalDuration: number
+    totalFuelConsumed: number
+  }
+}
+
+// GET /vehicles/{id}/trips
+export interface VehicleTripsQuery extends PaginationQuery {
+  id: string
+  search?: string
+  status?: TripStatus
+  startDate?: string
+  endDate?: string
 }
 
 export interface CombinedTireData {
@@ -296,17 +327,6 @@ export interface GPS {
   east_west: string
   speed_over_grd: string
   gps_time: string | null
-}
-
-export interface Trip {
-  id: number
-  created_at: string
-  updated_at: string
-  start_time: string
-  end_time: string
-  status: VehicleTripStatus
-  vehicle_id: VehicleReference
-  gpss: GPS[]
 }
 
 export type VehicleTripsByTripIdResponse = {

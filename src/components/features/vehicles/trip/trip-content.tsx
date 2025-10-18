@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import {
   ResizableHandle,
@@ -9,14 +9,12 @@ import {
 } from '@/components/ui/resizable'
 import { TripHistoryTable } from '@/components/features/vehicles/trip/trip-history-table'
 import { TripOverview } from '@/components/features/vehicles/trip/trip-overview'
-import { useVehicleTripsPaginated } from '@/lib/query-hooks/useVehicles'
-import type {
-  VehicleTripsPaginationParams,
-  VehicleTripEvent,
-} from '@/types/features/vehicle/vehicle.types'
+import { useVehicleAllTrips } from '@/lib/query-hooks/useVehicles'
+import type { VehicleTripsQuery } from '@/types/features/vehicle/vehicle.types'
+import type { VehicleTripEvent } from '@/types/features/vehicle/vehicle.types'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TripPagination } from './trip-pagination'
-import { formatDuration, formatTotalDuration } from '@/lib/utils/build-url'
+import { formatDuration } from '@/lib/utils/build-url'
 
 export interface TripSession {
   id: number
@@ -43,21 +41,19 @@ const TripMap = dynamic(
 
 export default function TripContent({
   vehicleId,
-  pageParams,
-  setPageParams,
+  query,
+  setQuery,
 }: {
-  vehicleId: number
-  pageParams: VehicleTripsPaginationParams
-  setPageParams: React.Dispatch<
-    React.SetStateAction<VehicleTripsPaginationParams>
-  >
+  vehicleId: string
+  query: Omit<VehicleTripsQuery, 'id'>
+  setQuery: React.Dispatch<React.SetStateAction<Omit<VehicleTripsQuery, 'id'>>>
 }) {
   const [sessions, setSessions] = useState<TripSession[]>([])
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
 
-  const { data, isLoading } = useVehicleTripsPaginated({
-    ...pageParams,
+  const { data: tripsData, isLoading } = useVehicleAllTrips({
+    ...query,
     id: vehicleId,
   })
 
@@ -102,33 +98,22 @@ export default function TripContent({
     selectedIds.size > 0 && selectedIds.size === sessions.length
 
   useEffect(() => {
-    if (data) {
-      const newSessions: TripSession[] = data.trips.map((trip) => ({
+    if (tripsData) {
+      const newSessions: TripSession[] = tripsData.data.trips.map((trip) => ({
         id: trip.id,
-        startTime: trip.start_time,
-        endTime: trip.end_time,
-        driveTime: formatDuration(trip.start_time, trip.end_time),
+        startTime: trip.startTime,
+        endTime: trip.endTime,
+        driveTime: formatDuration(trip.startTime, trip.endTime),
         idleTime: '10',
         distance: '10',
-        events: trip.events,
+        events: [],
         status: trip.status,
       }))
       setSessions(newSessions)
     }
-  }, [data])
+  }, [tripsData])
 
-  const totalDriveTime = useMemo(() => {
-    if (!data?.trips) return '0s'
-
-    return formatTotalDuration(
-      data.trips.map((trip) => ({
-        created_at: trip.start_time,
-        updated_at: trip.end_time,
-      })),
-    )
-  }, [data])
-
-  if (isLoading || !data) {
+  if (isLoading || !tripsData) {
     return (
       <div className="col-span-3 flex flex-col gap-y-2">
         <Skeleton className="w-full h-10" />
@@ -138,14 +123,18 @@ export default function TripContent({
     )
   }
 
+  const { vehicle, stats } = tripsData.data
+
   return (
     <main className="flex-grow flex-1 overflow-hidden flex flex-col">
       <TripOverview
-        totalDriveTime={totalDriveTime}
-        totalIdleTime={'100'}
-        totalDistance={'100'}
-        totalTrips={data.pagination.total}
-        vehicleName={`Vehicle-${vehicleId}`}
+        totalDriveTime={stats.totalDuration}
+        activeTrips={stats.activeTrips}
+        totalDistance={stats.totalDistance}
+        totalTrips={stats.totalTrips}
+        vehicleName={`${vehicle.plateNumber} ${
+          vehicle.vehicleName && `(${vehicle.vehicleName})`
+        }`}
         onToggleSelectAll={handleToggleSelectAll}
         areAllSelected={areAllSelected}
       />
@@ -167,11 +156,11 @@ export default function TripContent({
                   onVisibilityToggle={handleVisibilityToggle}
                 />
                 <TripPagination
-                  currentPage={pageParams.page ?? 1}
-                  totalPages={data.pagination.totalPages}
+                  currentPage={query.page ?? 1}
+                  totalPages={tripsData.pagination!.totalPages}
                   onPageChange={(page) => {
-                    setPageParams({
-                      ...pageParams,
+                    setQuery({
+                      ...query,
                       page,
                     })
                   }}
@@ -195,11 +184,11 @@ export default function TripContent({
               />
             </div>
             <TripPagination
-              currentPage={pageParams.page ?? 1}
-              totalPages={data.pagination.totalPages}
+              currentPage={query.page ?? 1}
+              totalPages={tripsData.pagination!.totalPages}
               onPageChange={(page) => {
-                setPageParams({
-                  ...pageParams,
+                setQuery({
+                  ...query,
                   page,
                 })
               }}

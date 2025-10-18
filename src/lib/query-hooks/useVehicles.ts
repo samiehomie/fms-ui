@@ -18,6 +18,8 @@ import type {
   VehicleUpdateQuery,
   VehicleUpdateBody,
   VehicleUpdateResponse,
+  VehicleTripsQuery,
+  VehicleTripsResponse,
 } from '@/types/features/vehicle/vehicle.types'
 import {
   ApiResponseType,
@@ -34,13 +36,14 @@ import {
   deleteVehicle,
   restoreVehicle,
 } from '../actions/vehicle.actions'
+import { getVehicleTrips } from '../actions/vehicle-trip.actions'
 import type { ServerActionResult } from '@/types/features/common.types'
 
-export function useAllVehicles(params: VehiclesGetQuery) {
+export function useAllVehicles(query: VehiclesGetQuery) {
   return useQuery({
-    queryKey: ['vehicles', params],
+    queryKey: ['vehicles', query],
     queryFn: async () => {
-      const result = await getAllVehicles(params)
+      const result = await getAllVehicles(query)
 
       if (!result.success) {
         throw new Error(result.error.message)
@@ -49,6 +52,22 @@ export function useAllVehicles(params: VehiclesGetQuery) {
       return result
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
+export function useVehicleById(id: string) {
+  return useQuery({
+    queryKey: ['vehicle', id],
+    queryFn: async () => {
+      const result = await getVehicle({ id })
+
+      if (!result.success) {
+        throw new Error(result.error.message)
+      }
+
+      return result
+    },
+    staleTime: 5 * 60 * 1000,
   })
 }
 
@@ -81,22 +100,6 @@ export function useCreateVehicle() {
         description: error.message,
       })
     },
-  })
-}
-
-export function useVehicleById(id: string) {
-  return useQuery({
-    queryKey: ['vehicle', id],
-    queryFn: async () => {
-      const result = await getVehicle({ id })
-
-      if (!result.success) {
-        throw new Error(result.error.message)
-      }
-
-      return result
-    },
-    staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
 
@@ -194,13 +197,22 @@ export function useRestoreVehicle(id: string) {
   })
 }
 
-export function useVehicleTripsPaginated(
-  params: ApiParamsType<'GET /vehicles/trips/vehicle/{vehicle_id}'>,
-) {
+// 아직
+// 처리 전
+
+export function useVehicleAllTrips(query: VehicleTripsQuery) {
   return useQuery({
-    queryKey: ['trips', params],
-    queryFn: () => vehiclesApi.getVehicleTripsByVehicleIdPaginated(params),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ['trips', query],
+    queryFn: async () => {
+      const result = await getVehicleTrips(query)
+
+      if (!result.success) {
+        throw new Error(result.error.message)
+      }
+
+      return result
+    },
+    staleTime: 5 * 60 * 1000,
   })
 }
 

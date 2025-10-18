@@ -66,3 +66,33 @@ export function formatDateTime(dateString: string): string {
     return '날짜 오류'
   }
 }
+
+export function formatSeconds(seconds: number): string {
+  if (seconds < 0) {
+    throw new Error('초는 0 이상의 값이어야 합니다.')
+  }
+
+  if (seconds === 0) {
+    return '0s'
+  }
+
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const remainingSeconds = seconds % 60
+
+  const parts: string[] = []
+
+  if (hours > 0) {
+    parts.push(`${hours}h`)
+  }
+
+  if (minutes > 0) {
+    parts.push(`${minutes}m`)
+  }
+
+  if (remainingSeconds > 0) {
+    parts.push(`${remainingSeconds}s`)
+  }
+
+  return parts.join(' ')
+}
