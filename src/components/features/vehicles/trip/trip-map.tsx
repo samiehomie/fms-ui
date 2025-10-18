@@ -19,7 +19,7 @@ import type { LatLngExpression, Marker as LeafletMarker } from 'leaflet'
 import L from 'leaflet'
 import { useEffect, useRef } from 'react'
 import { useVehicleTripDetailsBatch } from '@/lib/query-hooks/useVehicles'
-import type { VehicleTripsByTripIdResponse } from '@/types/features/vehicle/vehicle.types'
+import type { TripDetailsResponse } from '@/types/features/trip/trip.types'
 
 interface TripMapProps {
   selectedIds: number[]
@@ -30,7 +30,7 @@ const MapUpdater = ({
   trips,
 }: {
   selectedIds: number[]
-  trips: Record<number, VehicleTripsByTripIdResponse>
+  trips: Record<number, TripDetailsResponse>
 }) => {
   const map = useMap()
   const isInitialLoad = useRef(true)
@@ -39,7 +39,7 @@ const MapUpdater = ({
     if (selectedIds.length > 0) {
       const allPoints = selectedIds
         .map((id) => {
-          const trip = trips[id]?.trip.gpss.map((gps) => ({
+          const trip = trips[id]?.gpss.map((gps) => ({
             lat: parseFloat(gps.latitude),
             lng: parseFloat(gps.longitude),
           }))
@@ -124,7 +124,7 @@ export default function TripMap({ selectedIds }: TripMapProps) {
       />
 
       {selectedIds.map((id) => {
-        const gpsData = tripDetailsMap[id].trip.gpss
+        const gpsData = tripDetailsMap[id].gpss
         if (gpsData.length === 0) {
           return <Fragment key={`trip-${id}`}></Fragment>
         } else {
@@ -164,7 +164,7 @@ export default function TripMap({ selectedIds }: TripMapProps) {
         showCoverageOnHover={false}
       >
         {selectedIds.map((id) => {
-          const gpsData = tripDetailsMap[id].trip.gpss
+          const gpsData = tripDetailsMap[id].gpss
           if (gpsData.length === 0) {
             return <Fragment key={`trip-${id}`}></Fragment>
           } else {

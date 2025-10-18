@@ -62,7 +62,7 @@ export default function CompanyDetailContent({
     <div className="flex flex-col flex-1 ">
       <header className="flex items-center justify-between pb-2 pl-2 pt-5 border-b shrink-0">
         <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold sm:text-3xl">{name}</h1>
+          <h1 className="text-xl font-bold sm:text-[1.625rem]">{name}</h1>
           {verified ? <VerifiedBadge /> : <UnVerifiedBadge />}
         </div>
       </header>

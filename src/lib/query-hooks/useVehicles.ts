@@ -36,8 +36,10 @@ import {
   deleteVehicle,
   restoreVehicle,
 } from '../actions/vehicle.actions'
+import { getTripDetails } from '../actions/trip.actions'
 import { getVehicleTrips } from '../actions/vehicle-trip.actions'
 import type { ServerActionResult } from '@/types/features/common.types'
+import { TripDetailsResponse } from '@/types/features/trip/trip.types'
 
 export function useAllVehicles(query: VehiclesGetQuery) {
   return useQuery({
@@ -197,9 +199,6 @@ export function useRestoreVehicle(id: string) {
   })
 }
 
-// 아직
-// 처리 전
-
 export function useVehicleAllTrips(query: VehicleTripsQuery) {
   return useQuery({
     queryKey: ['trips', query],
@@ -223,9 +222,17 @@ export function useVehicleTripDetailsBatch(tripIds: number[]) {
       return []
     }
 
-    return tripIds.map((tripId) => ({
-      queryKey: ['trip details', tripId] as const,
-      queryFn: () => vehiclesApi.getVehicleTripsByTripId({ tripId }),
+    return tripIds.map((id) => ({
+      queryKey: ['trip details', id] as const,
+      queryFn: async () => {
+        const result = await getTripDetails({ id })
+
+        if (!result.success) {
+          throw new Error(result.error.message)
+        }
+
+        return result
+      },
       staleTime: 5 * 60 * 1000, // 5 minutes
     }))
   }, [tripIds])
@@ -236,12 +243,12 @@ export function useVehicleTripDetailsBatch(tripIds: number[]) {
 
   // tripId와 결과를 매핑하여 객체로 반환
   const mappedData = useMemo(() => {
-    const result: Record<number, VehicleTripsByTripIdResponse> = {}
+    const result: Record<number, TripDetailsResponse> = {}
 
     tripIds.forEach((tripId, index) => {
       const query = queries[index]
-      if (query?.data) {
-        result[tripId] = query.data
+      if (query?.data && query.data.data) {
+        result[tripId] = query.data.data
       }
     })
 

@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils/utils'
 import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
-import banfShortLogoWEBP from '@/../public/logos/banf-short.webp'
+import banfShortLogoPNG from '@/../public/logos/banf-short.png'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -94,7 +94,7 @@ function SidebarLogo() {
       <Link href="/">
         {state === 'collapsed' ? (
           <Image
-            src={banfShortLogoWEBP}
+            src={banfShortLogoPNG}
             alt="logo"
             width={20}
             className="mx-auto "
