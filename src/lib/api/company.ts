@@ -2,8 +2,8 @@ import type {
   ApiRequestType,
   ApiResponseType,
   ApiParamsType,
-} from '@/types/api'
-import { ApiSuccessResponse } from '@/types/api/route.types'
+} from '@/types/features'
+import { ApiSuccessResponse } from '@/types/features/route.types'
 import { fetchClient } from './fetch-client'
 import { buildURL } from '../utils/build-url'
 

@@ -13,7 +13,7 @@ import { useVehicleTripsPaginated } from '@/lib/query-hooks/useVehicles'
 import type {
   VehicleTripsPaginationParams,
   VehicleTripEvent,
-} from '@/types/api/vehicle.types'
+} from '@/types/features/vehicle/vehicle.types'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TripPagination } from './trip-pagination'
 import { formatDuration, formatTotalDuration } from '@/lib/utils/build-url'

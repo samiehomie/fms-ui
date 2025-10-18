@@ -3,13 +3,16 @@
 import { useState, useMemo } from 'react'
 import { VehicleList } from './vehicle-list'
 import { RealTimeDataTable } from './real-time-data-table'
-import type { Vehicle, CombinedTireData } from '@/types/api/vehicle.types'
+import type {
+  Vehicle,
+  CombinedTireData,
+} from '@/types/features/vehicle/vehicle.types'
 import { useAllVehicles } from '@/lib/query-hooks/useVehicles'
 import {
   useAIResults,
   useTPMSResults,
 } from '@/lib/query-hooks/useActiveVehicles'
-import type { VehicleDataParams } from '@/types/api/vehicle.types'
+import type { VehicleDataParams } from '@/types/features/vehicle/vehicle.types'
 
 export default function ActiveVehiclesContent() {
   const { data, isLoading } = useAllVehicles({

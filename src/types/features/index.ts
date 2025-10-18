@@ -2,7 +2,7 @@ export * from './auth.types'
 
 import { AuthApiTypes } from './auth.types'
 import { CompanyApiTypes } from './company.types'
-import { VehicleApiTypes } from './vehicle.types'
+import { VehicleApiTypes } from './vehicle/vehicle.types'
 import { UserApiTypes } from './user.types'
 import { DeviceApiTypes } from './device.types'
 import { VehicleTripApiTypes } from './vehicle/vehicle-trip'

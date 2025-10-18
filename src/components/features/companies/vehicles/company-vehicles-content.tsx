@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useCompanyVehiclesPaginated } from '@/lib/query-hooks/useCompanies'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ApiParamsType } from '@/types/api'
+import { ApiParamsType } from '@/types/features'
 
 const CompanyVehiclesContent = ({ companyId }: { companyId: number }) => {
   const [pageParams, setPageParams] = useState<

@@ -5,17 +5,12 @@ import { Button } from '@/components/ui/button'
 import { AddVehicleForm } from './add-vehicle-form'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import { ApiParamsType } from '@/types/api'
-import type { CompaniesPaginationParams } from '@/types/api/company.types'
-import { Tag, Switch } from 'antd'
+import { Tag } from 'antd'
+import type { VehiclesGetQuery } from '@/types/features/vehicle/vehicle.types'
 
 type DataTableHeaderProps = {
-  pagination: ApiParamsType<'GET /vehicles'> & CompaniesPaginationParams
-  setPagination: React.Dispatch<
-    React.SetStateAction<
-      ApiParamsType<'GET /vehicles'> & CompaniesPaginationParams
-    >
-  >
+  pagination: VehiclesGetQuery
+  setPagination: React.Dispatch<React.SetStateAction<VehiclesGetQuery>>
 }
 
 const DataTableHeader: FC<DataTableHeaderProps> = ({
@@ -74,11 +69,11 @@ const DataTableHeader: FC<DataTableHeaderProps> = ({
         <div className="flex items-center gap-1">
           <Checkbox
             id="terms"
-            checked={pagination.include_deleted}
+            checked={pagination.includeDeleted}
             onCheckedChange={(e) => {
               setPagination((old) => ({
                 ...old,
-                include_deleted: !old.include_deleted,
+                includeDeleted: !old.includeDeleted,
               }))
             }}
           />

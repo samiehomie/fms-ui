@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import type { ApiResponseType } from '@/types/api'
+import type { ApiResponseType } from '@/types/features'
 import { withAuth } from '@/lib/actions/auth.actions'
 import { fetchServer } from '@/lib/api/fetch-server'
 import { buildURL } from '@/lib/utils/build-url'
@@ -130,17 +130,16 @@ export async function PATCH(request: NextRequest) {
     const requestBody = await request.json()
 
     try {
-      const response = await fetchServer<ApiResponseType<'PATCH /vehicles/{id}'>>(
-        apiUrl,
-        {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestBody),
+      const response = await fetchServer<
+        ApiResponseType<'PATCH /vehicles/{id}'>
+      >(apiUrl, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
         },
-      )
+        body: JSON.stringify(requestBody),
+      })
       if (!response.success) {
         return createErrorResponse(
           response.error.type,

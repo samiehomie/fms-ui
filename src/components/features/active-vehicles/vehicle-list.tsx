@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Truck, Calendar, Fuel, Settings, Building } from 'lucide-react'
-import type { Vehicle } from '@/types/api/vehicle.types'
+import type { Vehicle } from '@/types/features/vehicle/vehicle.types'
 
 interface VehicleListProps {
   vehicles: Vehicle[]
@@ -64,9 +64,7 @@ export function VehicleList({
               >
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <h3 className="font-semibold">
-                      {vehicle.plate_number}
-                    </h3>
+                    <h3 className="font-semibold">{vehicle.plate_number}</h3>
                     <p className="text-sm text-muted-foreground">
                       {vehicle.brand} {vehicle.model} ({vehicle.manuf_year})
                     </p>

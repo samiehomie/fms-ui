@@ -2,7 +2,11 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { ApiResponseType, ApiRequestType, ApiParamsType } from '@/types/api'
+import {
+  ApiResponseType,
+  ApiRequestType,
+  ApiParamsType,
+} from '@/types/features'
 import { buildURL } from '../utils/build-url'
 
 // export interface Vehicle {

@@ -16,14 +16,14 @@ import {
 import { IconDotsVertical } from '@tabler/icons-react'
 import { cn } from '@/lib/utils/utils'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
-import type { Vehicle } from '@/types/api/vehicle.types'
 import {
   useDeleteVehicle,
   useRestoreVehicle,
 } from '@/lib/query-hooks/useVehicles'
 import { UpdateVehicleForm } from './update-vehicle-form'
+import type { VehiclesGetResponse } from '@/types/features/vehicle/vehicle.types'
 
-export const columns: ColumnDef<Vehicle>[] = [
+export const columns: ColumnDef<VehiclesGetResponse[number]>[] = [
   {
     accessorKey: 'id',
     header: () => <div className="min-w-[45px] pl-2">{'ID'}</div>,
@@ -98,7 +98,7 @@ export const columns: ColumnDef<Vehicle>[] = [
       const router = useRouter()
       const { isdeleted, id: vehicleId } = row.original
       const mutationDelete = useDeleteVehicle()
-      const mutationRestore = useRestoreVehicle()
+      const mutationRestore = useRestoreVehicle(vehicleId.toString())
 
       const [open, setOpen] = useState(false)
 

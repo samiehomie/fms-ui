@@ -1,12 +1,12 @@
 'use client'
 import { DataTable } from '../../ui/data-table'
-import type { CompaniesPaginationParams } from '@/types/api/company.types'
+import type { CompaniesPaginationParams } from '@/types/features/company.types'
 import { useState } from 'react'
 import { useCompaniesPaginated } from '@/lib/query-hooks/useCompanies'
 import { columns } from '@/components/features/companies/columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'
-import type { ApiParamsType } from '@/types/api'
+import type { ApiParamsType } from '@/types/features'
 
 const CompaniesContent = () => {
   const [pageParams, setPageParams] = useState<ApiParamsType<'GET /companies'>>(

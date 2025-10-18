@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { usersApi } from '@/lib/api/user'
-import type { UsersPaginationParams } from '@/types/api/user.types'
-import { ApiResponseType, ApiRequestType } from '@/types/api'
+import type { UsersPaginationParams } from '@/types/features/user.types'
+import { ApiResponseType, ApiRequestType } from '@/types/features'
 import { toast } from 'sonner'
 
 type CreateUserResponse = ApiResponseType<'POST /users'>

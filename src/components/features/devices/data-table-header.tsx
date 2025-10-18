@@ -3,7 +3,7 @@ import { useState, FC } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { AddDeviceForm } from './add-device-form'
-import type { DevicesPaginationParams } from '@/types/api/device.types'
+import type { DevicesPaginationParams } from '@/types/features/device.types'
 import { Tag, Switch } from 'antd'
 
 type DataTableHeaderProps = {

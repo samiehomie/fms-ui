@@ -1,7 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { companiesApi } from '@/lib/api/company'
-import type { CompaniesPaginationParams } from '@/types/api/company.types'
-import { ApiResponseType, ApiRequestType, ApiParamsType } from '@/types/api'
+import type { CompaniesPaginationParams } from '@/types/features/company.types'
+import {
+  ApiResponseType,
+  ApiRequestType,
+  ApiParamsType,
+} from '@/types/features'
 import { toast } from 'sonner'
 import { vehiclesApi } from '@/lib/api/vehicle'
 

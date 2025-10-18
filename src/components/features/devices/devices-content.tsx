@@ -1,6 +1,9 @@
 'use client'
 import { DataTable } from '@/components/ui/data-table'
-import type { DevicesPaginationParams, Device } from '@/types/api/device.types'
+import type {
+  DevicesPaginationParams,
+  Device,
+} from '@/types/features/device.types'
 import { useState } from 'react'
 import { useDevicesPaginated } from '@/lib/query-hooks/useDevices'
 import { columns } from './columns'

@@ -22,7 +22,6 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
   SelectContent,
@@ -44,9 +43,8 @@ import { useUpdateVehicle, useVehicleById } from '@/lib/query-hooks/useVehicles'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { GearType, FuelType, CanBitrateType } from '@/types/enums/vehicle.enum'
-import { useAuth } from '../auth/auth-provider'
 import { useCompaniesPaginated } from '@/lib/query-hooks/useCompanies'
-import { ApiRequestType } from '@/types/api'
+import type { VehicleUpdateBody } from '@/types/features/vehicle/vehicle.types'
 
 const vehicleSchema = z.object({
   vehicleName: z.string().min(1, 'Vehicle name is required'),
@@ -60,7 +58,10 @@ const vehicleSchema = z.object({
       new Date().getFullYear() + 1,
       'Manufacturing year cannot be in the future',
     ),
-  canBitrate: z.string().min(1, 'CAN bitrate is required'),
+
+  canBitrate: z.nativeEnum(CanBitrateType, {
+    errorMap: () => ({ message: 'CAN bitrate is required' }),
+  }),
   fuelType: z.nativeEnum(FuelType, {
     errorMap: () => ({ message: 'Fuel type is required' }),
   }),
@@ -81,7 +82,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
       limit: 100,
       search: '',
     })
-  const { user, isLoading: userLoading } = useAuth()
+
   const { data: vehicleData, isLoading } = useVehicleById(id)
   const mutation = useUpdateVehicle(id)
   const form = useForm<VehicleFormData>({
@@ -97,13 +98,11 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
       fuelType: vehicleData?.data?.fuelType ?? FuelType.GASOLINE,
       gearType: vehicleData?.data?.gearType ?? GearType.AUTOMATIC,
       numTire: vehicleData?.data?.numTire ?? 4,
-      companyId: user?.companyId ?? 1,
+      companyId: vehicleData?.data?.company?.id,
     },
   })
 
-  const onSubmit = async (
-    data: Partial<ApiRequestType<'PATCH /vehicles/{id}'>>,
-  ) => {
+  const onSubmit = async (data: VehicleUpdateBody) => {
     try {
       await mutation.mutateAsync({
         ...data,
@@ -128,10 +127,10 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
         fuelType: vehicle.fuelType,
         gearType: vehicle.gearType,
         numTire: vehicle.numTire,
-        companyId: user?.companyId ?? 1,
+        companyId: vehicle?.company?.id,
       })
     }
-  }, [vehicleData])
+  }, [vehicleData, companiesData])
 
   // 폼 에러 확인
   useEffect(() => {
@@ -141,7 +140,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
     }
   }, [form.formState.errors])
 
-  if (companiesLoading || userLoading || isLoading) {
+  if (companiesLoading || isLoading) {
     return (
       <div className="min-h-[51.125rem]  flex flex-col gap-y-4 overflow-y-hidden">
         <Skeleton className="w-full h-10" />
@@ -369,7 +368,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
                 <FormItem>
                   <FormLabel>Company Name</FormLabel>
                   <Select
-                    onValueChange={field.onChange}
+                    onValueChange={(value) => field.onChange(parseInt(value))}
                     defaultValue={`${field.value}`}
                   >
                     <FormControl className="w-full">
@@ -379,7 +378,10 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
                     </FormControl>
                     <SelectContent>
                       {companiesData?.data.map((company) => (
-                        <SelectItem key={company.id} value={`${company.id}`}>
+                        <SelectItem
+                          key={company.id}
+                          value={company.id.toString()}
+                        >
                           {company.name}
                         </SelectItem>
                       ))}

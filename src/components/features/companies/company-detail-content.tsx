@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Building, Mail, Phone, Globe, UserCircle, MapPin } from 'lucide-react'
-import type { CompanyByIdResponse } from '@/types/api/company.types'
+import type { CompanyByIdResponse } from '@/types/features/company.types'
 import { VerifiedBadge, UnVerifiedBadge } from '@/components/ui/custom-badges'
 
 type CompanyDetailContentProps = {
@@ -162,6 +162,5 @@ const CompanyDetailContent: FC<CompanyDetailContentProps> = ({ company }) => {
     </>
   )
 }
-
 
 export default CompanyDetailContent

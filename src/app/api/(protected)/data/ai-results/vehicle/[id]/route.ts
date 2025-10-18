@@ -6,7 +6,7 @@ import {
   createErrorResponse,
   createSuccessResponse,
 } from '@/lib/route/route.heplers'
-import type { AIResultsResponse } from '@/types/api/vehicle.types'
+import type { AIResultsResponse } from '@/types/features/vehicle/vehicle.types'
 
 export async function GET(
   request: NextRequest,

@@ -5,7 +5,7 @@ import { formatDateTime } from '@/lib/utils/date-formatter'
 import { ArrowUpDown, CircleSlash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import type { Device } from '@/types/api/device.types'
+import type { Device } from '@/types/features/device.types'
 import { IconCircleCheckFilled } from '@tabler/icons-react'
 
 export const columns: ColumnDef<Device>[] = [

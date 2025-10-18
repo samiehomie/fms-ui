@@ -4,8 +4,7 @@ import { useState, useCallback } from 'react'
 import { DatePicker } from 'antd'
 import type { Dayjs } from 'dayjs'
 import dayjs from 'dayjs'
-
-import { logger, formatDateRangeForAPI } from '@/lib/utils/utils'
+import { formatDateRangeForAPI } from '@/lib/utils/date-formatter'
 
 const { RangePicker } = DatePicker
 

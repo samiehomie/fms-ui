@@ -56,7 +56,7 @@ export type ApiGetDefaultPaginatedResponse<T> = ApiResponse<
   DefaultPaginatedResponse<T>
 >
 
-export interface PaginationResponse {
+export interface PaginationQuery {
   page?: number
   limit?: number
 }
@@ -66,3 +66,16 @@ export interface CommonData {
   createdAt: string
   updatedAt: string
 }
+
+
+export type CommonProperties = 'id' | 'createdAt' | 'updatedAt'
+
+export type ServerActionError = {
+  message: string
+  status?: number
+  details?: unknown
+}
+
+export type ServerActionResult<T = any> =
+  | { success: true; data: T; pagination?: PaginationMeta; message?: string }
+  | { success: false; error: ServerActionError }

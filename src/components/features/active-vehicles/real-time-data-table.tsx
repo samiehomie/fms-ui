@@ -19,7 +19,10 @@ import {
   Clock,
   Truck,
 } from 'lucide-react'
-import type { Vehicle, CombinedTireData } from '@/types/api/vehicle.types'
+import type {
+  Vehicle,
+  CombinedTireData,
+} from '@/types/features/vehicle/vehicle.types'
 interface RealTimeDataProps {
   selectedVehicle: Vehicle | null
   tireData: CombinedTireData[]

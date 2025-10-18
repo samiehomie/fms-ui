@@ -1,6 +1,6 @@
-import type { ApiRequestType, ApiResponseType } from '@/types/api'
-import { ApiSuccessResponse } from '@/types/api/route.types'
-import type { UsersPaginationParams } from '@/types/api/user.types'
+import type { ApiRequestType, ApiResponseType } from '@/types/features'
+import { ApiSuccessResponse } from '@/types/features/route.types'
+import type { UsersPaginationParams } from '@/types/features/user.types'
 import { buildURL } from '../utils/build-url'
 import { fetchClient } from './fetch-client'
 

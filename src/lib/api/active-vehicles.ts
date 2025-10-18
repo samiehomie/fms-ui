@@ -3,8 +3,8 @@ import type {
   AIResultsResponse,
   TPMSResultsResponse,
   VehicleDataParams,
-} from '@/types/api/vehicle.types'
-import { ApiSuccessResponse } from '@/types/api/route.types'
+} from '@/types/features/vehicle/vehicle.types'
+import { ApiSuccessResponse } from '@/types/features/route.types'
 
 export const activeVehiclesApi = {
   getAIResults: async (

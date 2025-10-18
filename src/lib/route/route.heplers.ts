@@ -4,9 +4,9 @@ import type {
   ApiSuccessResponse,
   ApiErrorResponse,
   ApiErrorCode,
-} from '@/types/api/route.types'
-import { HTTP_STATUS, API_ERROR_CODES } from '@/types/api/route.types'
-import type { PaginationMeta } from '@/types/api/common.types'
+} from '@/types/features/route.types'
+import { HTTP_STATUS, API_ERROR_CODES } from '@/types/features/route.types'
+import type { PaginationMeta } from '@/types/features/common.types'
 
 // 성공 응답 헬퍼
 export function createSuccessResponse(

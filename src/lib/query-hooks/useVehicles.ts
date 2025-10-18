@@ -8,9 +8,22 @@ import {
 import { vehiclesApi } from '@/lib/api/vehicle'
 import type {
   VehicleTripsByTripIdResponse,
-  VehicleTripsPaginationParams,
-} from '@/types/api/vehicle.types'
-import { ApiResponseType, ApiRequestType, ApiParamsType } from '@/types/api'
+  VehiclesGetQuery,
+  VehicleCreateBody,
+  VehicleCreateResponse,
+  VehicleDeleteQuery,
+  VehicleDeleteResponse,
+  VehicleRestoreQuery,
+  VehicleRestoreResponse,
+  VehicleUpdateQuery,
+  VehicleUpdateBody,
+  VehicleUpdateResponse,
+} from '@/types/features/vehicle/vehicle.types'
+import {
+  ApiResponseType,
+  ApiRequestType,
+  ApiParamsType,
+} from '@/types/features'
 import { toast } from 'sonner'
 import { useMemo, useEffect } from 'react'
 import {
@@ -21,14 +34,9 @@ import {
   deleteVehicle,
   restoreVehicle,
 } from '../actions/vehicle.actions'
-import type { ServerActionResult } from '@/types/api'
+import type { ServerActionResult } from '@/types/features/common.types'
 
-type CreateVehicleResponse = ServerActionResult<
-  ApiResponseType<'POST /vehicles'>
->
-type CreateVehicleRequest = ApiRequestType<'POST /vehicles'>
-
-export function useAllVehicles(params: ApiParamsType<'GET /vehicles'>) {
+export function useAllVehicles(params: VehiclesGetQuery) {
   return useQuery({
     queryKey: ['vehicles', params],
     queryFn: async () => {
@@ -46,7 +54,11 @@ export function useAllVehicles(params: ApiParamsType<'GET /vehicles'>) {
 
 export function useCreateVehicle() {
   const queryClient = useQueryClient()
-  return useMutation<CreateVehicleResponse, Error, CreateVehicleRequest>({
+  return useMutation<
+    ServerActionResult<VehicleCreateResponse>,
+    Error,
+    VehicleCreateBody
+  >({
     mutationFn: async (newVehicle) => {
       const res = await createVehicle(newVehicle)
       return res
@@ -91,9 +103,9 @@ export function useVehicleById(id: string) {
 export function useDeleteVehicle() {
   const queryClient = useQueryClient()
   return useMutation<
-    ServerActionResult<ApiResponseType<'DELETE /vehicles/{id}'>>,
+    ServerActionResult<VehicleDeleteResponse>,
     Error,
-    ApiParamsType<'DELETE /vehicles/{id}'>
+    VehicleDeleteQuery
   >({
     mutationFn: async (deleteParams) => {
       const res = await deleteVehicle(deleteParams)
@@ -121,9 +133,9 @@ export function useDeleteVehicle() {
 export function useUpdateVehicle(id: string) {
   const queryClient = useQueryClient()
   return useMutation<
-    ServerActionResult<ApiResponseType<'PATCH /vehicles/{id}'>>,
+    ServerActionResult<VehicleUpdateResponse>,
     Error,
-    ApiRequestType<'PATCH /vehicles/{id}'>
+    VehicleUpdateBody
   >({
     mutationFn: async (vehicle) => {
       const res = await updateVehicle({ id }, vehicle)
@@ -137,7 +149,7 @@ export function useUpdateVehicle(id: string) {
         queryKey: ['vehicle', id],
       })
       if (res.success) {
-        toast.success('A new vehicle added', {
+        toast.success('Vehicle updated successfully', {
           description: `plate number: ${res.data.plateNumber}`,
           position: 'bottom-center',
         })
@@ -155,9 +167,9 @@ export function useUpdateVehicle(id: string) {
 export function useRestoreVehicle(id: string) {
   const queryClient = useQueryClient()
   return useMutation<
-    ServerActionResult<ApiResponseType<'PATCH /vehicles/{id}/restore'>>,
+    ServerActionResult<VehicleRestoreResponse>,
     Error,
-    ApiParamsType<'PATCH /vehicles/{id}/restore'>
+    VehicleRestoreQuery
   >({
     mutationFn: async (restoreParams) => {
       const res = await restoreVehicle(restoreParams)
@@ -167,13 +179,8 @@ export function useRestoreVehicle(id: string) {
       queryClient.invalidateQueries({
         queryKey: ['vehicles'],
       })
-      queryClient.invalidateQueries({
-        queryKey: ['vehicle', id],
-      })
-
       if (res.success) {
-        toast.success('A vehicle restored.', {
-          description: `plate number: ${res.data.plateNumber}`,
+        toast.success(res.message ?? 'Vehicle restored.', {
           position: 'bottom-center',
         })
       }

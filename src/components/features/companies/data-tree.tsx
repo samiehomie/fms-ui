@@ -1,12 +1,12 @@
 'use client'
 
 import type React from 'react'
-import type { CompanyDetail } from '@/types/api/company.types'
+import type { CompanyDetail } from '@/types/features/company.types'
 import { Tree } from 'antd'
 import type { TreeDataNode, TreeProps } from 'antd'
 import { Badge } from '@/components/ui/badge'
 import { UserIcon, Truck, UserCircle, Search } from 'lucide-react'
-import { ApiResponseType } from '@/types/api'
+import { ApiResponseType } from '@/types/features'
 import { Input } from '@/components/ui/input'
 import CompanyDetailsPagination from './company-details-pagination'
 

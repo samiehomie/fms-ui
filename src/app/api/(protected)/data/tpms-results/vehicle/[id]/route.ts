@@ -6,7 +6,7 @@ import {
   createErrorResponse,
   createSuccessResponse,
 } from '@/lib/route/route.heplers'
-import type { TPMSResultsResponse } from '@/types/api/vehicle.types'
+import type { TPMSResultsResponse } from '@/types/features/vehicle/vehicle.types'
 
 export async function GET(
   request: NextRequest,

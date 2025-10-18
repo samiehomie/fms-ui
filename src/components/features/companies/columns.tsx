@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
-import type { Company } from '@/types/api/company.types'
+import type { Company } from '@/types/features/company.types'
 import { formatDateTime } from '@/lib/utils/date-formatter'
 import { getCompanyTypeColor } from '@/lib/utils/utils'
 import { ArrowUpDown, CircleSlash } from 'lucide-react'

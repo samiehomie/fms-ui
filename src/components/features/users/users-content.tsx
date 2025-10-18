@@ -1,6 +1,6 @@
 'use client'
 import { DataTable } from '@/components/ui/data-table'
-import type { UsersPaginationParams } from '@/types/api/user.types'
+import type { UsersPaginationParams } from '@/types/features/user.types'
 import { useState } from 'react'
 import { useUsersPaginated } from '@/lib/query-hooks/useUsers'
 import { columns } from './columns'

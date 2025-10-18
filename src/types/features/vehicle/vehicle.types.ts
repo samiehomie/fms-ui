@@ -1,76 +1,121 @@
 import type {
-  PaginatedResponseWithKey,
   DefaultPaginatedResponse,
-} from './common.types'
-import { GearType, FuelType } from '@/types/enums/vehicle.enum'
+  PaginatedResponseWithKey,
+  CommonProperties,
+  PaginationQuery,
+} from '../common.types'
+import { GearType, FuelType, CanBitrateType } from '@/types/enums/vehicle.enum'
 import { CompanyType } from '@/types/enums/company.enum'
 import { SensorStatus } from '@/types/enums/sensor.enum'
 import { EdgeDeviceType } from '@/types/enums/edge-device.enum'
+import { Vehicle } from '@/types/entities/vehicle.entity'
+import { Company } from '@/types/entities/company.entity'
+import { User } from '@/types/entities/user.entity'
+import { Tire } from '@/types/entities/tire.entity'
+import { SmartProfiler } from '@/types/entities/smart-profiler.entity'
+import { Sensor } from '@/types/entities/sensor.entity'
+import { EdgeDevice } from '@/types/entities/edge-device.entity'
 
-export interface Vehicle {
-  id: number
-  createdAt: string
-  updatedAt: string
-  vehicleName: string
-  plateNumber: string
-  brand: string
-  model: string
-  manufactureYear: number
-  canBitrate: string
-  fuelType: FuelType
-  gearType: GearType
-  numTire: number
-  isdeleted: boolean
-  users: {
-    id: number
-    name: string
-    username: string
-    email: string
-    verified: boolean
-    isdeleted: boolean
-  }[]
-  tires: {
-    id: number
-    tireLocation: string
-    profiler: {
-      id: number
-      serialNumber: string
-      profilerFwVer: string
-      profilerRev: string
-      verified: boolean
-      isdeleted: boolean
-      status: SensorStatus
-    }
-    sensor: {
-      id: 1
-      serialNumber: string
-      sensorFwVer: string
-      sensorRev: string
-      verified: boolean
-      isdeleted: boolean
-      status: SensorStatus
-    }
-  }[]
-  edgeDevices: {
-    id: number
-    name: string
-    serialNumber: string
-    type: EdgeDeviceType
-    wlanIpAddr: string
-    ethIpAddr: string
-    verified: boolean
-    terminated: boolean
-    terminatedAt?: string
-  }[]
-  company: {
-    id: number
-    name: string
-    regNumber: string
-    type: CompanyType
-    website: string
-    verified: boolean
-    isdeleted: boolean
-  }
+type VehicleData = Pick<
+  Vehicle,
+  | CommonProperties
+  | 'vehicleName'
+  | 'plateNumber'
+  | 'brand'
+  | 'model'
+  | 'manufactureYear'
+  | 'canBitrate'
+  | 'fuelType'
+  | 'gearType'
+  | 'numTire'
+  | 'isdeleted'
+>
+// GET /vehicles
+export type VehiclesGetResponse = (VehicleData & {
+  company: Pick<Company, 'id' | 'name'>
+})[]
+
+// GET /vehicles
+export interface VehiclesGetQuery extends PaginationQuery {
+  includeDeleted?: boolean
+  search?: string
+}
+
+// GET /vehicles/{id}
+export type VehicleGetResponse = VehicleData & {
+  users: Pick<User, 'id' | 'username' | 'email'>[]
+  tires: (Pick<Tire, 'id' | 'tireLocation'> & {
+    profiler: Pick<SmartProfiler, 'id' | 'serialNumber' | 'isdeleted'>
+    sensor: Pick<Sensor, 'id' | 'serialNumber' | 'isdeleted'>
+  })[]
+  edgeDevices: Pick<
+    EdgeDevice,
+    'id' | 'serialNumber' | 'type' | 'verified' | 'terminated'
+  >[]
+  company: Pick<
+    Company,
+    | 'id'
+    | 'name'
+    | 'regNumber'
+    | 'type'
+    | 'details'
+    | 'phone'
+    | 'email'
+    | 'website'
+    | 'verified'
+    | 'isdeleted'
+  >
+}
+
+// GET /vehicles/{id}
+export interface VehicleGetQuery {
+  id: string
+}
+
+// POST /vehicles
+export type VehicleCreateBody = Pick<
+  Vehicle,
+  | 'vehicleName'
+  | 'plateNumber'
+  | 'brand'
+  | 'model'
+  | 'manufactureYear'
+  | 'canBitrate'
+  | 'fuelType'
+  | 'gearType'
+  | 'numTire'
+> & {
+  companyId: number
+}
+
+// POST /vehicles
+export type VehicleCreateResponse = VehicleGetResponse
+
+// DELETE /vehicles/{id}
+export interface VehicleDeleteQuery {
+  id: string
+}
+
+// DELETE /vehicles/{id}
+export type VehicleDeleteResponse = undefined
+
+// PATCH /vehicles/{id}/restore
+export type VehicleRestoreResponse = undefined
+
+// PATCH /vehicles/{id}/restore
+export interface VehicleRestoreQuery {
+  id: string
+}
+
+// PATCH /vehicles/{id}
+export type VehicleUpdateBody = VehicleCreateBody
+
+// PATCH /vehicles/{id}
+export type VehicleUpdateResponse = VehicleCreateResponse
+
+// PATCH /vehicles/{id}
+export interface VehicleUpdateQuery {
+  id: string
 }
 
 export interface CombinedTireData {
@@ -109,8 +154,6 @@ export type DefaultResponse<T> = {
   data: T
 }
 
-export type VehiclesResponse = DefaultPaginatedResponse<Vehicle>
-export type VehicleResponse = Vehicle
 export interface VehiclesPaginationParams {
   page?: number
   limit?: number
@@ -173,11 +216,6 @@ export interface VehiclesByCompany {
   updated_at: string
 }
 
-export type VehiclesByCompanyIdResponse = PaginatedResponseWithKey<
-  VehiclesByCompany,
-  'vehicles'
-> & { company_id: number }
-
 export interface VehiclesByCompanyIdPaginationParams {
   page: number
   limit: number
@@ -196,43 +234,6 @@ export interface VehicleCreateRequest {
   companyId: number
 }
 
-export interface VehicleCreateResponse {
-  id: number
-  vehicleName: string
-  plateNumber: string
-  brand: string
-  model: string
-  manuf_year: number
-  can_bitrate: string
-  fuel_type: string
-  gear_type: string
-  num_tire: number
-  isdeleted: boolean
-  deletedAt: string
-  company_id: {
-    id: number
-    name: string
-    type: string
-    reg_number: string
-  }
-  users: {
-    id: number
-    name: string
-    username: string
-  }[]
-  tires: {
-    id: number
-    tire_location: string
-  }[]
-  edge_devices: {
-    id: number
-    name: string
-    serial_number: string
-  }[]
-  created_at: string
-  updated_at: string
-}
-
 export interface VehiclesSearchPaginationParams {
   query: string
   page: number
@@ -240,7 +241,7 @@ export interface VehiclesSearchPaginationParams {
   include_deleted: boolean
 }
 
-export type VehiclesSearchResponse = VehiclesResponse & {
+export type VehiclesSearchResponse = VehiclesGetResponse & {
   search_query: string
 }
 
@@ -284,11 +285,6 @@ export interface VehicleTrip {
   end_point: string | null
   events: VehicleTripEvent[]
 }
-
-export type VehicleTripsResponse = PaginatedResponseWithKey<
-  VehicleTrip,
-  'trips'
->
 
 export interface GPS {
   id: number
@@ -370,16 +366,9 @@ export interface VehicleDeleteParams {
   id: string
 }
 
-export interface VehicleDeleteResponse {
-  message: string
-  deleted_at: string
-}
-
 export interface VehicleRestoreParams {
   id: string
 }
-
-export type VehicleRestoreResponse = VehicleCreateResponse
 
 export interface VehicleUpdateParams {
   id: string
@@ -399,8 +388,6 @@ export interface VehicleRequest {
 }
 
 // export type VehicleResponse = VehicleCreateResponse['data']
-
-export type VehicleUpdateResponse = VehicleCreateResponse
 
 export interface VehicleInLiveStream {
   id: number
@@ -523,12 +510,12 @@ export interface VehicleApiTypes {
   'GET /vehicles': {
     params: VehiclesPaginationParams
     request: {}
-    response: VehiclesResponse
+    response: VehiclesGetResponse
   }
   'GET /vehicles/{id}': {
     params: { id: string }
     request: {}
-    response: VehicleResponse
+    response: VehicleGetResponse
   }
   'DELETE /vehicles/{id}': {
     params: VehicleDeleteParams
@@ -578,7 +565,7 @@ export interface VehicleApiTypes {
   'POST /vehicles/get': {
     params: {}
     request: VehicleRequest
-    response: VehicleResponse
+    response: VehicleGetResponse
   }
   'GET /sse/vehicles/live-stream/{company_id}': {
     params: VehiclesLiveStreamParams

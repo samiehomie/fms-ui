@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import type { VehicleTripsPaginationParams } from '@/types/api/vehicle.types'
+import type { VehicleTripsPaginationParams } from '@/types/features/vehicle/vehicle.types'
 import { DateRangePicker } from '@/components/ui/data-range-picker'
 import TripContent from './trip-content'
 

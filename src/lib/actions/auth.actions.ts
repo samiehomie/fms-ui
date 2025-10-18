@@ -8,12 +8,12 @@ import {
   AUTH_REFRESH_THRESHOLD,
 } from '@/lib/constants/auth'
 import { buildURL } from '@/lib/utils/build-url'
-import type { ApiResponseType, ApiRequestType } from '@/types/api'
+import type { ApiResponseType, ApiRequestType } from '@/types/features'
 import { fetchServer } from '../api/fetch-server'
-import type { JWTAuthPayload } from '@/types/api'
+import type { JWTAuthPayload } from '@/types/features'
 import { redirect } from 'next/navigation'
 import { parseJWT } from '@/lib/utils/build-url'
-import type { ServerActionResult } from '@/types/api'
+import type { ServerActionResult } from '@/types/features/common.types'
 
 export async function loginAction(
   loginData: ApiRequestType<'POST /auth/login'>,
@@ -84,7 +84,7 @@ export async function refreshTokenIfNeeded(
   newRefreshToken: string
 } | null> {
   if (!accessToken || !refreshToken) {
-    logger.log(
+    console.log(
       `인증 토큰 갱신실패: ${AUTH_TOKEN_COOKIE_NAME}: ${accessToken} ${REFRESH_TOKEN_COOKIE_NAME}: ${refreshToken}`,
     )
     return null

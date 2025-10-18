@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/card'
 import Image from 'next/image'
 import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
-import { ApiRequestType } from '@/types/api'
+import { ApiRequestType } from '@/types/features'
 import { loginAction } from '@/lib/actions/auth.actions'
 
 const loginSchema = z.object({

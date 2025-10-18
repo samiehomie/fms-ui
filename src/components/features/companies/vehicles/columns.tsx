@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { IconDotsVertical } from '@tabler/icons-react'
-import type { VehiclesByCompany } from '@/types/api/vehicle.types'
+import type { VehiclesByCompany } from '@/types/features/vehicle/vehicle.types'
 
 export const columns: ColumnDef<VehiclesByCompany>[] = [
   {

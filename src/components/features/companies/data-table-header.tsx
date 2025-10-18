@@ -3,7 +3,7 @@ import { useState, FC } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { AddCompanyForm } from './add-company-form'
-import type { CompaniesPaginationParams } from '@/types/api/company.types'
+import type { CompaniesPaginationParams } from '@/types/features/company.types'
 import { Tag, Switch } from 'antd'
 
 type DataTableHeaderProps = {

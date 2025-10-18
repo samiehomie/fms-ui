@@ -6,8 +6,8 @@ import {
   skipToken,
 } from '@tanstack/react-query'
 import { devicesApi } from '@/lib/api/device'
-import type { DevicesPaginationParams } from '@/types/api/device.types'
-import { ApiResponseType, ApiRequestType } from '@/types/api'
+import type { DevicesPaginationParams } from '@/types/features/device.types'
+import { ApiResponseType, ApiRequestType } from '@/types/features'
 import { toast } from 'sonner'
 import { useMemo } from 'react'
 

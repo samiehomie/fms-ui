@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import type { ApiResponseType } from '@/types/api'
+import type { ApiResponseType } from '@/types/features'
 import type React from 'react'
-import type { CompanyDetail } from '@/types/api/company.types'
+import type { CompanyDetail } from '@/types/features/company.types'
 import CompanyVehiclesContent from '@/components/features/companies/vehicles/company-vehicles-content'
 import SubSidebar from './sub-sidebar'
 import CompanyDetailContent from './detail/company-detail-content'

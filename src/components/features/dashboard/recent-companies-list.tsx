@@ -8,7 +8,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Building2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import type { Company } from '@/types/api/company.types'
+import type { Company } from '@/types/features/company.types'
 
 export function RecentCompaniesList({ companies }: { companies: Company[] }) {
   return (
@@ -45,7 +45,9 @@ export function RecentCompaniesList({ companies }: { companies: Company[] }) {
                   {company.type}
                 </Badge>
               </div>
-              <div className=' text-muted-foreground text-xs'>{company.website}</div>
+              <div className=" text-muted-foreground text-xs">
+                {company.website}
+              </div>
             </div>
           </div>
         ))}

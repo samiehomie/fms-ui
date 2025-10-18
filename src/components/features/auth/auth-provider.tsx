@@ -7,7 +7,7 @@ import {
   useEffect,
   ReactNode,
 } from 'react'
-import type { JWTAuthPayload } from '@/types/api'
+import type { JWTAuthPayload } from '@/types/features'
 import { getAuthData } from '@/lib/actions/auth.actions'
 
 type AuthContextType = {

@@ -1,283 +1,254 @@
 'use server'
 
 import { buildURL } from '../utils/build-url'
-import type {
-  ApiParamsType,
-  ApiRequestType,
-  ApiResponseType,
-} from '@/types/api'
 import { withAuthAction } from './auth.actions'
 import { fetchServer } from '../api/fetch-server'
+import type {
+  VehiclesGetResponse,
+  VehiclesGetQuery,
+  VehicleGetQuery,
+  VehicleGetResponse,
+  VehicleCreateBody,
+  VehicleCreateResponse,
+  VehicleDeleteQuery,
+  VehicleDeleteResponse,
+  VehicleRestoreQuery,
+  VehicleRestoreResponse,
+  VehicleUpdateResponse,
+  VehicleUpdateBody,
+  VehicleUpdateQuery,
+} from '@/types/features/vehicle/vehicle.types'
 
-export async function getAllVehicles(params: ApiParamsType<'GET /vehicles'>) {
-  return await withAuthAction<ApiResponseType<'GET /vehicles'>>(
-    async (accessToken) => {
-      const { id } = params
-      const apiUrl =
-        typeof id === 'string'
-          ? buildURL(`/vehicles/${id}`)
-          : buildURL(`/vehicles`, {
-              page: params.page,
-              limit: params.limit,
-              search: params.search,
-              includeDeleted: params.include_deleted,
-            })
+export async function getAllVehicles(query: VehiclesGetQuery) {
+  return await withAuthAction<VehiclesGetResponse>(async (accessToken) => {
+    const apiUrl = buildURL(`/vehicles`, query)
 
-      try {
-        const response = await fetchServer<ApiResponseType<'GET /vehicles'>>(
-          apiUrl,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-            cache: 'no-store',
-          },
-        )
+    try {
+      const response = await fetchServer<VehiclesGetResponse>(apiUrl, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        cache: 'no-store',
+      })
 
-        if (!response.success) {
-          return {
-            success: false,
-            error: {
-              message: response.error.message || 'Unknown server error',
-              status: response.error.status,
-            },
-          }
-        }
-        const { data, pagination } = response
-
-        return { success: true, data, pagination }
-      } catch (error) {
+      if (!response.success) {
         return {
           success: false,
           error: {
-            message: 'Unexpected server error',
-            status: 500,
+            message: response.error.message || 'Unknown server error',
+            status: response.error.status,
           },
         }
       }
-    },
-  )
+      const { data, pagination } = response
+
+      return { success: true, data, pagination }
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: 'Unexpected server error',
+          status: 500,
+        },
+      }
+    }
+  })
 }
 
-export async function getVehicle(params: ApiParamsType<'GET /vehicles/{id}'>) {
-  return await withAuthAction<ApiResponseType<'GET /vehicles/{id}'>>(
-    async (accessToken) => {
-      const { id } = params
-      const apiUrl = buildURL(`/vehicles/${id}`)
+export async function getVehicle(query: VehicleGetQuery) {
+  return await withAuthAction<VehicleGetResponse>(async (accessToken) => {
+    const { id } = query
+    const apiUrl = buildURL(`/vehicles/${id}`)
 
-      try {
-        const response = await fetchServer<
-          ApiResponseType<'GET /vehicles/{id}'>
-        >(apiUrl, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          cache: 'no-store',
-        })
+    try {
+      const response = await fetchServer<VehicleGetResponse>(apiUrl, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        cache: 'no-store',
+      })
 
-        if (!response.success) {
-          return {
-            success: false,
-            error: {
-              message: response.error.message || 'Unknown server error',
-              status: response.error.status,
-            },
-          }
-        }
-        const { data, pagination } = response
-
-        return { success: true, data, pagination }
-      } catch (error) {
+      if (!response.success) {
         return {
           success: false,
           error: {
-            message: 'Unexpected server error',
-            status: 500,
+            message: response.error.message || 'Unknown server error',
+            status: response.error.status,
           },
         }
       }
-    },
-  )
+      const { data, pagination } = response
+
+      return { success: true, data, pagination }
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: 'Unexpected server error',
+          status: 500,
+        },
+      }
+    }
+  })
 }
 
-export async function createVehicle(body: ApiRequestType<'POST /vehicles'>) {
-  return await withAuthAction<ApiResponseType<'POST /vehicles'>>(
-    async (accessToken) => {
-      const apiUrl = buildURL(`/vehicles`)
+export async function createVehicle(body: VehicleCreateBody) {
+  return await withAuthAction<VehicleCreateResponse>(async (accessToken) => {
+    const apiUrl = buildURL(`/vehicles`)
 
-      try {
-        const response = await fetchServer<ApiResponseType<'POST /vehicles'>>(
-          apiUrl,
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
-            cache: 'no-store',
-          },
-        )
+    try {
+      const response = await fetchServer<VehicleCreateResponse>(apiUrl, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+        cache: 'no-store',
+      })
 
-        if (!response.success) {
-          return {
-            success: false,
-            error: {
-              message: response.error.message || 'Unknown server error',
-              status: response.error.status,
-            },
-          }
-        }
-        const { data, pagination } = response
-        return { success: true, data, pagination }
-      } catch (error) {
+      if (!response.success) {
         return {
           success: false,
           error: {
-            message: 'Unexpected server error',
-            status: 500,
+            message: response.error.message || 'Unknown server error',
+            status: response.error.status,
           },
         }
       }
-    },
-  )
+      const { data, pagination } = response
+      return { success: true, data, pagination }
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: 'Unexpected server error',
+          status: 500,
+        },
+      }
+    }
+  })
 }
 
 export async function updateVehicle(
-  params: ApiParamsType<'PATCH /vehicles/{id}'>,
-  body: ApiRequestType<'PATCH /vehicles/{id}'>,
+  query: VehicleUpdateQuery,
+  body: VehicleUpdateBody,
 ) {
-  return await withAuthAction<ApiResponseType<'PATCH /vehicles/{id}'>>(
-    async (accessToken) => {
-      const { id } = params
-      const apiUrl = buildURL(`/vehicles/${id}`)
+  return await withAuthAction<VehicleUpdateResponse>(async (accessToken) => {
+    const { id } = query
+    const apiUrl = buildURL(`/vehicles/${id}`)
 
-      try {
-        const response = await fetchServer<
-          ApiResponseType<'PATCH /vehicles/{id}'>
-        >(apiUrl, {
-          method: 'PATCH',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body),
-          cache: 'no-store',
-        })
+    try {
+      const response = await fetchServer<VehicleUpdateResponse>(apiUrl, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+        cache: 'no-store',
+      })
 
-        if (!response.success) {
-          return {
-            success: false,
-            error: {
-              message: response.error.message || 'Unknown server error',
-              status: response.error.status,
-            },
-          }
-        }
-        const { data, pagination } = response
-        return { success: true, data, pagination }
-      } catch (error) {
+      if (!response.success) {
         return {
           success: false,
           error: {
-            message: 'Unexpected server error',
-            status: 500,
+            message: response.error.message || 'Unknown server error',
+            status: response.error.status,
           },
         }
       }
-    },
-  )
+      const { data, pagination } = response
+      return { success: true, data, pagination }
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: 'Unexpected server error',
+          status: 500,
+        },
+      }
+    }
+  })
 }
 
-export async function deleteVehicle(
-  params: ApiParamsType<'DELETE /vehicles/{id}'>,
-) {
-  return await withAuthAction<ApiResponseType<'DELETE /vehicles/{id}'>>(
-    async (accessToken) => {
-      const { id } = params
-      const apiUrl = buildURL(`/vehicles/${id}`)
+export async function deleteVehicle(params: VehicleDeleteQuery) {
+  return await withAuthAction<VehicleDeleteResponse>(async (accessToken) => {
+    const { id } = params
+    const apiUrl = buildURL(`/vehicles/${id}`)
 
-      try {
-        const response = await fetchServer<
-          ApiResponseType<'DELETE /vehicles/{id}'>
-        >(apiUrl, {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          cache: 'no-store',
-        })
+    try {
+      const response = await fetchServer<VehicleDeleteResponse>(apiUrl, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        cache: 'no-store',
+      })
 
-        if (!response.success) {
-          return {
-            success: false,
-            error: {
-              message: response.error.message || 'Unknown server error',
-              status: response.error.status,
-            },
-          }
-        }
-        const { data, pagination } = response
-
-        return { success: true, data, pagination }
-      } catch (error) {
+      if (!response.success) {
         return {
           success: false,
           error: {
-            message: 'Unexpected server error',
-            status: 500,
+            message: response.error.message || 'Unknown server error',
+            status: response.error.status,
           },
         }
       }
-    },
-  )
+      const { data, pagination, message } = response
+
+      return { success: true, data, pagination, message }
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: 'Unexpected server error',
+          status: 500,
+        },
+      }
+    }
+  })
 }
 
-export async function restoreVehicle(
-  params: ApiParamsType<'PATCH /vehicles/{id}/restore'>,
-) {
-  return await withAuthAction<ApiResponseType<'PATCH /vehicles/{id}/restore'>>(
-    async (accessToken) => {
-      const { id } = params
-      const apiUrl = buildURL(`/vehicles/${id}`)
+export async function restoreVehicle(query: VehicleRestoreQuery) {
+  return await withAuthAction<VehicleRestoreResponse>(async (accessToken) => {
+    const { id } = query
+    const apiUrl = buildURL(`/vehicles/${id}/restore`)
 
-      try {
-        const response = await fetchServer<
-          ApiResponseType<'PATCH /vehicles/{id}/restore'>
-        >(apiUrl, {
-          method: 'PATCH',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          cache: 'no-store',
-        })
+    try {
+      const response = await fetchServer<VehicleRestoreResponse>(apiUrl, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        cache: 'no-store',
+      })
 
-        if (!response.success) {
-          return {
-            success: false,
-            error: {
-              message: response.error.message || 'Unknown server error',
-              status: response.error.status,
-            },
-          }
-        }
-        const { data, pagination } = response
-        return { success: true, data, pagination }
-      } catch (error) {
+      if (!response.success) {
         return {
           success: false,
           error: {
-            message: 'Unexpected server error',
-            status: 500,
+            message: response.error.message || 'Unknown server error',
+            status: response.error.status,
           },
         }
       }
-    },
-  )
+      const { data, pagination, message } = response
+      return { success: true, data, pagination, message }
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: 'Unexpected server error',
+          status: 500,
+        },
+      }
+    }
+  })
 }

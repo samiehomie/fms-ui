@@ -17,7 +17,7 @@ import { useVerifyUser } from '@/lib/query-hooks/useUsers'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
-import type { User } from '@/types/api/user.types'
+import type { User } from '@/types/features/user.types'
 import { IconCircleCheckFilled, IconDotsVertical } from '@tabler/icons-react'
 
 export const columns: ColumnDef<User>[] = [

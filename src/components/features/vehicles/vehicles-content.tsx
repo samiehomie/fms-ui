@@ -5,13 +5,13 @@ import { useAllVehicles } from '@/lib/query-hooks/useVehicles'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'
-import type { ApiParamsType } from '@/types/api'
+import type { VehiclesGetQuery } from '@/types/features/vehicle/vehicle.types'
 
 const VehiclesContent = () => {
-  const [pageParams, setPageParams] = useState<ApiParamsType<'GET /vehicles'>>({
+  const [pageParams, setPageParams] = useState<VehiclesGetQuery>({
     page: 1,
     limit: 10,
-    include_deleted: true,
+    includeDeleted: true,
     search: '',
   })
 
