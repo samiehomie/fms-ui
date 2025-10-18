@@ -75,6 +75,8 @@ const vehicleSchema = z.object({
 type VehicleFormData = z.infer<typeof vehicleSchema>
 
 function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
+  const [isInitialized, setIsInitialized] = useState(false)
+
   // TODO: 전체 가져오기 다른 패턴 회사가 많아 졌을 경우 검색 UI 필요
   const { data: companiesData, isLoading: companiesLoading } =
     useCompaniesPaginated({
@@ -85,36 +87,13 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
 
   const { data: vehicleData, isLoading } = useVehicleById(id)
   const mutation = useUpdateVehicle(id)
+
   const form = useForm<VehicleFormData>({
     resolver: zodResolver(vehicleSchema),
-    defaultValues: {
-      vehicleName: vehicleData?.data.vehicleName ?? '',
-      plateNumber: vehicleData?.data?.plateNumber ?? '',
-      brand: vehicleData?.data?.brand ?? '',
-      model: vehicleData?.data?.model ?? '',
-      manufactureYear: vehicleData?.data?.manufactureYear,
-      canBitrate: vehicleData?.data?.canBitrate,
-      fuelType: vehicleData?.data?.fuelType,
-      gearType: vehicleData?.data?.gearType,
-      numTire: vehicleData?.data?.numTire,
-      companyId: vehicleData?.data?.company?.id,
-    },
   })
 
-  const onSubmit = async (data: VehicleUpdateBody) => {
-    try {
-      await mutation.mutateAsync({
-        ...data,
-      })
-      form.reset()
-      onClose()
-    } catch (error) {
-      // Error is handled in the mutation
-    }
-  }
-
   useEffect(() => {
-    if (vehicleData && vehicleData.data) {
+    if (vehicleData?.data) {
       const vehicle = vehicleData.data
       form.reset({
         vehicleName: vehicle.vehicleName,
@@ -126,20 +105,14 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
         fuelType: vehicle.fuelType,
         gearType: vehicle.gearType,
         numTire: vehicle.numTire,
-        companyId: vehicle?.company?.id,
+        companyId: vehicle.company?.id,
       })
+      setIsInitialized(true)
     }
-  }, [vehicleData, form])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vehicleData])
 
-  // 폼 에러 확인
-  useEffect(() => {
-    const errors = form.formState.errors
-    if (Object.keys(errors).length > 0) {
-      logger.log('Form validation errors:', errors)
-    }
-  }, [form.formState.errors])
-
-  if (companiesLoading || isLoading) {
+  if (companiesLoading || isLoading || !vehicleData || !isInitialized) {
     return (
       <div className="min-h-[51.125rem]  flex flex-col gap-y-4 overflow-y-hidden">
         <Skeleton className="w-full h-10" />
@@ -147,6 +120,18 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
         <Skeleton className="w-full h-10" />
       </div>
     )
+  }
+
+  const onSubmit = async (data: VehicleUpdateBody) => {
+    try {
+      await mutation.mutateAsync({
+        ...data,
+      })
+      form.reset()
+      onClose()
+    } catch (error) {
+      // Error is handled in the mutation
+    }
   }
 
   return (
@@ -434,7 +419,7 @@ export function UpdateVehicleForm({
             </DrawerDescription>
           </DrawerHeader>
           <div className="px-4 pb-4 overflow-y-auto">
-            <VehicleForm onClose={handleClose} id={id} />
+            <VehicleForm key={id} onClose={handleClose} id={id} />
           </div>
         </DrawerContent>
       </Drawer>
@@ -459,7 +444,7 @@ export function UpdateVehicleForm({
           <DialogTitle>Update Vehicle</DialogTitle>
           <DialogDescription>Update the vehicle information.</DialogDescription>
         </DialogHeader>
-        <VehicleForm onClose={handleClose} id={id} />
+        <VehicleForm key={id} onClose={handleClose} id={id} />
       </DialogContent>
     </Dialog>
   )
