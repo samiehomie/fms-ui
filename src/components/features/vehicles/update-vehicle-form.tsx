@@ -127,7 +127,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
       await mutation.mutateAsync({
         ...data,
       })
-      form.reset()
+      // form.reset()
       onClose()
     } catch (error) {
       // Error is handled in the mutation
