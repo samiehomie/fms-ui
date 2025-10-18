@@ -1,4 +1,3 @@
-
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
 export interface GeocodeResponse {
@@ -21,7 +20,7 @@ export async function reverseGeocode(
   const lng = typeof longitude === 'string' ? parseFloat(longitude) : longitude
 
   const response = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}&language=en`,
+    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&language=en`,
   )
 
   if (!response.ok) {

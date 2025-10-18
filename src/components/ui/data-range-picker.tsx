@@ -1,10 +1,12 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { DatePicker } from 'antd'
-import type { Dayjs } from 'dayjs'
-import dayjs from 'dayjs'
-import { formatDateRangeForAPI } from '@/lib/utils/date-formatter'
+import dayjs, { type Dayjs } from 'dayjs'
+import {
+  formatDateRangeForAPI,
+  getDefaultDateRange,
+} from '@/lib/utils/date-formatter'
 
 const { RangePicker } = DatePicker
 
@@ -17,10 +19,9 @@ export function DateRangePicker({
   className,
   onDateChange,
 }: DateRangePickerProps) {
-  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>([
-    dayjs('2025-08-29'),
-    dayjs('2025-09-04'),
-  ])
+  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(() =>
+    getDefaultDateRange(),
+  )
 
   const handleDateChange = useCallback(
     (dates: [Dayjs | null, Dayjs | null] | null) => {
@@ -34,7 +35,6 @@ export function DateRangePicker({
 
         const formattedRange = formatDateRangeForAPI(dateRange)
         if (formattedRange) {
-          logger.log('Formatted date range:', formattedRange)
           onDateChange?.(formattedRange)
         }
       } else {

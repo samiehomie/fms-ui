@@ -1,8 +1,31 @@
 import type { DateRange } from 'react-day-picker'
+import dayjs, { type Dayjs } from 'dayjs'
 
 export interface DateRangeFormatted {
   from: string
   to: string
+}
+
+/**
+ * 기본 날짜 범위를 생성 (3개월 전 ~ 오늘)
+ * @returns [시작일, 종료일] 튜플
+ */
+export function getDefaultDateRange(): [Dayjs, Dayjs] {
+  const today = dayjs()
+  const threeMonthsAgo = today.subtract(3, 'month')
+  return [threeMonthsAgo, today]
+}
+
+/**
+ * 기본 날짜 범위를 API 포맷으로 반환
+ * @returns API용 포맷된 날짜 범위
+ */
+export function getDefaultDateRangeFormatted(): DateRangeFormatted {
+  const [from, to] = getDefaultDateRange()
+  return formatDateRangeForAPI({
+    from: from.toDate(),
+    to: to.toDate(),
+  })!
 }
 
 export function formatDateRangeForAPI(

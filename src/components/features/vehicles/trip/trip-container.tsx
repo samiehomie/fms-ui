@@ -4,14 +4,18 @@ import { useState, useCallback } from 'react'
 import { DateRangePicker } from '@/components/ui/data-range-picker'
 import TripContent from './trip-content'
 import type { VehicleTripsQuery } from '@/types/features/vehicle/vehicle.types'
+import { getDefaultDateRangeFormatted } from '@/lib/utils/date-formatter'
 
 export default function TripContainer({ vehicleId }: { vehicleId: string }) {
-  const [query, setQuery] = useState<Omit<VehicleTripsQuery, 'id'>>({
-    page: 1,
-    limit: 6,
-    status: undefined,
-    startDate: undefined,
-    endDate: undefined,
+  const [query, setQuery] = useState<Omit<VehicleTripsQuery, 'id'>>(() => {
+    const defaultDateRange = getDefaultDateRangeFormatted()
+    return {
+      page: 1,
+      limit: 6,
+      status: undefined,
+      startDate: defaultDateRange.from,
+      endDate: defaultDateRange.to,
+    }
   })
 
   const handleDateRangeChange = useCallback(

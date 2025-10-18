@@ -9,12 +9,11 @@ export function useReverseGeocode(
     queryKey: ['reverse-geocode', latitude, longitude],
     queryFn:
       latitude && longitude
-        ? () => reverseGeocode(latitude, longitude)
+        ? async () => await reverseGeocode(latitude, longitude)
         : skipToken,
-    staleTime: 24 * 60 * 60 * 1000, // 24시간 캐싱
-    gcTime: 7 * 24 * 60 * 60 * 1000, // 7일간 캐시 유지
-    // enabled: options?.enabled ?? true,
-    retry: 1, // API 제한으로 인한 재시도 최소화
+    staleTime: 8 * 60 * 60 * 1000, // 8 hours
+    gcTime: 12 * 60 * 60 * 1000, // 12 hours
+    retry: 3, // API 제한으로 인한 재시도 최소화
   })
 }
 
@@ -26,11 +25,11 @@ export function useReverseGeocodeBatch(
   return useQueries({
     queries: coordinates.map(({ latitude, longitude }) => ({
       queryKey: ['reverse-geocode', latitude, longitude],
-      queryFn: () => reverseGeocode(latitude, longitude),
+      queryFn: async () => await reverseGeocode(latitude, longitude),
       staleTime: 24 * 60 * 60 * 1000,
       gcTime: 7 * 24 * 60 * 60 * 1000,
       enabled: options?.enabled ?? true,
-      retry: 1,
+      retry: 3,
     })),
   })
 }
