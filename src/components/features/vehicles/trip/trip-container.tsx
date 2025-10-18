@@ -19,8 +19,8 @@ export default function TripContainer({ vehicleId }: { vehicleId: string }) {
       if (dateRange) {
         setQuery((old) => ({
           ...old,
-          start_date: dateRange.from,
-          end_date: dateRange.to,
+          startDate: dateRange.from,
+          endDate: dateRange.to,
         }))
       }
     },
@@ -35,11 +35,7 @@ export default function TripContainer({ vehicleId }: { vehicleId: string }) {
         </h1>
         <DateRangePicker onDateChange={handleDateRangeChange} />
       </header>
-      <TripContent
-        vehicleId={vehicleId}
-        setQuery={setQuery}
-        query={query}
-      />
+      <TripContent vehicleId={vehicleId} setQuery={setQuery} query={query} />
     </div>
   )
 }

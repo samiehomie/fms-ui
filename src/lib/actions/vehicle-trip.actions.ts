@@ -11,8 +11,8 @@ import type {
 // GET /vehicles/{id}/trips
 export async function getVehicleTrips(query: VehicleTripsQuery) {
   return await withAuthAction<VehicleTripsResponse>(async (accessToken) => {
-    const { id } = query
-    const apiUrl = buildURL(`/vehicles/${id}/trips`)
+    const { id, ...params } = query
+    const apiUrl = buildURL(`/vehicles/${id}/trips`, params)
 
     try {
       const response = await fetchServer<VehicleTripsResponse>(apiUrl, {
