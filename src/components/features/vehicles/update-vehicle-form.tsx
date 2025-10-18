@@ -92,12 +92,11 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
       plateNumber: vehicleData?.data?.plateNumber ?? '',
       brand: vehicleData?.data?.brand ?? '',
       model: vehicleData?.data?.model ?? '',
-      manufactureYear:
-        vehicleData?.data?.manufactureYear ?? new Date().getFullYear(),
-      canBitrate: vehicleData?.data?.canBitrate ?? CanBitrateType['500Kbps'],
-      fuelType: vehicleData?.data?.fuelType ?? FuelType.GASOLINE,
-      gearType: vehicleData?.data?.gearType ?? GearType.AUTOMATIC,
-      numTire: vehicleData?.data?.numTire ?? 4,
+      manufactureYear: vehicleData?.data?.manufactureYear,
+      canBitrate: vehicleData?.data?.canBitrate,
+      fuelType: vehicleData?.data?.fuelType,
+      gearType: vehicleData?.data?.gearType,
+      numTire: vehicleData?.data?.numTire,
       companyId: vehicleData?.data?.company?.id,
     },
   })
@@ -130,7 +129,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
         companyId: vehicle?.company?.id,
       })
     }
-  }, [vehicleData, companiesData])
+  }, [vehicleData, form])
 
   // 폼 에러 확인
   useEffect(() => {
@@ -281,10 +280,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Fuel Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl className="w-full">
                       <SelectTrigger>
                         <SelectValue placeholder="Select fuel type" />
@@ -309,10 +305,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Gear Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl className="w-full">
                       <SelectTrigger>
                         <SelectValue placeholder="Select gear type" />
@@ -339,10 +332,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Can Bitrate</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl className="w-full">
                       <SelectTrigger>
                         <SelectValue placeholder="Select gear type" />
@@ -369,7 +359,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
                   <FormLabel>Company Name</FormLabel>
                   <Select
                     onValueChange={(value) => field.onChange(parseInt(value))}
-                    defaultValue={`${field.value}`}
+                    value={field.value?.toString()}
                   >
                     <FormControl className="w-full">
                       <SelectTrigger>
