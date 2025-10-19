@@ -17,10 +17,10 @@ import { useVerifyUser } from '@/lib/query-hooks/useUsers'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
-import type { User } from '@/types/features/user.types'
 import { IconCircleCheckFilled, IconDotsVertical } from '@tabler/icons-react'
+import type { UsersGetResponse } from '@/types/features/users/user.types'
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<UsersGetResponse[number]>[] = [
   {
     accessorKey: 'id',
     header: () => <div className="min-w-[45px] pl-2">{'ID'}</div>,

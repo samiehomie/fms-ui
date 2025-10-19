@@ -1,21 +1,22 @@
 'use client'
 import { DataTable } from '@/components/ui/data-table'
-import type { UsersPaginationParams } from '@/types/features/user.types'
 import { useState } from 'react'
-import { useUsersPaginated } from '@/lib/query-hooks/useUsers'
+import { useAllUsers } from '@/lib/query-hooks/useUsers'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'
+import type { UsersGetQuery } from '@/types/features/users/user.types'
 
 const UsersContent = () => {
-  const [pageParams, setPageParams] = useState<UsersPaginationParams>({
+  const [query, setQuery] = useState<UsersGetQuery>({
     page: 1,
     limit: 10,
+    includeDeleted: true,
     verified: true,
-    search: '',
+    search: undefined,
   })
 
-  const { data: usersData, isLoading } = useUsersPaginated(pageParams)
+  const { data: usersData, isLoading } = useAllUsers(query)
 
   if (isLoading || !usersData) {
     return (
@@ -27,19 +28,18 @@ const UsersContent = () => {
     )
   }
 
+  if (!usersData.pagination) return null
+
   return (
     <div className="col-span-3">
       <div className="mb-3">
-        <DataTableHeader
-          setPagination={setPageParams}
-          pagination={pageParams}
-        />
+        <DataTableHeader setQuery={setQuery} query={query} />
       </div>
       <DataTable
         columns={columns}
         data={usersData.data}
-        pagination={pageParams}
-        setPagination={setPageParams}
+        pagination={query}
+        setPagination={setQuery}
         totalCount={usersData.pagination.total}
       />
     </div>

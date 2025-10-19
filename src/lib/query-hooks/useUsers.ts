@@ -3,17 +3,30 @@ import { usersApi } from '@/lib/api/user'
 import type { UsersPaginationParams } from '@/types/features/user.types'
 import { ApiResponseType, ApiRequestType } from '@/types/features'
 import { toast } from 'sonner'
+import { getAllUsers } from '../actions/user.actions'
+import type {
+  UsersGetResponse,
+  UsersGetQuery,
+} from '@/types/features/users/user.types'
 
 type CreateUserResponse = ApiResponseType<'POST /users'>
 type CreateUserRequest = ApiRequestType<'POST /users'>
 type VerifyUserResponse = ApiResponseType<'POST /users/verify'>
 type VerifyUserRequest = ApiRequestType<'POST /users/verify'>
 
-export function useUsersPaginated(params: UsersPaginationParams) {
+export function useAllUsers(query: UsersGetQuery) {
   return useQuery({
-    queryKey: ['users', params],
-    queryFn: () => usersApi.getUsersPaginated(params),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ['users', query],
+    queryFn: async () => {
+      const result = await getAllUsers(query)
+
+      if (!result.success) {
+        throw new Error(result.error.message)
+      }
+
+      return result
+    },
+    staleTime: 5 * 60 * 1000, 
   })
 }
 

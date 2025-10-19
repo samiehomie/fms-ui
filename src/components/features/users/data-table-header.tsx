@@ -3,18 +3,17 @@ import { useState, FC } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { AddUserForm } from './add-user-form'
-import type { UsersPaginationParams } from '@/types/features/user.types'
-import type { CompaniesPaginationParams } from '@/types/features/company.types'
 import { Tag, Switch } from 'antd'
+import type { UsersGetQuery } from '@/types/features/users/user.types'
 
 type DataTableHeaderProps = {
-  pagination: CompaniesPaginationParams
-  setPagination: React.Dispatch<React.SetStateAction<UsersPaginationParams>>
+  query: UsersGetQuery
+  setQuery: React.Dispatch<React.SetStateAction<UsersGetQuery>>
 }
 
 const DataTableHeader: FC<DataTableHeaderProps> = ({
-  pagination,
-  setPagination,
+  query: pagination,
+  setQuery: setPagination,
 }) => {
   const [search, setSearch] = useState('')
 
