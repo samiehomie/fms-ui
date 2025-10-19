@@ -42,13 +42,11 @@ import { Loader2 } from 'lucide-react'
 import { useCreateDevice } from '@/lib/query-hooks/useDevices'
 import { IconPlus } from '@tabler/icons-react'
 import { useAllVehicles } from '@/lib/query-hooks/useVehicles'
+import { EdgeDeviceType } from '@/types/enums/edge-device.enum'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const deviceSchema = z.object({
-  name: z
-    .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(50, 'Name must be at most 50 characters'),
-  serial_number: z
+  serialNumber: z
     .string()
     .min(8, 'Serial number must be at least 8 characters')
     .max(255, 'Serial number must be at most 255 characters')
@@ -56,52 +54,85 @@ const deviceSchema = z.object({
       /^[A-Z0-9]+$/,
       'Serial number must contain only uppercase letters and numbers',
     ),
-  type: z.enum(['master', 'slave', 'gateway', 'sensor', 'logger']),
-  user_name: z
+  type: z.nativeEnum(EdgeDeviceType, {
+    errorMap: () => ({ message: 'Edge device type is required' }),
+  }),
+  username: z
     .string()
     .min(3, 'Username must be at least 3 characters')
     .max(20, 'Username must be at most 20 characters'),
-  ip_addr: z
+  password: z
+    .string()
+    .min(3, 'Password must be at least 3 characters')
+    .max(20, 'Password must be at most 20 characters'),
+  name: z
+    .string()
+    .min(2, 'Name must be at least 2 characters')
+    .max(50, 'Name must be at most 50 characters')
+    .optional(),
+  wlanIpAddr: z
     .string()
     .max(16, 'IP address must be at most 16 characters')
     .regex(
       /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
       'Invalid IP address format',
-    ),
-  vehicle_id: z.number().min(1, 'Vehicle ID must be at least 1'),
+    )
+    .optional(),
+  ethIpAddr: z
+    .string()
+    .max(16, 'IP address must be at most 16 characters')
+    .regex(
+      /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+      'Invalid IP address format',
+    )
+    .optional(),
+  vehicleId: z.number().min(1, 'Vehicle ID must be at least 1'),
 })
 
 type DeviceFormData = z.infer<typeof deviceSchema>
 
 function DeviceForm({ onClose }: { onClose: () => void }) {
-  const mutation = useCreateDevice()
+  // TODO 모든 차량 가져오기에 대한 리펙토링 UI / API 모두 필요
   const { data: vehiclesData, isLoading: isLoadingVehicles } = useAllVehicles({
     page: 1,
-    limit: 10000, // 모든 회사를 가져오기 위해 충분히 큰 수로 설정
+    limit: 10,
+    includeDeleted: false,
+    search: '',
   })
 
+  const mutation = useCreateDevice()
   const form = useForm<DeviceFormData>({
     resolver: zodResolver(deviceSchema),
     defaultValues: {
+      serialNumber: '',
       name: '',
-      serial_number: '',
-      type: 'master',
-      user_name: 'banf',
-      ip_addr: '',
-      vehicle_id: undefined,
+      type: EdgeDeviceType.MASTER,
+      username: '',
+      password: '',
+      wlanIpAddr: '',
+      ethIpAddr: '',
+      vehicleId: undefined,
     },
   })
 
   const onSubmit = async (data: DeviceFormData) => {
     try {
-      await mutation.mutateAsync({
-        edge_device: data,
-      })
+      await mutation.mutateAsync(data)
       form.reset()
       onClose()
     } catch (error) {
-      // Error is handled in the mutation
+      logger.log('add device form:', error)
     }
+  }
+
+  if (isLoadingVehicles) {
+    return (
+      <div className="min-h-[51.125rem]  flex flex-col gap-y-4 overflow-y-hidden">
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+      </div>
+    )
   }
 
   return (
@@ -125,7 +156,7 @@ function DeviceForm({ onClose }: { onClose: () => void }) {
 
             <FormField
               control={form.control}
-              name="serial_number"
+              name="serialNumber"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Serial Number</FormLabel>
@@ -147,32 +178,7 @@ function DeviceForm({ onClose }: { onClose: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Device Type</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select device type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="master">Master</SelectItem>
-                      <SelectItem value="slave">Slave</SelectItem>
-                      <SelectItem value="gateway">Gateway</SelectItem>
-                      <SelectItem value="sensor">Sensor</SelectItem>
-                      <SelectItem value="logger">Logger</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="user_name"
+              name="username"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Username</FormLabel>
@@ -185,10 +191,37 @@ function DeviceForm({ onClose }: { onClose: () => void }) {
             />
             <FormField
               control={form.control}
-              name="ip_addr"
+              name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>IP Address</FormLabel>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="wlanIpAddr"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Wlan IP</FormLabel>
+                  <FormControl>
+                    <Input placeholder="192.168.1.100" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="ethIpAddr"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ethernet IP</FormLabel>
                   <FormControl>
                     <Input placeholder="192.168.1.100" {...field} />
                   </FormControl>
@@ -198,10 +231,35 @@ function DeviceForm({ onClose }: { onClose: () => void }) {
             />
             <FormField
               control={form.control}
-              name="vehicle_id"
+              name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Vehicle ID</FormLabel>
+                  <FormLabel>Device Type</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select device type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Object.values(EdgeDeviceType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="vehicleId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Vehicle</FormLabel>
                   <Select
                     onValueChange={(value) => field.onChange(parseInt(value))}
                     value={field.value?.toString()}
@@ -219,15 +277,15 @@ function DeviceForm({ onClose }: { onClose: () => void }) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {vehiclesData?.data?.vehicles.map((vehicle) => (
+                      {vehiclesData?.data?.map((vehicle) => (
                         <SelectItem
                           key={vehicle.id}
                           value={vehicle.id.toString()}
                         >
-                          {vehicle.plate_number}
+                          {vehicle.plateNumber}
                         </SelectItem>
                       ))}
-                      {vehiclesData?.data?.vehicles.length === 0 && (
+                      {vehiclesData?.data?.length === 0 && (
                         <SelectItem value="" disabled>
                           No vehicles available
                         </SelectItem>

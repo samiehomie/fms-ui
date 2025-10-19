@@ -550,7 +550,7 @@ export interface VehicleApiTypes {
   'GET /vehicles/company/{company_id}': {
     params: VehiclesByCompanyIdPaginationParams
     request: {}
-    response: VehiclesByCompanyIdResponse
+    response: {}
   }
   'POST /vehicles': {
     params: {}

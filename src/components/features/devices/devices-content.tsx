@@ -5,21 +5,23 @@ import type {
   Device,
 } from '@/types/features/device.types'
 import { useState } from 'react'
-import { useDevicesPaginated } from '@/lib/query-hooks/useDevices'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'
+import type { DevicesGetQuery } from '@/types/features/device/device.types'
+import { EdgeDeviceType } from '@/types/enums/edge-device.enum'
+import { useAllDevices } from '@/lib/query-hooks/useDevices'
 
 const DevicesContent = () => {
-  const [pageParams, setPageParams] = useState<DevicesPaginationParams>({
+  const [query, setQuery] = useState<DevicesGetQuery>({
     page: 1,
     limit: 10,
     verified: true,
-    terminated: false,
     type: undefined,
+    includeTerminated: true,
   })
 
-  const { data: edgeDeviceData, isLoading } = useDevicesPaginated(pageParams)
+  const { data: edgeDeviceData, isLoading } = useAllDevices(query)
 
   if (isLoading || !edgeDeviceData) {
     return (
@@ -31,19 +33,18 @@ const DevicesContent = () => {
     )
   }
 
+  if (!edgeDeviceData.pagination) return null
+
   return (
     <div className="col-span-3">
       <div className="mb-3">
-        <DataTableHeader
-          setPagination={setPageParams}
-          pagination={pageParams}
-        />
+        <DataTableHeader setQuery={setQuery} query={query} />
       </div>
-      <DataTable<Device, any, DevicesPaginationParams>
+      <DataTable
         columns={columns}
         data={edgeDeviceData.data}
-        pagination={pageParams}
-        setPagination={setPageParams}
+        pagination={query}
+        setPagination={setQuery}
         totalCount={edgeDeviceData.pagination.total}
       />
     </div>

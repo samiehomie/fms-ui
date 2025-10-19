@@ -6,36 +6,54 @@ import {
   skipToken,
 } from '@tanstack/react-query'
 import { devicesApi } from '@/lib/api/device'
-import type { DevicesPaginationParams } from '@/types/features/device.types'
-import { ApiResponseType, ApiRequestType } from '@/types/features'
 import { toast } from 'sonner'
 import { useMemo } from 'react'
+import type {
+  DevicesGetQuery,
+  DevicesGetResponse,
+  DeviceCreateBody,
+  DeviceCreateResponse,
+} from '@/types/features/device/device.types'
+import type { ServerActionResult } from '@/types/features/common.types'
+import { getAllDevices, createDevice } from '../actions/device.actions'
 
-type CreateDeviceResponse = ApiResponseType<'POST /edge-devices'>
-type CreateDeviceRequest = ApiRequestType<'POST /edge-devices'>
-
-export function useDevicesPaginated(params: DevicesPaginationParams) {
+export function useAllDevices(query: DevicesGetQuery) {
   return useQuery({
-    queryKey: ['devices', params],
-    queryFn: () => devicesApi.getDevicesPaginated(params),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ['devices', query],
+    queryFn: async () => {
+      const result = await getAllDevices(query)
+
+      if (!result.success) {
+        throw new Error(result.error.message)
+      }
+
+      return result
+    },
+    staleTime: 5 * 60 * 1000,
   })
 }
 
 export function useCreateDevice() {
   const queryClient = useQueryClient()
-  return useMutation<CreateDeviceResponse, Error, CreateDeviceRequest>({
+  return useMutation<
+    ServerActionResult<DeviceCreateResponse>,
+    Error,
+    DeviceCreateBody
+  >({
     mutationFn: async (newDevice) => {
-      const res = await devicesApi.createVehicle(newDevice)
+      const res = await createDevice(newDevice)
       return res
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries({
         queryKey: ['devices'],
       })
-      toast.success('A new device added', {
-        position: 'bottom-center',
-      })
+      if (res.success) {
+        toast.success('A new device added', {
+          description: `serial number: ${res.data.serialNumber}`,
+          position: 'bottom-center',
+        })
+      }
     },
     onError: (error) => {
       toast.error('Adding a new device failed.', {

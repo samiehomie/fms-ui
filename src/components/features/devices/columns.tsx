@@ -1,14 +1,25 @@
 'use client'
 
+import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { formatDateTime } from '@/lib/utils/date-formatter'
 import { ArrowUpDown, CircleSlash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import type { Device } from '@/types/features/device.types'
 import { IconCircleCheckFilled } from '@tabler/icons-react'
+import type { DevicesGetResponse } from '@/types/features/device/device.types'
+import { useRouter } from 'next/navigation'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { IconDotsVertical } from '@tabler/icons-react'
+import ConfirmDialog from '@/components/ui/confirm-dialog'
 
-export const columns: ColumnDef<Device>[] = [
+export const columns: ColumnDef<DevicesGetResponse[number]>[] = [
   {
     accessorKey: 'id',
     header: () => <div className="min-w-[45px] pl-2">{'ID'}</div>,
@@ -27,7 +38,7 @@ export const columns: ColumnDef<Device>[] = [
     header: 'Vehicle',
     cell: ({ row }) => {
       const vehicle = row.original.vehicle
-      return <div>{vehicle.vehicleName}</div>
+      return <div>{vehicle.plateNumber}</div>
     },
   },
   {
@@ -35,17 +46,14 @@ export const columns: ColumnDef<Device>[] = [
     header: 'Type',
   },
   {
-    accessorKey: 'ipAddr',
-    header: 'IP',
+    accessorKey: 'wlanIpAddr',
+    header: 'wlan IP',
   },
-  // {
-  //   id: 'role',
-  //   header: 'Role',
-  //   cell: ({ row }) => {
-  //     const role = row.original.role_id
-  //     return <div className="">{role.name}</div>
-  //   },
-  // },
+
+  {
+    accessorKey: 'ethIpAddr',
+    header: 'ethernet IP',
+  },
   {
     accessorKey: 'verified',
     header: () => <div className="text-center">Verified</div>,
@@ -90,68 +98,68 @@ export const columns: ColumnDef<Device>[] = [
       )
     },
   },
-  // {
-  //   id: 'actions',
-  //   cell: ({ row }) => {
-  //     const router = useRouter()
-  //     const username = row.original.username
-  //     const verified = row.original.verified
-  //     //const mutationDelete = useDeleteCompany()
-  //     const mutationVerify = useVerifyUser()
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      const router = useRouter()
+      const username = row.original.username
+      const verified = row.original.verified
+      //const mutationDelete = useDeleteCompany()
+      // const mutationVerify = useVerifyUser()
 
-  //     const [open, setOpen] = useState(false)
+      const [open, setOpen] = useState(false)
 
-  //     const handleVerifyAction = async () => {
-  //       try {
-  //         await mutationVerify.mutateAsync({ username })
-  //         setOpen(false) // 메뉴 닫기
-  //       } catch (error) {
-  //         logger.error('Verify action failed:', error)
-  //       }
-  //     }
+      // const handleVerifyAction = async () => {
+      //   try {
+      //     await mutationVerify.mutateAsync({ username })
+      //     setOpen(false) // 메뉴 닫기
+      //   } catch (error) {
+      //     logger.error('Verify action failed:', error)
+      //   }
+      // }
 
-  //     return (
-  //       <DropdownMenu open={open} onOpenChange={setOpen}>
-  //         <DropdownMenuTrigger asChild>
-  //           <Button
-  //             variant="ghost"
-  //             className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
-  //             size="icon"
-  //           >
-  //             <IconDotsVertical />
-  //             <span className="sr-only">Open menu</span>
-  //           </Button>
-  //         </DropdownMenuTrigger>
-  //         <DropdownMenuContent align="end" className="w-32">
-  //           {/* <ModifyCompanyForm id={companyId} onClose={() => setOpen(false)} /> */}
-  //           <ConfirmDialog
-  //             onClose={() => setOpen(false)}
-  //             handleClick={handleVerifyAction}
-  //           >
-  //             <div className="text-sm p-2 hover:bg-gray-100/90 rounded-sm">
-  //               {verified ? 'Unverify' : 'Verify'}
-  //             </div>
-  //           </ConfirmDialog>
+      return (
+        <DropdownMenu open={open} onOpenChange={setOpen}>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
+              size="icon"
+            >
+              <IconDotsVertical />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-32">
+            {/* <ModifyCompanyForm id={companyId} onClose={() => setOpen(false)} /> */}
+            {/* <ConfirmDialog
+              onClose={() => setOpen(false)}
+              handleClick={handleVerifyAction}
+            >
+              <div className="text-sm p-2 hover:bg-gray-100/90 rounded-sm">
+                {verified ? 'Unverify' : 'Verify'}
+              </div>
+            </ConfirmDialog> */}
 
-  //           {/* <DropdownMenuItem
-  //             onClick={() => {
-  //               router.push(`/companies/${companyId}`)
-  //             }}
-  //           >
-  //             View Details
-  //           </DropdownMenuItem> */}
-  //           {/* <DropdownMenuSeparator /> */}
-  //           {/* <ConfirmDialog
-  //             onClose={() => setOpen(false)}
-  //             handleClick={handleDeleteAction}
-  //           >
-  //             <div className="text-sm p-2 text-red-500 hover:bg-gray-100/90 rounded-sm">
-  //               Delete
-  //             </div>
-  //           </ConfirmDialog> */}
-  //         </DropdownMenuContent>
-  //       </DropdownMenu>
-  //     )
-  //   },
-  // },
+            {/* <DropdownMenuItem
+              onClick={() => {
+                router.push(`/companies/${companyId}`)
+              }}
+            >
+              View Details
+            </DropdownMenuItem> */}
+            {/* <DropdownMenuSeparator /> */}
+            {/* <ConfirmDialog
+              onClose={() => setOpen(false)}
+              handleClick={handleDeleteAction}
+            >
+              <div className="text-sm p-2 text-red-500 hover:bg-gray-100/90 rounded-sm">
+                Delete
+              </div>
+            </ConfirmDialog> */}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    },
+  },
 ]

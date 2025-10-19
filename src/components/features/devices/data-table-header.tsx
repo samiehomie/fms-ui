@@ -3,22 +3,19 @@ import { useState, FC } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { AddDeviceForm } from './add-device-form'
-import type { DevicesPaginationParams } from '@/types/features/device.types'
 import { Tag, Switch } from 'antd'
+import type { DevicesGetQuery } from '@/types/features/device/device.types'
 
 type DataTableHeaderProps = {
-  pagination: DevicesPaginationParams
-  setPagination: React.Dispatch<React.SetStateAction<DevicesPaginationParams>>
+  query: DevicesGetQuery
+  setQuery: React.Dispatch<React.SetStateAction<DevicesGetQuery>>
 }
 
-const DataTableHeader: FC<DataTableHeaderProps> = ({
-  pagination,
-  setPagination,
-}) => {
+const DataTableHeader: FC<DataTableHeaderProps> = ({ query, setQuery }) => {
   const [search, setSearch] = useState('')
 
   const handleSearch = () => {
-    setPagination((old) => ({ ...old, search }))
+    setQuery((old) => ({ ...old, search }))
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -68,9 +65,9 @@ const DataTableHeader: FC<DataTableHeaderProps> = ({
           size={'default'}
           checkedChildren="verified"
           unCheckedChildren="unverified"
-          checked={pagination.verified}
+          checked={query.verified}
           onChange={() => {
-            setPagination((old) => ({
+            setQuery((old) => ({
               ...old,
               verified: !old.verified,
             }))

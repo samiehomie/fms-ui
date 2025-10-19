@@ -58,7 +58,9 @@ const vehicleSchema = z.object({
       new Date().getFullYear() + 1,
       'Manufacturing year cannot be in the future',
     ),
-  canBitrate: z.string().min(1, 'CAN bitrate is required'),
+  canBitrate: z.nativeEnum(CanBitrateType, {
+    errorMap: () => ({ message: 'Can bitrate type is required' }),
+  }),
   fuelType: z.nativeEnum(FuelType, {
     errorMap: () => ({ message: 'Fuel type is required' }),
   }),
@@ -72,11 +74,11 @@ const vehicleSchema = z.object({
 type VehicleFormData = z.infer<typeof vehicleSchema>
 
 function VehicleForm({ onClose }: { onClose: () => void }) {
+  // TODO 모든 회사 가져오기에 대한 리펙토링 UI / API 모두 필요
   const { data: companiesData, isLoading: companiesLoading } =
     useCompaniesPaginated({
       page: 1,
-      limit: 100,
-      search: '',
+      limit: 1000,
     })
   const { user, isLoading } = useAuth()
   const mutation = useCreateVehicle()
@@ -88,7 +90,7 @@ function VehicleForm({ onClose }: { onClose: () => void }) {
       brand: '',
       model: '',
       manufactureYear: new Date().getFullYear(),
-      canBitrate: '',
+      canBitrate: CanBitrateType['500Kbps'],
       fuelType: FuelType.GASOLINE,
       gearType: GearType.AUTOMATIC,
       numTire: 4,
