@@ -52,7 +52,7 @@ export default function LoginForm() {
       // Redirect is handled by the login mutation's onSuccess
     } catch (error: any) {
       if (error.message !== 'NEXT_REDIRECT') {
-        logger.error('login form error:', error)
+        console.error('login form error:', error)
         setApiError(error.message || 'An unexpected error occurred.')
       }
     }

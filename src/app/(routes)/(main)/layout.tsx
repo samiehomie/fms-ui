@@ -14,7 +14,6 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  logger.log('test')
   return (
     <Providers>
       <SidebarProvider>

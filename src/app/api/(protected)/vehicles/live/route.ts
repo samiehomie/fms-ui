@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
               ),
             )
           } catch (err) {
-            logger.error('Error fetching vehicles:', err)
+            console.error('Error fetching vehicles:', err)
             return createErrorResponse(
               'INTERNAL_ERROR',
               'An unexpected error occurred while fetching vehicles',

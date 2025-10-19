@@ -50,7 +50,7 @@ export async function GET(
         'AI results fetched successfully',
       )
     } catch (err) {
-      logger.error('Error fetching AI results:', err)
+      console.error('Error fetching AI results:', err)
 
       return createErrorResponse(
         'INTERNAL_ERROR',

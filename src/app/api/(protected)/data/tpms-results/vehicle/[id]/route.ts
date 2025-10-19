@@ -49,7 +49,7 @@ export async function GET(
         'TPMS results fetched successfully',
       )
     } catch (err) {
-      logger.error('Error fetching TPMS results:', err)
+      console.error('Error fetching TPMS results:', err)
 
       return createErrorResponse(
         'INTERNAL_ERROR',

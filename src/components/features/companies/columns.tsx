@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
-import type { Company } from '@/types/features/company.types'
 import { formatDateTime } from '@/lib/utils/date-formatter'
 import { getCompanyTypeColor } from '@/lib/utils/utils'
 import { ArrowUpDown, CircleSlash } from 'lucide-react'
@@ -162,7 +161,7 @@ export const columns: ColumnDef<CompaniesGetResponse[number]>[] = [
           await mutationVerify.mutateAsync({ verified: !verified })
           setOpen(false) // 메뉴 닫기
         } catch (error) {
-          logger.error('Verify action failed:', error)
+          console.error('Verify action failed:', error)
         }
       }
 
@@ -171,7 +170,7 @@ export const columns: ColumnDef<CompaniesGetResponse[number]>[] = [
           await mutationDelete.mutateAsync({ id: companyId })
           setOpen(false) // 메뉴 닫기
         } catch (error) {
-          logger.error('Delete action failed:', error)
+          console.error('Delete action failed:', error)
         }
       }
 

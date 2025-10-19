@@ -57,7 +57,7 @@ export async function GET() {
           controller.enqueue(data)
           return true
         } catch (err) {
-          logger.error('Enqueue failed: ', err)
+          console.error('Enqueue failed: ', err)
           abortController.abort()
           return false
         }
@@ -132,7 +132,7 @@ export async function GET() {
         abortController.abort()
         clearInterval(interval)
         clearInterval(heartbeatInterval)
-        logger.log('SSE connection cleaned up')
+        console.log('SSE connection cleaned up')
       }
     },
   })

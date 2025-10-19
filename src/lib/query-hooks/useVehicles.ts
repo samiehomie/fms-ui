@@ -314,7 +314,7 @@ export function useLiveVehicles() {
     // Basic error handling with reconnection logic
     eventSource.onerror = () => {
       // Here you would implement exponential backoff for retries
-      logger.error(
+      console.error(
         'SSE connection error. Closing and will be retried by browser.',
       )
       eventSource.close()

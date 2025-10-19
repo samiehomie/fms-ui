@@ -66,7 +66,7 @@ export const useVehicleLiveStream = (
     queryString,
   )
 
-  logger.info('Live Stream Endpoint : ', apiUrl)
+  console.info('Live Stream Endpoint : ', apiUrl)
 
   const connect = useCallback(() => {
     if (eventSourceRef.current?.readyState === EventSource.OPEN) {
