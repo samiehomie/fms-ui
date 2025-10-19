@@ -123,9 +123,7 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
 
   const onSubmit = async (data: VehicleUpdateBody) => {
     try {
-      await mutation.mutateAsync({
-        ...data,
-      })
+      await mutation.mutateAsync(data)
       // form.reset()
       onClose()
     } catch (error) {

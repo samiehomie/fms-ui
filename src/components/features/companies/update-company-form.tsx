@@ -44,86 +44,55 @@ import { useUpdateCompany } from '@/lib/query-hooks/useCompanies'
 import { useCompanyById } from '@/lib/query-hooks/useCompanies'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
+import type { CompanyUpdateBody } from '@/types/features/companies/company.types'
+import { CompanyType } from '@/types/enums/company.enum'
 
 const companySchema = z.object({
   name: z.string().min(1, 'Company name is required'),
-  reg_number: z.string().min(1, 'Registration number is required'),
-  type: z.string().min(1, 'Company type is required'),
+  regNumber: z.string().min(1, 'Registration number is required'),
+  type: z.nativeEnum(CompanyType, {
+    errorMap: () => ({ message: 'Company type is required' }),
+  }),
   details: z.string().min(1, 'Company details are required'),
   phone: z.string().min(1, 'Phone number is required'),
   email: z.string().email('Invalid email address'),
   website: z.string().url('Invalid website URL'),
-  contact_person: z.string().min(1, 'Contact person is required'),
-  contact_phone: z.string().min(1, 'Contact phone is required'),
+  contactPerson: z.string().min(1, 'Contact person is required'),
+  contactPhone: z.string().min(1, 'Contact phone is required'),
 })
 
 type CompanyFormData = z.infer<typeof companySchema>
 
 function CompanyForm({ onClose, id }: { onClose: () => void; id: string }) {
-  const { data, isLoading } = useCompanyById(id)
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  const { data: companyData, isLoading } = useCompanyById(id)
   const mutation = useUpdateCompany(id)
+
   const form = useForm<CompanyFormData>({
     resolver: zodResolver(companySchema),
-    defaultValues: {
-      name: '',
-      reg_number: '',
-      type: '',
-      details: '',
-      phone: '',
-      email: '',
-      website: '',
-      contact_person: '',
-      contact_phone: '',
-    },
   })
 
-  const onSubmit = async (data: CompanyFormData) => {
-    logger.log('modify', data)
-    try {
-      await mutation.mutateAsync(data)
-      form.reset()
-      onClose()
-    } catch (error) {
-      // Error is handled in the mutation
-    }
-  }
-
   useEffect(() => {
-    if (data && data.data.company) {
-      const company = data.data.company
-      logger.log('company', company)
+    if (companyData?.data) {
+      const company = companyData.data
       form.reset({
         name: company.name || '',
-        reg_number: company.reg_number || '',
+        regNumber: company.regNumber || '',
         type: company.type || '',
         details: company.details || '',
         phone: company.phone || '',
         email: company.email || '',
         website: company.website || '',
-        contact_person: company.contact_person || '',
-        contact_phone: company.contact_phone || '',
-        address: {
-          street: company.address?.street || '',
-          city: company.address?.city || '',
-          state: company.address?.state || '',
-          country: company.address?.country || '',
-          postal_code: company.address?.postal_code || '',
-          latitude: 0,
-          longitude: 0,
-        },
+        contactPerson: company.contactPerson || '',
+        contactPhone: company.contactPhone || '',
       })
+      setIsInitialized(true)
     }
-  }, [data])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [companyData])
 
-  // 폼 에러 확인
-  useEffect(() => {
-    const errors = form.formState.errors
-    if (Object.keys(errors).length > 0) {
-      // logger.log('Form validation errors:', errors)
-    }
-  }, [form.formState.errors])
-
-  if (!data || isLoading) {
+  if (isLoading || !companyData || !isInitialized) {
     return (
       <div className="min-h-[51.125rem]  flex flex-col gap-y-4 overflow-y-hidden">
         <Skeleton className="w-full h-10" />
@@ -138,6 +107,15 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: string }) {
         <Skeleton className="w-full h-10" />
       </div>
     )
+  }
+
+  const onSubmit = async (data: CompanyUpdateBody) => {
+    try {
+      await mutation.mutateAsync(data)
+      onClose()
+    } catch (error) {
+      // Error is handled in the mutation
+    }
   }
 
   return (
@@ -161,7 +139,7 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: string }) {
 
             <FormField
               control={form.control}
-              name="reg_number"
+              name="regNumber"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Registration Number</FormLabel>
@@ -181,21 +159,18 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: string }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Company Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder={field.value} />
+                        <SelectValue placeholder="Select company type" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Owner">Owner</SelectItem>
-                      <SelectItem value="Guest">Guest</SelectItem>
-                      <SelectItem value="Partner">Partner</SelectItem>
-                      <SelectItem value="Client">Client</SelectItem>
-                      <SelectItem value="Vendor">Vendor</SelectItem>
+                      {Object.values(CompanyType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -272,7 +247,7 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: string }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="contact_person"
+              name="contactPerson"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contact Person</FormLabel>
@@ -286,7 +261,7 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: string }) {
 
             <FormField
               control={form.control}
-              name="contact_phone"
+              name="contactPhone"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contact Phone</FormLabel>
@@ -299,7 +274,7 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: string }) {
             />
           </div>
 
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h3 className="text-lg font-medium">Address Information</h3>
 
             <FormField
@@ -378,7 +353,7 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: string }) {
                 )}
               />
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex justify-end gap-3 pt-4">
@@ -424,13 +399,13 @@ export function UpdateCompanyForm({
         </DrawerTrigger>
         <DrawerContent className="max-h-[90vh]">
           <DrawerHeader>
-            <DrawerTitle>Add New Company</DrawerTitle>
+            <DrawerTitle>Update Company</DrawerTitle>
             <DrawerDescription>
-              Fill in the company information to add it to your database.
+              Update the company information.
             </DrawerDescription>
           </DrawerHeader>
           <div className="px-4 pb-4 overflow-y-auto">
-            <CompanyForm onClose={handleClose} id={id} />
+            <CompanyForm key={id} onClose={handleClose} id={id} />
           </div>
         </DrawerContent>
       </Drawer>
@@ -456,12 +431,10 @@ export function UpdateCompanyForm({
         className="max-w-4xl max-h-[91vh] overflow-y-auto"
       >
         <DialogHeader>
-          <DialogTitle>Add Company</DialogTitle>
-          <DialogDescription>
-            Fill in the company information to add it to your database.
-          </DialogDescription>
+          <DialogTitle>Update Company</DialogTitle>
+          <DialogDescription>Update the company information.</DialogDescription>
         </DialogHeader>
-        <CompanyForm onClose={handleClose} id={id} />
+        <CompanyForm key={id} onClose={handleClose} id={id} />
       </DialogContent>
     </Dialog>
   )
