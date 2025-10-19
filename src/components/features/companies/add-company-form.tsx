@@ -41,28 +41,21 @@ import {
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
 import { useCreateCompany } from '@/lib/query-hooks/useCompanies'
-
 import { IconPlus } from '@tabler/icons-react'
+import { CompanyType } from '@/types/enums/company.enum'
 
 const companySchema = z.object({
   name: z.string().min(1, 'Company name is required'),
-  reg_number: z.string().min(1, 'Registration number is required'),
-  type: z.string().min(1, 'Company type is required'),
+  regNumber: z.string().min(1, 'Registration number is required'),
+  type: z.nativeEnum(CompanyType, {
+    errorMap: () => ({ message: 'Company type is required' }),
+  }),
   details: z.string().min(1, 'Company details are required'),
   phone: z.string().min(1, 'Phone number is required'),
   email: z.string().email('Invalid email address'),
   website: z.string().url('Invalid website URL'),
-  contact_person: z.string().min(1, 'Contact person is required'),
-  contact_phone: z.string().min(1, 'Contact phone is required'),
-  address: z.object({
-    street: z.string().min(1, 'Street address is required'),
-    city: z.string().min(1, 'City is required'),
-    state: z.string().min(1, 'State is required'),
-    country: z.string().min(1, 'Country is required'),
-    postal_code: z.string().min(1, 'Postal code is required'),
-    latitude: z.number(),
-    longitude: z.number(),
-  }),
+  contactPerson: z.string().min(1, 'Contact person is required'),
+  contactPhone: z.string().min(1, 'Contact phone is required'),
 })
 
 type CompanyFormData = z.infer<typeof companySchema>
@@ -73,31 +66,20 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
     resolver: zodResolver(companySchema),
     defaultValues: {
       name: '',
-      reg_number: '',
-      type: '',
+      regNumber: '',
+      type: CompanyType.OWNER,
       details: '',
       phone: '',
       email: '',
       website: '',
-      contact_person: '',
-      contact_phone: '',
-      address: {
-        street: '',
-        city: '',
-        state: '',
-        country: '',
-        postal_code: '',
-        latitude: 0,
-        longitude: 0,
-      },
+      contactPerson: '',
+      contactPhone: '',
     },
   })
 
   const onSubmit = async (data: CompanyFormData) => {
     try {
-      await mutation.mutateAsync({
-        company: data,
-      })
+      await mutation.mutateAsync(data)
       form.reset()
       onClose()
     } catch (error) {
@@ -126,7 +108,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
 
             <FormField
               control={form.control}
-              name="reg_number"
+              name="regNumber"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Registration Number</FormLabel>
@@ -156,10 +138,11 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Guest">Guest</SelectItem>
-                      <SelectItem value="Partner">Partner</SelectItem>
-                      <SelectItem value="Client">Client</SelectItem>
-                      <SelectItem value="Vendor">Vendor</SelectItem>
+                      {Object.values(CompanyType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -237,7 +220,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="contact_person"
+              name="contactPerson"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contact Person</FormLabel>
@@ -251,7 +234,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
 
             <FormField
               control={form.control}
-              name="contact_phone"
+              name="contactPhone"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contact Phone</FormLabel>
@@ -264,7 +247,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
             />
           </div>
 
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h3 className="text-lg font-medium">Address Information</h3>
 
             <FormField
@@ -343,7 +326,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
                 )}
               />
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex justify-end gap-3 pt-4">

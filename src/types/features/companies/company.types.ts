@@ -101,3 +101,26 @@ export interface CompanyVerifyBody {
 
 // PATCH /companies/{id}/verify
 export type CompanyVerifyResponse = CompanyGetResponse
+
+// GET /companies/{id}/vehicles
+export interface CompanyVehiclesQuery extends PaginationQuery {
+  id: string
+  search?: string
+  includeDeleted?: boolean
+}
+
+// GET /companies/{id}/vehicles
+export type CompanyVehiclesReponse = Pick<
+  Vehicle,
+  | CommonProperties
+  | 'vehicleName'
+  | 'plateNumber'
+  | 'brand'
+  | 'manufactureYear'
+  | 'model'
+  | 'canBitrate'
+  | 'fuelType'
+  | 'gearType'
+  | 'numTire'
+  | 'isdeleted'
+>[]

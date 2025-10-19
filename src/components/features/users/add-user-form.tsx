@@ -207,7 +207,7 @@ function UserForm({ onClose }: { onClose: () => void }) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {companiesData?.data?.companies.map((company) => (
+                      {companiesData?.data?.map((company) => (
                         <SelectItem
                           key={company.id}
                           value={company.id.toString()}
@@ -215,7 +215,7 @@ function UserForm({ onClose }: { onClose: () => void }) {
                           {company.name}
                         </SelectItem>
                       ))}
-                      {companiesData?.data?.companies.length === 0 && (
+                      {companiesData?.data?.length === 0 && (
                         <SelectItem value="" disabled>
                           No companies available
                         </SelectItem>

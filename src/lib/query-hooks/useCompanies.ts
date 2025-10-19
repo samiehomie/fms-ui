@@ -17,6 +17,8 @@ import type {
   CompanyVerifyBody,
   CompanyVerifyQuery,
   CompanyVerifyResponse,
+  CompanyVehiclesQuery,
+  CompanyVehiclesReponse,
 } from '@/types/features/companies/company.types'
 import {
   getAllCompanies,
@@ -26,8 +28,11 @@ import {
   restoreCompany,
   getCompany,
   verifyCompany,
+  getCompanyVehicles,
 } from '../actions/compnay.actions'
 import type { ServerActionResult } from '@/types/features/common.types'
+import type { ApiParamsType } from '@/types/features'
+import { vehiclesApi } from '../api/vehicle'
 
 export function useAllCompanies(query: CompaniesGetQuery) {
   return useQuery({
@@ -222,14 +227,18 @@ export function useVerifyCompany(id: string) {
   })
 }
 
-// export function useCompanyVehiclesPaginated(
-//   companyId: number,
-//   params: ApiParamsType<'GET /vehicles/company/{company_id}'>,
-// ) {
-//   return useQuery({
-//     queryKey: ['vehicles', params, companyId],
-//     queryFn: () =>
-//       vehiclesApi.getVehiclesByCompanyIdPaginated(params, companyId),
-//     staleTime: 5 * 60 * 1000, // 5 minutes
-//   })
-// }
+export function useCompanyVehicles(query: CompanyVehiclesQuery) {
+  return useQuery({
+    queryKey: ['vehicles', query],
+    queryFn: async () => {
+      const result = await getCompanyVehicles(query)
+
+      if (!result.success) {
+        throw new Error(result.error.message)
+      }
+
+      return result
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}

@@ -12,16 +12,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { IconDotsVertical } from '@tabler/icons-react'
-import type { VehiclesByCompany } from '@/types/features/vehicles/vehicle.types'
+import type { CompanyVehiclesReponse } from '@/types/features/companies/company.types'
 
-export const columns: ColumnDef<VehiclesByCompany>[] = [
+export const columns: ColumnDef<CompanyVehiclesReponse[number]>[] = [
   {
     accessorKey: 'id',
     header: () => <div className="min-w-[45px] pl-2">{'ID'}</div>,
     cell: ({ row }) => <div className="pl-2">{row.getValue('id')}</div>,
   },
   {
-    accessorKey: 'plate_number',
+    accessorKey: 'plateNumber',
     header: 'Plate No.',
   },
 
@@ -29,13 +29,13 @@ export const columns: ColumnDef<VehiclesByCompany>[] = [
     id: 'vehicle_info',
     header: 'Model',
     cell: ({ row }) => {
-      const { model, brand, manuf_year, fuel_type, gear_type } = row.original
+      const { model, brand, manufactureYear, fuelType, gearType } = row.original
       return (
         <div className="flex gap-1">
           <div className="font-[400]">
             {brand} {model}
             <span className="text-muted-foreground pl-1 font-normal">
-              {manuf_year} {gear_type} {fuel_type}
+              {manufactureYear} {gearType} {fuelType}
             </span>
           </div>
         </div>
@@ -43,11 +43,11 @@ export const columns: ColumnDef<VehiclesByCompany>[] = [
     },
   },
   {
-    accessorKey: 'can_bitrate',
+    accessorKey: 'canBitrate',
     header: 'Can Bitrate',
   },
   {
-    accessorKey: 'num_tire',
+    accessorKey: 'numTire',
     header: 'Tires',
   },
   {

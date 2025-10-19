@@ -7,7 +7,7 @@ import { RecentCompaniesList } from '@/components/features/dashboard/recent-comp
 import { VehicleStatusList } from '@/components/features/dashboard/vehicle-status-list'
 
 export default function DashboardContent() {
-  const { companies, vehicles, users, devices, isLoading } = useDashboard()
+  const { companies, vehicles, users, isLoading } = useDashboard()
 
   if (isLoading) {
     return (
@@ -24,33 +24,27 @@ export default function DashboardContent() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Companies"
-          value={companies?.data.companies.length ?? 0}
+          value={companies?.data.length ?? 0}
           description="Companies in system"
           Icon={Globe}
         />
         <StatCard
           title="Total Users"
-          value={users?.data.users.length ?? 0}
+          value={users?.data.length ?? 0}
           description="Registered users"
           Icon={Users}
         />
         <StatCard
           title="Total Vehicles"
-          value={vehicles?.data.vehicles.length ?? 0}
+          value={vehicles?.data.length ?? 0}
           description="Fleet vehicles"
           Icon={Truck}
         />
-        <StatCard
-          title="Total Devices"
-          value={devices?.data.edge_devices.length ?? 0}
-          description="Registered devices"
-          Icon={Cpu}
-        />
       </div>
-      <div className="grid gap-6 md:grid-cols-2">
-        <RecentCompaniesList companies={companies?.data.companies ?? []} />
+      {/* <div className="grid gap-6 md:grid-cols-2">
+        <RecentCompaniesList companies={companies?.data ?? []} />
         <VehicleStatusList />
-      </div>
+      </div> */}
     </>
   )
 }

@@ -20,6 +20,8 @@ import type {
   CompanyVerifyBody,
   CompanyVerifyQuery,
   CompanyVerifyResponse,
+  CompanyVehiclesQuery,
+  CompanyVehiclesReponse,
 } from '@/types/features/companies/company.types'
 
 // TODO 반복되는 함수 헬퍼 함수로 만들기
@@ -286,6 +288,45 @@ export async function verifyCompany(
         }
       }
       const { data, pagination } = response
+      return { success: true, data, pagination }
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: 'Unexpected server error',
+          status: 500,
+        },
+      }
+    }
+  })
+}
+
+export async function getCompanyVehicles(query: CompanyVehiclesQuery) {
+  return await withAuthAction<CompanyVehiclesReponse>(async (accessToken) => {
+    const { id, ...filter } = query
+    const apiUrl = buildURL(`/companies/${id}/vehicles`, filter)
+
+    try {
+      const response = await fetchServer<CompanyVehiclesReponse>(apiUrl, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        cache: 'no-store',
+      })
+
+      if (!response.success) {
+        return {
+          success: false,
+          error: {
+            message: response.error.message || 'Unknown server error',
+            status: response.error.status,
+          },
+        }
+      }
+      const { data, pagination } = response
+
       return { success: true, data, pagination }
     } catch (error) {
       return {

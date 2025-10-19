@@ -1,22 +1,27 @@
 'use client'
 import { DataTable } from '@/components/ui/data-table'
 import { useState } from 'react'
-import { useCompanyVehiclesPaginated } from '@/lib/query-hooks/useCompanies'
+import { useCompanyVehicles } from '@/lib/query-hooks/useCompanies'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ApiParamsType } from '@/types/features'
+import type {
+  CompanyVehiclesQuery,
+} from '@/types/features/companies/company.types'
 
-const CompanyVehiclesContent = ({ companyId }: { companyId: number }) => {
-  const [pageParams, setPageParams] = useState<
-    ApiParamsType<'GET /vehicles/company/{company_id}'>
-  >({
+const CompanyVehiclesContent = ({ companyId }: { companyId: string }) => {
+  const [query, setQuery] = useState<Omit<CompanyVehiclesQuery, 'id'>>({
     page: 1,
     limit: 10,
+    includeDeleted: true,
+    search: undefined,
   })
 
-  const { data, isLoading } = useCompanyVehiclesPaginated(companyId, pageParams)
+  const { data: vehiclesData, isLoading } = useCompanyVehicles({
+    ...query,
+    id: companyId,
+  })
 
-  if (isLoading || !data) {
+  if (isLoading || !vehiclesData) {
     return (
       <div className="col-span-3 flex flex-col gap-y-2">
         <Skeleton className="w-full h-10" />
@@ -26,6 +31,8 @@ const CompanyVehiclesContent = ({ companyId }: { companyId: number }) => {
     )
   }
 
+  if (!vehiclesData.pagination) return null
+
   return (
     <div className="flex-1 flex flex-col gap-y-4">
       <div className="text-2xl tracking-[-0.01em] font-semibold">
@@ -33,10 +40,10 @@ const CompanyVehiclesContent = ({ companyId }: { companyId: number }) => {
       </div>
       <DataTable
         columns={columns}
-        data={data.data.vehicles}
-        pagination={pageParams}
-        setPagination={setPageParams}
-        totalCount={data.data.pagination.total}
+        data={vehiclesData.data}
+        pagination={query}
+        setPagination={setQuery}
+        totalCount={vehiclesData.pagination.total}
       />
     </div>
   )

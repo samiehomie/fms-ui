@@ -84,13 +84,7 @@ const companyData: CompanyDetail = {
   },
 }
 
-export default function CompanyDetails({
-  detail,
-  companyId,
-}: {
-  detail: ApiResponseType<'GET /companies/{id}'>
-  companyId: number
-}) {
+export default function CompanyDetails({ companyId }: { companyId: string }) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const [activeNavItem, setActiveNavItem] = useState<NavItems>('Company')
 
@@ -106,12 +100,12 @@ export default function CompanyDetails({
         {activeNavItem === 'Vehicles' && (
           <CompanyVehiclesContent companyId={companyId} />
         )}
-        {activeNavItem === 'Company' && (
+        {/* {activeNavItem === 'Company' && (
           <CompanyDetailContent
             company={detail.company}
             handleClick={() => setActiveNavItem('Vehicles')}
           />
-        )}
+        )} */}
       </div>
     </div>
   )

@@ -51,10 +51,6 @@ const data = {
           title: 'Live Map',
           url: '/live-map',
         },
-        {
-          title: 'Active Vehicles',
-          url: '/active-vehicles',
-        },
       ],
     },
     {
