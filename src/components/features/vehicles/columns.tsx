@@ -21,7 +21,7 @@ import {
   useRestoreVehicle,
 } from '@/lib/query-hooks/useVehicles'
 import { UpdateVehicleForm } from './update-vehicle-form'
-import type { VehiclesGetResponse } from '@/types/features/vehicle/vehicle.types'
+import type { VehiclesGetResponse } from '@/types/features/vehicles/vehicle.types'
 
 export const columns: ColumnDef<VehiclesGetResponse[number]>[] = [
   {
@@ -98,7 +98,7 @@ export const columns: ColumnDef<VehiclesGetResponse[number]>[] = [
       const router = useRouter()
       const { isdeleted, id: vehicleId } = row.original
       const mutationDelete = useDeleteVehicle()
-      const mutationRestore = useRestoreVehicle(vehicleId.toString())
+      const mutationRestore = useRestoreVehicle()
 
       const [open, setOpen] = useState(false)
 

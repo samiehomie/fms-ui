@@ -7,7 +7,7 @@ import { ArrowUpDown, CircleSlash } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { IconCircleCheckFilled } from '@tabler/icons-react'
-import type { DevicesGetResponse } from '@/types/features/device/device.types'
+import type { DevicesGetResponse } from '@/types/features/devices/device.types'
 import { useRouter } from 'next/navigation'
 import {
   DropdownMenu,

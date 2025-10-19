@@ -2,7 +2,7 @@
 
 import { useQuery, skipToken } from '@tanstack/react-query'
 import { activeVehiclesApi } from '@/lib/api/active-vehicles'
-import type { VehicleDataParams } from '@/types/features/vehicle/vehicle.types'
+import type { VehicleDataParams } from '@/types/features/vehicles/vehicle.types'
 
 export const useAIResults = (
   vehicleId: number | undefined,

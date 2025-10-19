@@ -6,7 +6,7 @@ import { AddVehicleForm } from './add-vehicle-form'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Tag } from 'antd'
-import type { VehiclesGetQuery } from '@/types/features/vehicle/vehicle.types'
+import type { VehiclesGetQuery } from '@/types/features/vehicles/vehicle.types'
 
 type DataTableHeaderProps = {
   pagination: VehiclesGetQuery

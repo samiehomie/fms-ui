@@ -3,7 +3,7 @@ import type {
   AIResultsResponse,
   TPMSResultsResponse,
   VehicleDataParams,
-} from '@/types/features/vehicle/vehicle.types'
+} from '@/types/features/vehicles/vehicle.types'
 import { ApiSuccessResponse } from '@/types/features/route.types'
 
 export const activeVehiclesApi = {

@@ -1,53 +1,87 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { companiesApi } from '@/lib/api/company'
-import type { CompaniesPaginationParams } from '@/types/features/company.types'
-import {
-  ApiResponseType,
-  ApiRequestType,
-  ApiParamsType,
-} from '@/types/features'
 import { toast } from 'sonner'
-import { vehiclesApi } from '@/lib/api/vehicle'
+import type {
+  CompaniesGetQuery,
+  CompaniesGetResponse,
+  CompanyCreateBody,
+  CompanyCreateResponse,
+  CompanyGetQuery,
+  CompanyGetResponse,
+  CompanyUpdateBody,
+  CompanyDeleteQuery,
+  CompanyDeleteResponse,
+  CompanyRestoreQuery,
+  CompanyRestoreResponse,
+  CompanyUpdateQuery,
+  CompanyUpdateResponse,
+  CompanyVerifyBody,
+  CompanyVerifyQuery,
+  CompanyVerifyResponse,
+} from '@/types/features/companies/company.types'
+import {
+  getAllCompanies,
+  createCompany,
+  updateCompany,
+  deleteCompany,
+  restoreCompany,
+  getCompany,
+  verifyCompany,
+} from '../actions/compnay.actions'
+import type { ServerActionResult } from '@/types/features/common.types'
 
-type CreateCompanyResponse = ApiResponseType<'POST /companies'>
-type CreateCompanyRequest = ApiRequestType<'POST /companies'>
-type DeleteCompanyResponse = ApiResponseType<'DELETE /companies'>
-type ModifyCompanyResponse = ApiResponseType<'PUT /companies'>
-type ModifyCompanyRequest = ApiRequestType<'PUT /companies'>
-type VerifyCompanyRequest = ApiRequestType<'PATCH /companies/{id}/verify'>
-type VerifyCompanyRespone = ApiResponseType<'PATCH /companies/{id}/verify'>
-
-export function useCompaniesPaginated(params: CompaniesPaginationParams) {
+export function useAllCompanies(query: CompaniesGetQuery) {
   return useQuery({
-    queryKey: ['companies', params],
-    queryFn: () => companiesApi.getCompaniesPaginated(params),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ['companies', query],
+    queryFn: async () => {
+      const result = await getAllCompanies(query)
+
+      if (!result.success) {
+        throw new Error(result.error.message)
+      }
+
+      return result
+    },
+    staleTime: 5 * 60 * 1000,
   })
 }
 
-export function useCompanyById(id: number) {
+export function useCompanyById(id: string) {
   return useQuery({
-    queryKey: ['companies', id],
-    queryFn: () => companiesApi.getCompanyById(id),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ['company', id],
+    queryFn: async () => {
+      const result = await getCompany({ id })
+
+      if (!result.success) {
+        throw new Error(result.error.message)
+      }
+
+      return result
+    },
+    staleTime: 5 * 60 * 1000,
   })
 }
 
 export function useCreateCompany() {
   const queryClient = useQueryClient()
-  return useMutation<CreateCompanyResponse, Error, CreateCompanyRequest>({
+  return useMutation<
+    ServerActionResult<CompanyCreateResponse>,
+    Error,
+    CompanyCreateBody
+  >({
     mutationFn: async (newCompany) => {
-      const { data } = await companiesApi.createCompany(newCompany)
-      return data
+      const res = await createCompany(newCompany)
+      return res
     },
-    onSuccess: (data) => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries({
         queryKey: ['companies'],
       })
-      toast.success('A new company added', {
-        description: `${data.company.name}`,
-        position: 'bottom-center',
-      })
+      if (res.success) {
+        toast.success('A new company added', {
+          description: `${res.data.name}`,
+          position: 'bottom-center',
+        })
+      }
     },
     onError: (error) => {
       toast.error('Adding a new company failed.', {
@@ -60,23 +94,26 @@ export function useCreateCompany() {
 
 export function useDeleteCompany() {
   const queryClient = useQueryClient()
-  return useMutation<DeleteCompanyResponse, Error, number>({
-    mutationFn: async (companyId) => {
-      const { data } = await companiesApi.deleteCompany(companyId)
-      return data
+  return useMutation<
+    ServerActionResult<CompanyDeleteResponse>,
+    Error,
+    CompanyDeleteQuery
+  >({
+    mutationFn: async (deleteParams) => {
+      const res = await deleteCompany(deleteParams)
+      return res
     },
-    onSuccess: (data, companyId) => {
-      // 특정 회사 쿼리 제거
-      queryClient.removeQueries({
-        queryKey: ['companies', companyId],
-      })
+    onSuccess: (res) => {
       // 회사 목록 쿼리 무효화
       queryClient.invalidateQueries({
         queryKey: ['companies'],
       })
-      toast.success('A company deleted.', {
-        position: 'bottom-center',
-      })
+
+      if (res.success) {
+        toast.success('A company deleted.', {
+          position: 'bottom-center',
+        })
+      }
     },
     onError: (error) => {
       toast.error('Deleting a comapny failed.', {
@@ -87,24 +124,33 @@ export function useDeleteCompany() {
   })
 }
 
-export function useModifyCompany(id: number) {
+export function useUpdateCompany(id: string) {
   const queryClient = useQueryClient()
-  return useMutation<ModifyCompanyResponse, Error, ModifyCompanyRequest>({
+  return useMutation<
+    ServerActionResult<CompanyUpdateResponse>,
+    Error,
+    CompanyUpdateBody
+  >({
     mutationFn: async (newCompany) => {
-      const res = await companiesApi.modifyCompany(id, newCompany)
+      const res = await updateCompany({ id }, newCompany)
       return res
     },
-    onSuccess: (data) => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries({
         queryKey: ['companies'],
       })
-      toast.success('A new company added', {
-        description: `${data.company.name}`,
-        position: 'bottom-center',
+      queryClient.invalidateQueries({
+        queryKey: ['company', id],
       })
+      if (res.success) {
+        toast.success('Company updated', {
+          description: `${res.data.name}`,
+          position: 'bottom-center',
+        })
+      }
     },
     onError: (error) => {
-      toast.error('Adding a new company failed.', {
+      toast.error('Update failed.', {
         position: 'bottom-center',
         description: error.message,
       })
@@ -112,21 +158,60 @@ export function useModifyCompany(id: number) {
   })
 }
 
-export function useVerifyCompany(id: number) {
+export function useRestoreCompany() {
   const queryClient = useQueryClient()
-  return useMutation<VerifyCompanyRespone, Error, VerifyCompanyRequest>({
-    mutationFn: async (newCompany) => {
-      const res = await companiesApi.verifyCompany(id, newCompany)
+  return useMutation<
+    ServerActionResult<CompanyRestoreResponse>,
+    Error,
+    CompanyRestoreQuery
+  >({
+    mutationFn: async (restoreParams) => {
+      const res = await restoreCompany(restoreParams)
       return res
     },
-    onSuccess: (data) => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries({
         queryKey: ['companies'],
       })
-      toast.success('Company Verification Complete', {
-        description: `${data.company.name}`,
+      if (res.success) {
+        toast.success(res.message ?? 'Company restored.', {
+          position: 'bottom-center',
+        })
+      }
+    },
+    onError: (error) => {
+      toast.error('Restoring a company failed.', {
         position: 'bottom-center',
       })
+      logger.error('Restore vehicle error:', error)
+    },
+  })
+}
+
+export function useVerifyCompany(id: string) {
+  const queryClient = useQueryClient()
+  return useMutation<
+    ServerActionResult<CompanyVerifyResponse>,
+    Error,
+    CompanyVerifyBody
+  >({
+    mutationFn: async (body) => {
+      const res = await verifyCompany({ id }, body)
+      return res
+    },
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({
+        queryKey: ['companies'],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['company', id],
+      })
+      if (res.success) {
+        toast.success('Company Verification Complete', {
+          description: `${res.data.name}`,
+          position: 'bottom-center',
+        })
+      }
     },
     onError: (error) => {
       toast.error('Company Verification Failed', {
@@ -137,14 +222,14 @@ export function useVerifyCompany(id: number) {
   })
 }
 
-export function useCompanyVehiclesPaginated(
-  companyId: number,
-  params: ApiParamsType<'GET /vehicles/company/{company_id}'>,
-) {
-  return useQuery({
-    queryKey: ['vehicles', params, companyId],
-    queryFn: () =>
-      vehiclesApi.getVehiclesByCompanyIdPaginated(params, companyId),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  })
-}
+// export function useCompanyVehiclesPaginated(
+//   companyId: number,
+//   params: ApiParamsType<'GET /vehicles/company/{company_id}'>,
+// ) {
+//   return useQuery({
+//     queryKey: ['vehicles', params, companyId],
+//     queryFn: () =>
+//       vehiclesApi.getVehiclesByCompanyIdPaginated(params, companyId),
+//     staleTime: 5 * 60 * 1000, // 5 minutes
+//   })
+// }

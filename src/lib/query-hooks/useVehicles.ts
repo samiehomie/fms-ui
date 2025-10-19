@@ -20,7 +20,7 @@ import type {
   VehicleUpdateResponse,
   VehicleTripsQuery,
   VehicleTripsResponse,
-} from '@/types/features/vehicle/vehicle.types'
+} from '@/types/features/vehicles/vehicle.types'
 import {
   ApiResponseType,
   ApiRequestType,
@@ -39,7 +39,7 @@ import {
 import { getTripDetails } from '../actions/trip.actions'
 import { getVehicleTrips } from '../actions/vehicle-trip.actions'
 import type { ServerActionResult } from '@/types/features/common.types'
-import { TripDetailsResponse } from '@/types/features/trip/trip.types'
+import { TripDetailsResponse } from '@/types/features/trips/trip.types'
 
 export function useAllVehicles(query: VehiclesGetQuery) {
   return useQuery({
@@ -169,7 +169,7 @@ export function useUpdateVehicle(id: string) {
   })
 }
 
-export function useRestoreVehicle(id: string) {
+export function useRestoreVehicle() {
   const queryClient = useQueryClient()
   return useMutation<
     ServerActionResult<VehicleRestoreResponse>,

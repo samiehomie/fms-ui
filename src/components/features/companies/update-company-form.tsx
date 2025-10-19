@@ -40,7 +40,7 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { useModifyCompany } from '@/lib/query-hooks/useCompanies'
+import { useUpdateCompany } from '@/lib/query-hooks/useCompanies'
 import { useCompanyById } from '@/lib/query-hooks/useCompanies'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
@@ -55,22 +55,13 @@ const companySchema = z.object({
   website: z.string().url('Invalid website URL'),
   contact_person: z.string().min(1, 'Contact person is required'),
   contact_phone: z.string().min(1, 'Contact phone is required'),
-  address: z.object({
-    street: z.string().min(1, 'Street address is required'),
-    city: z.string().min(1, 'City is required'),
-    state: z.string().min(1, 'State is required'),
-    country: z.string().min(1, 'Country is required'),
-    postal_code: z.string().min(1, 'Postal code is required'),
-    latitude: z.number(),
-    longitude: z.number(),
-  }),
 })
 
 type CompanyFormData = z.infer<typeof companySchema>
 
-function CompanyForm({ onClose, id }: { onClose: () => void; id: number }) {
+function CompanyForm({ onClose, id }: { onClose: () => void; id: string }) {
   const { data, isLoading } = useCompanyById(id)
-  const mutation = useModifyCompany(id)
+  const mutation = useUpdateCompany(id)
   const form = useForm<CompanyFormData>({
     resolver: zodResolver(companySchema),
     defaultValues: {
@@ -83,24 +74,13 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: number }) {
       website: '',
       contact_person: '',
       contact_phone: '',
-      address: {
-        street: '',
-        city: '',
-        state: '',
-        country: '',
-        postal_code: '',
-        latitude: 0,
-        longitude: 0,
-      },
     },
   })
 
   const onSubmit = async (data: CompanyFormData) => {
     logger.log('modify', data)
     try {
-      await mutation.mutateAsync({
-        company: data,
-      })
+      await mutation.mutateAsync(data)
       form.reset()
       onClose()
     } catch (error) {
@@ -417,11 +397,11 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: number }) {
   )
 }
 
-export function ModifyCompanyForm({
+export function UpdateCompanyForm({
   id,
   onClose,
 }: {
-  id: number
+  id: string
   onClose: () => void
 }) {
   const [open, setOpen] = useState(false)

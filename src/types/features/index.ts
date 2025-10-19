@@ -2,10 +2,10 @@ export * from './auth.types'
 
 import { AuthApiTypes } from './auth.types'
 import { CompanyApiTypes } from './company.types'
-import { VehicleApiTypes } from './vehicle/vehicle.types'
+import { VehicleApiTypes } from './vehicles/vehicle.types'
 import { UserApiTypes } from './user.types'
 import { DeviceApiTypes } from './device.types'
-import { VehicleTripApiTypes } from './vehicle/vehicle-trip'
+import { VehicleTripApiTypes } from './vehicles/vehicle-trip'
 
 export interface ApiTypes
   extends AuthApiTypes,

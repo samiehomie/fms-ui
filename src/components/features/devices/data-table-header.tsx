@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { AddDeviceForm } from './add-device-form'
 import { Tag, Switch } from 'antd'
-import type { DevicesGetQuery } from '@/types/features/device/device.types'
+import type { DevicesGetQuery } from '@/types/features/devices/device.types'
 
 type DataTableHeaderProps = {
   query: DevicesGetQuery

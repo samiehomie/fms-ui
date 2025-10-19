@@ -10,7 +10,7 @@ import type {
   DeviceGetResponse,
   DeviceCreateBody,
   DeviceCreateResponse,
-} from '@/types/features/device/device.types'
+} from '@/types/features/devices/device.types'
 
 export async function getAllDevices(query: DevicesGetQuery) {
   return await withAuthAction<DevicesGetResponse>(async (accessToken) => {

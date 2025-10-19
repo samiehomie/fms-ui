@@ -44,7 +44,7 @@ import { IconPlus } from '@tabler/icons-react'
 import { GearType, FuelType, CanBitrateType } from '@/types/enums/vehicle.enum'
 import { useAuth } from '../auth/auth-provider'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useCompaniesPaginated } from '@/lib/query-hooks/useCompanies'
+import { useAllCompanies } from '@/lib/query-hooks/useCompanies'
 
 const vehicleSchema = z.object({
   vehicleName: z.string().min(1, 'Vehicle name is required'),
@@ -75,11 +75,10 @@ type VehicleFormData = z.infer<typeof vehicleSchema>
 
 function VehicleForm({ onClose }: { onClose: () => void }) {
   // TODO 모든 회사 가져오기에 대한 리펙토링 UI / API 모두 필요
-  const { data: companiesData, isLoading: companiesLoading } =
-    useCompaniesPaginated({
-      page: 1,
-      limit: 1000,
-    })
+  const { data: companiesData, isLoading: companiesLoading } = useAllCompanies({
+    page: 1,
+    limit: 1000,
+  })
   const { user, isLoading } = useAuth()
   const mutation = useCreateVehicle()
   const form = useForm<VehicleFormData>({

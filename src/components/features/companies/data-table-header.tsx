@@ -3,22 +3,19 @@ import { useState, FC } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { AddCompanyForm } from './add-company-form'
-import type { CompaniesPaginationParams } from '@/types/features/company.types'
 import { Tag, Switch } from 'antd'
+import type { CompaniesGetQuery } from '@/types/features/companies/company.types'
 
 type DataTableHeaderProps = {
-  pagination: CompaniesPaginationParams
-  setPagination: React.Dispatch<React.SetStateAction<CompaniesPaginationParams>>
+  query: CompaniesGetQuery
+  setQuery: React.Dispatch<React.SetStateAction<CompaniesGetQuery>>
 }
 
-const DataTableHeader: FC<DataTableHeaderProps> = ({
-  pagination,
-  setPagination,
-}) => {
+const DataTableHeader: FC<DataTableHeaderProps> = ({ query, setQuery }) => {
   const [search, setSearch] = useState('')
 
   const handleSearch = () => {
-    setPagination((old) => ({ ...old, search }))
+    setQuery((old) => ({ ...old, search }))
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -44,13 +41,13 @@ const DataTableHeader: FC<DataTableHeaderProps> = ({
           Search
         </Button>
         <div className="ml-2">
-          {pagination.search && (
+          {query.search && (
             <Tag
               color="processing"
               className="ml-3"
               bordered={false}
               onClose={() => {
-                setPagination((old) => ({
+                setQuery((old) => ({
                   ...old,
                   search: '',
                 }))
@@ -58,7 +55,7 @@ const DataTableHeader: FC<DataTableHeaderProps> = ({
               }}
               closable={true}
             >
-              {pagination.search}
+              {query.search}
             </Tag>
           )}
         </div>
@@ -68,9 +65,9 @@ const DataTableHeader: FC<DataTableHeaderProps> = ({
           size={'default'}
           checkedChildren="verified"
           unCheckedChildren="unverified"
-          checked={pagination.verified}
+          checked={query.verified}
           onChange={() => {
-            setPagination((old) => ({
+            setQuery((old) => ({
               ...old,
               verified: !old.verified,
             }))

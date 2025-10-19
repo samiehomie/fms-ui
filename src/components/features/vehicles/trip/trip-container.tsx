@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react'
 import { DateRangePicker } from '@/components/ui/data-range-picker'
 import TripContent from './trip-content'
-import type { VehicleTripsQuery } from '@/types/features/vehicle/vehicle.types'
+import type { VehicleTripsQuery } from '@/types/features/vehicles/vehicle.types'
 import { getDefaultDateRangeFormatted } from '@/lib/utils/date-formatter'
 
 export default function TripContainer({ vehicleId }: { vehicleId: string }) {

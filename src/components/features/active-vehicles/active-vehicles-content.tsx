@@ -6,13 +6,13 @@ import { RealTimeDataTable } from './real-time-data-table'
 import type {
   Vehicle,
   CombinedTireData,
-} from '@/types/features/vehicle/vehicle.types'
+} from '@/types/features/vehicles/vehicle.types'
 import { useAllVehicles } from '@/lib/query-hooks/useVehicles'
 import {
   useAIResults,
   useTPMSResults,
 } from '@/lib/query-hooks/useActiveVehicles'
-import type { VehicleDataParams } from '@/types/features/vehicle/vehicle.types'
+import type { VehicleDataParams } from '@/types/features/vehicles/vehicle.types'
 
 export default function ActiveVehiclesContent() {
   const { data, isLoading } = useAllVehicles({

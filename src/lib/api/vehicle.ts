@@ -3,7 +3,7 @@ import type {
   ApiResponseType,
   ApiParamsType,
 } from '@/types/features'
-import type { VehicleTripsPaginationParams } from '@/types/features/vehicle/vehicle.types'
+import type { VehicleTripsPaginationParams } from '@/types/features/vehicles/vehicle.types'
 import { buildSearchParams, buildURL } from '../utils/build-url'
 import { fetchClient } from './fetch-client'
 

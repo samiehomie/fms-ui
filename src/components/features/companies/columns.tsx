@@ -15,7 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { ModifyCompanyForm } from './modify-company-form'
+import { UpdateCompanyForm } from './update-company-form'
 
 import { IconCircleCheckFilled, IconDotsVertical } from '@tabler/icons-react'
 import { Badge } from '@/components/ui/badge'
@@ -25,8 +25,9 @@ import {
   useVerifyCompany,
 } from '@/lib/query-hooks/useCompanies'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
+import type { CompaniesGetResponse } from '@/types/features/companies/company.types'
 
-export const columns: ColumnDef<Company>[] = [
+export const columns: ColumnDef<CompaniesGetResponse[number]>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -149,7 +150,7 @@ export const columns: ColumnDef<Company>[] = [
     id: 'actions',
     cell: ({ row }) => {
       const router = useRouter()
-      const companyId = row.original.id
+      const companyId = row.original.id.toString()
       const verified = row.original.verified
       const mutationDelete = useDeleteCompany()
       const mutationVerify = useVerifyCompany(companyId)
@@ -167,7 +168,7 @@ export const columns: ColumnDef<Company>[] = [
 
       const handleDeleteAction = async () => {
         try {
-          await mutationDelete.mutateAsync(companyId)
+          await mutationDelete.mutateAsync({ id: companyId })
           setOpen(false) // 메뉴 닫기
         } catch (error) {
           logger.error('Delete action failed:', error)
@@ -187,7 +188,7 @@ export const columns: ColumnDef<Company>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-32">
-            <ModifyCompanyForm id={companyId} onClose={() => setOpen(false)} />
+            <UpdateCompanyForm id={companyId} onClose={() => setOpen(false)} />
             <ConfirmDialog
               onClose={() => setOpen(false)}
               handleClick={handleVerifyAction}

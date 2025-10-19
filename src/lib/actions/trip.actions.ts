@@ -6,7 +6,7 @@ import { fetchServer } from '../api/fetch-server'
 import type {
   TripDetailsResponse,
   TripDetailsQuery,
-} from '@/types/features/trip/trip.types'
+} from '@/types/features/trips/trip.types'
 
 // GET /trips/{id}
 export async function getTripDetails(query: TripDetailsQuery) {

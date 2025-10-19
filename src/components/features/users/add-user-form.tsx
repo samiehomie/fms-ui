@@ -41,7 +41,7 @@ import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
 import { useCreateUser } from '@/lib/query-hooks/useUsers'
 import { IconPlus } from '@tabler/icons-react'
-import { useCompaniesPaginated } from '@/lib/query-hooks/useCompanies'
+import { useAllCompanies } from '@/lib/query-hooks/useCompanies'
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -57,7 +57,7 @@ type UserFormData = z.infer<typeof userSchema>
 function UserForm({ onClose }: { onClose: () => void }) {
   const mutation = useCreateUser()
   const { data: companiesData, isLoading: isLoadingCompanies } =
-    useCompaniesPaginated({
+    useAllCompanies({
       page: 1,
       limit: 10000, // 모든 회사를 가져오기 위해 충분히 큰 수로 설정
     })

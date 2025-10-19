@@ -5,7 +5,7 @@ import { useAllVehicles } from '@/lib/query-hooks/useVehicles'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'
-import type { VehiclesGetQuery } from '@/types/features/vehicle/vehicle.types'
+import type { VehiclesGetQuery } from '@/types/features/vehicles/vehicle.types'
 
 const VehiclesContent = () => {
   const [pageParams, setPageParams] = useState<VehiclesGetQuery>({

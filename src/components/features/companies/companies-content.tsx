@@ -1,24 +1,23 @@
 'use client'
 import { DataTable } from '../../ui/data-table'
-import type { CompaniesPaginationParams } from '@/types/features/company.types'
 import { useState } from 'react'
-import { useCompaniesPaginated } from '@/lib/query-hooks/useCompanies'
+import { useAllCompanies } from '@/lib/query-hooks/useCompanies'
 import { columns } from '@/components/features/companies/columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'
-import type { ApiParamsType } from '@/types/features'
+import type { CompaniesGetQuery } from '@/types/features/companies/company.types'
 
 const CompaniesContent = () => {
-  const [pageParams, setPageParams] = useState<ApiParamsType<'GET /companies'>>(
-    {
-      page: 1,
-      limit: 10,
-      search: '',
-      verified: true,
-    },
-  )
+  const [query, setQuery] = useState<CompaniesGetQuery>({
+    page: 1,
+    limit: 10,
+    verified: true,
+    includeDeleted: true,
+    search: undefined,
+    type: undefined,
+  })
 
-  const { data: companiesData, isLoading } = useCompaniesPaginated(pageParams)
+  const { data: companiesData, isLoading } = useAllCompanies(query)
 
   if (isLoading || !companiesData) {
     return (
@@ -30,14 +29,16 @@ const CompaniesContent = () => {
     )
   }
 
+  if (!companiesData.pagination) return null
+
   return (
     <div className="flex flex-col gap-y-3">
-      <DataTableHeader setPagination={setPageParams} pagination={pageParams} />
+      <DataTableHeader setQuery={setQuery} query={query} />
       <DataTable
         columns={columns}
         data={companiesData.data}
-        pagination={pageParams}
-        setPagination={setPageParams}
+        pagination={query}
+        setPagination={setQuery}
         totalCount={companiesData.pagination.total}
       />
     </div>

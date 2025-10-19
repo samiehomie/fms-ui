@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'
-import type { DevicesGetQuery } from '@/types/features/device/device.types'
+import type { DevicesGetQuery } from '@/types/features/devices/device.types'
 import { EdgeDeviceType } from '@/types/enums/edge-device.enum'
 import { useAllDevices } from '@/lib/query-hooks/useDevices'
 

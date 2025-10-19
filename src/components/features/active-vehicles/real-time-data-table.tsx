@@ -22,7 +22,7 @@ import {
 import type {
   Vehicle,
   CombinedTireData,
-} from '@/types/features/vehicle/vehicle.types'
+} from '@/types/features/vehicles/vehicle.types'
 interface RealTimeDataProps {
   selectedVehicle: Vehicle | null
   tireData: CombinedTireData[]

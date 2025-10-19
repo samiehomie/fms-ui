@@ -13,7 +13,7 @@ import type {
   DevicesGetResponse,
   DeviceCreateBody,
   DeviceCreateResponse,
-} from '@/types/features/device/device.types'
+} from '@/types/features/devices/device.types'
 import type { ServerActionResult } from '@/types/features/common.types'
 import { getAllDevices, createDevice } from '../actions/device.actions'
 

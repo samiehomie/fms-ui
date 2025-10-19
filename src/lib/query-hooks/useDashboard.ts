@@ -1,4 +1,4 @@
-import { useCompaniesPaginated } from './useCompanies'
+import { useAllCompanies } from './useCompanies'
 import { useAllVehicles } from './useVehicles'
 import { useUsersPaginated } from './useUsers'
 import { useDevicesPaginated } from './useDevices'
@@ -9,7 +9,7 @@ const paramsAllData = {
 }
 
 export const useDashboard = () => {
-  const companiesQuery = useCompaniesPaginated({
+  const companiesQuery = useAllCompanies({
     page: 1,
     limit: 6,
   })

@@ -6,7 +6,7 @@ import { fetchServer } from '../api/fetch-server'
 import type {
   VehicleTripsResponse,
   VehicleTripsQuery,
-} from '@/types/features/vehicle/vehicle.types'
+} from '@/types/features/vehicles/vehicle.types'
 
 // GET /vehicles/{id}/trips
 export async function getVehicleTrips(query: VehicleTripsQuery) {

@@ -19,7 +19,7 @@ import type { LatLngExpression, Marker as LeafletMarker } from 'leaflet'
 import L from 'leaflet'
 import { useEffect, useRef } from 'react'
 import { useVehicleTripDetailsBatch } from '@/lib/query-hooks/useVehicles'
-import type { TripDetailsResponse } from '@/types/features/trip/trip.types'
+import type { TripDetailsResponse } from '@/types/features/trips/trip.types'
 
 interface TripMapProps {
   selectedIds: number[]

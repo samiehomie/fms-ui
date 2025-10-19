@@ -43,8 +43,8 @@ import { useUpdateVehicle, useVehicleById } from '@/lib/query-hooks/useVehicles'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { GearType, FuelType, CanBitrateType } from '@/types/enums/vehicle.enum'
-import { useCompaniesPaginated } from '@/lib/query-hooks/useCompanies'
-import type { VehicleUpdateBody } from '@/types/features/vehicle/vehicle.types'
+import { useAllCompanies } from '@/lib/query-hooks/useCompanies'
+import type { VehicleUpdateBody } from '@/types/features/vehicles/vehicle.types'
 
 const vehicleSchema = z.object({
   vehicleName: z.string().min(1, 'Vehicle name is required'),
@@ -78,12 +78,11 @@ function VehicleForm({ onClose, id }: { onClose: () => void; id: string }) {
   const [isInitialized, setIsInitialized] = useState(false)
 
   // TODO: 전체 가져오기 다른 패턴 회사가 많아 졌을 경우 검색 UI 필요
-  const { data: companiesData, isLoading: companiesLoading } =
-    useCompaniesPaginated({
-      page: 1,
-      limit: 100,
-      search: '',
-    })
+  const { data: companiesData, isLoading: companiesLoading } = useAllCompanies({
+    page: 1,
+    limit: 100,
+    search: '',
+  })
 
   const { data: vehicleData, isLoading } = useVehicleById(id)
   const mutation = useUpdateVehicle(id)
