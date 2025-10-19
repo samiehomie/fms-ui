@@ -43,13 +43,13 @@ const data = {
           title: 'All Vehicles',
           url: '/vehicles',
         },
-        // {
-        //   title: 'Live Map',
-        //   url: '/live',
-        // },
         {
           title: 'Live Map',
           url: '/live-map',
+        },
+        {
+          title: 'Active Vehicles',
+          url: '/active-vehicles',
         },
       ],
     },

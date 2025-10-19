@@ -1,9 +1,9 @@
 'use client'
 
-import { MetricCard } from '@/components/features/dashboard_mock/metric-card'
-import { FleetActivityChart } from '@/components/features/dashboard_mock/fleet-activity-chart'
-import { RecentIssues } from '@/components/features/dashboard_mock/recent-issues'
-import { DashboardFilters } from '@/components/features/dashboard_mock/dashboard-filters'
+import { MetricCard } from '@/components/features/dashboard-mock/metric-card'
+import { FleetActivityChart } from '@/components/features/dashboard-mock/fleet-activity-chart'
+import { RecentIssues } from '@/components/features/dashboard-mock/recent-issues'
+import { DashboardFilters } from '@/components/features/dashboard-mock/dashboard-filters'
 import {
   dashboardMetrics,
   recentIssues,

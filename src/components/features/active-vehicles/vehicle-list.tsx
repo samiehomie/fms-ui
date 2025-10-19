@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Truck, Calendar, Fuel, Settings, Building } from 'lucide-react'
-import type { Vehicle } from '@/types/features/vehicles/vehicle.types'
+import { VehiclesGetResponse } from '@/types/features/vehicles/vehicle.types'
 
 interface VehicleListProps {
-  vehicles: Vehicle[]
+  vehicles: VehiclesGetResponse
   selectedVehicleId: number | undefined
-  onVehicleSelect: (vehicle: Vehicle) => void
+  onVehicleSelect: (vehicle: VehiclesGetResponse[number]) => void
 }
 
 export function VehicleList({
@@ -30,13 +30,13 @@ export function VehicleList({
     })
   }
 
-  const getStatusColor = (vehicle: Vehicle) => {
+  const getStatusColor = (vehicle:  VehiclesGetResponse[number]) => {
     if (vehicle.isdeleted) return 'bg-red-100 text-red-800'
     // if (vehicle.tires.length === 0) return 'bg-yellow-100 text-yellow-800'
     return 'bg-green-100 text-green-800'
   }
 
-  const getStatusText = (vehicle: Vehicle) => {
+  const getStatusText = (vehicle:  VehiclesGetResponse[number]) => {
     if (vehicle.isdeleted) return 'Inactive'
     // if (vehicle.tires.length === 0) return 'No Tires'
     return 'Active'
@@ -64,9 +64,9 @@ export function VehicleList({
               >
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <h3 className="font-semibold">{vehicle.plate_number}</h3>
+                    <h3 className="font-semibold">{vehicle.plateNumber}</h3>
                     <p className="text-sm text-muted-foreground">
-                      {vehicle.brand} {vehicle.model} ({vehicle.manuf_year})
+                      {vehicle.brand} {vehicle.model} ({vehicle.manufactureYear})
                     </p>
                   </div>
                   {/* <Badge className={getStatusColor(vehicle)}>
@@ -77,15 +77,15 @@ export function VehicleList({
                 <div className="space-y-2 text-xs text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <Building className="h-3 w-3" />
-                    <span>{vehicle.company_id.name}</span>
+                    <span>{vehicle.company.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Fuel className="h-3 w-3" />
-                    <span>{vehicle.fuel_type}</span>
+                    <span>{vehicle.fuelType}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Settings className="h-3 w-3" />
-                    <span>{vehicle.num_tire} Tires</span>
+                    <span>{vehicle.numTire} Tires</span>
                   </div>
                   {/* <div className="flex items-center gap-2">
                     <Calendar className="h-3 w-3" />

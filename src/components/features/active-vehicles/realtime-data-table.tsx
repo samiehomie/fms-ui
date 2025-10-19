@@ -20,11 +20,12 @@ import {
   Truck,
 } from 'lucide-react'
 import type {
-  Vehicle,
   CombinedTireData,
 } from '@/types/features/vehicles/vehicle.types'
+import type { VehiclesGetResponse } from '@/types/features/vehicles/vehicle.types'
+
 interface RealTimeDataProps {
-  selectedVehicle: Vehicle | null
+  selectedVehicle: VehiclesGetResponse[number] | null
   tireData: CombinedTireData[]
   isLoading: boolean
 }

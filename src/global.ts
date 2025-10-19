@@ -1,4 +1,4 @@
-import { logger as loggerUtils } from '@/lib/utils/logger'
+import { logger as loggerUtils } from './lib/utils/logger'
 
 // 서버 환경 (Node.js, SSR)
 if (typeof globalThis !== 'undefined') {

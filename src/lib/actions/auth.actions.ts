@@ -35,7 +35,7 @@ export async function loginAction(
       },
     )
 
-    logger.log('loginAction', response)
+    console.log('loginAction', response)
 
     if (!response.success) throw new Error('Authentication failed')
 
@@ -70,7 +70,7 @@ export async function logOutAction() {
     cookieStore.delete(REFRESH_TOKEN_COOKIE_NAME)
     if (!response.success) throw new Error('Authentication failed')
   } catch (error) {
-    logger.error('Logout error:', error)
+    console.error('Logout error:', error)
     redirect('/login')
   }
   redirect('/login')
@@ -118,7 +118,7 @@ export async function refreshTokenIfNeeded(
       },
     )
 
-    logger.log(result)
+    console.log(result)
 
     if (!result.success) {
       const error = result.error
@@ -129,17 +129,17 @@ export async function refreshTokenIfNeeded(
           ? error.serverMessage
           : error.message || 'Token refresh failed'
 
-      logger.error(`인증 토큰 갱신실패: ${status} - ${message}`)
+      console.error(`인증 토큰 갱신실패: ${status} - ${message}`)
       return null
     }
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       result.data
 
-    logger.info('인증 토큰 갱신성공')
+    console.info('인증 토큰 갱신성공')
     return { newAccessToken, newRefreshToken }
   }
 
-  // logger.info('인증 토큰 갱신 필요없음. 기존 토큰 사용 유지.')
+  // console.info('인증 토큰 갱신 필요없음. 기존 토큰 사용 유지.')
 
   return {
     newAccessToken: accessToken,

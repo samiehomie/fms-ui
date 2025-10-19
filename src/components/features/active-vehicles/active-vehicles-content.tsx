@@ -3,15 +3,16 @@
 import { useState, useMemo } from 'react'
 import { VehicleList } from './vehicle-list'
 import { RealTimeDataTable } from './realtime-data-table'
-import type {
-  Vehicle,
-  CombinedTireData,
-} from '@/types/features/vehicles/vehicle.types'
+import type { CombinedTireData } from '@/types/features/vehicles/vehicle.types'
 import { useAllVehicles } from '@/lib/query-hooks/useVehicles'
 import {
   useAIResults,
   useTPMSResults,
 } from '@/lib/query-hooks/useActiveVehicles'
+import type {
+  VehiclesGetQuery,
+  VehiclesGetResponse,
+} from '@/types/features/vehicles/vehicle.types'
 import type { VehicleDataParams } from '@/types/features/vehicles/vehicle.types'
 
 export default function ActiveVehiclesContent() {
@@ -20,7 +21,9 @@ export default function ActiveVehiclesContent() {
     limit: 1000,
     includeDeleted: false,
   })
-  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null)
+  const [selectedVehicle, setSelectedVehicle] = useState<
+    VehiclesGetResponse[number] | null
+  >(null)
   const params: VehicleDataParams = {
     page: 1,
     limit: 4,
@@ -50,9 +53,7 @@ export default function ActiveVehiclesContent() {
     const aiResults = aiData.data.ai_results
 
     // Get unique tire locations from the selected vehicle
-    const tireLocations = selectedVehicle.tires.map(
-      (tire) => tire.tire_location,
-    )
+    const tireLocations = selectedVehicle.tires.map((tire) => tire.tireLocation)
 
     return tireLocations.map((location) => {
       const tpmsData = tpmsResults.find(
@@ -82,11 +83,11 @@ export default function ActiveVehiclesContent() {
     })
   }, [selectedVehicle, aiResult, tpmsResult])
 
-  const handleVehicleSelect = (vehicle: Vehicle) => {
+  const handleVehicleSelect = (vehicle: VehiclesGetResponse[number]) => {
     setSelectedVehicle(vehicle)
   }
 
-  const vehicles = vehiclesData?.data.vehicles
+  const vehicles = vehiclesData?.data
 
   return (
     <div className="flex flex-col h-full">

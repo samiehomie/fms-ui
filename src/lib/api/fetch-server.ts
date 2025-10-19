@@ -57,7 +57,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
  * // Basic usage
  * const result = await fetchServer<User[]>('/api/users')
  * if (result.success) {
- *   logger.log(result.data)
+ *   console.log(result.data)
  * }
  *
  * @example
@@ -102,7 +102,7 @@ export async function fetchServer<T = unknown>(
       : String(input)
 
   if (debug) {
-    logger.log('[fetchServer] Request:', {
+    console.log('[fetchServer] Request:', {
       url,
       method: fetchOptions.method || 'GET',
       revalidate,
@@ -155,7 +155,7 @@ export async function fetchServer<T = unknown>(
       clearTimeout(timeoutId)
 
       if (debug) {
-        logger.log('[fetchServer] Response:', {
+        console.log('[fetchServer] Response:', {
           status: response.status,
           statusText: response.statusText,
           headers: Object.fromEntries(response.headers.entries()),
@@ -168,7 +168,7 @@ export async function fetchServer<T = unknown>(
 
       // Handle non-OK responses
       if (!response.ok) {
-        logger.log('error--->', response)
+        console.log('error--->', response)
         let errorMessage = response.statusText || 'Unknown server error'
         let errorDetails: unknown = undefined
 
@@ -182,7 +182,7 @@ export async function fetchServer<T = unknown>(
         // Check if should retry
         if (attempt < attempts && shouldRetry(error)) {
           if (debug) {
-            logger.log(
+            console.log(
               `[fetchServer] Retrying... Attempt ${attempt + 1}/${attempts}`,
             )
           }
@@ -207,7 +207,7 @@ export async function fetchServer<T = unknown>(
 
       try {
         const data = await response.json()
-        logger.log('data', data.data)
+        console.log('data', data.data)
         return data
       } catch (error) {
         return {
@@ -232,7 +232,7 @@ export async function fetchServer<T = unknown>(
         // Check if should retry on timeout
         if (attempt < attempts && shouldRetry(timeoutError)) {
           if (debug) {
-            logger.log(
+            console.log(
               `[fetchServer] Timeout. Retrying... Attempt ${
                 attempt + 1
               }/${attempts}`,
@@ -256,7 +256,7 @@ export async function fetchServer<T = unknown>(
       // Check if should retry on network error
       if (attempt < attempts && shouldRetry(networkError)) {
         if (debug) {
-          logger.log(
+          console.log(
             `[fetchServer] Network error. Retrying... Attempt ${
               attempt + 1
             }/${attempts}`,

@@ -16,7 +16,7 @@ const DashboardSkeleton = () => {
 }
 
 const DashboardMockContent = dynamic(
-  () => import('@/components/features/dashboard_mock/dashboard-mock-content'),
+  () => import('@/components/features/dashboard-mock/dashboard-mock-content'),
   {
     ssr: false,
     loading: () => <DashboardSkeleton />,

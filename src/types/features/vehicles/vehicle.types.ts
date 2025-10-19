@@ -31,6 +31,7 @@ type VehicleData = Pick<
 // GET /vehicles
 export type VehiclesGetResponse = (VehicleData & {
   company: Pick<Company, 'id' | 'name'>
+  tires: Pick<Tire, 'id' | 'tireLocation'>[]
 })[]
 
 // GET /vehicles
