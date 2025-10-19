@@ -18,7 +18,7 @@ export default function ActiveVehiclesContent() {
   const { data, isLoading } = useAllVehicles({
     page: 1,
     limit: 100,
-    include_deleted: false,
+    includeDeleted: false,
     search: '',
   })
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null)

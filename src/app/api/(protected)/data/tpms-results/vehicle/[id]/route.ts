@@ -42,8 +42,10 @@ export async function GET(
         )
       }
 
+      const { data, pagination } = response
       return createSuccessResponse(
-        response.data,
+        data,
+        pagination,
         'TPMS results fetched successfully',
       )
     } catch (err) {
