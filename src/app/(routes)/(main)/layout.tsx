@@ -30,7 +30,7 @@ export default function DashboardLayout({
               <BreadcrumbMain />
             </div>
           </header>
-          <div className="lg:mx-6 flex-1 flex flex-col mt-5">{children}</div>
+          <div className="lg:mx-6 flex-1 flex flex-col mt-7">{children}</div>
         </SidebarInset>
       </SidebarProvider>
     </Providers>

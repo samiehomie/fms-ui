@@ -130,6 +130,13 @@
   body {
     @apply bg-background text-foreground;
   }
+  .header-one {
+    @apply text-xl font-semibold leading-none sm:text-[1.75rem] tracking-tight;
+  }
+
+  .page-container {
+    @apply w-full flex flex-col gap-y-7;
+  }
 }
 
 .trip-label {

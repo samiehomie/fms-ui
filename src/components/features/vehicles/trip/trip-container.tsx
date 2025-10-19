@@ -32,11 +32,9 @@ export default function TripContainer({ vehicleId }: { vehicleId: string }) {
   )
 
   return (
-    <div className="flex-1 w-full bg-background text-[#424656] flex flex-col">
+    <div className="flex-1 w-full bg-background flex flex-col">
       <header className="flex items-center justify-between mb-8  shrink-0">
-        <h1 className="text-xl font-semibold leading-none sm:text-[1.625rem] tracking-tight">
-          Trips History
-        </h1>
+        <h1 className="header-one">Trips History</h1>
         <DateRangePicker onDateChange={handleDateRangeChange} />
       </header>
       <TripContent vehicleId={vehicleId} setQuery={setQuery} query={query} />
