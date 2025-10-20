@@ -22,7 +22,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import {
   useDeleteCompany,
   useVerifyCompany,
-} from '@/lib/query-hooks/useCompanies'
+} from '@/lib/query-hooks/use-companies'
 import ConfirmDialog from '@/components/ui/confirm-dialog'
 import type { CompaniesGetResponse } from '@/types/features/companies/company.types'
 

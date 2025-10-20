@@ -4,11 +4,11 @@ import { useState, useMemo } from 'react'
 import { VehicleList } from './vehicle-list'
 import { RealTimeDataTable } from './realtime-data-table'
 import type { CombinedTireData } from '@/types/features/vehicles/vehicle.types'
-import { useAllVehicles } from '@/lib/query-hooks/useVehicles'
+import { useAllVehicles } from '@/lib/query-hooks/use-vehicles'
 import {
   useAIResults,
   useTPMSResults,
-} from '@/lib/query-hooks/useActiveVehicles'
+} from '@/lib/query-hooks/use-vehicles-active'
 import type {
   VehiclesGetQuery,
   VehiclesGetResponse,

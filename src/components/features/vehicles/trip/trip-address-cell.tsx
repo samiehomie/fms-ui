@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect, FC } from 'react'
-import { useVehicleTripDetailsBatch } from '@/lib/query-hooks/useVehicles'
-import { useReverseGeocode } from '@/lib/query-hooks/useGeocoding'
+import { useVehicleTripDetailsBatch } from '@/lib/query-hooks/use-vehicles'
+import { useReverseGeocode } from '@/lib/query-hooks/use-geocoding'
 
 interface TripAddressCellProps {
   visibleIds: number[]

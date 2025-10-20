@@ -39,9 +39,9 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { useCreateDevice } from '@/lib/query-hooks/useDevices'
+import { useCreateDevice } from '@/lib/query-hooks/use-devices'
 import { IconPlus } from '@tabler/icons-react'
-import { useAllVehicles } from '@/lib/query-hooks/useVehicles'
+import { useAllVehicles } from '@/lib/query-hooks/use-vehicles'
 import { EdgeDeviceType } from '@/types/enums/edge-device.enum'
 import { Skeleton } from '@/components/ui/skeleton'
 

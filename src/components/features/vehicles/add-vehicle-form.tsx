@@ -39,12 +39,12 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { useCreateVehicle } from '@/lib/query-hooks/useVehicles'
+import { useCreateVehicle } from '@/lib/query-hooks/use-vehicles'
 import { IconPlus } from '@tabler/icons-react'
 import { GearType, FuelType, CanBitrateType } from '@/types/enums/vehicle.enum'
 import { useAuth } from '../auth/auth-provider'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useAllCompanies } from '@/lib/query-hooks/useCompanies'
+import { useAllCompanies } from '@/lib/query-hooks/use-companies'
 
 const vehicleSchema = z.object({
   vehicleName: z.string().min(1, 'Vehicle name is required'),

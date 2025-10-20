@@ -19,7 +19,7 @@ import ConfirmDialog from '@/components/ui/confirm-dialog'
 import {
   useDeleteVehicle,
   useRestoreVehicle,
-} from '@/lib/query-hooks/useVehicles'
+} from '@/lib/query-hooks/use-vehicles'
 import { UpdateVehicleForm } from './update-vehicle-form'
 import type { VehiclesGetResponse } from '@/types/features/vehicles/vehicle.types'
 

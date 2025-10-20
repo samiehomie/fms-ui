@@ -40,7 +40,7 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { useCreateCompany } from '@/lib/query-hooks/useCompanies'
+import { useCreateCompany } from '@/lib/query-hooks/use-companies'
 import { IconPlus } from '@tabler/icons-react'
 import { CompanyType } from '@/types/enums/company.enum'
 

@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useVerifyUser } from '@/lib/query-hooks/useUsers'
+import { useVerifyUser } from '@/lib/query-hooks/use-users'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import ConfirmDialog from '@/components/ui/confirm-dialog'

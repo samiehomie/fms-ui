@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'
 import type { DevicesGetQuery } from '@/types/features/devices/device.types'
 import { EdgeDeviceType } from '@/types/enums/edge-device.enum'
-import { useAllDevices } from '@/lib/query-hooks/useDevices'
+import { useAllDevices } from '@/lib/query-hooks/use-devices'
 
 const DevicesContent = () => {
   const [query, setQuery] = useState<DevicesGetQuery>({

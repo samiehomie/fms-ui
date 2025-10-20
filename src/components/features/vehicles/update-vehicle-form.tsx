@@ -39,11 +39,14 @@ import {
 } from '@/components/ui/form'
 import { useMedia } from 'react-use'
 import { Loader2 } from 'lucide-react'
-import { useUpdateVehicle, useVehicleById } from '@/lib/query-hooks/useVehicles'
+import {
+  useUpdateVehicle,
+  useVehicleById,
+} from '@/lib/query-hooks/use-vehicles'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { GearType, FuelType, CanBitrateType } from '@/types/enums/vehicle.enum'
-import { useAllCompanies } from '@/lib/query-hooks/useCompanies'
+import { useAllCompanies } from '@/lib/query-hooks/use-companies'
 import type { VehicleUpdateBody } from '@/types/features/vehicles/vehicle.types'
 
 const vehicleSchema = z.object({

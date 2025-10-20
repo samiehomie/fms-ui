@@ -9,12 +9,13 @@ import {
 } from '@/components/ui/resizable'
 import { TripHistoryTable } from '@/components/features/vehicles/trip/trip-history-table'
 import { TripOverview } from '@/components/features/vehicles/trip/trip-overview'
-import { useVehicleAllTrips } from '@/lib/query-hooks/useVehicles'
+import { useVehicleAllTrips } from '@/lib/query-hooks/use-vehicles'
 import type { VehicleTripsQuery } from '@/types/features/vehicles/vehicle.types'
 import type { VehicleTripEvent } from '@/types/features/vehicles/vehicle.types'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TripPagination } from './trip-pagination'
 import { formatDuration } from '@/lib/utils/build-url'
+import { useTpmsResultsByVehicle } from '@/lib/query-hooks/use-vehicles-tpms'
 
 export interface TripSession {
   id: number
@@ -51,9 +52,14 @@ export default function TripContent({
   const [sessions, setSessions] = useState<TripSession[]>([])
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
-
+  const { search, status, ...tpmsQuery } = query
   const { data: tripsData, isLoading } = useVehicleAllTrips({
     ...query,
+    id: vehicleId,
+  })
+
+  const { data: tpmsData, isLoading: tpmsLoading } = useTpmsResultsByVehicle({
+    ...tpmsQuery,
     id: vehicleId,
   })
 
@@ -113,7 +119,7 @@ export default function TripContent({
     }
   }, [tripsData])
 
-  if (isLoading || !tripsData) {
+  if (isLoading || !tripsData || tpmsLoading || !tpmsData) {
     return (
       <div className="col-span-3 flex flex-col gap-y-2">
         <Skeleton className="w-full h-10" />
@@ -124,6 +130,8 @@ export default function TripContent({
   }
 
   const { vehicle, stats } = tripsData.data
+
+  console.log('tpms===>', tpmsData)
 
   return (
     <main className="flex-grow flex-1 overflow-hidden flex flex-col">

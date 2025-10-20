@@ -5,7 +5,7 @@ import { CompanyApiTypes } from './company.types'
 import { VehicleApiTypes } from './vehicles/vehicle.types'
 import { UserApiTypes } from './user.types'
 import { DeviceApiTypes } from './device.types'
-import { VehicleTripApiTypes } from './vehicles/vehicle-trip'
+import { VehicleTripApiTypes } from './vehicles/vehicle-trip.types'
 
 export interface ApiTypes
   extends AuthApiTypes,

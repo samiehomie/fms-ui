@@ -1,12 +1,10 @@
 'use client'
 import { DataTable } from '@/components/ui/data-table'
 import { useState } from 'react'
-import { useCompanyVehicles } from '@/lib/query-hooks/useCompanies'
+import { useCompanyVehicles } from '@/lib/query-hooks/use-companies'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
-import type {
-  CompanyVehiclesQuery,
-} from '@/types/features/companies/company.types'
+import type { CompanyVehiclesQuery } from '@/types/features/companies/company.types'
 
 const CompanyVehiclesContent = ({ companyId }: { companyId: string }) => {
   const [query, setQuery] = useState<Omit<CompanyVehiclesQuery, 'id'>>({

@@ -1,25 +1,28 @@
 'use client'
-import { useAuth } from '@/components/features/auth/auth-provider'
-import DashboardContent from '@/components/features/dashboard/dashboard-content'
+import { Skeleton } from '@/components/ui/skeleton'
+// TODO: 실제 구현시 수정할 내용임
+import dynamic from 'next/dynamic'
 
-export default function DashboardPage() {
-  const { user, isLoading } = useAuth()
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
+const DashboardSkeleton = () => {
   return (
-    <div className="flex-1 space-y-6">
-      {/* <div>
-        <h1 className="text-3xl font-bold text-[#0f172a] dark:text-slate-50">
-          Dashboard
-        </h1>
-        <p className="text-slate-600 dark:text-slate-400">
-          Welcome, {user?.name || user?.username || 'User'}!
-        </p>
-      </div> */}
-      <DashboardContent />
+    <div className="flex flex-col gap-y-4">
+      <Skeleton className="w-full h-9" />
+      <Skeleton className="w-full h-12" />
+      <Skeleton className="w-full h-12" />
+      <Skeleton className="w-full h-12" />
+      <Skeleton className="w-full h-12" />
     </div>
   )
+}
+
+const DashboardMockContent = dynamic(
+  () => import('@/components/features/dashboard-mock/dashboard-mock-content'),
+  {
+    ssr: false,
+    loading: () => <DashboardSkeleton />,
+  },
+)
+
+export default function DashboardPage() {
+  return <DashboardMockContent />
 }

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import dynamic from 'next/dynamic'
-import { useVehicleStream } from '@/lib/query-hooks/useVehicleStream'
+import { useVehicleStream } from '@/lib/query-hooks/use-vehicle-stream'
 import VehicleList from '@/components/features/live/vehicle-list'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'

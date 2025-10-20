@@ -1,7 +1,7 @@
 'use client'
 import { DataTable } from '@/components/ui/data-table'
 import { useState } from 'react'
-import { useAllUsers } from '@/lib/query-hooks/useUsers'
+import { useAllUsers } from '@/lib/query-hooks/use-users'
 import { columns } from './columns'
 import { Skeleton } from '@/components/ui/skeleton'
 import DataTableHeader from './data-table-header'
