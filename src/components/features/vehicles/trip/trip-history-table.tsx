@@ -13,7 +13,6 @@ import { cn } from '@/lib/utils/utils'
 import type { TripSession } from './trip-content'
 import { Eye, EyeOff, MoveRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useReverseGeocode } from '@/lib/query-hooks/use-geocoding'
 import { format, parseISO } from 'date-fns'
 
 interface TripHistoryTableProps {
@@ -31,9 +30,7 @@ export function TripHistoryTable({
   visibleIds,
   onVisibilityToggle,
 }: TripHistoryTableProps) {
-  const { data: startAddress } = useReverseGeocode('37.101135', '126.901810')
-  const { data: endAddress } = useReverseGeocode('37.364746', '126.947838')
-
+  // TODO 역 geocode 처리
   return (
     <div>
       <Table>
@@ -48,10 +45,7 @@ export function TripHistoryTable({
               {/* <Clock className="inline-block mt-[-1px] mr-1 h-4 w-4" /> */}
               {`Trip Length`}
             </TableHead>
-            <TableHead>
-              {/* <AlertTriangle className="inline-block mr-1 mt-[-1px] h-4 w-4" /> */}
-              Events
-            </TableHead>
+
             <TableHead className=""></TableHead>
           </TableRow>
         </TableHeader>
@@ -81,17 +75,17 @@ export function TripHistoryTable({
                 </div>
                 <div className="flex items-center pl-4 text-xs text-gray-800 font-[400]">
                   <div className="flex flex-col gap-y-[9px] leading-none">
-                    {startAddress && <div>{startAddress}</div>}
-                    {endAddress && (
-                      <div className="flex gap-x-1 items-center">
-                        <MoveRight
-                          className="leading-none text-muted-foreground"
-                          size={12}
-                        />
-                        {endAddress}
-                      </div>
-                    )}
-                    <div className="text-muted-foreground font-light tracking-wider text-[11.6px] font-mono">
+                    <div>
+                      {format(parseISO(session.startTime), 'yy.MM.d HH:mm')}
+                    </div>
+                    <div className="flex gap-x-1 items-center">
+                      <MoveRight
+                        className="leading-none text-muted-foreground"
+                        size={12}
+                      />
+                      {format(parseISO(session.endTime), 'yy.MM.d HH:mm')}
+                    </div>
+                    {/* <div className="text-muted-foreground font-light tracking-wider text-[11.6px] font-mono">
                       {`${format(
                         parseISO(session.startTime),
                         'yy.MM.d HH:mm',
@@ -99,7 +93,7 @@ export function TripHistoryTable({
                         parseISO(session.endTime),
                         'yy.MM.d HH:mm',
                       )}`}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </TableCell>
@@ -121,15 +115,7 @@ export function TripHistoryTable({
                   Distance: {session.distance}km
                 </div>
               </TableCell>
-              <TableCell>
-                <div className="flex flex-wrap gap-1">
-                  {session.events.map((event) => (
-                    <Badge key={event.id} variant="secondary">
-                      {event.details}
-                    </Badge>
-                  ))}
-                </div>
-              </TableCell>
+
               <TableCell className="text-center pr-[.625rem]">
                 {selectedIds.has(session.id) && (
                   <Button

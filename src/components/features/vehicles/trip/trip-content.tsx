@@ -16,6 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { TripPagination } from './trip-pagination'
 import { formatDuration } from '@/lib/utils/build-url'
 import { useTpmsResultsByVehicle } from '@/lib/query-hooks/use-vehicles-tpms'
+import type { TPMSResultsByVehicleGetQuery } from '@/types/features/vehicles/vehicle-tpms.types'
 
 export interface TripSession {
   id: number
@@ -26,6 +27,14 @@ export interface TripSession {
   distance: string // in km
   events: VehicleTripEvent[]
   status: string
+  startPoint: {
+    latitude: string
+    longitude: string
+  }
+  endPoint: {
+    latitude: string
+    longitude: string
+  }
 }
 
 const TripMap = dynamic(
@@ -49,6 +58,12 @@ export default function TripContent({
   query: Omit<VehicleTripsQuery, 'id'>
   setQuery: React.Dispatch<React.SetStateAction<Omit<VehicleTripsQuery, 'id'>>>
 }) {
+  const [tpmsPagination, setTpmsPagination] = useState<
+    Omit<TPMSResultsByVehicleGetQuery, 'startDate' | 'endDate' | 'id'>
+  >({
+    page: 1,
+    limit: 10,
+  })
   const [sessions, setSessions] = useState<TripSession[]>([])
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
@@ -60,6 +75,7 @@ export default function TripContent({
 
   const { data: tpmsData, isLoading: tpmsLoading } = useTpmsResultsByVehicle({
     ...tpmsQuery,
+    ...tpmsPagination,
     id: vehicleId,
   })
 
@@ -114,6 +130,14 @@ export default function TripContent({
         distance: '10',
         events: [],
         status: trip.status,
+        startPoint: {
+          latitude: trip.startPoint.latitude,
+          longitude: trip.startPoint.longitude,
+        },
+        endPoint: {
+          latitude: trip.endPoint.latitude,
+          longitude: trip.endPoint.longitude,
+        },
       }))
       setSessions(newSessions)
     }
@@ -129,10 +153,7 @@ export default function TripContent({
     )
   }
 
-  const { vehicle, stats } = tripsData.data
-
-  console.log('tpms===>', tpmsData)
-
+  const { vehicle, stats, trips } = tripsData.data
   return (
     <main className="flex-grow flex-1 overflow-hidden flex flex-col">
       <TripOverview
@@ -150,8 +171,8 @@ export default function TripContent({
         {isMapVisible ? (
           <ResizablePanelGroup direction="horizontal" className="h-full w-full">
             <ResizablePanel
-              defaultSize={50}
-              minSize={40}
+              defaultSize={35}
+              minSize={25}
               maxSize={60}
               className="flex flex-col flex-1"
             >
@@ -176,7 +197,7 @@ export default function TripContent({
               </div>
             </ResizablePanel>
             <ResizableHandle withHandle className="z-[999]" />
-            <ResizablePanel defaultSize={50} minSize={30}>
+            <ResizablePanel defaultSize={65} minSize={40}>
               <TripMap selectedIds={Array.from(visibleIds)} />
             </ResizablePanel>
           </ResizablePanelGroup>
