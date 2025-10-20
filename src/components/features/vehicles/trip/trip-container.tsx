@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/select'
 import { useAllVehicles } from '@/lib/query-hooks/use-vehicles'
 
+// TODO 차량 등록전 화면 구현 필요
 export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
   const [carId, setCarId] = useState<string>()
   const { data: vehiclesData, isLoading: vehiclesLoading } = useAllVehicles(
@@ -51,12 +52,10 @@ export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
   )
 
   useEffect(() => {
-    if (vehiclesData) {
+    if (vehiclesData && vehiclesData.data) {
       const vehicleCount = vehiclesData.data.length
       if (vehicleCount > 0) {
         setCarId(vehiclesData.data[vehicleCount - 1].id?.toString())
-      } else {
-        setCarId('1')
       }
     }
   }, [vehiclesData])
@@ -64,7 +63,9 @@ export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
   return (
     <div className="flex-1 w-full bg-background flex flex-col">
       <header className="flex items-center justify-between mb-8  shrink-0">
-        <h1 className="header-one">Trips History</h1>
+        <h1 className="header-one">
+          {vehicleId ? 'Trips History' : ''}
+        </h1>
         <div className="flex items-center gap-x-4">
           {vehicleId === undefined && (
             <Select

@@ -140,8 +140,16 @@ export default function TripContent({
         },
       }))
       setSessions(newSessions)
+      if (newSessions?.[0]?.id !== undefined) {
+        const firstId = new Set([newSessions[0].id])
+        setSelectedIds(firstId)
+        setVisibleIds(firstId)
+      } else {
+        setSelectedIds(new Set())
+        setVisibleIds(new Set())
+      }
     }
-  }, [tripsData])
+  }, [tripsData, vehicleId])
 
   if (isLoading || !tripsData || tpmsLoading || !tpmsData) {
     return (
@@ -186,7 +194,11 @@ export default function TripContent({
               </div>
             </ResizablePanel>
             <ResizableHandle withHandle className="z-[999]" />
-            <ResizablePanel defaultSize={65} minSize={40}>
+            <ResizablePanel
+              defaultSize={65}
+              minSize={40}
+              className="mb-4 rounded-[4px]"
+            >
               <TripOverview
                 totalDriveTime={stats.totalDuration}
                 activeTrips={stats.activeTrips}
