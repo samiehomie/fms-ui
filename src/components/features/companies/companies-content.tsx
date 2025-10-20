@@ -10,7 +10,7 @@ import type { CompaniesGetQuery } from '@/types/features/companies/company.types
 const CompaniesContent = () => {
   const [query, setQuery] = useState<CompaniesGetQuery>({
     page: 1,
-    limit: 10,
+    limit: 20,
     verified: true,
     includeDeleted: true,
     search: undefined,
