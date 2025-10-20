@@ -31,8 +31,6 @@ import {
   getCompanyVehicles,
 } from '../actions/compnay.actions'
 import type { ServerActionResult } from '@/types/features/common.types'
-import type { ApiParamsType } from '@/types/features'
-import { vehiclesApi } from '../api/vehicle'
 
 export function useAllCompanies(query: CompaniesGetQuery) {
   return useQuery({

@@ -102,16 +102,17 @@ export const columns: ColumnDef<UsersGetResponse[number]>[] = [
     id: 'actions',
     cell: ({ row }) => {
       const router = useRouter()
+      const userId = row.original.id.toString()
       const username = row.original.username
       const verified = row.original.verified
       //const mutationDelete = useDeleteCompany()
-      const mutationVerify = useVerifyUser()
+      const mutationVerify = useVerifyUser(userId)
 
       const [open, setOpen] = useState(false)
 
       const handleVerifyAction = async () => {
         try {
-          await mutationVerify.mutateAsync({ username })
+          await mutationVerify.mutateAsync({ verified: !verified })
           setOpen(false) // 메뉴 닫기
         } catch (error) {
           logger.error('Verify action failed:', error)

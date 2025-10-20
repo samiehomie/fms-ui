@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -42,48 +42,81 @@ import { Loader2 } from 'lucide-react'
 import { useCreateUser } from '@/lib/query-hooks/useUsers'
 import { IconPlus } from '@tabler/icons-react'
 import { useAllCompanies } from '@/lib/query-hooks/useCompanies'
+import { useAllRoles } from '@/lib/query-hooks/useRoles'
+import { RoleType } from '@/types/enums/role.enum'
+import { useAuth } from '../auth/auth-provider'
+import { Skeleton } from '@/components/ui/skeleton'
+import type { UserCreateBody } from '@/types/features/users/user.types'
 
 const userSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  name: z.string().min(3, 'Name is required'),
   username: z.string().min(1, 'Username is required'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   email: z.string().email('Invalid email address'),
-  role_id: z.number().min(1, 'Role is required'),
-  company_id: z.number().min(1, 'Company is required'),
+  roleId: z.number().min(1, 'Role is required'),
+  companyId: z.number().min(1, 'Company is required'),
 })
 
 type UserFormData = z.infer<typeof userSchema>
 
 function UserForm({ onClose }: { onClose: () => void }) {
-  const mutation = useCreateUser()
+  const [isInitialized, setIsInitialized] = useState(false)
+  const { user, isLoading } = useAuth()
+
+  // TODO 모든 회사 가져오기에 대한 리펙토링 UI / API 모두 필요
   const { data: companiesData, isLoading: isLoadingCompanies } =
     useAllCompanies({
       page: 1,
-      limit: 10000, // 모든 회사를 가져오기 위해 충분히 큰 수로 설정
+      limit: 1000,
     })
 
+  const { data: rolesData, isLoading: isLoadingRoles } = useAllRoles({
+    page: 1,
+    limit: 1000,
+  })
+  const mutation = useCreateUser()
   const form = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
-    defaultValues: {
-      name: '',
-      username: '',
-      password: '',
-      email: '',
-      role_id: undefined,
-      company_id: undefined,
-    },
   })
 
-  const onSubmit = async (data: UserFormData) => {
-    try {
-      await mutation.mutateAsync({
-        user: data,
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        name: '',
+        username: '',
+        password: '',
+        email: '',
+        roleId: 3,
+        companyId: user.companyId,
       })
-      form.reset()
+      setIsInitialized(true)
+    }
+  }, [user])
+
+  const onSubmit = async (data: UserCreateBody) => {
+    try {
+      await mutation.mutateAsync(data)
       onClose()
     } catch (error) {
       // Error is handled in the mutation
     }
+  }
+
+  if (
+    isLoadingCompanies ||
+    isLoading ||
+    !companiesData ||
+    !isInitialized ||
+    isLoadingRoles ||
+    !rolesData
+  ) {
+    return (
+      <div className="min-h-[51.125rem]  flex flex-col gap-y-4 overflow-y-hidden">
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-10" />
+      </div>
+    )
   }
 
   return (
@@ -161,22 +194,35 @@ function UserForm({ onClose }: { onClose: () => void }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="role_id"
+              name="roleId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Role</FormLabel>
                   <Select
                     onValueChange={(value) => field.onChange(parseInt(value))}
                     value={field.value?.toString()}
+                    disabled={isLoadingRoles}
                   >
                     <FormControl>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select role" />
+                        <SelectValue
+                          placeholder={
+                            isLoadingRoles ? 'Loading roles...' : 'Select role'
+                          }
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="1">Super Admin</SelectItem>
-                      <SelectItem value="2">Company Owner</SelectItem>
+                      {rolesData?.data?.map((role) => (
+                        <SelectItem key={role.id} value={role.id.toString()}>
+                          {role.name.replace('_', ' ').toUpperCase()}
+                        </SelectItem>
+                      ))}
+                      {rolesData?.data?.length === 0 && (
+                        <SelectItem value="" disabled>
+                          No role available
+                        </SelectItem>
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -186,7 +232,7 @@ function UserForm({ onClose }: { onClose: () => void }) {
 
             <FormField
               control={form.control}
-              name="company_id"
+              name="companyId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Company</FormLabel>

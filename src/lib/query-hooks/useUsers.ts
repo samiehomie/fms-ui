@@ -1,18 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { usersApi } from '@/lib/api/user'
-import type { UsersPaginationParams } from '@/types/features/user.types'
-import { ApiResponseType, ApiRequestType } from '@/types/features'
 import { toast } from 'sonner'
-import { getAllUsers } from '../actions/user.actions'
+import { getAllUsers, createUser, verifyUser } from '../actions/user.actions'
 import type {
-  UsersGetResponse,
   UsersGetQuery,
+  UserCreateBody,
+  UserCreateResponse,
+  UserVerifyBody,
+  UserVerifyResponse,
 } from '@/types/features/users/user.types'
-
-type CreateUserResponse = ApiResponseType<'POST /users'>
-type CreateUserRequest = ApiRequestType<'POST /users'>
-type VerifyUserResponse = ApiResponseType<'POST /users/verify'>
-type VerifyUserRequest = ApiRequestType<'POST /users/verify'>
+import type { ServerActionResult } from '@/types/features/common.types'
 
 export function useAllUsers(query: UsersGetQuery) {
   return useQuery({
@@ -26,25 +22,31 @@ export function useAllUsers(query: UsersGetQuery) {
 
       return result
     },
-    staleTime: 5 * 60 * 1000, 
+    staleTime: 5 * 60 * 1000,
   })
 }
 
 export function useCreateUser() {
   const queryClient = useQueryClient()
-  return useMutation<CreateUserResponse, Error, CreateUserRequest>({
+  return useMutation<
+    ServerActionResult<UserCreateResponse>,
+    Error,
+    UserCreateBody
+  >({
     mutationFn: async (newUser) => {
-      const res = await usersApi.createUser(newUser)
+      const res = await createUser(newUser)
       return res
     },
-    onSuccess: (data) => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries({
         queryKey: ['users'],
       })
-      toast.success('A new vehicle added', {
-        description: `${data.message}`,
-        position: 'bottom-center',
-      })
+      if (res.success) {
+        toast.success('New user added', {
+          description: `username: ${res.data.username}`,
+          position: 'bottom-center',
+        })
+      }
     },
     onError: (error) => {
       toast.error('Adding a new vehicle failed.', {
@@ -55,24 +57,33 @@ export function useCreateUser() {
   })
 }
 
-export function useVerifyUser() {
+export function useVerifyUser(id: string) {
   const queryClient = useQueryClient()
-  return useMutation<VerifyUserResponse, Error, VerifyUserRequest>({
-    mutationFn: async (user) => {
-      const res = await usersApi.verifyUser(user)
+  return useMutation<
+    ServerActionResult<UserVerifyResponse>,
+    Error,
+    UserVerifyBody
+  >({
+    mutationFn: async (body) => {
+      const res = await verifyUser({ id }, body)
       return res
     },
-    onSuccess: (data) => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries({
         queryKey: ['users'],
       })
-      toast.success('User Verification Complete', {
-        description: `${data.message}`,
-        position: 'bottom-center',
+      queryClient.invalidateQueries({
+        queryKey: ['user', id],
       })
+      if (res.success) {
+        toast.success('User Verification Complete', {
+          description: `${res.data.name}`,
+          position: 'bottom-center',
+        })
+      }
     },
     onError: (error) => {
-      toast.error('User Verification Failed', {
+      toast.error('Company Verification Failed', {
         position: 'bottom-center',
         description: error.message,
       })

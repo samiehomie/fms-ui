@@ -43,3 +43,28 @@ export type UserGetResponse = UserData & {
 export interface UserGetQuery {
   id: string
 }
+
+// POST /users
+export type UserCreateBody = Pick<
+  User,
+  'username' | 'email' | 'name' | 'password'
+> & {
+  companyId: number
+  roleId: number
+}
+
+// POST /users
+export type UserCreateResponse = UserGetResponse
+
+// PATCH /users/{id}/verify
+export interface UserVerifyQuery {
+  id: string
+}
+
+// PATCH /users/{id}/verify
+export interface UserVerifyBody {
+  verified: boolean
+}
+
+// PATCH /companies/{id}/verify
+export type UserVerifyResponse = UserGetResponse
