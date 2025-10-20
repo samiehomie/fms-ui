@@ -16,7 +16,7 @@ export type TPMSResultsByVehicleGetResponse = (TPMSResultData & {
 
 // GET /vehicles/{id}/tpms-results
 export interface TPMSResultsByVehicleGetQuery extends PaginationQuery {
-  id: string
+  id?: string
   startDate?: string
   endDate?: string
 }

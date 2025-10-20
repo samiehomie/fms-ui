@@ -41,18 +41,21 @@ import { getVehicleTrips } from '../actions/vehicle-trip.actions'
 import type { ServerActionResult } from '@/types/features/common.types'
 import { TripDetailsResponse } from '@/types/features/trips/trip.types'
 
-export function useAllVehicles(query: VehiclesGetQuery) {
+export function useAllVehicles(query: VehiclesGetQuery, id?: string) {
   return useQuery({
     queryKey: ['vehicles', query],
-    queryFn: async () => {
-      const result = await getAllVehicles(query)
+    queryFn:
+      id === undefined
+        ? async () => {
+            const result = await getAllVehicles(query)
 
-      if (!result.success) {
-        throw new Error(result.error.message)
-      }
+            if (!result.success) {
+              throw new Error(result.error.message)
+            }
 
-      return result
-    },
+            return result
+          }
+        : skipToken,
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
@@ -202,15 +205,18 @@ export function useRestoreVehicle() {
 export function useVehicleAllTrips(query: VehicleTripsQuery) {
   return useQuery({
     queryKey: ['trips', query],
-    queryFn: async () => {
-      const result = await getVehicleTrips(query)
+    queryFn:
+      query.id !== undefined
+        ? async () => {
+            const result = await getVehicleTrips(query)
 
-      if (!result.success) {
-        throw new Error(result.error.message)
-      }
+            if (!result.success) {
+              throw new Error(result.error.message)
+            }
 
-      return result
-    },
+            return result
+          }
+        : skipToken,
     staleTime: 5 * 60 * 1000,
   })
 }

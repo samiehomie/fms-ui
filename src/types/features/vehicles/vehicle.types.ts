@@ -143,7 +143,7 @@ export type VehicleTripsResponse = {
 
 // GET /vehicles/{id}/trips
 export interface VehicleTripsQuery extends PaginationQuery {
-  id: string
+  id?: string
   search?: string
   status?: TripStatus
   startDate?: string

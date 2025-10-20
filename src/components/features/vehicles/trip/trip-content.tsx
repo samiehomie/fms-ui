@@ -54,9 +54,9 @@ export default function TripContent({
   query,
   setQuery,
 }: {
-  vehicleId: string
   query: Omit<VehicleTripsQuery, 'id'>
   setQuery: React.Dispatch<React.SetStateAction<Omit<VehicleTripsQuery, 'id'>>>
+  vehicleId?: string
 }) {
   const [tpmsPagination, setTpmsPagination] = useState<
     Omit<TPMSResultsByVehicleGetQuery, 'startDate' | 'endDate' | 'id'>
@@ -156,17 +156,6 @@ export default function TripContent({
   const { vehicle, stats, trips } = tripsData.data
   return (
     <main className="flex-grow flex-1 overflow-hidden flex flex-col">
-      <TripOverview
-        totalDriveTime={stats.totalDuration}
-        activeTrips={stats.activeTrips}
-        totalDistance={stats.totalDistance}
-        totalTrips={stats.totalTrips}
-        vehicleName={`${vehicle.plateNumber} ${
-          vehicle.vehicleName && `(${vehicle.vehicleName})`
-        }`}
-        onToggleSelectAll={handleToggleSelectAll}
-        areAllSelected={areAllSelected}
-      />
       <div className="flex-grow flex-1 overflow-hidden flex flex-col">
         {isMapVisible ? (
           <ResizablePanelGroup direction="horizontal" className="h-full w-full">
@@ -198,6 +187,17 @@ export default function TripContent({
             </ResizablePanel>
             <ResizableHandle withHandle className="z-[999]" />
             <ResizablePanel defaultSize={65} minSize={40}>
+              <TripOverview
+                totalDriveTime={stats.totalDuration}
+                activeTrips={stats.activeTrips}
+                totalDistance={stats.totalDistance}
+                totalTrips={stats.totalTrips}
+                vehicleName={`${vehicle.plateNumber} ${
+                  vehicle.vehicleName && `(${vehicle.vehicleName})`
+                }`}
+                onToggleSelectAll={handleToggleSelectAll}
+                areAllSelected={areAllSelected}
+              />
               <TripMap selectedIds={Array.from(visibleIds)} />
             </ResizablePanel>
           </ResizablePanelGroup>
