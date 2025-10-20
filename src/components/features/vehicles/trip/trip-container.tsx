@@ -63,9 +63,7 @@ export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
   return (
     <div className="flex-1 w-full bg-background flex flex-col">
       <header className="flex items-center justify-between mb-8  shrink-0">
-        <h1 className="header-one">
-          {vehicleId ? 'Trips History' : ''}
-        </h1>
+        <div />
         <div className="flex items-center gap-x-4">
           {vehicleId === undefined && (
             <Select

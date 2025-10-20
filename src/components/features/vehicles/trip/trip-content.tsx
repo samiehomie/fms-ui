@@ -17,6 +17,7 @@ import { TripPagination } from './trip-pagination'
 import { formatDuration } from '@/lib/utils/build-url'
 import { useTpmsResultsByVehicle } from '@/lib/query-hooks/use-vehicles-tpms'
 import type { TPMSResultsByVehicleGetQuery } from '@/types/features/vehicles/vehicle-tpms.types'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export interface TripSession {
   id: number
@@ -173,24 +174,32 @@ export default function TripContent({
               maxSize={60}
               className="flex flex-col flex-1"
             >
-              <div className="flex-1 flex flex-col overflow-y-auto pl-1 pr-4 pt-4 pb-4">
-                <TripHistoryTable
-                  sessions={sessions}
-                  selectedIds={selectedIds}
-                  visibleIds={visibleIds}
-                  onRowClick={handleRowClick}
-                  onVisibilityToggle={handleVisibilityToggle}
-                />
-                <TripPagination
-                  currentPage={query.page ?? 1}
-                  totalPages={tripsData.pagination!.totalPages}
-                  onPageChange={(page) => {
-                    setQuery({
-                      ...query,
-                      page,
-                    })
-                  }}
-                />
+              <div className="flex-1 flex flex-col overflow-y-auto mr-4 mb-4 ">
+                <Tabs defaultValue="account">
+                  <TabsList className=" absolute top-[4.75rem]">
+                    <TabsTrigger value="account">Tracking</TabsTrigger>
+                    <TabsTrigger value="password">TPMS Data</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="account">
+                    <TripHistoryTable
+                      sessions={sessions}
+                      selectedIds={selectedIds}
+                      visibleIds={visibleIds}
+                      onRowClick={handleRowClick}
+                      onVisibilityToggle={handleVisibilityToggle}
+                    />
+                    <TripPagination
+                      currentPage={query.page ?? 1}
+                      totalPages={tripsData.pagination!.totalPages}
+                      onPageChange={(page) => {
+                        setQuery({
+                          ...query,
+                          page,
+                        })
+                      }}
+                    />
+                  </TabsContent>
+                </Tabs>
               </div>
             </ResizablePanel>
             <ResizableHandle withHandle className="z-[999]" />
@@ -214,26 +223,34 @@ export default function TripContent({
             </ResizablePanel>
           </ResizablePanelGroup>
         ) : (
-          <div className="flex-1 flex flex-col pl-1 pr-4 pt-4 pb-4 ">
-            <div className="flex-grow overflow-y-auto">
-              <TripHistoryTable
-                sessions={sessions}
-                selectedIds={selectedIds}
-                visibleIds={visibleIds}
-                onRowClick={handleRowClick}
-                onVisibilityToggle={handleVisibilityToggle}
-              />
-            </div>
-            <TripPagination
-              currentPage={query.page ?? 1}
-              totalPages={tripsData.pagination!.totalPages}
-              onPageChange={(page) => {
-                setQuery({
-                  ...query,
-                  page,
-                })
-              }}
-            />
+          <div className="flex-1 flex flex-col  mr-4  mb-4 ">
+            <Tabs defaultValue="account">
+              <TabsList className=" absolute top-[4.75rem]">
+                <TabsTrigger value="account">Tracking</TabsTrigger>
+                <TabsTrigger value="password">TPMS Data</TabsTrigger>
+              </TabsList>
+              <TabsContent value="account">
+                <div className="flex-grow overflow-y-auto">
+                  <TripHistoryTable
+                    sessions={sessions}
+                    selectedIds={selectedIds}
+                    visibleIds={visibleIds}
+                    onRowClick={handleRowClick}
+                    onVisibilityToggle={handleVisibilityToggle}
+                  />
+                </div>
+                <TripPagination
+                  currentPage={query.page ?? 1}
+                  totalPages={tripsData.pagination!.totalPages}
+                  onPageChange={(page) => {
+                    setQuery({
+                      ...query,
+                      page,
+                    })
+                  }}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
         )}
       </div>
