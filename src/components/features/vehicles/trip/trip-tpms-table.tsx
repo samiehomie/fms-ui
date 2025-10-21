@@ -5,6 +5,7 @@ import { useTripTpmsDetails } from '@/lib/query-hooks/use-vehicles'
 import type { TripTpmsDetailsQuery } from '@/types/features/trips/trip.types'
 import { Skeleton } from '@/components/ui/skeleton'
 import TPMSDataTable from '../../tpms-data-table/tpms-data-table'
+import { TripPagination } from './trip-pagination'
 
 interface TripTpmsTableProps {
   selectedId: number
@@ -55,6 +56,16 @@ export default function TripTpmsTable({
         pressureUnit="PSI"
         temperatureUnit="°C"
         numTire={4}
+      />
+      <TripPagination
+        currentPage={query.page ?? 1}
+        totalPages={tpmsData.pagination!.totalPages}
+        onPageChange={(page) => {
+          setQuery({
+            ...query,
+            page,
+          })
+        }}
       />
     </div>
   )

@@ -32,7 +32,6 @@ export function TripPagination({
     }
   }
 
-  // 페이지 번호 생성 로직 (간단한 버전)
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1)
 
   return (
