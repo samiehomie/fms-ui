@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, FC } from 'react'
-import { useVehicleTripDetailsBatch } from '@/lib/query-hooks/use-vehicles'
+import { useTripGpsDetailsBatch } from '@/lib/query-hooks/use-vehicles'
 import { useReverseGeocode } from '@/lib/query-hooks/use-geocoding'
 
 interface TripAddressCellProps {
@@ -19,7 +19,7 @@ const TripAddressCell: FC<TripAddressCellProps> = ({ visibleIds }) => {
     end: { lat: null, lng: null },
   })
   const { data: tripDetailsMap, isLoading: tripLoading } =
-    useVehicleTripDetailsBatch(visibleIds)
+    useTripGpsDetailsBatch(visibleIds)
 
   const { data: startAddress, isError } = useReverseGeocode(
     position.start.lat,

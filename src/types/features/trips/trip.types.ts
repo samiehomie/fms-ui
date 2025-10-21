@@ -2,6 +2,8 @@ import type { Trip } from '@/types/entities/trip.entity'
 import type { Gps } from '@/types/entities/gps.entity'
 import type { Vehicle } from '@/types/entities/vehicle.entity'
 import type { PaginationQuery } from '../common.types'
+import type { TpmsResult } from '@/types/entities/tpms-result.entity'
+import type { Tire } from '@/types/entities/tire.entity'
 
 type GpsData = Pick<
   Gps,
@@ -17,7 +19,7 @@ type GpsData = Pick<
 type VehicleData = Pick<Vehicle, 'id' | 'plateNumber'>
 
 // GET /trips/{id}
-export type TripDetailsResponse = Pick<
+export type TripGpsDetailsResponse = Pick<
   Trip,
   | 'id'
   | 'createdAt'
@@ -35,6 +37,22 @@ export type TripDetailsResponse = Pick<
   gpss: GpsData[]
 }
 
-export interface TripDetailsQuery {
+export interface TripGpsDetailsQuery {
   id: number
 }
+
+type TripTpmsDetailsData = Pick<
+  TpmsResult,
+  'id' | 'pressure' | 'temperature' | 'blowout' | 'resultTime'
+> & {
+  gps: Pick<Gps, 'id' | 'latitude' | 'longitude'>
+  tire: Pick<Tire, 'id' | 'tireLocation'>
+}
+
+// GET /trips/{id}/tpms-results
+export interface TripTpmsDetailsQuery extends PaginationQuery {
+  id: number
+}
+
+// GET /trips/{id}/tpms-results
+export type TripTpmsDetailsResponse = TripTpmsDetailsData[]

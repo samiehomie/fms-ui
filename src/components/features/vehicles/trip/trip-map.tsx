@@ -18,8 +18,8 @@ import {
 import type { LatLngExpression, Marker as LeafletMarker } from 'leaflet'
 import L from 'leaflet'
 import { useEffect, useRef } from 'react'
-import { useVehicleTripDetailsBatch } from '@/lib/query-hooks/use-vehicles'
-import type { TripDetailsResponse } from '@/types/features/trips/trip.types'
+import { useTripGpsDetailsBatch } from '@/lib/query-hooks/use-vehicles'
+import type { TripGpsDetailsResponse } from '@/types/features/trips/trip.types'
 
 interface TripMapProps {
   selectedIds: number[]
@@ -30,7 +30,7 @@ const MapUpdater = ({
   trips,
 }: {
   selectedIds: number[]
-  trips: Record<number, TripDetailsResponse>
+  trips: Record<number, TripGpsDetailsResponse>
 }) => {
   const map = useMap()
   const isInitialLoad = useRef(true)
@@ -95,7 +95,7 @@ const createCircleIcon = (color: string) => {
 
 export default function TripMap({ selectedIds }: TripMapProps) {
   const { data: tripDetailsMap, isLoading } =
-    useVehicleTripDetailsBatch(selectedIds)
+    useTripGpsDetailsBatch(selectedIds)
 
   const startIcon = createCircleIcon('bg-[#005EAE]')
   const endIcon = createCircleIcon('bg-[#a5abbd]')

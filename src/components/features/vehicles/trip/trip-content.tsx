@@ -50,6 +50,18 @@ const TripMap = dynamic(
   },
 )
 
+const TripTpmsTable = dynamic(
+  () => import('@/components/features/vehicles/trip/trip-tpms-table'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-full w-full items-center justify-center bg-muted">
+        <p>Loading table...</p>
+      </div>
+    ),
+  },
+)
+
 export default function TripContent({
   vehicleId,
   query,
@@ -59,26 +71,16 @@ export default function TripContent({
   setQuery: React.Dispatch<React.SetStateAction<Omit<VehicleTripsQuery, 'id'>>>
   vehicleId?: string
 }) {
-  const [tpmsPagination, setTpmsPagination] = useState<
-    Omit<TPMSResultsByVehicleGetQuery, 'startDate' | 'endDate' | 'id'>
-  >({
-    page: 1,
-    limit: 10,
-  })
+
   const [sessions, setSessions] = useState<TripSession[]>([])
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
-  const { search, status, ...tpmsQuery } = query
   const { data: tripsData, isLoading } = useVehicleAllTrips({
     ...query,
     id: vehicleId,
   })
 
-  const { data: tpmsData, isLoading: tpmsLoading } = useTpmsResultsByVehicle({
-    ...tpmsQuery,
-    ...tpmsPagination,
-    id: vehicleId,
-  })
+
 
   const handleRowClick = (id: number) => {
     const newSelectedIds = new Set(selectedIds)
@@ -152,7 +154,7 @@ export default function TripContent({
     }
   }, [tripsData, vehicleId])
 
-  if (isLoading || !tripsData || tpmsLoading || !tpmsData) {
+  if (isLoading || !tripsData ) {
     return (
       <div className="col-span-3 flex flex-col gap-y-2">
         <Skeleton className="w-full h-10" />

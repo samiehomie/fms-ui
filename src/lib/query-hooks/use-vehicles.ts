@@ -36,10 +36,14 @@ import {
   deleteVehicle,
   restoreVehicle,
 } from '../actions/vehicle.actions'
-import { getTripDetails } from '../actions/trip.actions'
+import { getTripGpsDetails, getTripTpmsDetails } from '../actions/trip.actions'
 import { getVehicleTrips } from '../actions/vehicle-trip.actions'
 import type { ServerActionResult } from '@/types/features/common.types'
-import { TripDetailsResponse } from '@/types/features/trips/trip.types'
+import {
+  TripGpsDetailsResponse,
+  TripTpmsDetailsQuery,
+  TripTpmsDetailsResponse,
+} from '@/types/features/trips/trip.types'
 
 export function useAllVehicles(query: VehiclesGetQuery, id?: string) {
   return useQuery({
@@ -221,7 +225,7 @@ export function useVehicleAllTrips(query: VehicleTripsQuery) {
   })
 }
 
-export function useVehicleTripDetailsBatch(tripIds: number[]) {
+export function useTripGpsDetailsBatch(tripIds: number[]) {
   // tripIds가 비어있으면 빈 배열, 아니면 쿼리 배열 생성
   const queryConfigs = useMemo(() => {
     if (tripIds.length === 0) {
@@ -229,9 +233,9 @@ export function useVehicleTripDetailsBatch(tripIds: number[]) {
     }
 
     return tripIds.map((id) => ({
-      queryKey: ['trip details', id] as const,
+      queryKey: ['trip gps', id] as const,
       queryFn: async () => {
-        const result = await getTripDetails({ id })
+        const result = await getTripGpsDetails({ id })
 
         if (!result.success) {
           throw new Error(result.error.message)
@@ -249,7 +253,7 @@ export function useVehicleTripDetailsBatch(tripIds: number[]) {
 
   // tripId와 결과를 매핑하여 객체로 반환
   const mappedData = useMemo(() => {
-    const result: Record<number, TripDetailsResponse> = {}
+    const result: Record<number, TripGpsDetailsResponse> = {}
 
     tripIds.forEach((tripId, index) => {
       const query = queries[index]
@@ -277,6 +281,22 @@ export function useVehicleTripDetailsBatch(tripIds: number[]) {
     errors,
     isSuccess,
   }
+}
+
+export function useTripTpmsDetails(query: TripTpmsDetailsQuery) {
+  return useQuery({
+    queryKey: ['trip gps', query],
+    queryFn: async () => {
+      const result = await getTripTpmsDetails(query)
+
+      if (!result.success) {
+        throw new Error(result.error.message)
+      }
+
+      return result
+    },
+    staleTime: 5 * 60 * 1000,
+  })
 }
 
 export function useAllVehicleTripsPaginated(
