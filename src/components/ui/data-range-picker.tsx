@@ -48,6 +48,7 @@ export function DateRangePicker({
   return (
     <div className={className}>
       <RangePicker
+        className="h-full rounded-[10px] "
         value={dateRange}
         onChange={handleDateChange}
         format="YYYY-MM-DD"

@@ -44,7 +44,7 @@ export function TripOverview({
 }: TripOverviewProps) {
   return (
     <div
-      className="flex flex-wrap items-center justify-between gap-4 px-4 py-2 border-b bg-[#414656] 
+      className="flex flex-wrap items-center justify-between gap-4 px-4 py-2 bg-[#424656] 
     rounded-[4px_4px_0px_0px]"
     >
       <div className="flex items-center gap-2">
@@ -65,7 +65,7 @@ export function TripOverview({
         variant="outline"
         onClick={onToggleSelectAll}
         size={'sm'}
-        className="text-sm tracking-[-0.018em] px-3"
+        className="text-sm tracking-[-0.018em] px-3 h-7 rounded-sm"
       >
         {areAllSelected ? 'Hide All Trips' : 'Show All Trips'}
       </Button>

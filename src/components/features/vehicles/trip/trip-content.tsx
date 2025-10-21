@@ -71,7 +71,6 @@ export default function TripContent({
   setQuery: React.Dispatch<React.SetStateAction<Omit<VehicleTripsQuery, 'id'>>>
   vehicleId?: string
 }) {
-
   const [sessions, setSessions] = useState<TripSession[]>([])
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
@@ -79,8 +78,6 @@ export default function TripContent({
     ...query,
     id: vehicleId,
   })
-
-
 
   const handleRowClick = (id: number) => {
     const newSelectedIds = new Set(selectedIds)
@@ -154,7 +151,7 @@ export default function TripContent({
     }
   }, [tripsData, vehicleId])
 
-  if (isLoading || !tripsData ) {
+  if (isLoading || !tripsData) {
     return (
       <div className="col-span-3 flex flex-col gap-y-2">
         <Skeleton className="w-full h-10" />
@@ -169,78 +166,24 @@ export default function TripContent({
     <main className="flex-grow flex-1 overflow-hidden flex flex-col">
       <div className="flex-grow flex-1 overflow-hidden flex flex-col">
         {isMapVisible ? (
-          <ResizablePanelGroup direction="horizontal" className="h-full w-full">
+          <ResizablePanelGroup
+            direction="horizontal"
+            className="h-full w-full mb-3"
+          >
             <ResizablePanel
               defaultSize={35}
               minSize={25}
               maxSize={60}
               className="flex flex-col flex-1"
             >
-              <div className="flex-1 flex flex-col overflow-y-auto mr-4 mb-3 ">
-                <Tabs defaultValue="account" className="flex-1 flex flex-col">
-                  <TabsList className="absolute top-[4.75rem] right-6">
-                    <TabsTrigger value="account">Tracking</TabsTrigger>
-                    <TabsTrigger value="password">TPMS Data</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="account" className="flex-1 flex flex-col">
-                    <TripHistoryTable
-                      sessions={sessions}
-                      selectedIds={selectedIds}
-                      visibleIds={visibleIds}
-                      onRowClick={handleRowClick}
-                      onVisibilityToggle={handleVisibilityToggle}
-                    />
-                    <TripPagination
-                      currentPage={query.page ?? 1}
-                      totalPages={tripsData.pagination!.totalPages}
-                      onPageChange={(page) => {
-                        setQuery({
-                          ...query,
-                          page,
-                        })
-                      }}
-                    />
-                  </TabsContent>
-                </Tabs>
-              </div>
-            </ResizablePanel>
-            <ResizableHandle withHandle className="z-[999]" />
-            <ResizablePanel
-              defaultSize={65}
-              minSize={40}
-              className="mb-[.875rem] rounded-[4px]"
-            >
-              <TripOverview
-                totalDriveTime={stats.totalDuration}
-                activeTrips={stats.activeTrips}
-                totalDistance={stats.totalDistance}
-                totalTrips={stats.totalTrips}
-                vehicleName={`${vehicle.plateNumber} ${
-                  vehicle.vehicleName && `(${vehicle.vehicleName})`
-                }`}
-                onToggleSelectAll={handleToggleSelectAll}
-                areAllSelected={areAllSelected}
-              />
-              <TripMap selectedIds={Array.from(visibleIds)} />
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        ) : (
-          <div className="flex-1 flex flex-col  mr-4  mb-4 ">
-            <Tabs defaultValue="account">
-              <TabsList className=" absolute top-[4.75rem] right-6">
-                <TabsTrigger value="account">Tracking</TabsTrigger>
-                <TabsTrigger value="password">TPMS Data</TabsTrigger>
-              </TabsList>
-              <TabsContent value="account">
-                <div className="flex-grow overflow-y-auto">
-                  <TripHistoryTable
-                    sessions={sessions}
-                    selectedIds={selectedIds}
-                    visibleIds={visibleIds}
-                    onRowClick={handleRowClick}
-                    onVisibilityToggle={handleVisibilityToggle}
-                  />
-                </div>
+              <div className="flex-1 flex flex-col overflow-y-auto mr-4 ">
+                <TripHistoryTable
+                  sessions={sessions}
+                  selectedIds={selectedIds}
+                  visibleIds={visibleIds}
+                  onRowClick={handleRowClick}
+                  onVisibilityToggle={handleVisibilityToggle}
+                />
                 <TripPagination
                   currentPage={query.page ?? 1}
                   totalPages={tripsData.pagination!.totalPages}
@@ -251,8 +194,69 @@ export default function TripContent({
                     })
                   }}
                 />
-              </TabsContent>
-            </Tabs>
+              </div>
+            </ResizablePanel>
+            <ResizableHandle withHandle className="z-[999]" />
+            <ResizablePanel
+              defaultSize={65}
+              minSize={40}
+              className="rounded-[4px] flex flex-col flex-1"
+            >
+              <Tabs
+                defaultValue="tracking"
+                className="flex-1 flex flex-col w-full"
+              >
+                <TabsList className="absolute top-[4.75rem] right-6">
+                  <TabsTrigger value="tracking">Tracking</TabsTrigger>
+                  <TabsTrigger value="tpms">TPMS Data</TabsTrigger>
+                </TabsList>
+                <TabsContent
+                  value="tracking"
+                  className="flex-1 flex flex-col w-full relative"
+                >
+                  <TripOverview
+                    totalDriveTime={stats.totalDuration}
+                    activeTrips={stats.activeTrips}
+                    totalDistance={stats.totalDistance}
+                    totalTrips={stats.totalTrips}
+                    vehicleName={`${vehicle.plateNumber} ${
+                      vehicle.vehicleName && `(${vehicle.vehicleName})`
+                    }`}
+                    onToggleSelectAll={handleToggleSelectAll}
+                    areAllSelected={areAllSelected}
+                  />
+                  <TripMap selectedIds={Array.from(visibleIds)} />
+                </TabsContent>
+                <TabsContent
+                  value="tpms"
+                  className="flex-1 flex flex-col w-full relative"
+                >
+                  <TripTpmsTable selectedId={1} />
+                </TabsContent>
+              </Tabs>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        ) : (
+          <div className="flex-1 flex flex-col  mr-4  mb-4 ">
+            <div className="flex-grow overflow-y-auto">
+              <TripHistoryTable
+                sessions={sessions}
+                selectedIds={selectedIds}
+                visibleIds={visibleIds}
+                onRowClick={handleRowClick}
+                onVisibilityToggle={handleVisibilityToggle}
+              />
+            </div>
+            <TripPagination
+              currentPage={query.page ?? 1}
+              totalPages={tripsData.pagination!.totalPages}
+              onPageChange={(page) => {
+                setQuery({
+                  ...query,
+                  page,
+                })
+              }}
+            />
           </div>
         )}
       </div>

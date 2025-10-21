@@ -62,7 +62,7 @@ export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
 
   return (
     <div className="flex-1 w-full bg-background flex flex-col">
-      <header className="flex items-center justify-between mb-7  shrink-0">
+      <header className="flex items-center justify-between mb-[1.375rem]  shrink-0">
         <div className="flex items-center gap-x-4">
           {vehicleId === undefined && (
             <Select
@@ -70,7 +70,7 @@ export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
               value={carId}
               disabled={vehiclesLoading}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger>
                 <SelectValue
                   placeholder={
                     vehiclesLoading ? 'Loading vehicles...' : 'Select vehicle'
@@ -92,7 +92,7 @@ export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
             </Select>
           )}
 
-          <DateRangePicker onDateChange={handleDateRangeChange} />
+          <DateRangePicker onDateChange={handleDateRangeChange} className='h-9' />
         </div>
         <div />
       </header>
