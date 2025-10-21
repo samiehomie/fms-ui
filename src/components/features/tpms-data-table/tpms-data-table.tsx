@@ -75,28 +75,23 @@ export default function TPMSDataTable({
                 className="border-t border-border hover:bg-muted/20"
               >
                 {tireChunk.map((tireData, index) => {
+                  const realTimeDate = new Date(tireData.resultTime)
                   return (
                     <React.Fragment
                       key={`${tireData.id}-${index}-${chunkIndex}`}
                     >
                       {index === 0 && (
                         <td className="px-4 py-3 font-mono text-xs border-r border-border bg-muted/10 sticky left-0 z-10 whitespace-nowrap w-[180px] min-w-[180px] max-w-[180px]">
-                          {new Date(tireData.resultTime).toLocaleDateString(
-                            'en-US',
-                            {
-                              month: 'short',
-                              day: '2-digit',
-                            },
-                          )}{' '}
-                          {new Date(tireData.resultTime).toLocaleTimeString(
-                            'en-US',
-                            {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                              second: '2-digit',
-                              hour12: false,
-                            },
-                          )}
+                          {realTimeDate.toLocaleDateString('en-US', {
+                            month: '2-digit',
+                            day: '2-digit',
+                          })}{' '}
+                          {realTimeDate.toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: false,
+                          })}
                         </td>
                       )}
 

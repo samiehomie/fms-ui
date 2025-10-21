@@ -166,7 +166,7 @@ export default function TripContent({
         {isMapVisible ? (
           <ResizablePanelGroup
             direction="horizontal"
-            className="h-full w-full mb-3"
+            className="h-full w-full mb-4"
           >
             <ResizablePanel
               defaultSize={35}
@@ -229,7 +229,7 @@ export default function TripContent({
                   value="tpms"
                   className="flex-1 flex flex-col w-full relative"
                 >
-                  <TripTpmsTable selectedId={1} numTire={4} />
+                  <TripTpmsTable selectedId={1} numTire={vehicle.numTire} />
                 </TabsContent>
               </Tabs>
             </ResizablePanel>

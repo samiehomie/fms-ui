@@ -12,7 +12,7 @@ interface TripTpmsTableProps {
   numTire: number
 }
 
-const rows = 13
+const rows = 15
 
 export default function TripTpmsTable({
   selectedId,
