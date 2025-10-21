@@ -62,8 +62,7 @@ export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
 
   return (
     <div className="flex-1 w-full bg-background flex flex-col">
-      <header className="flex items-center justify-between mb-8  shrink-0">
-        <div />
+      <header className="flex items-center justify-between mb-7  shrink-0">
         <div className="flex items-center gap-x-4">
           {vehicleId === undefined && (
             <Select
@@ -95,6 +94,7 @@ export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
 
           <DateRangePicker onDateChange={handleDateRangeChange} />
         </div>
+        <div />
       </header>
       <TripContent
         vehicleId={vehicleId ?? carId}

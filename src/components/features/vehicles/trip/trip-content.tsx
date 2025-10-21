@@ -174,13 +174,13 @@ export default function TripContent({
               maxSize={60}
               className="flex flex-col flex-1"
             >
-              <div className="flex-1 flex flex-col overflow-y-auto mr-4 mb-4 ">
-                <Tabs defaultValue="account">
-                  <TabsList className=" absolute top-[4.75rem]">
+              <div className="flex-1 flex flex-col overflow-y-auto mr-4 mb-3 ">
+                <Tabs defaultValue="account" className="flex-1 flex flex-col">
+                  <TabsList className="absolute top-[4.75rem] right-6">
                     <TabsTrigger value="account">Tracking</TabsTrigger>
                     <TabsTrigger value="password">TPMS Data</TabsTrigger>
                   </TabsList>
-                  <TabsContent value="account">
+                  <TabsContent value="account" className="flex-1 flex flex-col">
                     <TripHistoryTable
                       sessions={sessions}
                       selectedIds={selectedIds}
@@ -206,7 +206,7 @@ export default function TripContent({
             <ResizablePanel
               defaultSize={65}
               minSize={40}
-              className="mb-4 rounded-[4px]"
+              className="mb-[.875rem] rounded-[4px]"
             >
               <TripOverview
                 totalDriveTime={stats.totalDuration}
@@ -225,7 +225,7 @@ export default function TripContent({
         ) : (
           <div className="flex-1 flex flex-col  mr-4  mb-4 ">
             <Tabs defaultValue="account">
-              <TabsList className=" absolute top-[4.75rem]">
+              <TabsList className=" absolute top-[4.75rem] right-6">
                 <TabsTrigger value="account">Tracking</TabsTrigger>
                 <TabsTrigger value="password">TPMS Data</TabsTrigger>
               </TabsList>
