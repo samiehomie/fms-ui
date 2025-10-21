@@ -26,7 +26,7 @@ export default function TPMSDataTable({
 }: TPMSDataTableProps) {
   const tireChunks = chunkArray(data, numTire)
   return (
-    <div className="overflow-auto border border-border rounded-[0px_0px_4px_4px]">
+    <div className="overflow-auto border-l border-b border-border rounded-[0px_0px_4px_4px]">
       <table className="w-full text-sm">
         <thead className="bg-muted/50 sticky top-0 z-10">
           <tr>

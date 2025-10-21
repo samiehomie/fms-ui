@@ -44,7 +44,7 @@ export default function TripTpmsTable({
 
   console.log(tpmsData.data)
   return (
-    <div className="ml-3">
+    <div className="ml-3 flex-1 flex flex-col ">
       <div
         className="flex flex-wrap items-center justify-between gap-4 px-4 py-2 bg-[#424656] border-[1px_1px_0px_1px] border-[#424656]
     rounded-[4px_4px_0px_0px] h-[44px]"
