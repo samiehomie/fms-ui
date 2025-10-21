@@ -4,11 +4,14 @@ import { useState } from 'react'
 import { useTripTpmsDetails } from '@/lib/query-hooks/use-vehicles'
 import type { TripTpmsDetailsQuery } from '@/types/features/trips/trip.types'
 import { Skeleton } from '@/components/ui/skeleton'
+import TPMSDataTable from '../../tpms-data-table/tpms-data-table'
 
 interface TripTpmsTableProps {
   selectedId: number
   numTire: number
 }
+
+const rows = 13
 
 export default function TripTpmsTable({
   selectedId,
@@ -21,9 +24,9 @@ export default function TripTpmsTable({
   })
 
   const { data: tpmsData, isLoading } = useTripTpmsDetails({
-    ...query,
+    page: query.page,
     id: selectedId,
-    limit: numTire,
+    limit: numTire * rows,
   })
 
   if (isLoading)
@@ -36,5 +39,23 @@ export default function TripTpmsTable({
       </div>
     )
 
-  return <pre>{JSON.stringify(tpmsData?.data, null, 2)}</pre>
+  if (!tpmsData) return null
+
+  console.log(tpmsData.data)
+  return (
+    <div className="ml-3">
+      <div
+        className="flex flex-wrap items-center justify-between gap-4 px-4 py-2 bg-[#424656] border-[1px_1px_0px_1px] border-[#424656]
+    rounded-[4px_4px_0px_0px] h-[44px]"
+      >
+        <div className="text-white">TEST</div>
+      </div>
+      <TPMSDataTable
+        data={tpmsData.data}
+        pressureUnit="PSI"
+        temperatureUnit="°C"
+        numTire={4}
+      />
+    </div>
+  )
 }

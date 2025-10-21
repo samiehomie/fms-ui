@@ -15,8 +15,6 @@ import type { VehicleTripEvent } from '@/types/features/vehicles/vehicle.types'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TripPagination } from './trip-pagination'
 import { formatDuration } from '@/lib/utils/build-url'
-import { useTpmsResultsByVehicle } from '@/lib/query-hooks/use-vehicles-tpms'
-import type { TPMSResultsByVehicleGetQuery } from '@/types/features/vehicles/vehicle-tpms.types'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export interface TripSession {

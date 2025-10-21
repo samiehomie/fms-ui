@@ -285,7 +285,7 @@ export function useTripGpsDetailsBatch(tripIds: number[]) {
 
 export function useTripTpmsDetails(query: TripTpmsDetailsQuery) {
   return useQuery({
-    queryKey: ['trip gps', query],
+    queryKey: ['trip tpms', query],
     queryFn: async () => {
       const result = await getTripTpmsDetails(query)
 

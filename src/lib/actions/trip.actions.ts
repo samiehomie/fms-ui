@@ -53,8 +53,8 @@ export async function getTripGpsDetails(query: TripGpsDetailsQuery) {
 // GET /trips/{id}/tpms-results
 export async function getTripTpmsDetails(query: TripTpmsDetailsQuery) {
   return await withAuthAction<TripTpmsDetailsResponse>(async (accessToken) => {
-    const { id } = query
-    const apiUrl = buildURL(`/trips/${id}/tpms-results`)
+    const { id, ...params } = query
+    const apiUrl = buildURL(`/trips/${id}/tpms-results`, params)
 
     try {
       const response = await fetchServer<TripTpmsDetailsResponse>(apiUrl, {

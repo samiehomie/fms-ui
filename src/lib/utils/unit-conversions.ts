@@ -1,6 +1,7 @@
 export type PressureUnit = 'PSI' | 'BAR' | 'kPa'
 export type TemperatureUnit = '°C' | '°F' | 'cff'
 
+// Pressure conversions (from PSI)
 export function convertPressure(
   value: number,
   fromUnit: PressureUnit,
@@ -8,10 +9,12 @@ export function convertPressure(
 ): number {
   if (fromUnit === toUnit) return value
 
+  // Convert to PSI first
   let psi = value
   if (fromUnit === 'BAR') psi = value * 14.5038
   if (fromUnit === 'kPa') psi = value * 0.145038
 
+  // Convert from PSI to target unit
   if (toUnit === 'PSI') return Math.round(psi)
   if (toUnit === 'BAR') return Math.round((psi / 14.5038) * 100) / 100
   if (toUnit === 'kPa') return Math.round(psi / 0.145038)
@@ -19,6 +22,7 @@ export function convertPressure(
   return value
 }
 
+// Temperature conversions (from Celsius)
 export function convertTemperature(
   value: number,
   fromUnit: TemperatureUnit,
@@ -26,10 +30,12 @@ export function convertTemperature(
 ): number {
   if (fromUnit === toUnit) return value
 
+  // Convert to Celsius first
   let celsius = value
   if (fromUnit === '°F') celsius = ((value - 32) * 5) / 9
-  if (fromUnit === 'cff') celsius = value
+  if (fromUnit === 'cff') celsius = value // Assuming cff is same as Celsius for now
 
+  // Convert from Celsius to target unit
   if (toUnit === '°C') return Math.round(celsius * 10) / 10
   if (toUnit === '°F') return Math.round(((celsius * 9) / 5 + 32) * 10) / 10
   if (toUnit === 'cff') return Math.round(celsius * 10) / 10
@@ -37,6 +43,7 @@ export function convertTemperature(
   return value
 }
 
+// Format display value with unit
 export function formatPressure(value: number, unit: PressureUnit): string {
   return `${convertPressure(value, 'PSI', unit)}`
 }

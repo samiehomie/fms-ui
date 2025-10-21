@@ -134,10 +134,10 @@ export default function TripMap({ selectedIds }: TripMapProps) {
     <div className="relative flex flex-col flex-1 w-full">
       <div className="absolute right-4 top-4 z-[1000] flex gap-[6px] text-xs">
         <Button
-          variant={'outline'}
+          variant={'secondary'}
           size="sm"
           className={cn(
-            'text-xs leading-none h-6 border-none rounded-sm hover:bg-[#424656]/80 hover:text-white font-light w-14',
+            'text-xs leading-none h-[23px] border-none rounded-sm hover:bg-[#424656]/80 hover:text-white font-light w-14',
             mapStyle === 'satellite' && 'bg-[#424656] border-none text-white',
           )}
           onClick={() => setMapStyle('satellite')}
@@ -145,10 +145,10 @@ export default function TripMap({ selectedIds }: TripMapProps) {
           Satellite
         </Button>
         <Button
-          variant={'outline'}
+          variant={'secondary'}
           size="sm"
           className={cn(
-            'text-xs border-none leading-none h-6 rounded-sm hover:bg-[#424656]/80 hover:text-white font-light w-14',
+            'text-xs border-none leading-none h-[23px] rounded-sm hover:bg-[#424656]/80 hover:text-white font-light w-14',
             mapStyle === 'street' && 'bg-[#424656] border-none text-white',
           )}
           onClick={() => setMapStyle('street')}

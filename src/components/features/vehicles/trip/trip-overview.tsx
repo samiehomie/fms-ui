@@ -62,10 +62,10 @@ export function TripOverview({
         <StatCard icon={Route} label="km" value={totalDistance} />
       </div>
       <Button
-        variant="outline"
+        variant="secondary"
         onClick={onToggleSelectAll}
         size={'sm'}
-        className="text-sm tracking-[-0.018em] px-3 h-7 rounded-sm"
+        className="tracking-[-0.018em] px-3 h-7 rounded-[4px] text-xs"
       >
         {areAllSelected ? 'Hide All Trips' : 'Show All Trips'}
       </Button>
