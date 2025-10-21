@@ -7,17 +7,23 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 interface TripTpmsTableProps {
   selectedId: number
+  numTire: number
 }
 
-export default function TripTpmsTable({ selectedId }: TripTpmsTableProps) {
-  const [query, setQuery] = useState<Omit<TripTpmsDetailsQuery, 'id'>>({
+export default function TripTpmsTable({
+  selectedId,
+  numTire,
+}: TripTpmsTableProps) {
+  const [query, setQuery] = useState<
+    Omit<TripTpmsDetailsQuery, 'id' | 'limit'>
+  >({
     page: 1,
-    limit: 10,
   })
 
   const { data: tpmsData, isLoading } = useTripTpmsDetails({
     ...query,
     id: selectedId,
+    limit: numTire,
   })
 
   if (isLoading)

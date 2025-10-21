@@ -231,7 +231,7 @@ export default function TripContent({
                   value="tpms"
                   className="flex-1 flex flex-col w-full relative"
                 >
-                  <TripTpmsTable selectedId={1} />
+                  <TripTpmsTable selectedId={1} numTire={4} />
                 </TabsContent>
               </Tabs>
             </ResizablePanel>
