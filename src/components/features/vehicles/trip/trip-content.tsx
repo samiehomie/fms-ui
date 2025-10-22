@@ -22,9 +22,7 @@ export interface TripSession {
   startTime: string
   endTime: string
   driveTime: string // in minutes
-  idleTime: string // in minutes
-  distance: string // in km
-  events: VehicleTripEvent[]
+  distance: number // in km
   status: string
   startPoint: {
     latitude: string
@@ -124,9 +122,7 @@ export default function TripContent({
         startTime: trip.startTime,
         endTime: trip.endTime,
         driveTime: formatDuration(trip.startTime, trip.endTime),
-        idleTime: '10',
-        distance: '10',
-        events: [],
+        distance: trip.distanceInKph,
         status: trip.status,
         startPoint: {
           latitude: trip.startPoint.latitude,
