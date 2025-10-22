@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button'
 import { format, parseISO } from 'date-fns'
 
 interface TripHistoryTableProps {
+  isTracking: boolean
   sessions: TripSession[]
   selectedIds: Set<number>
   onRowClick: (id: number) => void
@@ -24,6 +25,7 @@ interface TripHistoryTableProps {
 }
 
 export function TripHistoryTable({
+  isTracking,
   sessions,
   selectedIds,
   onRowClick,
@@ -117,7 +119,7 @@ export function TripHistoryTable({
               </TableCell>
 
               <TableCell className="text-center pr-[.625rem]">
-                {selectedIds.has(session.id) && (
+                {selectedIds.has(session.id) && isTracking ? (
                   <Button
                     variant="ghost"
                     size="icon"
@@ -134,6 +136,8 @@ export function TripHistoryTable({
                     )}
                     <span className="sr-only">Toggle visibility</span>
                   </Button>
+                ) : (
+                  <div className="w-6" />
                 )}
               </TableCell>
             </TableRow>

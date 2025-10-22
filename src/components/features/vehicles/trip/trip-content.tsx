@@ -70,6 +70,7 @@ export default function TripContent({
   const [sessions, setSessions] = useState<TripSession[]>([])
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
+  const [currentTab, setCurrentTab] = useState<'tracking' | 'tpms'>('tracking')
   const { data: tripsData, isLoading } = useVehicleAllTrips({
     ...query,
     id: vehicleId,
@@ -79,12 +80,21 @@ export default function TripContent({
     const newSelectedIds = new Set(selectedIds)
     const newVisibleIds = new Set(visibleIds)
 
-    if (newSelectedIds.has(id)) {
-      newSelectedIds.delete(id)
-      newVisibleIds.delete(id) // 선택 해제 시, 보임 목록에서도 제거
+    if (currentTab === 'tracking') {
+      // tracking 탭: 복수 선택 허용
+      if (newSelectedIds.has(id)) {
+        newSelectedIds.delete(id)
+        newVisibleIds.delete(id) // 선택 해제 시, 보임 목록에서도 제거
+      } else {
+        newSelectedIds.add(id)
+        newVisibleIds.add(id) // 선택 시, 기본적으로 보이도록 추가
+      }
     } else {
+      // tpms 탭: 단일 선택만 허용
+      newSelectedIds.clear()
+      newVisibleIds.clear()
       newSelectedIds.add(id)
-      newVisibleIds.add(id) // 선택 시, 기본적으로 보이도록 추가
+      newVisibleIds.add(id)
     }
     setSelectedIds(newSelectedIds)
     setVisibleIds(newVisibleIds)
@@ -101,13 +111,16 @@ export default function TripContent({
   }
 
   const handleToggleSelectAll = () => {
-    if (selectedIds.size === sessions.length) {
-      setSelectedIds(new Set())
-      setVisibleIds(new Set())
-    } else {
-      const allIds = new Set(sessions.map((s) => s.id))
-      setSelectedIds(allIds)
-      setVisibleIds(allIds)
+    // tracking 탭에서만 전체 선택 기능 허용
+    if (currentTab === 'tracking') {
+      if (selectedIds.size === sessions.length) {
+        setSelectedIds(new Set())
+        setVisibleIds(new Set())
+      } else {
+        const allIds = new Set(sessions.map((s) => s.id))
+        setSelectedIds(allIds)
+        setVisibleIds(allIds)
+      }
     }
   }
 
@@ -172,6 +185,7 @@ export default function TripContent({
             >
               <div className="flex-1 flex flex-col overflow-y-auto mr-4 ">
                 <TripHistoryTable
+                  isTracking={currentTab === 'tracking'}
                   sessions={sessions}
                   selectedIds={selectedIds}
                   visibleIds={visibleIds}
@@ -198,6 +212,10 @@ export default function TripContent({
             >
               <Tabs
                 defaultValue="tracking"
+                value={currentTab}
+                onValueChange={(value) =>
+                  setCurrentTab(value as 'tracking' | 'tpms')
+                }
                 className="flex-1 flex flex-col w-full"
               >
                 <TabsList className="absolute top-[4.75rem] right-6">
@@ -225,7 +243,10 @@ export default function TripContent({
                   value="tpms"
                   className="flex-1 flex flex-col w-full relative"
                 >
-                  <TripTpmsTable selectedId={1} numTire={vehicle.numTire} />
+                  <TripTpmsTable
+                    selectedId={Array.from(selectedIds)[0] ?? 1}
+                    numTire={vehicle.numTire}
+                  />
                 </TabsContent>
               </Tabs>
             </ResizablePanel>
@@ -234,6 +255,7 @@ export default function TripContent({
           <div className="flex-1 flex flex-col  mr-4  mb-4 ">
             <div className="flex-grow overflow-y-auto">
               <TripHistoryTable
+                isTracking={currentTab === 'tracking'}
                 sessions={sessions}
                 selectedIds={selectedIds}
                 visibleIds={visibleIds}
