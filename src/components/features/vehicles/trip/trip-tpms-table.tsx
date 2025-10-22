@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, Dispatch, SetStateAction } from 'react'
 import { useTripTpmsDetails } from '@/lib/query-hooks/use-vehicles'
 import type { TripTpmsDetailsQuery } from '@/types/features/trips/trip.types'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -21,8 +21,10 @@ interface TripTpmsTableProps {
   temperatureUnit: TemperatureUnit
   tireLocations: string[]
   selectedTires: string[]
-  startDate?: string
-  endDate?: string
+  tpmsQuery: Omit<TripTpmsDetailsQuery, 'id' | 'limit'>
+  setTpmsQuery: Dispatch<
+    SetStateAction<Omit<TripTpmsDetailsQuery, 'id' | 'limit'>>
+  >
 }
 
 const rows = 15
@@ -30,27 +32,19 @@ const rows = 15
 export default function TripTpmsTable({
   selectedId,
   numTire,
-  startDate,
-  endDate,
   pressureUnit,
   temperatureUnit,
   selectedTires,
   tireLocations,
+  tpmsQuery,
+  setTpmsQuery,
 }: TripTpmsTableProps) {
-  const [query, setQuery] = useState<
-    Omit<TripTpmsDetailsQuery, 'id' | 'limit'>
-  >({
-    page: 1,
-    endDate,
-    startDate,
-  })
-
   const { data: tpmsData, isLoading } = useTripTpmsDetails({
-    page: query.page,
+    page: tpmsQuery.page,
     id: selectedId,
     limit: numTire * rows,
-    endDate: query.endDate,
-    startDate: query.startDate,
+    endDate: tpmsQuery.endDate,
+    startDate: tpmsQuery.startDate,
   })
 
   if (isLoading)
@@ -78,11 +72,11 @@ export default function TripTpmsTable({
         numTire={numTire}
       />
       <TripPagination
-        currentPage={query.page ?? 1}
+        currentPage={tpmsQuery.page ?? 1}
         totalPages={tpmsData.pagination!.totalPages}
         onPageChange={(page) => {
-          setQuery({
-            ...query,
+          setTpmsQuery({
+            ...tpmsQuery,
             page,
           })
         }}

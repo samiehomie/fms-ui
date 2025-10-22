@@ -21,6 +21,7 @@ import type {
   TemperatureUnit,
 } from '@/lib/utils/unit-conversions'
 import TripTpmsHeader from './trip-tpms-header'
+import type { TripTpmsDetailsQuery } from '@/types/features/trips/trip.types'
 
 export interface TripSession {
   id: number
@@ -89,6 +90,13 @@ export default function TripContent({
   const [pressureUnit, setPressureUnit] = useState<PressureUnit>('PSI')
   const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>('°C')
   const [viewMode, setViewMode] = useState<'charts' | 'table'>('table')
+  const [tpmsQuery, setTpmsQuery] = useState<
+    Omit<TripTpmsDetailsQuery, 'id' | 'limit'>
+  >({
+    page: 1,
+    endDate,
+    startDate,
+  })
 
   const handleRowClick = (id: number) => {
     const newSelectedIds = new Set(selectedIds)
@@ -175,14 +183,14 @@ export default function TripContent({
   const handleDateRangeChange = useCallback(
     (dateRange: { from: string; to: string } | null) => {
       if (dateRange) {
-        setQuery((old) => ({
+        setTpmsQuery((old) => ({
           ...old,
           startDate: dateRange.from,
           endDate: dateRange.to,
         }))
       }
     },
-    [setQuery],
+    [setTpmsQuery],
   )
 
   if (isLoading || !tripsData) {
@@ -287,14 +295,14 @@ export default function TripContent({
                       handleDateRangeChange={handleDateRangeChange}
                     />
                     <TripTpmsTable
-                    tireLocations={tireLocations}
+                      tireLocations={tireLocations}
                       selectedTires={selectedTires}
                       pressureUnit={pressureUnit}
                       temperatureUnit={temperatureUnit}
                       selectedId={Array.from(selectedIds)[0] ?? 1}
                       numTire={numTire}
-                      startDate={startDate}
-                      endDate={endDate}
+                      setTpmsQuery={setTpmsQuery}
+                      tpmsQuery={tpmsQuery}
                     />
                   </div>
                 </TabsContent>
