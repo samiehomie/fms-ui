@@ -100,6 +100,8 @@ export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
         vehicleId={vehicleId ?? carId}
         setQuery={setQuery}
         query={query}
+        startDate={query.startDate}
+        endDate={query.endDate}
       />
     </div>
   )

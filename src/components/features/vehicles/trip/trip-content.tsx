@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import {
   ResizableHandle,
@@ -16,6 +16,11 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { TripPagination } from './trip-pagination'
 import { formatDuration } from '@/lib/utils/build-url'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import type {
+  PressureUnit,
+  TemperatureUnit,
+} from '@/lib/utils/unit-conversions'
+import TripTpmsHeader from './trip-tpms-header'
 
 export interface TripSession {
   id: number
@@ -62,9 +67,13 @@ export default function TripContent({
   vehicleId,
   query,
   setQuery,
+  endDate,
+  startDate,
 }: {
   query: Omit<VehicleTripsQuery, 'id'>
   setQuery: React.Dispatch<React.SetStateAction<Omit<VehicleTripsQuery, 'id'>>>
+  startDate?: string
+  endDate?: string
   vehicleId?: string
 }) {
   const [sessions, setSessions] = useState<TripSession[]>([])
@@ -75,6 +84,11 @@ export default function TripContent({
     ...query,
     id: vehicleId,
   })
+
+  const [selectedTires, setSelectedTires] = useState<string[]>(['all'])
+  const [pressureUnit, setPressureUnit] = useState<PressureUnit>('PSI')
+  const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>('°C')
+  const [viewMode, setViewMode] = useState<'charts' | 'table'>('table')
 
   const handleRowClick = (id: number) => {
     const newSelectedIds = new Set(selectedIds)
@@ -158,6 +172,19 @@ export default function TripContent({
     }
   }, [tripsData, vehicleId])
 
+  const handleDateRangeChange = useCallback(
+    (dateRange: { from: string; to: string } | null) => {
+      if (dateRange) {
+        setQuery((old) => ({
+          ...old,
+          startDate: dateRange.from,
+          endDate: dateRange.to,
+        }))
+      }
+    },
+    [setQuery],
+  )
+
   if (isLoading || !tripsData) {
     return (
       <div className="col-span-3 flex flex-col gap-y-2">
@@ -169,6 +196,9 @@ export default function TripContent({
   }
 
   const { vehicle, stats, trips } = tripsData.data
+
+  const { numTire, tireLocations } = vehicle
+
   return (
     <main className="flex-grow flex-1 overflow-hidden flex flex-col">
       <div className="flex-grow flex-1 overflow-hidden flex flex-col">
@@ -243,10 +273,30 @@ export default function TripContent({
                   value="tpms"
                   className="flex-1 flex flex-col w-full relative"
                 >
-                  <TripTpmsTable
-                    selectedId={Array.from(selectedIds)[0] ?? 1}
-                    numTire={vehicle.numTire}
-                  />
+                  <div className="ml-3 flex-1 flex flex-col ">
+                    <TripTpmsHeader
+                      tireLocations={tireLocations}
+                      selectedTires={selectedTires}
+                      setSelectedTires={setSelectedTires}
+                      viewMode={viewMode}
+                      setViewMode={setViewMode}
+                      pressureUnit={pressureUnit}
+                      temperatureUnit={temperatureUnit}
+                      setTemperatureUnit={setTemperatureUnit}
+                      setPressureUnit={setPressureUnit}
+                      handleDateRangeChange={handleDateRangeChange}
+                    />
+                    <TripTpmsTable
+                    tireLocations={tireLocations}
+                      selectedTires={selectedTires}
+                      pressureUnit={pressureUnit}
+                      temperatureUnit={temperatureUnit}
+                      selectedId={Array.from(selectedIds)[0] ?? 1}
+                      numTire={numTire}
+                      startDate={startDate}
+                      endDate={endDate}
+                    />
+                  </div>
                 </TabsContent>
               </Tabs>
             </ResizablePanel>

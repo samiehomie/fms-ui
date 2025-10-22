@@ -52,7 +52,7 @@ export function DateRangePicker({
         value={dateRange}
         onChange={handleDateChange}
         format="YYYY-MM-DD"
-        style={{ width: 260 }}
+        style={{ width: 260  }}
         placeholder={['Start date', 'End date']}
         allowClear={true}
         showTime={{

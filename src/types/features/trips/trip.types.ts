@@ -52,6 +52,8 @@ type TripTpmsDetailsData = Pick<
 // GET /trips/{id}/tpms-results
 export interface TripTpmsDetailsQuery extends PaginationQuery {
   id: number
+  startDate?: string
+  endDate?: string
 }
 
 // GET /trips/{id}/tpms-results

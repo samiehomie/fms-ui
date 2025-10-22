@@ -8,13 +8,13 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 interface TireMultiSelectProps {
-  tireOptions: { value: string; label: string }[]
+  tireLocations: string[]
   selectedTires: string[]
   onSelectionChange: (tires: string[]) => void
 }
 
 export function TireMultiSelect({
-  tireOptions,
+  tireLocations,
   selectedTires,
   onSelectionChange,
 }: TireMultiSelectProps) {
@@ -22,7 +22,7 @@ export function TireMultiSelect({
 
   const handleShowAllToggle = () => {
     if (isShowAll) {
-      onSelectionChange([tireOptions[0].value])
+      onSelectionChange([tireLocations[0]])
     } else {
       onSelectionChange(['all'])
     }
@@ -44,8 +44,8 @@ export function TireMultiSelect({
   const getDisplayText = () => {
     if (isShowAll) return 'Show All'
     if (selectedTires.length === 1) {
-      const tire = tireOptions.find((t) => t.value === selectedTires[0])
-      return tire?.label || 'Select Tires'
+      const tire = tireLocations.find((t) => t === selectedTires[0])
+      return tire || 'Select Tires'
     }
     return `${selectedTires.length} Tires Selected`
   }
@@ -69,14 +69,14 @@ export function TireMultiSelect({
           Show All
         </DropdownMenuCheckboxItem>
         <div className="my-[2px] h-px bg-border" />
-        {tireOptions.map((tire) => (
+        {tireLocations.map((tire) => (
           <DropdownMenuCheckboxItem
-            key={tire.value}
+            key={tire}
             className="text-[12px]"
-            checked={!isShowAll && selectedTires.includes(tire.value)}
-            onCheckedChange={() => handleTireToggle(tire.value)}
+            checked={!isShowAll && selectedTires.includes(tire)}
+            onCheckedChange={() => handleTireToggle(tire)}
           >
-            {tire.label}
+            {tire}
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>

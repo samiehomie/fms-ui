@@ -17,7 +17,7 @@ interface TPMSDataTableProps {
   temperatureUnit: TemperatureUnit
   numTire: number
   selectedTires: string[]
-  tirePositions: { value: string; label: string }[]
+  tireLocations: string[]
 }
 
 export default function TPMSDataTable({
@@ -26,13 +26,11 @@ export default function TPMSDataTable({
   temperatureUnit,
   numTire,
   selectedTires,
-  tirePositions,
+  tireLocations,
 }: TPMSDataTableProps) {
   const filteredTirePositions = selectedTires.includes('all')
-    ? tirePositions.map((tp) => tp.value)
-    : tirePositions
-        .filter((tp) => selectedTires.includes(tp.value))
-        .map((tp) => tp.value)
+    ? tireLocations.map((tp) => tp)
+    : tireLocations.filter((tp) => selectedTires.includes(tp)).map((tp) => tp)
   const tireChunks = chunkArray(data, numTire)
 
   return (

@@ -120,7 +120,9 @@ export interface VehicleUpdateQuery {
 // GET /vehicles/{id}/trips
 // TODO API에 numTire 포하되게 수정 해야함
 export type VehicleTripsResponse = {
-  vehicle: Pick<Vehicle, 'id' | 'plateNumber' | 'vehicleName' | 'numTire'>
+  vehicle: Pick<Vehicle, 'id' | 'plateNumber' | 'vehicleName' | 'numTire'> & {
+    tireLocations: string[]
+  }
   trips: Pick<
     Trip,
     | CommonProperties
