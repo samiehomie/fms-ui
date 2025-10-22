@@ -13,14 +13,37 @@ const { RangePicker } = DatePicker
 interface DateRangePickerProps {
   className?: string
   onDateChange?: (formattedRange: { from: string; to: string } | null) => void
+  minDate?: string | Date | Dayjs
+  maxDate?: string | Date | Dayjs
 }
 
 export function DateRangePicker({
   className,
   onDateChange,
+  minDate,
+  maxDate,
 }: DateRangePickerProps) {
   const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(() =>
     getDefaultDateRange(),
+  )
+
+  // Convert minDate and maxDate to Dayjs objects
+  const minDayjs = minDate ? dayjs(minDate) : null
+  const maxDayjs = maxDate ? dayjs(maxDate) : null
+
+  // Define disabledDate function
+  const disabledDate = useCallback(
+    (current: Dayjs) => {
+      if (!current) return false
+      if (minDayjs && current.isBefore(minDayjs, 'day')) {
+        return true
+      }
+      if (maxDayjs && current.isAfter(maxDayjs, 'day')) {
+        return true
+      }
+      return false
+    },
+    [minDayjs, maxDayjs],
   )
 
   const handleDateChange = useCallback(
@@ -55,6 +78,7 @@ export function DateRangePicker({
         style={{ width: 260  }}
         placeholder={['Start date', 'End date']}
         allowClear={true}
+        disabledDate={disabledDate}
         showTime={{
           hideDisabledOptions: true,
           defaultValue: [

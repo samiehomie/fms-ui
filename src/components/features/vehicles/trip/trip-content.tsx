@@ -283,6 +283,8 @@ export default function TripContent({
                 >
                   <div className="ml-3 flex-1 flex flex-col ">
                     <TripTpmsHeader
+                      startDate={startDate}
+                      endDate={endDate}
                       tireLocations={tireLocations}
                       selectedTires={selectedTires}
                       setSelectedTires={setSelectedTires}

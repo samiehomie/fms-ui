@@ -7,8 +7,11 @@ import type {
   PressureUnit,
   TemperatureUnit,
 } from '@/lib/utils/unit-conversions'
+import dayjs from 'dayjs'
 
 interface TripTpmsHeaderProps {
+  startDate?: string
+  endDate?: string
   tireLocations: string[]
   selectedTires: string[]
   setSelectedTires: Dispatch<SetStateAction<string[]>>
@@ -27,6 +30,8 @@ interface TripTpmsHeaderProps {
 }
 
 export default function TripTpmsHeader({
+  startDate,
+  endDate,
   tireLocations,
   selectedTires,
   setSelectedTires,
@@ -143,6 +148,8 @@ export default function TripTpmsHeader({
         <DateRangePicker
           onDateChange={handleDateRangeChange}
           className="h-7 leading-none "
+          minDate={dayjs(startDate)}
+          maxDate={dayjs(endDate)}
         />
       </div>
     </div>
