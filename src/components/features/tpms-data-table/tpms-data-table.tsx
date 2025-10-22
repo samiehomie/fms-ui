@@ -16,6 +16,8 @@ interface TPMSDataTableProps {
   pressureUnit: PressureUnit
   temperatureUnit: TemperatureUnit
   numTire: number
+  selectedTires: string[]
+  tirePositions: { value: string; label: string }[]
 }
 
 export default function TPMSDataTable({
@@ -23,36 +25,41 @@ export default function TPMSDataTable({
   pressureUnit,
   temperatureUnit,
   numTire,
+  selectedTires,
+  tirePositions,
 }: TPMSDataTableProps) {
+  const filteredTirePositions = selectedTires.includes('all')
+    ? tirePositions.map((tp) => tp.value)
+    : tirePositions
+        .filter((tp) => selectedTires.includes(tp.value))
+        .map((tp) => tp.value)
   const tireChunks = chunkArray(data, numTire)
+
   return (
     <div className="overflow-auto border-l border-b border-border rounded-[0px_0px_4px_4px]">
       <table className="w-full text-sm">
-        <thead className="bg-muted/50 sticky top-0 z-10">
+        <thead className="bg-muted/90 sticky top-0 z-10">
           <tr>
-            <th className="px-4 py-3 text-left font-medium border-r border-border bg-muted/80 sticky left-0 z-20 w-[70px] min-w-[70px] max-w-[70px] ">
+            <th className="px-4 py-3 text-left font-medium border-r border-border bg-muted/90 sticky left-0 z-20 w-[70px] min-w-[70px] max-w-[70px] ">
               TIME
             </th>
-            {tireChunks[0].map((data, index) => {
-              const tireLocation = data.tire.tireLocation
+            {filteredTirePositions.map((tirePosition, index) => {
               return (
                 <th
-                  key={`${tireLocation}-${index}`}
+                  key={`${tirePosition}-${index}`}
                   colSpan={3}
-                  className="px-4 py-2 text-center font-medium border-r border-b border-border "
+                  className="px-4 py-2 text-center bg-muted/90 font-medium border-r border-b border-border "
                 >
-                  {tireLocation}
+                  {tirePosition}
                 </th>
               )
             })}
           </tr>
-          <tr className="bg-muted/30">
+          <tr className="bg-muted/90">
             <th className="px-4 py-2 text-left font-medium border-r border-border bg-muted/60 sticky left-0 z-20 w-[180px] min-w-[180px] max-w-[180px]"></th>
-            {tireChunks[0].map((data, index) => {
-              const tireLocation = data.tire.tireLocation
-              const key = `${tireLocation}-${index}`
+            {filteredTirePositions.map((position) => {
               return (
-                <React.Fragment key={key}>
+                <React.Fragment key={position}>
                   <th className="px-2 py-2 text-center font-medium border-r border-border/50 w-16">
                     {temperatureUnit}
                   </th>
@@ -75,6 +82,8 @@ export default function TPMSDataTable({
                 className="border-t border-border hover:bg-muted/20"
               >
                 {tireChunk.map((tireData, index) => {
+                  const tireLocation = tireData.tire.tireLocation
+
                   const realTimeDate = new Date(tireData.resultTime)
                   return (
                     <React.Fragment
@@ -94,21 +103,24 @@ export default function TPMSDataTable({
                           })}
                         </td>
                       )}
-
-                      <td className="px-2 py-3 text-center border-r border-border/50 font-mono text-xs">
-                        {formatTemperature(
-                          tireData.temperature,
-                          temperatureUnit,
-                        )}
-                      </td>
-                      <td className="px-2 py-3 text-center border-r border-border/50 font-mono text-xs">
-                        {formatPressure(tireData.pressure, pressureUnit)}
-                      </td>
-                      <td className="px-2 py-3 text-center border-r border-border">
-                        {tireData.slowleak && (
-                          <AlertTriangle className="w-4 h-4 mx-auto text-destructive fill-destructive/20" />
-                        )}
-                      </td>
+                      {filteredTirePositions.includes(tireLocation) && (
+                        <>
+                          <td className="px-2 py-3 text-center border-r border-border/50 font-mono text-xs">
+                            {formatTemperature(
+                              tireData.temperature,
+                              temperatureUnit,
+                            )}
+                          </td>
+                          <td className="px-2 py-3 text-center border-r border-border/50 font-mono text-xs">
+                            {formatPressure(tireData.pressure, pressureUnit)}
+                          </td>
+                          <td className="px-2 py-3 text-center border-r border-border">
+                            {tireData.slowleak && (
+                              <AlertTriangle className="w-4 h-4 mx-auto text-destructive fill-destructive/20" />
+                            )}
+                          </td>
+                        </>
+                      )}
                     </React.Fragment>
                   )
                 })}

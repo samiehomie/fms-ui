@@ -1,0 +1,85 @@
+'use client'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+
+interface TireMultiSelectProps {
+  tireOptions: { value: string; label: string }[]
+  selectedTires: string[]
+  onSelectionChange: (tires: string[]) => void
+}
+
+export function TireMultiSelect({
+  tireOptions,
+  selectedTires,
+  onSelectionChange,
+}: TireMultiSelectProps) {
+  const isShowAll = selectedTires.includes('all')
+
+  const handleShowAllToggle = () => {
+    if (isShowAll) {
+      onSelectionChange([tireOptions[0].value])
+    } else {
+      onSelectionChange(['all'])
+    }
+  }
+
+  const handleTireToggle = (tireValue: string) => {
+    if (isShowAll) {
+      onSelectionChange([tireValue])
+    } else {
+      if (selectedTires.includes(tireValue)) {
+        const newSelection = selectedTires.filter((t) => t !== tireValue)
+        onSelectionChange(newSelection.length === 0 ? ['all'] : newSelection)
+      } else {
+        onSelectionChange([...selectedTires, tireValue])
+      }
+    }
+  }
+
+  const getDisplayText = () => {
+    if (isShowAll) return 'Show All'
+    if (selectedTires.length === 1) {
+      const tire = tireOptions.find((t) => t.value === selectedTires[0])
+      return tire?.label || 'Select Tires'
+    }
+    return `${selectedTires.length} Tires Selected`
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className="w-[120px] h-4 text-[12px] rounded-none font-[300]"
+        >
+          {getDisplayText()}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-[120px] text-[12px]">
+        <DropdownMenuCheckboxItem
+          checked={isShowAll}
+          className="text-[12px]"
+          onCheckedChange={handleShowAllToggle}
+        >
+          Show All
+        </DropdownMenuCheckboxItem>
+        <div className="my-[2px] h-px bg-border" />
+        {tireOptions.map((tire) => (
+          <DropdownMenuCheckboxItem
+            key={tire.value}
+            className="text-[12px]"
+            checked={!isShowAll && selectedTires.includes(tire.value)}
+            onCheckedChange={() => handleTireToggle(tire.value)}
+          >
+            {tire.label}
+          </DropdownMenuCheckboxItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
