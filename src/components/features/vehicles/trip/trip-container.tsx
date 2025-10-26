@@ -1,20 +1,18 @@
-'use client'
+"use client"
 
-import { useState, useCallback, useEffect } from 'react'
-import { DateRangePicker } from '@/components/ui/data-range-picker'
-import TripContent from './trip-content'
-import type { VehicleTripsQuery } from '@/types/features/vehicles/vehicle.types'
-import { getDefaultDateRangeFormatted } from '@/lib/utils/date-formatter'
+import { useState, useCallback, useEffect } from "react"
+import { DateRangePicker } from "@/components/ui/data-range-picker"
+import TripContent from "./trip-content"
+import type { VehicleTripsQuery } from "@/types/features/vehicles/vehicle.types"
+import { getDefaultDateRangeFormatted } from "@/lib/utils/date-formatter"
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { useAllVehicles } from '@/lib/query-hooks/use-vehicles'
+} from "@/components/ui/select"
+import { useAllVehicles } from "@/lib/query-hooks/use-vehicles"
 
 // TODO 차량 등록전 화면 구현 필요
 export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
@@ -27,7 +25,7 @@ export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
     },
     vehicleId,
   )
-  const [query, setQuery] = useState<Omit<VehicleTripsQuery, 'id'>>(() => {
+  const [query, setQuery] = useState<Omit<VehicleTripsQuery, "id">>(() => {
     const defaultDateRange = getDefaultDateRangeFormatted()
     return {
       page: 1,
@@ -73,7 +71,7 @@ export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
               <SelectTrigger>
                 <SelectValue
                   placeholder={
-                    vehiclesLoading ? 'Loading vehicles...' : 'Select vehicle'
+                    vehiclesLoading ? "Loading vehicles..." : "Select vehicle"
                   }
                 />
               </SelectTrigger>
@@ -92,7 +90,10 @@ export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
             </Select>
           )}
 
-          <DateRangePicker onDateChange={handleDateRangeChange} className='h-9' />
+          <DateRangePicker
+            onDateChange={handleDateRangeChange}
+            className="h-9"
+          />
         </div>
         <div />
       </header>

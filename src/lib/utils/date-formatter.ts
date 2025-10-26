@@ -1,5 +1,5 @@
-import type { DateRange } from 'react-day-picker'
-import dayjs, { type Dayjs } from 'dayjs'
+import type { DateRange } from "react-day-picker"
+import dayjs, { type Dayjs } from "dayjs"
 
 export interface DateRangeFormatted {
   from: string
@@ -12,7 +12,7 @@ export interface DateRangeFormatted {
  */
 export function getDefaultDateRange(): [Dayjs, Dayjs] {
   const today = dayjs()
-  const threeMonthsAgo = today.subtract(3, 'month')
+  const threeMonthsAgo = today.subtract(4, "month")
   return [threeMonthsAgo, today]
 }
 
@@ -55,7 +55,7 @@ export function formatDateToKorean(dateString: string): string {
 
     // 유효한 날짜인지 확인
     if (isNaN(date.getTime())) {
-      return '잘못된 날짜'
+      return "잘못된 날짜"
     }
 
     const year = date.getFullYear()
@@ -64,8 +64,8 @@ export function formatDateToKorean(dateString: string): string {
 
     return `${year}. ${month}. ${day}`
   } catch (error) {
-    logger.error('날짜 포맷팅 오류:', error)
-    return '날짜 오류'
+    logger.error("날짜 포맷팅 오류:", error)
+    return "날짜 오류"
   }
 }
 
@@ -74,29 +74,29 @@ export function formatDateTime(dateString: string): string {
     const date = new Date(dateString)
 
     if (isNaN(date.getTime())) {
-      return '잘못된 날짜'
+      return "잘못된 날짜"
     }
 
     const year = date.getFullYear()
     const month = date.getMonth() + 1
     const day = date.getDate()
-    const hours = date.getHours().toString().padStart(2, '0')
-    const minutes = date.getMinutes().toString().padStart(2, '0')
+    const hours = date.getHours().toString().padStart(2, "0")
+    const minutes = date.getMinutes().toString().padStart(2, "0")
 
     return `${year}. ${month}. ${day} ${hours}:${minutes}`
   } catch (error) {
     // logger.error('날짜 포맷팅 오류:', error)
-    return '날짜 오류'
+    return "날짜 오류"
   }
 }
 
 export function formatSeconds(seconds: number): string {
   if (seconds < 0) {
-    throw new Error('초는 0 이상의 값이어야 합니다.')
+    throw new Error("초는 0 이상의 값이어야 합니다.")
   }
 
   if (seconds === 0) {
-    return '0s'
+    return "0s"
   }
 
   const hours = Math.floor(seconds / 3600)
@@ -117,5 +117,5 @@ export function formatSeconds(seconds: number): string {
     parts.push(`${remainingSeconds}s`)
   }
 
-  return parts.join(' ')
+  return parts.join(" ")
 }
