@@ -1,8 +1,8 @@
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
-  name: __FMS_WEB_CERT__
+  name: __WEB_CERT__
   namespace: "service"
 spec:
   domains:
-    - __FMS_WEB_DOMAIN__
+    - __WEB_DOMAIN__

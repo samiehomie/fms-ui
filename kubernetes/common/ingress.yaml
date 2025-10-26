@@ -7,9 +7,9 @@ metadata:
     # GKE Ingress class (deprecated but still works)
     kubernetes.io/ingress.class: "gce"
     # Managed SSL certificate
-    networking.gke.io/managed-certificates: __FMS_WEB_CERT__
+    networking.gke.io/managed-certificates: __WEB_CERT__
     # Static IP
-    kubernetes.io/ingress.global-static-ip-name: __FMS_WEB_STATIC_IP__
+    kubernetes.io/ingress.global-static-ip-name: __WEB_STATIC_IP__
     # HTTP to HTTPS redirect
     #networking.gke.io/redirect-to-https: "true"
     # Force SSL redirect (additional layer)
@@ -21,7 +21,7 @@ metadata:
 spec:
   ingressClassName: gce
   rules:
-    - host: __FMS_WEB_DOMAIN__
+    - host: __WEB_DOMAIN__
       http:
         paths:
           - path: /

@@ -36,10 +36,9 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 30
           env:
-            # Database Configuration
-            - name: FMS_WEB_DOMAIN
-              value: "__FMS_WEB_DOMAIN__"
-            - name: FMS_WEB_STATIC_IP
-              value: "__FMS_WEB_STATIC_IP__"
-            - name: FMS_WEB_CERT
-              value: "__FMS_WEB_CERT__"
+            - name: WEB_DOMAIN
+              value: "__WEB_DOMAIN__"
+            - name: WEB_STATIC_IP
+              value: "__WEB_STATIC_IP__"
+            - name: WEB_CERT
+              value: "__WEB_CERT__"
