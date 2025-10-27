@@ -98,17 +98,22 @@ export default function TPMSCharts({
   )
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 mt-2.5">
       {filteredTirePositions.map((position, index) => (
-        <Card key={`${position}-${index}`}>
-          <CardHeader>
-            <CardTitle className="text-lg">{position?.toUpperCase()}</CardTitle>
+        <Card
+          key={`${position}-${index}`}
+          className=" shadow-none rounded-xs py-3 gap-2"
+        >
+          <CardHeader className="px-4 gap-0">
+            <CardTitle className="text-[.9375rem] tracking-tight">
+              {position?.toUpperCase()}
+            </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Pressure Chart */}
               <div>
-                <h4 className="text-sm font-medium mb-4">
+                <h4 className="text-[.8125rem] mb-2">
                   Pressure ({pressureUnit})
                 </h4>
                 <ChartContainer
@@ -118,7 +123,7 @@ export default function TPMSCharts({
                       // color: position.color,
                     },
                   }}
-                  className="h-[250px]"
+                  className="h-[200px]"
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart
