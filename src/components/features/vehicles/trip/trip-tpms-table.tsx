@@ -12,7 +12,7 @@ import type {
   TemperatureUnit,
 } from '@/lib/utils/unit-conversions'
 import { TireMultiSelect } from './tire-multi-select'
-import { DateRangePicker } from '@/components/ui/data-range-picker'
+import DateRangePicker from '@/components/ui/data-range-picker'
 
 interface TripTpmsTableProps {
   selectedId: number

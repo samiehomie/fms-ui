@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback, useEffect } from "react"
-import { DateRangePicker } from "@/components/ui/data-range-picker"
+import DateRangePicker from "@/components/ui/data-range-picker"
 import TripContent from "./trip-content"
 import type { VehicleTripsQuery } from "@/types/features/vehicles/vehicle.types"
 import { getDefaultDateRangeFormatted } from "@/lib/utils/date-formatter"
@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/select"
 import { useAllVehicles } from "@/lib/query-hooks/use-vehicles"
 
+
+// TODO trip 날짜 선택이 초기값으로만 작용함 
 // TODO 차량 등록전 화면 구현 필요
 export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
   const [carId, setCarId] = useState<string>()
@@ -101,8 +103,6 @@ export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
         vehicleId={vehicleId ?? carId}
         setQuery={setQuery}
         query={query}
-        startDate={query.startDate}
-        endDate={query.endDate}
       />
     </div>
   )

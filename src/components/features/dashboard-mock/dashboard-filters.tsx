@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Calendar, Filter, RefreshCw } from "lucide-react"
-import { DateRangePicker } from "@/components/ui/data-range-picker"
+import DateRangePicker from "@/components/ui/data-range-picker"
 
 interface DashboardFiltersProps {
   onFiltersChange?: (filters: any) => void

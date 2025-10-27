@@ -1,27 +1,26 @@
-'use client'
+"use client"
 
-import { useState, useEffect, useCallback } from 'react'
-import dynamic from 'next/dynamic'
+import { useState, useEffect, useCallback, memo } from "react"
+import dynamic from "next/dynamic"
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '@/components/ui/resizable'
-import { TripHistoryTable } from '@/components/features/vehicles/trip/trip-history-table'
-import { TripOverview } from '@/components/features/vehicles/trip/trip-overview'
-import { useVehicleAllTrips } from '@/lib/query-hooks/use-vehicles'
-import type { VehicleTripsQuery } from '@/types/features/vehicles/vehicle.types'
-import type { VehicleTripEvent } from '@/types/features/vehicles/vehicle.types'
-import { Skeleton } from '@/components/ui/skeleton'
-import { TripPagination } from './trip-pagination'
-import { formatDuration } from '@/lib/utils/build-url'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+} from "@/components/ui/resizable"
+import { TripHistoryTable } from "@/components/features/vehicles/trip/trip-history-table"
+import { TripOverview } from "@/components/features/vehicles/trip/trip-overview"
+import { useVehicleAllTrips } from "@/lib/query-hooks/use-vehicles"
+import type { VehicleTripsQuery } from "@/types/features/vehicles/vehicle.types"
+import { Skeleton } from "@/components/ui/skeleton"
+import { TripPagination } from "./trip-pagination"
+import { formatDuration } from "@/lib/utils/build-url"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type {
   PressureUnit,
   TemperatureUnit,
-} from '@/lib/utils/unit-conversions'
-import TripTpmsHeader from './trip-tpms-header'
-import type { TripTpmsDetailsQuery } from '@/types/features/trips/trip.types'
+} from "@/lib/utils/unit-conversions"
+import TripTpmsHeader from "./trip-tpms-header"
+import type { TripTpmsDetailsQuery } from "@/types/features/trips/trip.types"
 
 export interface TripSession {
   id: number
@@ -41,7 +40,7 @@ export interface TripSession {
 }
 
 const TripMap = dynamic(
-  () => import('@/components/features/vehicles/trip/trip-map'),
+  () => import("@/components/features/vehicles/trip/trip-map"),
   {
     ssr: false,
     loading: () => (
@@ -53,7 +52,7 @@ const TripMap = dynamic(
 )
 
 const TripTpmsTable = dynamic(
-  () => import('@/components/features/vehicles/trip/trip-tpms-table'),
+  () => import("@/components/features/vehicles/trip/trip-tpms-table"),
   {
     ssr: false,
     loading: () => (
@@ -64,45 +63,41 @@ const TripTpmsTable = dynamic(
   },
 )
 
-export default function TripContent({
+const TripContent = ({
   vehicleId,
   query,
   setQuery,
-  endDate,
-  startDate,
 }: {
-  query: Omit<VehicleTripsQuery, 'id'>
-  setQuery: React.Dispatch<React.SetStateAction<Omit<VehicleTripsQuery, 'id'>>>
-  startDate?: string
-  endDate?: string
+  query: Omit<VehicleTripsQuery, "id">
+  setQuery: React.Dispatch<React.SetStateAction<Omit<VehicleTripsQuery, "id">>>
   vehicleId?: string
-}) {
+}) => {
   const [sessions, setSessions] = useState<TripSession[]>([])
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set())
-  const [currentTab, setCurrentTab] = useState<'tracking' | 'tpms'>('tracking')
+  const [currentTab, setCurrentTab] = useState<"tracking" | "tpms">("tracking")
   const { data: tripsData, isLoading } = useVehicleAllTrips({
     ...query,
     id: vehicleId,
   })
 
-  const [selectedTires, setSelectedTires] = useState<string[]>(['all'])
-  const [pressureUnit, setPressureUnit] = useState<PressureUnit>('PSI')
-  const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>('°C')
-  const [viewMode, setViewMode] = useState<'charts' | 'table'>('table')
+  const [selectedTires, setSelectedTires] = useState<string[]>(["all"])
+  const [pressureUnit, setPressureUnit] = useState<PressureUnit>("PSI")
+  const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>("°C")
+  const [viewMode, setViewMode] = useState<"charts" | "table">("table")
   const [tpmsQuery, setTpmsQuery] = useState<
-    Omit<TripTpmsDetailsQuery, 'id' | 'limit'>
+    Omit<TripTpmsDetailsQuery, "id" | "limit">
   >({
     page: 1,
-    endDate,
-    startDate,
+    endDate: query?.endDate,
+    startDate: query?.startDate,
   })
 
   const handleRowClick = (id: number) => {
     const newSelectedIds = new Set(selectedIds)
     const newVisibleIds = new Set(visibleIds)
 
-    if (currentTab === 'tracking') {
+    if (currentTab === "tracking") {
       // tracking 탭: 복수 선택 허용
       if (newSelectedIds.has(id)) {
         newSelectedIds.delete(id)
@@ -134,7 +129,7 @@ export default function TripContent({
 
   const handleToggleSelectAll = () => {
     // tracking 탭에서만 전체 선택 기능 허용
-    if (currentTab === 'tracking') {
+    if (currentTab === "tracking") {
       if (selectedIds.size === sessions.length) {
         setSelectedIds(new Set())
         setVisibleIds(new Set())
@@ -223,7 +218,7 @@ export default function TripContent({
             >
               <div className="flex-1 flex flex-col overflow-y-auto mr-4 ">
                 <TripHistoryTable
-                  isTracking={currentTab === 'tracking'}
+                  isTracking={currentTab === "tracking"}
                   sessions={sessions}
                   selectedIds={selectedIds}
                   visibleIds={visibleIds}
@@ -252,7 +247,7 @@ export default function TripContent({
                 defaultValue="tracking"
                 value={currentTab}
                 onValueChange={(value) =>
-                  setCurrentTab(value as 'tracking' | 'tpms')
+                  setCurrentTab(value as "tracking" | "tpms")
                 }
                 className="flex-1 flex flex-col w-full"
               >
@@ -283,8 +278,8 @@ export default function TripContent({
                 >
                   <div className="ml-3 flex-1 flex flex-col ">
                     <TripTpmsHeader
-                      startDate={startDate}
-                      endDate={endDate}
+                      startDate={query?.startDate}
+                      endDate={query?.endDate}
                       tireLocations={tireLocations}
                       selectedTires={selectedTires}
                       setSelectedTires={setSelectedTires}
@@ -315,7 +310,7 @@ export default function TripContent({
           <div className="flex-1 flex flex-col  mr-4  mb-4 ">
             <div className="flex-grow overflow-y-auto">
               <TripHistoryTable
-                isTracking={currentTab === 'tracking'}
+                isTracking={currentTab === "tracking"}
                 sessions={sessions}
                 selectedIds={selectedIds}
                 visibleIds={visibleIds}
@@ -339,3 +334,5 @@ export default function TripContent({
     </main>
   )
 }
+
+export default memo(TripContent)

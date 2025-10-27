@@ -1,13 +1,14 @@
-'use client'
-import type { Dispatch, SetStateAction } from 'react'
-import { Button } from '@/components/ui/button'
-import { TireMultiSelect } from './tire-multi-select'
-import { DateRangePicker } from '@/components/ui/data-range-picker'
+"use client"
+import { memo } from "react"
+import type { Dispatch, SetStateAction } from "react"
+import { Button } from "@/components/ui/button"
+import { TireMultiSelect } from "./tire-multi-select"
+import DateRangePicker from "@/components/ui/data-range-picker"
 import type {
   PressureUnit,
   TemperatureUnit,
-} from '@/lib/utils/unit-conversions'
-import dayjs from 'dayjs'
+} from "@/lib/utils/unit-conversions"
+import dayjs from "dayjs"
 
 interface TripTpmsHeaderProps {
   startDate?: string
@@ -15,8 +16,8 @@ interface TripTpmsHeaderProps {
   tireLocations: string[]
   selectedTires: string[]
   setSelectedTires: Dispatch<SetStateAction<string[]>>
-  viewMode: 'table' | 'charts'
-  setViewMode: (value: SetStateAction<'table' | 'charts'>) => void
+  viewMode: "table" | "charts"
+  setViewMode: (value: SetStateAction<"table" | "charts">) => void
   pressureUnit: PressureUnit
   temperatureUnit: TemperatureUnit
   setPressureUnit: (value: SetStateAction<PressureUnit>) => void
@@ -29,7 +30,7 @@ interface TripTpmsHeaderProps {
   ) => void
 }
 
-export default function TripTpmsHeader({
+const TripTpmsHeader = ({
   startDate,
   endDate,
   tireLocations,
@@ -42,7 +43,7 @@ export default function TripTpmsHeader({
   setTemperatureUnit,
   setPressureUnit,
   handleDateRangeChange,
-}: TripTpmsHeaderProps) {
+}: TripTpmsHeaderProps) => {
   return (
     <div
       className="flex flex-wrap items-center gap-x-5 px-4 bg-muted/20  border-[1px_1px_1px_1px]
@@ -64,17 +65,17 @@ export default function TripTpmsHeader({
         </label>
         <div className="flex border border-border rounded-xs bg-background">
           <Button
-            variant={viewMode === 'charts' ? 'secondary' : 'ghost'}
+            variant={viewMode === "charts" ? "secondary" : "ghost"}
             size="sm"
-            onClick={() => setViewMode('charts')}
+            onClick={() => setViewMode("charts")}
             className="h-4 text-[12px] rounded-none font-[300]"
           >
             Charts
           </Button>
           <Button
-            variant={viewMode === 'table' ? 'secondary' : 'ghost'}
+            variant={viewMode === "table" ? "secondary" : "ghost"}
             size="sm"
-            onClick={() => setViewMode('table')}
+            onClick={() => setViewMode("table")}
             className="h-4 text-[12px] rounded-none font-[300]"
           >
             Table
@@ -88,26 +89,26 @@ export default function TripTpmsHeader({
         </label>
         <div className="flex border border-border rounded-xs bg-background">
           <Button
-            variant={pressureUnit === 'PSI' ? 'secondary' : 'ghost'}
+            variant={pressureUnit === "PSI" ? "secondary" : "ghost"}
             size="sm"
             className="h-4 text-[12px] rounded-none font-[300]"
-            onClick={() => setPressureUnit('PSI')}
+            onClick={() => setPressureUnit("PSI")}
           >
             PSI
           </Button>
           <Button
-            variant={pressureUnit === 'BAR' ? 'secondary' : 'ghost'}
+            variant={pressureUnit === "BAR" ? "secondary" : "ghost"}
             size="sm"
             className="h-4 text-[12px] rounded-none font-[300]"
-            onClick={() => setPressureUnit('BAR')}
+            onClick={() => setPressureUnit("BAR")}
           >
             BAR
           </Button>
           <Button
-            variant={pressureUnit === 'kPa' ? 'secondary' : 'ghost'}
+            variant={pressureUnit === "kPa" ? "secondary" : "ghost"}
             size="sm"
             className="h-4 text-[12px] rounded-none font-[300]"
-            onClick={() => setPressureUnit('kPa')}
+            onClick={() => setPressureUnit("kPa")}
           >
             kPa
           </Button>
@@ -119,26 +120,26 @@ export default function TripTpmsHeader({
         </label>
         <div className="flex border border-border rounded-xs bg-background">
           <Button
-            variant={temperatureUnit === '°C' ? 'secondary' : 'ghost'}
+            variant={temperatureUnit === "°C" ? "secondary" : "ghost"}
             size="sm"
             className="h-4 text-[12px] rounded-none font-[300]"
-            onClick={() => setTemperatureUnit('°C')}
+            onClick={() => setTemperatureUnit("°C")}
           >
             °C
           </Button>
           <Button
-            variant={temperatureUnit === '°F' ? 'secondary' : 'ghost'}
+            variant={temperatureUnit === "°F" ? "secondary" : "ghost"}
             size="sm"
             className="h-4 text-[12px] rounded-none font-[300]"
-            onClick={() => setTemperatureUnit('°F')}
+            onClick={() => setTemperatureUnit("°F")}
           >
             °F
           </Button>
           <Button
-            variant={temperatureUnit === 'cff' ? 'secondary' : 'ghost'}
+            variant={temperatureUnit === "cff" ? "secondary" : "ghost"}
             size="sm"
             className="h-4 text-[12px] rounded-none font-[300]"
-            onClick={() => setTemperatureUnit('cff')}
+            onClick={() => setTemperatureUnit("cff")}
           >
             cff
           </Button>
@@ -148,10 +149,12 @@ export default function TripTpmsHeader({
         <DateRangePicker
           onDateChange={handleDateRangeChange}
           className="h-7 leading-none "
-          minDate={dayjs(startDate)}
-          maxDate={dayjs(endDate)}
+          minDate={startDate}
+          maxDate={endDate}
         />
       </div>
     </div>
   )
 }
+
+export default memo(TripTpmsHeader)

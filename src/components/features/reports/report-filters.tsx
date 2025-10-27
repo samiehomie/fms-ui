@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Search, Filter, X, Truck, Users } from 'lucide-react'
-import { DateRangePicker } from '@/components/ui/data-range-picker'
+import DateRangePicker from '@/components/ui/data-range-picker'
 
 export interface FilterState {
   search: string
