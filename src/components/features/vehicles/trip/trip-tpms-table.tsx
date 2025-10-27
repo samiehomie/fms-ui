@@ -1,18 +1,15 @@
-'use client'
+"use client"
 
-import { useState, useCallback, Dispatch, SetStateAction } from 'react'
-import { useTripTpmsDetails } from '@/lib/query-hooks/use-vehicles'
-import type { TripTpmsDetailsQuery } from '@/types/features/trips/trip.types'
-import { Skeleton } from '@/components/ui/skeleton'
-import TPMSDataTable from '../../tpms-data-table/tpms-data-table'
-import { TripPagination } from './trip-pagination'
-import { Button } from '@/components/ui/button'
+import { Dispatch, SetStateAction } from "react"
+import { useTripTpmsDetails } from "@/lib/query-hooks/use-vehicles"
+import type { TripTpmsDetailsQuery } from "@/types/features/trips/trip.types"
+import { Skeleton } from "@/components/ui/skeleton"
+import TPMSDataTable from "../../tpms-data-table/tpms-data-table"
+import { TripPagination } from "./trip-pagination"
 import type {
   PressureUnit,
   TemperatureUnit,
-} from '@/lib/utils/unit-conversions'
-import { TireMultiSelect } from './tire-multi-select'
-import DateRangePicker from '@/components/ui/data-range-picker'
+} from "@/lib/utils/unit-conversions"
 
 interface TripTpmsTableProps {
   selectedId: number
@@ -21,9 +18,9 @@ interface TripTpmsTableProps {
   temperatureUnit: TemperatureUnit
   tireLocations: string[]
   selectedTires: string[]
-  tpmsQuery: Omit<TripTpmsDetailsQuery, 'id' | 'limit'>
+  tpmsQuery: Omit<TripTpmsDetailsQuery, "id" | "limit">
   setTpmsQuery: Dispatch<
-    SetStateAction<Omit<TripTpmsDetailsQuery, 'id' | 'limit'>>
+    SetStateAction<Omit<TripTpmsDetailsQuery, "id" | "limit">>
   >
 }
 

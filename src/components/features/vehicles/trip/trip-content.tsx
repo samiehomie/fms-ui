@@ -63,6 +63,18 @@ const TripTpmsTable = dynamic(
   },
 )
 
+const TripTpmsCharts = dynamic(
+  () => import("@/components/features/vehicles/trip/trip-tpms-charts"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-full w-full items-center justify-center bg-muted">
+        <p>Loading table...</p>
+      </div>
+    ),
+  },
+)
+
 const TripContent = ({
   vehicleId,
   query,
@@ -291,16 +303,28 @@ const TripContent = ({
                       setPressureUnit={setPressureUnit}
                       handleDateRangeChange={handleDateRangeChange}
                     />
-                    <TripTpmsTable
-                      tireLocations={tireLocations}
-                      selectedTires={selectedTires}
-                      pressureUnit={pressureUnit}
-                      temperatureUnit={temperatureUnit}
-                      selectedId={Array.from(selectedIds)[0] ?? 1}
-                      numTire={numTire}
-                      setTpmsQuery={setTpmsQuery}
-                      tpmsQuery={tpmsQuery}
-                    />
+                    {viewMode === "table" ? (
+                      <TripTpmsTable
+                        tireLocations={tireLocations}
+                        selectedTires={selectedTires}
+                        pressureUnit={pressureUnit}
+                        temperatureUnit={temperatureUnit}
+                        selectedId={Array.from(selectedIds)[0] ?? 1}
+                        numTire={numTire}
+                        setTpmsQuery={setTpmsQuery}
+                        tpmsQuery={tpmsQuery}
+                      />
+                    ) : (
+                      <TripTpmsCharts
+                        tireLocations={tireLocations}
+                        selectedTires={selectedTires}
+                        pressureUnit={pressureUnit}
+                        temperatureUnit={temperatureUnit}
+                        selectedId={Array.from(selectedIds)[0] ?? 1}
+                        numTire={numTire}
+                        tpmsQuery={tpmsQuery}
+                      />
+                    )}
                   </div>
                 </TabsContent>
               </Tabs>
