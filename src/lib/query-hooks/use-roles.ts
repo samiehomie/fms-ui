@@ -6,8 +6,28 @@ import type {
   RoleGetQuery,
   RolesGetResponse,
 } from '@/types/features/roles/role.types'
-import { getAllRoles, getRole } from '../actions/role.actions'
-import type { ServerActionResult } from '@/types/features/common.types'
+import { getAllRoles, getRole, getAllRoleList } from '../actions/role.actions'
+import { HTTPError } from '../route/route.heplers'
+
+
+export function useAllRoleList() {
+  return useQuery({
+    queryKey: ["role list"],
+    queryFn: async () => {
+      const result = await getAllRoleList()
+
+      if (!result.success) {
+        throw new HTTPError(
+          result?.error?.status ?? 500,
+          result?.error?.message,
+        )
+      }
+
+      return result.data
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
 
 export function useAllRoles(query: RolesGetQuery) {
   return useQuery({

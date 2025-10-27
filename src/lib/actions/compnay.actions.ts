@@ -1,8 +1,8 @@
-'use server'
+"use server"
 
-import { buildURL } from '../utils/build-url'
-import { withAuthAction } from './auth.actions'
-import { fetchServer } from '../api/fetch-server'
+import { buildURL } from "../utils/build-url"
+import { withAuthAction } from "./auth.actions"
+import { fetchServer } from "../api/fetch-server"
 import type {
   CompaniesGetQuery,
   CompaniesGetResponse,
@@ -22,28 +22,60 @@ import type {
   CompanyVerifyResponse,
   CompanyVehiclesQuery,
   CompanyVehiclesReponse,
-} from '@/types/features/companies/company.types'
+} from "@/types/features/companies/company.types"
 
 // TODO 반복되는 함수 헬퍼 함수로 만들기
+
+export async function getAllCompanyList() {
+  try {
+    const apiUrl = buildURL(`/companies/list`)
+    const response = await fetchServer<CompaniesGetResponse>(apiUrl, {
+      method: "GET",
+      cache: "no-store",
+    })
+
+    if (!response.success) {
+      return {
+        success: false,
+        error: {
+          message: response.error.message || "Unknown server error",
+          status: response.error.status,
+        },
+      }
+    }
+    const { data, pagination } = response
+
+    return { success: true, data, pagination }
+  } catch (error) {
+    return {
+      success: false,
+      error: {
+        message: "Unexpected server error",
+        status: 500,
+      },
+    }
+  }
+}
+
 export async function getAllCompanies(query: CompaniesGetQuery) {
   return await withAuthAction<CompaniesGetResponse>(async (accessToken) => {
     const apiUrl = buildURL(`/companies`, query)
 
     try {
       const response = await fetchServer<CompaniesGetResponse>(apiUrl, {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -55,7 +87,7 @@ export async function getAllCompanies(query: CompaniesGetQuery) {
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }
@@ -70,19 +102,19 @@ export async function getCompany(query: CompanyGetQuery) {
 
     try {
       const response = await fetchServer<CompanyGetResponse>(apiUrl, {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -94,7 +126,7 @@ export async function getCompany(query: CompanyGetQuery) {
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }
@@ -108,20 +140,20 @@ export async function createCompany(body: CompanyCreateBody) {
 
     try {
       const response = await fetchServer<CompanyCreateResponse>(apiUrl, {
-        method: 'POST',
+        method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -132,7 +164,7 @@ export async function createCompany(body: CompanyCreateBody) {
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }
@@ -150,20 +182,20 @@ export async function updateCompany(
 
     try {
       const response = await fetchServer<CompanyUpdateResponse>(apiUrl, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -174,7 +206,7 @@ export async function updateCompany(
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }
@@ -189,19 +221,19 @@ export async function deleteCompany(params: CompanyDeleteQuery) {
 
     try {
       const response = await fetchServer<CompanyDeleteResponse>(apiUrl, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -213,7 +245,7 @@ export async function deleteCompany(params: CompanyDeleteQuery) {
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }
@@ -228,19 +260,19 @@ export async function restoreCompany(query: CompanyRestoreQuery) {
 
     try {
       const response = await fetchServer<CompanyRestoreResponse>(apiUrl, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -251,7 +283,7 @@ export async function restoreCompany(query: CompanyRestoreQuery) {
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }
@@ -269,20 +301,20 @@ export async function verifyCompany(
 
     try {
       const response = await fetchServer<CompanyVerifyResponse>(apiUrl, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -293,7 +325,7 @@ export async function verifyCompany(
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }
@@ -308,19 +340,19 @@ export async function getCompanyVehicles(query: CompanyVehiclesQuery) {
 
     try {
       const response = await fetchServer<CompanyVehiclesReponse>(apiUrl, {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -332,7 +364,7 @@ export async function getCompanyVehicles(query: CompanyVehiclesQuery) {
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }

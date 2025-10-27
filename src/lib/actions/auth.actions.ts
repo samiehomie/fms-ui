@@ -1,43 +1,89 @@
-'use server'
+"use server"
 
-import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { cookies } from "next/headers"
+import { NextResponse } from "next/server"
 import {
   AUTH_TOKEN_COOKIE_NAME,
   REFRESH_TOKEN_COOKIE_NAME,
   AUTH_REFRESH_THRESHOLD,
-} from '@/lib/constants/auth'
-import { buildURL } from '@/lib/utils/build-url'
-import type { ApiResponseType, ApiRequestType } from '@/types/features'
-import { fetchServer } from '../api/fetch-server'
-import type { JWTAuthPayload } from '@/types/features'
-import { redirect } from 'next/navigation'
-import { parseJWT } from '@/lib/utils/build-url'
-import type { ServerActionResult } from '@/types/features/common.types'
+} from "@/lib/constants/auth"
+import { buildURL } from "@/lib/utils/build-url"
+import type { ApiResponseType, ApiRequestType } from "@/types/features"
+import { fetchServer } from "../api/fetch-server"
+import type { JWTAuthPayload } from "@/types/features"
+import { redirect } from "next/navigation"
+import { parseJWT } from "@/lib/utils/build-url"
+import type { ServerActionResult } from "@/types/features/common.types"
+import { signupSchema } from "@/types/features/auth/signup.schema"
+import type { SignupData } from "@/types/features/auth/signup.schema"
+import type { SignupResponse } from "@/types/features/auth/signup.types"
+
+export async function signupAction(
+  formData: Omit<SignupData, "confirmPassword">,
+) {
+  // if (!validatedFields.success) {
+  //   return {
+  //     errors: validatedFields.error.flatten().fieldErrors,
+  //     values: Object.fromEntries(formData),
+  //   }
+  // }
+
+  const apiUrl = buildURL("/auth/register")
+
+  try {
+    const response = await fetchServer<SignupResponse>(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+      cache: "no-store",
+    })
+
+    if (!response.success) {
+      return {
+        success: false,
+        error: {
+          message: response.error.message || "Unknown server error",
+          status: response.error.status,
+        },
+      }
+    }
+
+    const { data } = response
+    return { success: true, data }
+  } catch (error) {
+    return {
+      success: false,
+      error: {
+        message: "Unexpected server error",
+        status: 500,
+      },
+    }
+  }
+}
 
 export async function loginAction(
-  loginData: ApiRequestType<'POST /auth/login'>,
+  loginData: ApiRequestType<"POST /auth/login">,
 ) {
-  const credentials: ApiRequestType<'POST /auth/login'> = {
+  const credentials: ApiRequestType<"POST /auth/login"> = {
     username: loginData.username,
     password: loginData.password,
   }
 
-  const apiUrl = buildURL('/auth/login')
+  const apiUrl = buildURL("/auth/login")
 
   try {
-    const response = await fetchServer<ApiResponseType<'POST /auth/login'>>(
+    const response = await fetchServer<ApiResponseType<"POST /auth/login">>(
       apiUrl,
       {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
       },
     )
 
-    console.log('loginAction', response)
+    console.log("loginAction", response)
 
-    if (!response.success) throw new Error('Authentication failed')
+    if (!response.success) throw new Error("Authentication failed")
 
     const { accessToken, refreshToken } = await response.data
     await setAuthCookies(accessToken, refreshToken)
@@ -45,35 +91,35 @@ export async function loginAction(
     return { error: (error as Error).message }
   }
 
-  redirect('/')
+  redirect("/")
 }
 
 export async function logOutAction() {
-  const apiUrl = buildURL('/auth/logout')
+  const apiUrl = buildURL("/auth/logout")
 
   try {
     const cookieStore = await cookies()
     const accessToken = cookieStore.get(AUTH_TOKEN_COOKIE_NAME)?.value
 
     // TODO: API - 세션 하이브리드 방식이라 토큰 무효화 시키려면 로그아웃 동작 구현해야함 현재 없음
-    const response = await fetchServer<ApiResponseType<'POST /auth/logout'>>(
+    const response = await fetchServer<ApiResponseType<"POST /auth/logout">>(
       apiUrl,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
       },
     )
     cookieStore.delete(AUTH_TOKEN_COOKIE_NAME)
     cookieStore.delete(REFRESH_TOKEN_COOKIE_NAME)
-    if (!response.success) throw new Error('Authentication failed')
+    if (!response.success) throw new Error("Authentication failed")
   } catch (error) {
-    console.error('Logout error:', error)
-    redirect('/login')
+    console.error("Logout error:", error)
+    redirect("/login")
   }
-  redirect('/login')
+  redirect("/login")
 }
 
 export async function refreshTokenIfNeeded(
@@ -100,17 +146,17 @@ export async function refreshTokenIfNeeded(
   const timeUntilExpiry = exp * 1000 - Date.now()
 
   if (timeUntilExpiry < refreshThreshold) {
-    const apiUrl = buildURL('/auth/refresh')
-    const requestBody: ApiRequestType<'POST /auth/refresh'> = {
+    const apiUrl = buildURL("/auth/refresh")
+    const requestBody: ApiRequestType<"POST /auth/refresh"> = {
       refreshToken,
     }
 
-    const result = await fetchServer<ApiResponseType<'POST /auth/refresh'>>(
+    const result = await fetchServer<ApiResponseType<"POST /auth/refresh">>(
       apiUrl,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(requestBody),
@@ -123,11 +169,11 @@ export async function refreshTokenIfNeeded(
     if (!result.success) {
       const error = result.error
       // If refresh fails (e.g. token expired or invalid), clear the cookie
-      const status = 'status' in error ? error.status : 500
+      const status = "status" in error ? error.status : 500
       const message =
-        'serverMessage' in error && error.serverMessage
+        "serverMessage" in error && error.serverMessage
           ? error.serverMessage
-          : error.message || 'Token refresh failed'
+          : error.message || "Token refresh failed"
 
       console.error(`인증 토큰 갱신실패: ${status} - ${message}`)
       return null
@@ -135,7 +181,7 @@ export async function refreshTokenIfNeeded(
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       result.data
 
-    console.info('인증 토큰 갱신성공')
+    console.info("인증 토큰 갱신성공")
     return { newAccessToken, newRefreshToken }
   }
 
@@ -155,17 +201,17 @@ export async function setAuthCookies(
   const { exp } = await parseJWT(accessToken)
   cookieStore.set(AUTH_TOKEN_COOKIE_NAME, accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
     expires: new Date(exp * 1000),
   })
 
   cookieStore.set(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
     expires: new Date(exp * 1000),
   })
 }
@@ -182,7 +228,7 @@ export async function withAuth(
   if (!refreshTokenData) {
     cookieStore.delete(AUTH_TOKEN_COOKIE_NAME)
     cookieStore.delete(REFRESH_TOKEN_COOKIE_NAME)
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
   }
 
   // TODO: 쿠키 설정이
@@ -190,16 +236,16 @@ export async function withAuth(
   const { exp } = await parseJWT(refreshTokenData.newAccessToken)
   cookieStore.set(AUTH_TOKEN_COOKIE_NAME, refreshTokenData.newAccessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    sameSite: 'lax',
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    sameSite: "lax",
     expires: new Date(exp * 1000),
   })
   cookieStore.set(REFRESH_TOKEN_COOKIE_NAME, refreshTokenData.newRefreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    sameSite: 'lax',
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    sameSite: "lax",
     expires: new Date(exp * 1000),
   })
 
@@ -242,23 +288,23 @@ export async function withAuthAction<T = unknown>(
   if (!refreshTokenData) {
     cookieStore.delete(AUTH_TOKEN_COOKIE_NAME)
     cookieStore.delete(REFRESH_TOKEN_COOKIE_NAME)
-    return { success: false, error: { message: 'Unauthorized', status: 401 } }
+    return { success: false, error: { message: "Unauthorized", status: 401 } }
   }
 
   const response = await handler(refreshTokenData.newAccessToken)
   const { exp } = await parseJWT(refreshTokenData.newAccessToken)
   cookieStore.set(AUTH_TOKEN_COOKIE_NAME, refreshTokenData.newAccessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    sameSite: 'lax',
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    sameSite: "lax",
     expires: new Date(exp * 1000),
   })
   cookieStore.set(REFRESH_TOKEN_COOKIE_NAME, refreshTokenData.newRefreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    sameSite: 'lax',
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    sameSite: "lax",
     expires: new Date(exp * 1000),
   })
 

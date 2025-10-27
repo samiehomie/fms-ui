@@ -21,6 +21,7 @@ import type {
   CompanyVehiclesReponse,
 } from "@/types/features/companies/company.types"
 import {
+  getAllCompanyList,
   getAllCompanies,
   createCompany,
   updateCompany,
@@ -32,6 +33,25 @@ import {
 } from "../actions/compnay.actions"
 import type { ServerActionResult } from "@/types/features/common.types"
 import { HTTPError } from "../route/route.heplers"
+
+export function useAllCompanyList() {
+  return useQuery({
+    queryKey: ["company list"],
+    queryFn: async () => {
+      const result = await getAllCompanyList()
+
+      if (!result.success) {
+        throw new HTTPError(
+          result?.error?.status ?? 500,
+          result?.error?.message,
+        )
+      }
+
+      return result.data
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
 
 export function useAllCompanies(query: CompaniesGetQuery) {
   return useQuery({
