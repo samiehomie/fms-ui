@@ -3,16 +3,17 @@
 import { useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
+  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import {
+  CartesianGrid,
   Line,
   LineChart,
   XAxis,
   YAxis,
-  CartesianGrid,
   ResponsiveContainer,
 } from "recharts"
 import type {
@@ -26,6 +27,9 @@ import {
   formatTemperature,
 } from "@/lib/utils/unit-conversions"
 import { useTripTpmsDetails } from "@/lib/query-hooks/use-vehicles"
+import { Skeleton } from "@/components/ui/skeleton"
+import dayjs from "dayjs"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 const rows = 15
 
@@ -63,14 +67,25 @@ function transformTireData(data?: TripTpmsDetailsResponse): ChartData {
     }
 
     result[tireLocation].push({
-      timestamp: item.resultTime,
-      pressure: item.pressure,
-      temperature: item.temperature,
+      timestamp: dayjs(item.resultTime).format("MM/DD HH:mm:ss"),
+      pressure: Number(item.pressure),
+      temperature: Number(item.temperature),
     })
   }
 
   return result
 }
+
+const chartConfig = {
+  pressure: {
+    label: "Pressure",
+    color: "#0155a3",
+  },
+  temperature: {
+    label: "Temperature",
+    color: "var(--chart-1)",
+  },
+} satisfies ChartConfig
 
 export default function TPMSCharts({
   selectedId,
@@ -84,7 +99,7 @@ export default function TPMSCharts({
   const { data: tpmsData, isLoading } = useTripTpmsDetails({
     page: tpmsQuery.page,
     id: selectedId,
-    limit: numTire * rows,
+    limit: 1000,
     endDate: tpmsQuery.endDate,
     startDate: tpmsQuery.startDate,
   })
@@ -97,96 +112,74 @@ export default function TPMSCharts({
     [tpmsData],
   )
 
+  if (isLoading) {
+    return (
+      <div className="space-y-3 mt-2.5">
+        <Skeleton className="w-full h-[200px]" />
+        <Skeleton className="w-full h-[200px]" />
+        <Skeleton className="w-full h-[200px]" />
+        <Skeleton className="w-full h-[200px]" />
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-3 mt-2.5">
-      {filteredTirePositions.map((position, index) => (
-        <Card
-          key={`${position}-${index}`}
-          className=" shadow-none rounded-xs py-3 gap-2"
-        >
-          <CardHeader className="px-4 gap-0">
-            <CardTitle className="text-[.9375rem] tracking-tight">
-              {position?.toUpperCase()}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Pressure Chart */}
-              <div>
-                <h4 className="text-[.8125rem] mb-2">
-                  Pressure ({pressureUnit})
-                </h4>
-                <ChartContainer
-                  config={{
-                    pressure: {
-                      label: "Pressure",
-                      // color: position.color,
-                    },
+      {filteredTirePositions.map((position, index) => {
+        console.log(chartDataSet[position])
+        return (
+          <Card
+            key={`${position}-${index}`}
+            className=" shadow-none rounded-xs py-3 gap-2 w-full"
+          >
+            <CardHeader className="px-4 gap-0">
+              <CardTitle className="text-[.9375rem] tracking-tight">
+                {position?.toUpperCase()}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="px-4 w-full">
+              <ChartContainer config={chartConfig} className="h-[200px] w-full">
+                <LineChart
+                  accessibilityLayer
+                  data={chartDataSet[position]}
+                  margin={{
+                    left: 10,
+                    right: 10,
                   }}
-                  className="h-[200px]"
                 >
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
-                      data={chartDataSet[position]}
-                      margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
-                    >
-                      <CartesianGrid
-                        strokeDasharray="3 3"
-                        className="stroke-muted"
-                      />
-                      <XAxis
-                        dataKey="time"
-                        tick={{ fontSize: 11 }}
-                        tickMargin={8}
-                        interval="preserveStartEnd"
-                        minTickGap={50}
-                      />
-                      <YAxis
-                        tick={{ fontSize: 11 }}
-                        tickMargin={8}
-                        tickFormatter={(value) =>
-                          formatPressure(value, pressureUnit)
-                        }
-                      />
-                      <ChartTooltip
-                        content={
-                          <ChartTooltipContent
-                            formatter={(value) =>
-                              formatPressure(Number(value), pressureUnit)
-                            }
-                            labelFormatter={(label, payload) => {
-                              if (payload && payload[0]) {
-                                const date = payload[0].payload.fullTime as Date
-                                return date.toLocaleString("en-US", {
-                                  month: "short",
-                                  day: "2-digit",
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  second: "2-digit",
-                                  hour12: false,
-                                })
-                              }
-                              return label
-                            }}
-                          />
-                        }
-                      />
-                      {/* <Line
-                        type="monotone"
-                        dataKey={`${position.key}_pressure`}
-                        stroke={position.color}
-                        strokeWidth={2}
-                        dot={false}
-                        name="Pressure"
-                      /> */}
-                    </LineChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="timestamp"
+                    tick={{ fontSize: 10 }}
+                    tickMargin={8}
+                    interval="preserveStartEnd"
+                    minTickGap={13}
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent />}
+                  />
+
+                  <Line
+                    dataKey="pressure"
+                    type="monotone"
+                    stroke="var(--color-pressure)"
+                    strokeWidth={1}
+                    dot={false}
+                  />
+                  <Line
+                    dataKey="temperature"
+                    type="monotone"
+                    stroke="var(--color-temperature)"
+                    strokeWidth={1}
+                    dot={false}
+                  />
+                </LineChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+        )
+      })}
     </div>
   )
 }

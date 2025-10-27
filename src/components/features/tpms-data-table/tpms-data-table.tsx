@@ -1,15 +1,16 @@
-'use client'
+"use client"
 
-import React from 'react'
-import { AlertTriangle } from 'lucide-react'
+import React from "react"
+import { AlertTriangle } from "lucide-react"
 import {
   type PressureUnit,
   type TemperatureUnit,
   formatPressure,
   formatTemperature,
-} from '@/lib/utils/unit-conversions'
-import type { TripTpmsDetailsResponse } from '@/types/features/trips/trip.types'
-import { chunkArray } from '@/lib/utils/utils'
+} from "@/lib/utils/unit-conversions"
+import type { TripTpmsDetailsResponse } from "@/types/features/trips/trip.types"
+import { chunkArray } from "@/lib/utils/utils"
+import dayjs from "dayjs"
 
 interface TPMSDataTableProps {
   data: TripTpmsDetailsResponse
@@ -28,7 +29,7 @@ export default function TPMSDataTable({
   selectedTires,
   tireLocations,
 }: TPMSDataTableProps) {
-  const filteredTirePositions = selectedTires.includes('all')
+  const filteredTirePositions = selectedTires.includes("all")
     ? tireLocations.map((tp) => tp)
     : tireLocations.filter((tp) => selectedTires.includes(tp)).map((tp) => tp)
   const tireChunks = chunkArray(data, numTire)
@@ -89,16 +90,7 @@ export default function TPMSDataTable({
                     >
                       {index === 0 && (
                         <td className="px-4 py-3 font-mono text-xs border-r border-border bg-muted/10 sticky left-0 z-10 whitespace-nowrap w-[180px] min-w-[180px] max-w-[180px]">
-                          {realTimeDate.toLocaleDateString('en-US', {
-                            month: '2-digit',
-                            day: '2-digit',
-                          })}{' '}
-                          {realTimeDate.toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit',
-                            hour12: false,
-                          })}
+                          {dayjs(realTimeDate).format("MM/DD HH:mm:ss")}
                         </td>
                       )}
                       {filteredTirePositions.includes(tireLocation) && (

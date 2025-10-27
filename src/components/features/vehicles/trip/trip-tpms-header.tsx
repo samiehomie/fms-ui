@@ -47,10 +47,10 @@ const TripTpmsHeader = ({
   return (
     <div
       className="flex flex-wrap items-center gap-x-5 px-4 bg-muted/20  border-[1px_1px_1px_1px]
-    rounded-[4px_4px_0px_0px] h-[44px]"
+    rounded-[4px_4px_0px_0px] h-11"
     >
       <div className="flex flex-col gap-x-2">
-        <label className="text-[9.5px] font-[200] leading-none mb-[3.5px] tracking-wide">
+        <label className="text-[9.5px] font-extralight leading-none mb-[3.5px] tracking-wide">
           View Single Tyre
         </label>
         <TireMultiSelect
@@ -60,38 +60,38 @@ const TripTpmsHeader = ({
         />
       </div>
       <div className="flex flex-col gap-x-2">
-        <label className="text-[9.5px] font-[200] leading-none mb-[3.5px] tracking-wide">
+        <label className="text-[9.5px] font-extralight leading-none mb-[3.5px] tracking-wide">
           View Types
         </label>
         <div className="flex border border-border rounded-xs bg-background">
           <Button
-            variant={viewMode === "charts" ? "secondary" : "ghost"}
-            size="sm"
-            onClick={() => setViewMode("charts")}
-            className="h-4 text-[12px] rounded-none font-[300]"
-          >
-            Charts
-          </Button>
-          <Button
             variant={viewMode === "table" ? "secondary" : "ghost"}
             size="sm"
             onClick={() => setViewMode("table")}
-            className="h-4 text-[12px] rounded-none font-[300]"
+            className="h-4 text-[12px] rounded-none font-light"
           >
             Table
+          </Button>
+          <Button
+            variant={viewMode === "charts" ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => setViewMode("charts")}
+            className="h-4 text-[12px] rounded-none font-light"
+          >
+            Charts
           </Button>
         </div>
       </div>
 
       <div className="flex flex-col gap-x-2 font-mono">
-        <label className="text-[9.5px] font-[200] leading-none mb-[3.5px] tracking-wide">
+        <label className="text-[9.5px] font-extralight leading-none mb-[3.5px] tracking-wide">
           Pressure Units
         </label>
         <div className="flex border border-border rounded-xs bg-background">
           <Button
             variant={pressureUnit === "PSI" ? "secondary" : "ghost"}
             size="sm"
-            className="h-4 text-[12px] rounded-none font-[300]"
+            className="h-4 text-[12px] rounded-none font-light"
             onClick={() => setPressureUnit("PSI")}
           >
             PSI
@@ -99,7 +99,7 @@ const TripTpmsHeader = ({
           <Button
             variant={pressureUnit === "BAR" ? "secondary" : "ghost"}
             size="sm"
-            className="h-4 text-[12px] rounded-none font-[300]"
+            className="h-4 text-[12px] rounded-none font-light"
             onClick={() => setPressureUnit("BAR")}
           >
             BAR
@@ -107,7 +107,7 @@ const TripTpmsHeader = ({
           <Button
             variant={pressureUnit === "kPa" ? "secondary" : "ghost"}
             size="sm"
-            className="h-4 text-[12px] rounded-none font-[300]"
+            className="h-4 text-[12px] rounded-none font-light"
             onClick={() => setPressureUnit("kPa")}
           >
             kPa
@@ -115,14 +115,14 @@ const TripTpmsHeader = ({
         </div>
       </div>
       <div className="flex flex-col gap-x-2 font-mono">
-        <label className="text-[9.5px] font-[200] leading-none mb-[3.5px] tracking-wide">
+        <label className="text-[9.5px] font-extralight leading-none mb-[3.5px] tracking-wide">
           Temperature Units
         </label>
         <div className="flex border border-border rounded-xs bg-background">
           <Button
             variant={temperatureUnit === "°C" ? "secondary" : "ghost"}
             size="sm"
-            className="h-4 text-[12px] rounded-none font-[300]"
+            className="h-4 text-[12px] rounded-none font-light"
             onClick={() => setTemperatureUnit("°C")}
           >
             °C
@@ -130,7 +130,7 @@ const TripTpmsHeader = ({
           <Button
             variant={temperatureUnit === "°F" ? "secondary" : "ghost"}
             size="sm"
-            className="h-4 text-[12px] rounded-none font-[300]"
+            className="h-4 text-[12px] rounded-none font-light"
             onClick={() => setTemperatureUnit("°F")}
           >
             °F
@@ -138,7 +138,7 @@ const TripTpmsHeader = ({
           <Button
             variant={temperatureUnit === "cff" ? "secondary" : "ghost"}
             size="sm"
-            className="h-4 text-[12px] rounded-none font-[300]"
+            className="h-4 text-[12px] rounded-none font-light"
             onClick={() => setTemperatureUnit("cff")}
           >
             cff
