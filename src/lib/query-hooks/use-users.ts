@@ -1,23 +1,24 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { getAllUsers, createUser, verifyUser } from '../actions/user.actions'
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { toast } from "sonner"
+import { getAllUsers, createUser, verifyUser } from "../actions/user.actions"
 import type {
   UsersGetQuery,
   UserCreateBody,
   UserCreateResponse,
   UserVerifyBody,
   UserVerifyResponse,
-} from '@/types/features/users/user.types'
-import type { ServerActionResult } from '@/types/features/common.types'
+} from "@/types/features/users/user.types"
+import type { ServerActionResult } from "@/types/features/common.types"
+import { HTTPError } from "../route/route.heplers"
 
 export function useAllUsers(query: UsersGetQuery) {
   return useQuery({
-    queryKey: ['users', query],
+    queryKey: ["users", query],
     queryFn: async () => {
       const result = await getAllUsers(query)
 
       if (!result.success) {
-        throw new Error(result.error.message)
+        throw new HTTPError(result.error.status ?? 500, result.error.message)
       }
 
       return result
@@ -39,18 +40,18 @@ export function useCreateUser() {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({
-        queryKey: ['users'],
+        queryKey: ["users"],
       })
       if (res.success) {
-        toast.success('New user added', {
+        toast.success("New user added", {
           description: `username: ${res.data.username}`,
-          position: 'bottom-center',
+          position: "bottom-center",
         })
       }
     },
     onError: (error) => {
-      toast.error('Adding a new vehicle failed.', {
-        position: 'bottom-center',
+      toast.error("Adding a new vehicle failed.", {
+        position: "bottom-center",
         description: error.message,
       })
     },
@@ -70,21 +71,21 @@ export function useVerifyUser(id: string) {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({
-        queryKey: ['users'],
+        queryKey: ["users"],
       })
       queryClient.invalidateQueries({
-        queryKey: ['user', id],
+        queryKey: ["user", id],
       })
       if (res.success) {
-        toast.success('User Verification Complete', {
+        toast.success("User Verification Complete", {
           description: `${res.data.name}`,
-          position: 'bottom-center',
+          position: "bottom-center",
         })
       }
     },
     onError: (error) => {
-      toast.error('Company Verification Failed', {
-        position: 'bottom-center',
+      toast.error("Company Verification Failed", {
+        position: "bottom-center",
         description: error.message,
       })
     },

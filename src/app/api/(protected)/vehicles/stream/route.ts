@@ -132,7 +132,6 @@ export async function GET() {
         abortController.abort()
         clearInterval(interval)
         clearInterval(heartbeatInterval)
-        console.log('SSE connection cleaned up')
       }
     },
   })

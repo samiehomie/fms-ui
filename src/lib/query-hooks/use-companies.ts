@@ -1,5 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { toast } from "sonner"
 import type {
   CompaniesGetQuery,
   CompaniesGetResponse,
@@ -19,7 +19,7 @@ import type {
   CompanyVerifyResponse,
   CompanyVehiclesQuery,
   CompanyVehiclesReponse,
-} from '@/types/features/companies/company.types'
+} from "@/types/features/companies/company.types"
 import {
   getAllCompanies,
   createCompany,
@@ -29,17 +29,18 @@ import {
   getCompany,
   verifyCompany,
   getCompanyVehicles,
-} from '../actions/compnay.actions'
-import type { ServerActionResult } from '@/types/features/common.types'
+} from "../actions/compnay.actions"
+import type { ServerActionResult } from "@/types/features/common.types"
+import { HTTPError } from "../route/route.heplers"
 
 export function useAllCompanies(query: CompaniesGetQuery) {
   return useQuery({
-    queryKey: ['companies', query],
+    queryKey: ["companies", query],
     queryFn: async () => {
       const result = await getAllCompanies(query)
 
       if (!result.success) {
-        throw new Error(result.error.message)
+        throw new HTTPError(result.error.status ?? 500, result.error.message)
       }
 
       return result
@@ -50,12 +51,12 @@ export function useAllCompanies(query: CompaniesGetQuery) {
 
 export function useCompanyById(id: string) {
   return useQuery({
-    queryKey: ['company', id],
+    queryKey: ["company", id],
     queryFn: async () => {
       const result = await getCompany({ id })
 
       if (!result.success) {
-        throw new Error(result.error.message)
+        throw new HTTPError(result.error.status ?? 500, result.error.message)
       }
 
       return result
@@ -77,18 +78,18 @@ export function useCreateCompany() {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({
-        queryKey: ['companies'],
+        queryKey: ["companies"],
       })
       if (res.success) {
-        toast.success('A new company added', {
+        toast.success("A new company added", {
           description: `${res.data.name}`,
-          position: 'bottom-center',
+          position: "bottom-center",
         })
       }
     },
     onError: (error) => {
-      toast.error('Adding a new company failed.', {
-        position: 'bottom-center',
+      toast.error("Adding a new company failed.", {
+        position: "bottom-center",
         description: error.message,
       })
     },
@@ -109,20 +110,20 @@ export function useDeleteCompany() {
     onSuccess: (res) => {
       // 회사 목록 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: ['companies'],
+        queryKey: ["companies"],
       })
 
       if (res.success) {
-        toast.success('A company deleted.', {
-          position: 'bottom-center',
+        toast.success("A company deleted.", {
+          position: "bottom-center",
         })
       }
     },
     onError: (error) => {
-      toast.error('Deleting a comapny failed.', {
-        position: 'bottom-center',
+      toast.error("Deleting a comapny failed.", {
+        position: "bottom-center",
       })
-      logger.error('Delete company error:', error)
+      logger.error("Delete company error:", error)
     },
   })
 }
@@ -140,21 +141,21 @@ export function useUpdateCompany(id: string) {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({
-        queryKey: ['companies'],
+        queryKey: ["companies"],
       })
       queryClient.invalidateQueries({
-        queryKey: ['company', id],
+        queryKey: ["company", id],
       })
       if (res.success) {
-        toast.success('Company updated', {
+        toast.success("Company updated", {
           description: `${res.data.name}`,
-          position: 'bottom-center',
+          position: "bottom-center",
         })
       }
     },
     onError: (error) => {
-      toast.error('Update failed.', {
-        position: 'bottom-center',
+      toast.error("Update failed.", {
+        position: "bottom-center",
         description: error.message,
       })
     },
@@ -174,19 +175,19 @@ export function useRestoreCompany() {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({
-        queryKey: ['companies'],
+        queryKey: ["companies"],
       })
       if (res.success) {
-        toast.success(res.message ?? 'Company restored.', {
-          position: 'bottom-center',
+        toast.success(res.message ?? "Company restored.", {
+          position: "bottom-center",
         })
       }
     },
     onError: (error) => {
-      toast.error('Restoring a company failed.', {
-        position: 'bottom-center',
+      toast.error("Restoring a company failed.", {
+        position: "bottom-center",
       })
-      logger.error('Restore vehicle error:', error)
+      logger.error("Restore vehicle error:", error)
     },
   })
 }
@@ -204,21 +205,21 @@ export function useVerifyCompany(id: string) {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({
-        queryKey: ['companies'],
+        queryKey: ["companies"],
       })
       queryClient.invalidateQueries({
-        queryKey: ['company', id],
+        queryKey: ["company", id],
       })
       if (res.success) {
-        toast.success('Company Verification Complete', {
+        toast.success("Company Verification Complete", {
           description: `${res.data.name}`,
-          position: 'bottom-center',
+          position: "bottom-center",
         })
       }
     },
     onError: (error) => {
-      toast.error('Company Verification Failed', {
-        position: 'bottom-center',
+      toast.error("Company Verification Failed", {
+        position: "bottom-center",
         description: error.message,
       })
     },
@@ -227,12 +228,12 @@ export function useVerifyCompany(id: string) {
 
 export function useCompanyVehicles(query: CompanyVehiclesQuery) {
   return useQuery({
-    queryKey: ['vehicles', query],
+    queryKey: ["vehicles", query],
     queryFn: async () => {
       const result = await getCompanyVehicles(query)
 
       if (!result.success) {
-        throw new Error(result.error.message)
+        throw new HTTPError(result.error.status ?? 500, result.error.message)
       }
 
       return result

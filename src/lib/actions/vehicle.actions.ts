@@ -1,8 +1,8 @@
-'use server'
+"use server"
 
-import { buildURL } from '../utils/build-url'
-import { withAuthAction } from './auth.actions'
-import { fetchServer } from '../api/fetch-server'
+import { buildURL } from "../utils/build-url"
+import { withAuthAction } from "./auth.actions"
+import { fetchServer } from "../api/fetch-server"
 import type {
   VehiclesGetResponse,
   VehiclesGetQuery,
@@ -17,7 +17,7 @@ import type {
   VehicleUpdateResponse,
   VehicleUpdateBody,
   VehicleUpdateQuery,
-} from '@/types/features/vehicles/vehicle.types'
+} from "@/types/features/vehicles/vehicle.types"
 
 export async function getAllVehicles(query: VehiclesGetQuery) {
   return await withAuthAction<VehiclesGetResponse>(async (accessToken) => {
@@ -25,19 +25,19 @@ export async function getAllVehicles(query: VehiclesGetQuery) {
 
     try {
       const response = await fetchServer<VehiclesGetResponse>(apiUrl, {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -49,7 +49,7 @@ export async function getAllVehicles(query: VehiclesGetQuery) {
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }
@@ -64,19 +64,19 @@ export async function getVehicle(query: VehicleGetQuery) {
 
     try {
       const response = await fetchServer<VehicleGetResponse>(apiUrl, {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -85,10 +85,11 @@ export async function getVehicle(query: VehicleGetQuery) {
 
       return { success: true, data, pagination }
     } catch (error) {
+      console.error(error)
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }
@@ -102,20 +103,20 @@ export async function createVehicle(body: VehicleCreateBody) {
 
     try {
       const response = await fetchServer<VehicleCreateResponse>(apiUrl, {
-        method: 'POST',
+        method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -123,10 +124,11 @@ export async function createVehicle(body: VehicleCreateBody) {
       const { data, pagination } = response
       return { success: true, data, pagination }
     } catch (error) {
+      console.error(error)
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }
@@ -144,20 +146,20 @@ export async function updateVehicle(
 
     try {
       const response = await fetchServer<VehicleUpdateResponse>(apiUrl, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -165,10 +167,11 @@ export async function updateVehicle(
       const { data, pagination } = response
       return { success: true, data, pagination }
     } catch (error) {
+      console.error(error)
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }
@@ -183,19 +186,19 @@ export async function deleteVehicle(params: VehicleDeleteQuery) {
 
     try {
       const response = await fetchServer<VehicleDeleteResponse>(apiUrl, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -204,10 +207,11 @@ export async function deleteVehicle(params: VehicleDeleteQuery) {
 
       return { success: true, data, pagination, message }
     } catch (error) {
+      console.error(error)
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }
@@ -222,19 +226,19 @@ export async function restoreVehicle(query: VehicleRestoreQuery) {
 
     try {
       const response = await fetchServer<VehicleRestoreResponse>(apiUrl, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        cache: 'no-store',
+        cache: "no-store",
       })
 
       if (!response.success) {
         return {
           success: false,
           error: {
-            message: response.error.message || 'Unknown server error',
+            message: response.error.message || "Unknown server error",
             status: response.error.status,
           },
         }
@@ -242,10 +246,11 @@ export async function restoreVehicle(query: VehicleRestoreQuery) {
       const { data, pagination, message } = response
       return { success: true, data, pagination, message }
     } catch (error) {
+      console.error(error)
       return {
         success: false,
         error: {
-          message: 'Unexpected server error',
+          message: "Unexpected server error",
           status: 500,
         },
       }

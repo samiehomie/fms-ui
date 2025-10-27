@@ -169,8 +169,8 @@ export async function fetchServer<T = unknown>(
       // Handle non-OK responses
       if (!response.ok) {
         console.log('error--->', response)
-        let errorMessage = response.statusText || 'Unknown server error'
-        let errorDetails: unknown = undefined
+        const errorMessage = response.statusText || 'Unknown server error'
+        const errorDetails: unknown = undefined
 
         const error: FetchError = {
           type: 'http',

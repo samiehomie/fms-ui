@@ -4,27 +4,28 @@ import {
   useQueryClient,
   useQueries,
   skipToken,
-} from '@tanstack/react-query'
-import { devicesApi } from '@/lib/api/device'
-import { toast } from 'sonner'
-import { useMemo } from 'react'
+} from "@tanstack/react-query"
+import { devicesApi } from "@/lib/api/device"
+import { toast } from "sonner"
+import { useMemo } from "react"
 import type {
   DevicesGetQuery,
   DevicesGetResponse,
   DeviceCreateBody,
   DeviceCreateResponse,
-} from '@/types/features/devices/device.types'
-import type { ServerActionResult } from '@/types/features/common.types'
-import { getAllDevices, createDevice } from '../actions/device.actions'
+} from "@/types/features/devices/device.types"
+import type { ServerActionResult } from "@/types/features/common.types"
+import { getAllDevices, createDevice } from "../actions/device.actions"
+import { HTTPError } from "../route/route.heplers"
 
 export function useAllDevices(query: DevicesGetQuery) {
   return useQuery({
-    queryKey: ['devices', query],
+    queryKey: ["devices", query],
     queryFn: async () => {
       const result = await getAllDevices(query)
 
       if (!result.success) {
-        throw new Error(result.error.message)
+        throw new HTTPError(result.error.status ?? 500, result.error.message)
       }
 
       return result
@@ -46,18 +47,18 @@ export function useCreateDevice() {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({
-        queryKey: ['devices'],
+        queryKey: ["devices"],
       })
       if (res.success) {
-        toast.success('A new device added', {
+        toast.success("A new device added", {
           description: `serial number: ${res.data.serialNumber}`,
-          position: 'bottom-center',
+          position: "bottom-center",
         })
       }
     },
     onError: (error) => {
-      toast.error('Adding a new device failed.', {
-        position: 'bottom-center',
+      toast.error("Adding a new device failed.", {
+        position: "bottom-center",
         description: error.message,
       })
     },

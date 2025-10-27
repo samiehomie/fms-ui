@@ -4,10 +4,10 @@ import {
   useQueryClient,
   useQueries,
   skipToken,
-} from '@tanstack/react-query'
-import { vehiclesApi } from '@/lib/api/vehicle'
+} from "@tanstack/react-query"
+import { vehiclesApi } from "@/lib/api/vehicle"
 import type {
-  VehicleTripsByTripIdResponse,
+  // VehicleTripsByTripIdResponse,
   VehiclesGetQuery,
   VehicleCreateBody,
   VehicleCreateResponse,
@@ -15,19 +15,19 @@ import type {
   VehicleDeleteResponse,
   VehicleRestoreQuery,
   VehicleRestoreResponse,
-  VehicleUpdateQuery,
+  // VehicleUpdateQuery,
   VehicleUpdateBody,
   VehicleUpdateResponse,
   VehicleTripsQuery,
-  VehicleTripsResponse,
-} from '@/types/features/vehicles/vehicle.types'
+  // VehicleTripsResponse,
+} from "@/types/features/vehicles/vehicle.types"
 import {
-  ApiResponseType,
-  ApiRequestType,
+  // ApiResponseType,
+  // ApiRequestType,
   ApiParamsType,
-} from '@/types/features'
-import { toast } from 'sonner'
-import { useMemo, useEffect } from 'react'
+} from "@/types/features"
+import { toast } from "sonner"
+import { useMemo, useEffect } from "react"
 import {
   getAllVehicles,
   getVehicle,
@@ -35,26 +35,30 @@ import {
   updateVehicle,
   deleteVehicle,
   restoreVehicle,
-} from '../actions/vehicle.actions'
-import { getTripGpsDetails, getTripTpmsDetails } from '../actions/trip.actions'
-import { getVehicleTrips } from '../actions/vehicle-trip.actions'
-import type { ServerActionResult } from '@/types/features/common.types'
+} from "../actions/vehicle.actions"
+import { getTripGpsDetails, getTripTpmsDetails } from "../actions/trip.actions"
+import { getVehicleTrips } from "../actions/vehicle-trip.actions"
+import type { ServerActionResult } from "@/types/features/common.types"
 import {
   TripGpsDetailsResponse,
   TripTpmsDetailsQuery,
-  TripTpmsDetailsResponse,
-} from '@/types/features/trips/trip.types'
+  // TripTpmsDetailsResponse,
+} from "@/types/features/trips/trip.types"
+import { HTTPError } from "../route/route.heplers"
 
 export function useAllVehicles(query: VehiclesGetQuery, id?: string) {
   return useQuery({
-    queryKey: ['vehicles', query],
+    queryKey: ["vehicles", query],
     queryFn:
       id === undefined
         ? async () => {
             const result = await getAllVehicles(query)
 
             if (!result.success) {
-              throw new Error(result.error.message)
+              throw new HTTPError(
+                result.error.status ?? 500,
+                result.error.message,
+              )
             }
 
             return result
@@ -66,12 +70,12 @@ export function useAllVehicles(query: VehiclesGetQuery, id?: string) {
 
 export function useVehicleById(id: string) {
   return useQuery({
-    queryKey: ['vehicle', id],
+    queryKey: ["vehicle", id],
     queryFn: async () => {
       const result = await getVehicle({ id })
 
       if (!result.success) {
-        throw new Error(result.error.message)
+        throw new HTTPError(result.error.status ?? 500, result.error.message)
       }
 
       return result
@@ -93,19 +97,19 @@ export function useCreateVehicle() {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({
-        queryKey: ['vehicles'],
+        queryKey: ["vehicles"],
       })
       if (res.success) {
-        toast.success('A new vehicle added', {
+        toast.success("A new vehicle added", {
           description: `plate number: ${res.data.plateNumber}`,
-          position: 'bottom-center',
+          position: "bottom-center",
         })
       }
     },
     onError: (error) => {
       logger.log(error)
-      toast.error('Adding a new vehicle failed.', {
-        position: 'bottom-center',
+      toast.error("Adding a new vehicle failed.", {
+        position: "bottom-center",
         description: error.message,
       })
     },
@@ -125,19 +129,19 @@ export function useDeleteVehicle() {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({
-        queryKey: ['vehicles'],
+        queryKey: ["vehicles"],
       })
       if (res.success) {
-        toast.success('A vehicle deleted.', {
-          position: 'bottom-center',
+        toast.success("A vehicle deleted.", {
+          position: "bottom-center",
         })
       }
     },
     onError: (error) => {
-      toast.error('Deleting a vehicle failed.', {
-        position: 'bottom-center',
+      toast.error("Deleting a vehicle failed.", {
+        position: "bottom-center",
       })
-      logger.error('Delete vehicle error:', error)
+      logger.error("Delete vehicle error:", error)
     },
   })
 }
@@ -155,21 +159,21 @@ export function useUpdateVehicle(id: string) {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({
-        queryKey: ['vehicles'],
+        queryKey: ["vehicles"],
       })
       queryClient.invalidateQueries({
-        queryKey: ['vehicle', id],
+        queryKey: ["vehicle", id],
       })
       if (res.success) {
-        toast.success('Vehicle updated successfully', {
+        toast.success("Vehicle updated successfully", {
           description: `plate number: ${res.data.plateNumber}`,
-          position: 'bottom-center',
+          position: "bottom-center",
         })
       }
     },
     onError: (error) => {
-      toast.error('Adding a new vehicle failed.', {
-        position: 'bottom-center',
+      toast.error("Adding a new vehicle failed.", {
+        position: "bottom-center",
         description: error.message,
       })
     },
@@ -189,33 +193,36 @@ export function useRestoreVehicle() {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({
-        queryKey: ['vehicles'],
+        queryKey: ["vehicles"],
       })
       if (res.success) {
-        toast.success(res.message ?? 'Vehicle restored.', {
-          position: 'bottom-center',
+        toast.success(res.message ?? "Vehicle restored.", {
+          position: "bottom-center",
         })
       }
     },
     onError: (error) => {
-      toast.error('Restoring a vehicle failed.', {
-        position: 'bottom-center',
+      toast.error("Restoring a vehicle failed.", {
+        position: "bottom-center",
       })
-      logger.error('Restore vehicle error:', error)
+      logger.error("Restore vehicle error:", error)
     },
   })
 }
 
 export function useVehicleAllTrips(query: VehicleTripsQuery) {
   return useQuery({
-    queryKey: ['trips', query],
+    queryKey: ["trips", query],
     queryFn:
       query.id !== undefined
         ? async () => {
             const result = await getVehicleTrips(query)
 
             if (!result.success) {
-              throw new Error(result.error.message)
+              throw new HTTPError(
+                result.error.status ?? 500,
+                result.error.message,
+              )
             }
 
             return result
@@ -233,12 +240,12 @@ export function useTripGpsDetailsBatch(tripIds: number[]) {
     }
 
     return tripIds.map((id) => ({
-      queryKey: ['trip gps', id] as const,
+      queryKey: ["trip gps", id] as const,
       queryFn: async () => {
         const result = await getTripGpsDetails({ id })
 
         if (!result.success) {
-          throw new Error(result.error.message)
+          throw new HTTPError(result.error.status ?? 500, result.error.message)
         }
 
         return result
@@ -285,12 +292,12 @@ export function useTripGpsDetailsBatch(tripIds: number[]) {
 
 export function useTripTpmsDetails(query: TripTpmsDetailsQuery) {
   return useQuery({
-    queryKey: ['trip tpms', query],
+    queryKey: ["trip tpms", query],
     queryFn: async () => {
       const result = await getTripTpmsDetails(query)
 
       if (!result.success) {
-        throw new Error(result.error.message)
+        throw new HTTPError(result.error.status ?? 500, result.error.message)
       }
 
       return result
@@ -300,10 +307,10 @@ export function useTripTpmsDetails(query: TripTpmsDetailsQuery) {
 }
 
 export function useAllVehicleTripsPaginated(
-  params: ApiParamsType<'GET /vehicles/{id}/trips'>,
+  params: ApiParamsType<"GET /vehicles/{id}/trips">,
 ) {
   return useQuery({
-    queryKey: ['all trips', params],
+    queryKey: ["all trips", params],
     queryFn: () => vehiclesApi.getAllVehicleTrips(params),
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
@@ -321,12 +328,12 @@ export function useLiveVehicles() {
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    const eventSource = new EventSource('/api/vehicles/live')
+    const eventSource = new EventSource("/api/vehicles/live")
     eventSource.onmessage = (event) => {
       const updates: Vehicle[] = JSON.parse(event.data)
       // Update TanStack Query cache directly
       queryClient.setQueryData<Map<number, Vehicle>>(
-        ['live-vehicles'],
+        ["live-vehicles"],
         (oldData) => {
           const newData = oldData ? new Map(oldData) : new Map()
           updates.forEach((vehicle) => {
@@ -341,7 +348,7 @@ export function useLiveVehicles() {
     eventSource.onerror = () => {
       // Here you would implement exponential backoff for retries
       console.error(
-        'SSE connection error. Closing and will be retried by browser.',
+        "SSE connection error. Closing and will be retried by browser.",
       )
       eventSource.close()
     }
@@ -353,7 +360,7 @@ export function useLiveVehicles() {
   }, [queryClient])
 
   return useQuery<Map<number, Vehicle>>({
-    queryKey: ['live-vehicles'],
+    queryKey: ["live-vehicles"],
     initialData: new Map(),
     staleTime: Number.POSITIVE_INFINITY, // Data is live, no need to refetch via standard means
   })

@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
-import { useEffect, useRef } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { logOutAction } from '@/lib/actions/auth.actions'
-import type { FetchError } from '@/lib/api/fetch-client'
+import { useEffect, useRef } from "react"
+import { useQueryClient } from "@tanstack/react-query"
+import { toast } from "sonner"
+import { logOutAction } from "@/lib/actions/auth.actions"
+import type { FetchError } from "@/lib/api/fetch-client"
 
 export function SessionMonitorProvider({
   children,
@@ -17,15 +17,16 @@ export function SessionMonitorProvider({
   useEffect(() => {
     // Tanstack Query 전역 에러 핸들러
     const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
-      if (event.type === 'observerResultsUpdated') {
+      if (event.type === "observerResultsUpdated") {
         const error = event.query.state.error as FetchError
-
         if (
           (error?.statusCode === 401 || error?.statusCode === 409) &&
           !sessionExpiredHandled.current
         ) {
-          handleSessionExpired(error?.statusText ?? '').catch((err) => {
-            console.error('Session expired handling failed:', err)
+          handleSessionExpired(
+            error?.statusCode === 409 ? "Session invalid." : "Token invalid.",
+          ).catch((err) => {
+            console.error("Session expired handling failed:", err)
           })
         }
       }
@@ -44,9 +45,9 @@ export function SessionMonitorProvider({
     // 3. 사용자에게 알림
     toast.error(message, {
       duration: Infinity,
-      position: 'bottom-center',
+      position: "bottom-center",
       action: {
-        label: 'Login Again',
+        label: "Login Again",
         onClick: async () => {
           sessionExpiredHandled.current = false
           await logOutAction()
