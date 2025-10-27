@@ -78,7 +78,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/recharts": "^2.0.1",
     "@types/xlsx": "^0.0.36",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
