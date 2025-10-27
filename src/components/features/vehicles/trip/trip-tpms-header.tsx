@@ -8,7 +8,6 @@ import type {
   PressureUnit,
   TemperatureUnit,
 } from "@/lib/utils/unit-conversions"
-import dayjs from "dayjs"
 
 interface TripTpmsHeaderProps {
   startDate?: string

@@ -8,14 +8,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 import type {
   TripTpmsDetailsResponse,
   TripTpmsDetailsQuery,
@@ -23,15 +16,15 @@ import type {
 import {
   type PressureUnit,
   type TemperatureUnit,
-  formatPressure,
-  formatTemperature,
+  // formatPressure,
+  // formatTemperature,
 } from "@/lib/utils/unit-conversions"
 import { useTripTpmsDetails } from "@/lib/query-hooks/use-vehicles"
 import { Skeleton } from "@/components/ui/skeleton"
 import dayjs from "dayjs"
-import { ScrollArea } from "@/components/ui/scroll-area"
+// import { ScrollArea } from "@/components/ui/scroll-area"
 
-const rows = 15
+// const rows = 15
 
 interface TPMSChartsProps {
   selectedId: number
@@ -89,9 +82,9 @@ const chartConfig = {
 
 export default function TPMSCharts({
   selectedId,
-  pressureUnit,
-  temperatureUnit,
-  numTire,
+  // pressureUnit,
+  // temperatureUnit,
+  // numTire,
   selectedTires,
   tireLocations,
   tpmsQuery,

@@ -210,13 +210,13 @@ const TripContent = ({
     )
   }
 
-  const { vehicle, stats, trips } = tripsData.data
+  const { vehicle, stats } = tripsData.data
 
   const { numTire, tireLocations } = vehicle
 
   return (
-    <main className="flex-grow flex-1 overflow-hidden flex flex-col">
-      <div className="flex-grow flex-1 overflow-hidden flex flex-col">
+    <main className="grow flex-1 overflow-hidden flex flex-col">
+      <div className="grow flex-1 overflow-hidden flex flex-col">
         {isMapVisible ? (
           <ResizablePanelGroup
             direction="horizontal"
