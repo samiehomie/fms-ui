@@ -1,9 +1,9 @@
-'use client'
+"use client"
 
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { cn } from '@/lib/utils/utils'
-import { ChevronsRight, Truck, Signal } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { cn } from "@/lib/utils"
+import { ChevronsRight, Truck, Signal } from "lucide-react"
 
 interface Vehicle {
   id: number
@@ -31,8 +31,8 @@ export function VehicleListSidebar({
   return (
     <div
       className={cn(
-        'bg-background border-l relative transition-all duration-300 ease-in-out',
-        isCollapsed ? 'w-0' : 'w-72',
+        "bg-background border-l relative transition-all duration-300 ease-in-out",
+        isCollapsed ? "w-0" : "w-72",
       )}
     >
       <Button
@@ -43,15 +43,15 @@ export function VehicleListSidebar({
       >
         <ChevronsRight
           className={cn(
-            'h-4 w-4 transition-transform',
-            !isCollapsed && 'rotate-180',
+            "h-4 w-4 transition-transform",
+            !isCollapsed && "rotate-180",
           )}
         />
       </Button>
       <div
         className={cn(
-          'h-full flex flex-col transition-opacity',
-          isCollapsed && 'opacity-0',
+          "h-full flex flex-col transition-opacity",
+          isCollapsed && "opacity-0",
         )}
       >
         <div className="p-4 border-b">
@@ -66,8 +66,8 @@ export function VehicleListSidebar({
               key={vehicle.id}
               onClick={() => onVehicleSelect(vehicle)}
               className={cn(
-                'w-full text-left p-3 flex items-center gap-3 hover:bg-muted',
-                selectedVehicleId === vehicle.id && 'bg-muted',
+                "w-full text-left p-3 flex items-center gap-3 hover:bg-muted",
+                selectedVehicleId === vehicle.id && "bg-muted",
               )}
             >
               <Signal className="h-5 w-5 text-green-500" />

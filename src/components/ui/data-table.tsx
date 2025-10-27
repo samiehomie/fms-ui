@@ -1,5 +1,5 @@
-'use client'
-import { useState } from 'react'
+"use client"
+import { useState } from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -11,7 +11,7 @@ import {
   useReactTable,
   PaginationState,
   VisibilityState,
-} from '@tanstack/react-table'
+} from "@tanstack/react-table"
 import {
   Table,
   TableBody,
@@ -19,9 +19,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { DataTablePagination } from '../features/companies/data-table-pagination'
-import { cn } from '@/lib/utils/utils'
+} from "@/components/ui/table"
+import { DataTablePagination } from "../features/companies/data-table-pagination"
+import { cn } from "@/lib/utils"
 
 interface DataTableProps<TData, TValue, TPagination = any> {
   columns: ColumnDef<TData, TValue>[]
@@ -44,7 +44,7 @@ export function DataTable<
   setPagination,
   hiddenColumns,
 }: DataTableProps<TData, TValue, TPagination>) {
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("")
   const [sorting, setSorting] = useState<SortingState>([])
   const [tablePagination, setTablePagination] = useState<PaginationState>({
     pageIndex: pagination.page - 1, // TanStack Table은 0부터 시작
@@ -68,7 +68,7 @@ export function DataTable<
     onRowSelectionChange: setRowSelection,
     onPaginationChange: (updater) => {
       const newPagination =
-        typeof updater === 'function' ? updater(tablePagination) : updater
+        typeof updater === "function" ? updater(tablePagination) : updater
 
       setTablePagination(newPagination)
 
@@ -102,7 +102,7 @@ export function DataTable<
 
   // Enter 키 이벤트 핸들러
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleSearch()
     }
   }
@@ -138,18 +138,18 @@ export function DataTable<
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => {
                 let isDeleted = false
-                if (hiddenColumns && 'isDeleted' in hiddenColumns) {
-                  isDeleted = row.getValue('isDeleted') as boolean
+                if (hiddenColumns && "isDeleted" in hiddenColumns) {
+                  isDeleted = row.getValue("isDeleted") as boolean
                 }
                 return (
                   <TableRow
                     key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
+                    data-state={row.getIsSelected() && "selected"}
                     // onClick={() =>
                     //   router.push(`/vehicles/${row.getValue('id')}`)
                     // }
                     className={cn(
-                      isDeleted && 'opacity-30 text-muted-foreground',
+                      isDeleted && "opacity-30 text-muted-foreground",
                     )}
                   >
                     {row.getVisibleCells().map((cell) => (

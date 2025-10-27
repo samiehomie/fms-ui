@@ -1,6 +1,6 @@
-'use client'
+"use client"
 
-import * as React from 'react'
+import * as React from "react"
 import {
   ChartGantt,
   CarFront,
@@ -8,10 +8,10 @@ import {
   User,
   Cpu,
   FileText,
-} from 'lucide-react'
+} from "lucide-react"
 
-import { NavMain } from './nav-main'
-import { NavUser } from './nav-user'
+import { NavMain } from "./nav-main"
+import { NavUser } from "./nav-user"
 import {
   Sidebar,
   SidebarContent,
@@ -19,59 +19,59 @@ import {
   SidebarHeader,
   SidebarRail,
   useSidebar,
-} from '@/components/ui/sidebar'
-import { cn } from '@/lib/utils/utils'
-import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
-import banfShortLogoPNG from '@/../public/logos/banf-short.png'
-import Link from 'next/link'
-import Image from 'next/image'
+} from "@/components/ui/sidebar"
+import { cn } from "@/lib/utils"
+import banfleetLogoSVG from "@/../public/logos/banfleet.svg"
+import banfShortLogoPNG from "@/../public/logos/banf-short.png"
+import Link from "next/link"
+import Image from "next/image"
 
 const data = {
   navMain: [
     {
-      title: 'Dashboard',
-      url: '/',
+      title: "Dashboard",
+      url: "/",
       icon: ChartGantt,
     },
     {
-      title: 'Vehicles',
-      url: '/vehicles',
+      title: "Vehicles",
+      url: "/vehicles",
       isActive: true,
       icon: CarFront,
       items: [
         {
-          title: 'All Vehicles',
-          url: '/vehicles',
+          title: "All Vehicles",
+          url: "/vehicles",
         },
         {
-          title: 'Live Map',
-          url: '/live-map',
+          title: "Live Map",
+          url: "/live-map",
         },
         {
-          title: 'Active Vehicles',
-          url: '/active-vehicles',
+          title: "Active Vehicles",
+          url: "/active-vehicles",
         },
       ],
     },
     {
-      title: 'Companies',
-      url: '/companies',
+      title: "Companies",
+      url: "/companies",
       icon: Building,
     },
     {
-      title: 'Users',
-      url: '/users',
+      title: "Users",
+      url: "/users",
       icon: User,
     },
 
     {
-      title: 'Devices',
-      url: '/devices',
+      title: "Devices",
+      url: "/devices",
       icon: Cpu,
     },
     {
-      title: 'Reports',
-      url: '/reports',
+      title: "Reports",
+      url: "/reports",
       icon: FileText,
     },
   ],
@@ -83,12 +83,12 @@ function SidebarLogo() {
   return (
     <SidebarHeader
       className={cn(
-        'pl-4 pt-[1.025rem] pb-[.825rem]',
-        state === 'collapsed' && 'p-[1.025rem_0px_10px_0px]',
+        "pl-4 pt-[1.025rem] pb-[.825rem]",
+        state === "collapsed" && "p-[1.025rem_0px_10px_0px]",
       )}
     >
       <Link href="/">
-        {state === 'collapsed' ? (
+        {state === "collapsed" ? (
           <Image
             src={banfShortLogoPNG}
             alt="logo"

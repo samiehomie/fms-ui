@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import {
   Table,
@@ -7,13 +7,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils/utils'
-import type { TripSession } from './trip-content'
-import { Eye, EyeOff, MoveRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { format, parseISO } from 'date-fns'
+} from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
+import type { TripSession } from "./trip-content"
+import { Eye, EyeOff, MoveRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { format, parseISO } from "date-fns"
 
 interface TripHistoryTableProps {
   isTracking: boolean
@@ -58,19 +58,19 @@ export function TripHistoryTable({
               onClick={() => onRowClick(session.id)}
               data-selected={selectedIds.has(session.id)}
               className={cn(
-                'group cursor-pointer transition-colors hover:bg-inherit',
-                'hover:bg-slate-100/50',
+                "group cursor-pointer transition-colors hover:bg-inherit",
+                "hover:bg-slate-100/50",
                 selectedIds.has(session.id) &&
-                  'bg-slate-100/50 hover:bg-slate-200/70 ',
+                  "bg-slate-100/50 hover:bg-slate-200/70 ",
               )}
             >
               <TableCell className="font-medium relative">
                 <div
                   className={cn(
-                    'absolute top-0 bottom-0 -left-1 w-[22px] transition-all duration-200 text-[9px] tracking-tight flex justify-center pl-1 leading-none items-center ',
+                    "absolute top-0 bottom-0 -left-1 w-[22px] transition-all duration-200 text-[9px] tracking-tight flex justify-center pl-1 leading-none items-center ",
                     selectedIds.has(session.id)
-                      ? 'bg-[#0055a3] text-white'
-                      : 'bg-transparent',
+                      ? "bg-[#0055a3] text-white"
+                      : "bg-transparent",
                   )}
                 >
                   {session.id}
@@ -78,14 +78,14 @@ export function TripHistoryTable({
                 <div className="flex items-center pl-4 text-xs text-gray-800 font-[400]">
                   <div className="flex flex-col gap-y-[9px] leading-none">
                     <div>
-                      {format(parseISO(session.startTime), 'yy.MM.d HH:mm')}
+                      {format(parseISO(session.startTime), "yy.MM.d HH:mm")}
                     </div>
                     <div className="flex gap-x-1 items-center">
                       <MoveRight
                         className="leading-none text-muted-foreground"
                         size={12}
                       />
-                      {format(parseISO(session.endTime), 'yy.MM.d HH:mm')}
+                      {format(parseISO(session.endTime), "yy.MM.d HH:mm")}
                     </div>
                     {/* <div className="text-muted-foreground font-light tracking-wider text-[11.6px] font-mono">
                       {`${format(
@@ -101,11 +101,11 @@ export function TripHistoryTable({
               </TableCell>
               <TableCell className="">
                 <Badge
-                  variant={'outline'}
+                  variant={"outline"}
                   className={cn(
-                    'text-xs text-muted-foreground font-[400]',
-                    session.status === 'active' &&
-                      'border-green-500 text-green-500',
+                    "text-xs text-muted-foreground font-[400]",
+                    session.status === "active" &&
+                      "border-green-500 text-green-500",
                   )}
                 >
                   {session.status}

@@ -9,7 +9,7 @@ import {
   formatTemperature,
 } from "@/lib/utils/unit-conversions"
 import type { TripTpmsDetailsResponse } from "@/types/features/trips/trip.types"
-import { chunkArray } from "@/lib/utils/utils"
+import { chunkArray } from "@/lib/utils"
 import dayjs from "dayjs"
 
 interface TPMSDataTableProps {

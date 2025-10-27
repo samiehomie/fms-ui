@@ -1,14 +1,14 @@
-'use client'
+"use client"
 
-import { useMemo, useState, useRef, useCallback, useEffect } from 'react'
-import { Vehicle } from '@/lib/query-hooks/use-vehicle-stream'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Card } from '@/components/ui/card'
-import { Search, Truck, Car, Bus, ChevronLeft, MapPin } from 'lucide-react'
-import { cn } from '@/lib/utils/utils'
-import { useMap } from '@vis.gl/react-google-maps'
+import { useMemo, useState, useRef, useCallback, useEffect } from "react"
+import { Vehicle } from "@/lib/query-hooks/use-vehicle-stream"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Card } from "@/components/ui/card"
+import { Search, Truck, Car, Bus, ChevronLeft, MapPin } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { useMap } from "@vis.gl/react-google-maps"
 
 interface VehicleListProps {
   vehicles: Vehicle[]
@@ -16,7 +16,7 @@ interface VehicleListProps {
   onVehicleSelect: (vehicleId: string) => void
 }
 
-const VehicleIcon = ({ type }: { type: Vehicle['type'] }) => {
+const VehicleIcon = ({ type }: { type: Vehicle["type"] }) => {
   const icons = {
     sedan: Car,
     truck: Truck,
@@ -27,23 +27,23 @@ const VehicleIcon = ({ type }: { type: Vehicle['type'] }) => {
   return <Icon className="w-4 h-4" />
 }
 
-const StatusBadge = ({ status }: { status: Vehicle['status'] }) => {
+const StatusBadge = ({ status }: { status: Vehicle["status"] }) => {
   const variants = {
-    active: 'bg-green-500',
-    idle: 'bg-yellow-500',
-    maintenance: 'bg-yellow-500',
+    active: "bg-green-500",
+    idle: "bg-yellow-500",
+    maintenance: "bg-yellow-500",
   }
 
   const labels = {
-    active: 'Active',
-    idle: 'Idle',
-    maintenance: 'idle',
+    active: "Active",
+    idle: "Idle",
+    maintenance: "idle",
   }
 
   return (
     <Badge
       className={cn(
-        'text-white text-[11px] leading-3 rounded-[4px] font-[400]',
+        "text-white text-[11px] leading-3 rounded-[4px] font-[400]",
         variants[status],
       )}
     >
@@ -58,7 +58,7 @@ export default function VehicleList({
   onVehicleSelect,
 }: VehicleListProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState("")
   const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const rafRef = useRef<number>(null)
@@ -131,18 +131,18 @@ export default function VehicleList({
   // 2. 윈도우 리사이즈 처리
   useEffect(() => {
     const handleResize = () => calculateHeight()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
   }, [calculateHeight])
 
   return (
     <div
       className={cn(
-        'w-[25%] border-r bg-white h-full transition-all duration-300',
-        isCollapsed && 'w-0',
+        "w-[25%] border-r bg-white h-full transition-all duration-300",
+        isCollapsed && "w-0",
       )}
     >
-      <div ref={containerRef} className={'h-full relative'}>
+      <div ref={containerRef} className={"h-full relative"}>
         <div
           onClick={() => {
             setIsCollapsed((old) => !old)
@@ -151,8 +151,8 @@ export default function VehicleList({
         >
           <ChevronLeft
             className={cn(
-              'absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 transition-all duration-300 text-gray-500/90',
-              isCollapsed && 'rotate-180',
+              "absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 transition-all duration-300 text-gray-500/90",
+              isCollapsed && "rotate-180",
             )}
           />
         </div>
@@ -175,7 +175,7 @@ export default function VehicleList({
         <ScrollArea
           // className="h-[calc(100%-129px)] overflow-hidden"
           style={{
-            height: scrollAreaHeight > 0 ? `${scrollAreaHeight - 10}px` : '0px',
+            height: scrollAreaHeight > 0 ? `${scrollAreaHeight - 10}px` : "0px",
           }}
         >
           <div className="p-4 space-y-4">
@@ -183,9 +183,9 @@ export default function VehicleList({
               <Card
                 key={vehicle.id}
                 className={cn(
-                  'px-4 py-3 cursor-pointer transition-all hover:shadow-md gap-y-0',
+                  "px-4 py-3 cursor-pointer transition-all hover:shadow-md gap-y-0",
                   selectedVehicleId === vehicle.id &&
-                    'ring-2 ring-blue-500 bg-blue-50',
+                    "ring-2 ring-blue-500 bg-blue-50",
                 )}
                 onClick={() => {
                   moveToVehicle(vehicle.lat, vehicle.lng)
@@ -227,7 +227,7 @@ export default function VehicleList({
                 </div>
 
                 <div className="text-[11.5px] text-gray-400/90  mt-4 flex justify-end">
-                  Last updated:{' '}
+                  Last updated:{" "}
                   {new Date(vehicle.lastUpdate).toLocaleTimeString()}
                 </div>
               </Card>

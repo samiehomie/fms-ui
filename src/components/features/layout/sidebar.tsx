@@ -1,7 +1,7 @@
-'use client'
+"use client"
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
   LayoutDashboard,
   Building,
@@ -9,20 +9,20 @@ import {
   Truck,
   Cpu,
   LogOut,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils/utils'
-import Image from 'next/image'
-import banfleetLogoSVG from '@/../public/logos/banfleet.svg'
-import { logOutAction } from '@/lib/actions/auth.actions'
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import Image from "next/image"
+import banfleetLogoSVG from "@/../public/logos/banfleet.svg"
+import { logOutAction } from "@/lib/actions/auth.actions"
 // import { useAuth } from '../auth/auth-provider'
 
 const navigationItems = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Companies', href: '/companies', icon: Building },
-  { name: 'Users', href: '/users', icon: Users },
-  { name: 'Vehicles', href: '/vehicles', icon: Truck },
-  { name: 'Devices', href: '/devices', icon: Cpu },
+  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Companies", href: "/companies", icon: Building },
+  { name: "Users", href: "/users", icon: Users },
+  { name: "Vehicles", href: "/vehicles", icon: Truck },
+  { name: "Devices", href: "/devices", icon: Cpu },
 ]
 
 export function Sidebar() {
@@ -40,12 +40,12 @@ export function Sidebar() {
         {navigationItems.map((item) => (
           <Button
             key={item.name}
-            variant={pathname === item.href ? 'secondary' : 'ghost'}
+            variant={pathname === item.href ? "secondary" : "ghost"}
             className={cn(
-              'w-full justify-start',
+              "w-full justify-start",
               pathname === item.href
-                ? 'bg-[#e0f2fe] text-[#3b82f6] hover:bg-[#e0f2fe]/90 hover:text-[#3b82f6]'
-                : 'hover:bg-slate-100 dark:hover:bg-slate-800',
+                ? "bg-[#e0f2fe] text-[#3b82f6] hover:bg-[#e0f2fe]/90 hover:text-[#3b82f6]"
+                : "hover:bg-slate-100 dark:hover:bg-slate-800",
             )}
             asChild
           >
@@ -65,7 +65,7 @@ export function Sidebar() {
           }}
         >
           <LogOut className="w-5 h-5 mr-3" />
-          {'Log out'}
+          {"Log out"}
         </Button>
       </div>
     </aside>

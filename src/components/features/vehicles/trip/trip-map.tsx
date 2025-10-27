@@ -1,11 +1,11 @@
-'use client'
+"use client"
 
-import { Fragment } from 'react'
-import 'leaflet/dist/leaflet.css'
-import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css'
-import 'leaflet-defaulticon-compatibility'
+import { Fragment } from "react"
+import "leaflet/dist/leaflet.css"
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
+import "leaflet-defaulticon-compatibility"
 
-import MarkerClusterGroup from 'react-leaflet-markercluster'
+import MarkerClusterGroup from "react-leaflet-markercluster"
 import {
   MapContainer,
   TileLayer,
@@ -15,14 +15,14 @@ import {
   useMap,
   Tooltip,
   ZoomControl,
-} from 'react-leaflet'
-import type { LatLngExpression, Marker as LeafletMarker } from 'leaflet'
-import L from 'leaflet'
-import { useEffect, useRef, useState } from 'react'
-import { useTripGpsDetailsBatch } from '@/lib/query-hooks/use-vehicles'
-import type { TripGpsDetailsResponse } from '@/types/features/trips/trip.types'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils/utils'
+} from "react-leaflet"
+import type { LatLngExpression, Marker as LeafletMarker } from "leaflet"
+import L from "leaflet"
+import { useEffect, useRef, useState } from "react"
+import { useTripGpsDetailsBatch } from "@/lib/query-hooks/use-vehicles"
+import type { TripGpsDetailsResponse } from "@/types/features/trips/trip.types"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 interface TripMapProps {
   selectedIds: number[]
@@ -73,7 +73,7 @@ const createClusterCustomIcon = (cluster: any) => {
     String(marker.options.tripId),
   )
 
-  let label = `${tripNumbers.slice(0, 3).join(', ')}`
+  let label = `${tripNumbers.slice(0, 3).join(", ")}`
   if (tripNumbers.length > 3) {
     label += ` (+${tripNumbers.length - 3})`
   }
@@ -81,7 +81,7 @@ const createClusterCustomIcon = (cluster: any) => {
   const size = 25 * Math.min(tripNumbers.length, 4)
   return L.divIcon({
     html: `<div>${label}</div>`,
-    className: 'trip-cluster-label',
+    className: "trip-cluster-label",
     iconSize: [size, 25],
     iconAnchor: [-10, 10],
   })
@@ -90,34 +90,34 @@ const createClusterCustomIcon = (cluster: any) => {
 const createCircleIcon = (color: string) => {
   return L.divIcon({
     html: `<span class="flex h-[1.125rem] w-[1.125rem] rounded-full border-2 border-white ${color} shadow-md"></span>`,
-    className: 'bg-transparent border-transparent',
+    className: "bg-transparent border-transparent",
     iconSize: [18, 18],
     iconAnchor: [9, 9],
   })
 }
 
-type MapStyle = 'street' | 'satellite'
+type MapStyle = "street" | "satellite"
 
 const MAP_STYLES = {
   street: {
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   },
   satellite: {
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attribution:
-      'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+      "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
   },
 }
 
 export default function TripMap({ selectedIds }: TripMapProps) {
-  const [mapStyle, setMapStyle] = useState<MapStyle>('satellite')
+  const [mapStyle, setMapStyle] = useState<MapStyle>("satellite")
   const { data: tripDetailsMap, isLoading } =
     useTripGpsDetailsBatch(selectedIds)
 
-  const startIcon = createCircleIcon('bg-[#005EAE]')
-  const endIcon = createCircleIcon('bg-[#a5abbd]')
+  const startIcon = createCircleIcon("bg-[#005EAE]")
+  const endIcon = createCircleIcon("bg-[#a5abbd]")
 
   if (selectedIds.length === 0) {
     return (
@@ -134,24 +134,24 @@ export default function TripMap({ selectedIds }: TripMapProps) {
     <div className="relative flex flex-col flex-1 w-full">
       <div className="absolute right-4 top-4 z-[1000] flex gap-[6px] text-xs">
         <Button
-          variant={'secondary'}
+          variant={"secondary"}
           size="sm"
           className={cn(
-            'text-xs leading-none h-[23px] border-none rounded-sm hover:bg-[#424656]/80 hover:text-white font-light w-14',
-            mapStyle === 'satellite' && 'bg-[#424656] border-none text-white',
+            "text-xs leading-none h-[23px] border-none rounded-sm hover:bg-[#424656]/80 hover:text-white font-light w-14",
+            mapStyle === "satellite" && "bg-[#424656] border-none text-white",
           )}
-          onClick={() => setMapStyle('satellite')}
+          onClick={() => setMapStyle("satellite")}
         >
           Satellite
         </Button>
         <Button
-          variant={'secondary'}
+          variant={"secondary"}
           size="sm"
           className={cn(
-            'text-xs border-none leading-none h-[23px] rounded-sm hover:bg-[#424656]/80 hover:text-white font-light w-14',
-            mapStyle === 'street' && 'bg-[#424656] border-none text-white',
+            "text-xs border-none leading-none h-[23px] rounded-sm hover:bg-[#424656]/80 hover:text-white font-light w-14",
+            mapStyle === "street" && "bg-[#424656] border-none text-white",
           )}
-          onClick={() => setMapStyle('street')}
+          onClick={() => setMapStyle("street")}
         >
           Street
         </Button>
@@ -184,7 +184,7 @@ export default function TripMap({ selectedIds }: TripMapProps) {
                 <Polyline
                   positions={path as LatLngExpression[]}
                   pathOptions={{
-                    color: '#005EAE',
+                    color: "#005EAE",
                     weight: 3.5,
                   }}
                 />
@@ -198,7 +198,7 @@ export default function TripMap({ selectedIds }: TripMapProps) {
                 >
                   <Popup>
                     <div className="font-semibold">End</div>
-                    {'end test'}
+                    {"end test"}
                   </Popup>
                 </Marker>
               </Fragment>

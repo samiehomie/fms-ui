@@ -1,8 +1,8 @@
-'use client'
+"use client"
 
-import { Fragment } from 'react'
-import { useSelectedLayoutSegments } from 'next/navigation'
-import { capitalizeFirstLetter } from '@/lib/utils/utils'
+import { Fragment } from "react"
+import { useSelectedLayoutSegments } from "next/navigation"
+import { capitalizeFirstLetter } from "@/lib/utils"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,10 +10,10 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+} from "@/components/ui/breadcrumb"
 
 export default function BreadcrumbMain() {
-  const onlyCapitalRoutes = ['tpms']
+  const onlyCapitalRoutes = ["tpms"]
   const segments = useSelectedLayoutSegments()
 
   if (!segments) return null

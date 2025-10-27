@@ -1,40 +1,40 @@
-'use client'
+"use client"
 
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { ColumnDef } from '@tanstack/react-table'
-import { formatDateTime } from '@/lib/utils/date-formatter'
-import { getCompanyTypeColor } from '@/lib/utils/utils'
-import { ArrowUpDown, CircleSlash } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { ColumnDef } from "@tanstack/react-table"
+import { formatDateTime } from "@/lib/utils/date-formatter"
+import { getCompanyTypeColor } from "@/lib/utils"
+import { ArrowUpDown, CircleSlash } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { UpdateCompanyForm } from './update-company-form'
+} from "@/components/ui/dropdown-menu"
+import { UpdateCompanyForm } from "./update-company-form"
 
-import { IconCircleCheckFilled, IconDotsVertical } from '@tabler/icons-react'
-import { Badge } from '@/components/ui/badge'
-import { Checkbox } from '@/components/ui/checkbox'
+import { IconCircleCheckFilled, IconDotsVertical } from "@tabler/icons-react"
+import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   useDeleteCompany,
   useVerifyCompany,
-} from '@/lib/query-hooks/use-companies'
-import ConfirmDialog from '@/components/ui/confirm-dialog'
-import type { CompaniesGetResponse } from '@/types/features/companies/company.types'
+} from "@/lib/query-hooks/use-companies"
+import ConfirmDialog from "@/components/ui/confirm-dialog"
+import type { CompaniesGetResponse } from "@/types/features/companies/company.types"
 
 export const columns: ColumnDef<CompaniesGetResponse[number]>[] = [
   {
-    id: 'select',
+    id: "select",
     header: ({ table }) => (
       <Checkbox
         className="ml-2 mr-2"
         checked={
           table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
+          (table.getIsSomePageRowsSelected() && "indeterminate")
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -52,9 +52,9 @@ export const columns: ColumnDef<CompaniesGetResponse[number]>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'id',
-    header: () => <div className="min-w-[45px] pl-2">{'ID'}</div>,
-    cell: ({ row }) => <div className="pl-2">{row.getValue('id')}</div>,
+    accessorKey: "id",
+    header: () => <div className="min-w-[45px] pl-2">{"ID"}</div>,
+    cell: ({ row }) => <div className="pl-2">{row.getValue("id")}</div>,
   },
   // {
   //   accessorKey: 'id',
@@ -73,22 +73,22 @@ export const columns: ColumnDef<CompaniesGetResponse[number]>[] = [
   //     <div className="w-full text-center pr-4">{row.getValue('id')}</div>
   //   ),
   // },
-  { accessorKey: 'name', header: 'Company' },
-  { accessorKey: 'regNumber', header: 'Reg No' },
+  { accessorKey: "name", header: "Company" },
+  { accessorKey: "regNumber", header: "Reg No" },
   {
-    accessorKey: 'type',
+    accessorKey: "type",
     header: ({ column }) => (
       <Button
-        variant={'ghost'}
+        variant={"ghost"}
         className=""
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Type
         <ArrowUpDown className="" />
       </Button>
     ),
     cell: ({ row }) => {
-      const type = row.getValue('type') as string
+      const type = row.getValue("type") as string
 
       return (
         <Badge
@@ -100,13 +100,13 @@ export const columns: ColumnDef<CompaniesGetResponse[number]>[] = [
       )
     },
   },
-  { accessorKey: 'details', header: 'Details' },
+  { accessorKey: "details", header: "Details" },
   {
-    accessorKey: 'verified',
+    accessorKey: "verified",
     header: () => <div className="text-center">Verified</div>,
     //header: () => <div className="text-center">Verified</div>,
     cell: ({ row }) => {
-      const isVerified = row.getValue('verified')
+      const isVerified = row.getValue("verified")
       return (
         <div className="flex justify-center">
           {isVerified ? (
@@ -125,19 +125,19 @@ export const columns: ColumnDef<CompaniesGetResponse[number]>[] = [
     },
   },
   {
-    accessorKey: 'createdAt',
+    accessorKey: "createdAt",
     header: ({ column }) => (
       <Button
-        variant={'ghost'}
+        variant={"ghost"}
         className="w-full"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Created at
         <ArrowUpDown />
       </Button>
     ),
     cell: ({ row }) => {
-      const createdAt = row.getValue('createdAt') as string
+      const createdAt = row.getValue("createdAt") as string
       return (
         <div className="flex justify-center tracking-tight">
           {formatDateTime(createdAt)}
@@ -146,7 +146,7 @@ export const columns: ColumnDef<CompaniesGetResponse[number]>[] = [
     },
   },
   {
-    id: 'actions',
+    id: "actions",
     cell: ({ row }) => {
       const router = useRouter()
       const companyId = row.original.id.toString()
@@ -161,7 +161,7 @@ export const columns: ColumnDef<CompaniesGetResponse[number]>[] = [
           await mutationVerify.mutateAsync({ verified: !verified })
           setOpen(false) // 메뉴 닫기
         } catch (error) {
-          console.error('Verify action failed:', error)
+          console.error("Verify action failed:", error)
         }
       }
 
@@ -170,7 +170,7 @@ export const columns: ColumnDef<CompaniesGetResponse[number]>[] = [
           await mutationDelete.mutateAsync({ id: companyId })
           setOpen(false) // 메뉴 닫기
         } catch (error) {
-          console.error('Delete action failed:', error)
+          console.error("Delete action failed:", error)
         }
       }
 
@@ -193,7 +193,7 @@ export const columns: ColumnDef<CompaniesGetResponse[number]>[] = [
               handleClick={handleVerifyAction}
             >
               <div className="text-sm p-2 hover:bg-gray-100/90 rounded-sm">
-                {verified ? 'Unverify' : 'Verify'}
+                {verified ? "Unverify" : "Verify"}
               </div>
             </ConfirmDialog>
 
