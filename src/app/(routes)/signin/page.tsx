@@ -1,6 +1,6 @@
-'use client'
-import dynamic from 'next/dynamic'
-import { Skeleton } from '@/components/ui/skeleton'
+"use client"
+import dynamic from "next/dynamic"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const LoadingSkeleton = () => {
   return (
@@ -11,15 +11,17 @@ const LoadingSkeleton = () => {
   )
 }
 
-const LoginForm = dynamic(
-  () => import('@/components/features/auth/login-form'),
+const SigninForm = dynamic(
+  () => import("@/components/features/signin/signin-form"),
   { ssr: false, loading: () => <LoadingSkeleton /> },
 )
 
 export default function LoginPage() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-muted/40 p-4">
-      <LoginForm />
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm md:max-w-4xl">
+        <SigninForm />
+      </div>
     </div>
   )
 }

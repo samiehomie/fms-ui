@@ -58,7 +58,7 @@ export function SessionMonitorProvider({
     // 4. 로그인 페이지로 리다이렉트 (약간의 딜레이)
     // setTimeout(() => {
     //   router.refresh()
-    //   router.push('/login')
+    //   router.push('/signin')
     // }, 1000)
   }
 

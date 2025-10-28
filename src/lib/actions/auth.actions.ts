@@ -14,23 +14,18 @@ import type { JWTAuthPayload } from "@/types/features"
 import { redirect } from "next/navigation"
 import { parseJWT } from "@/lib/utils/build-url"
 import type { ServerActionResult } from "@/types/features/common.types"
-import { signupSchema } from "@/types/features/auth/signup.schema"
 import type { SignupFormData } from "@/types/features/auth/signup.schema"
 import type { SignupResponse } from "@/types/features/auth/signup.types"
+import type {
+  UserLoginBody,
+  UserLoginResponse,
+} from "@/types/features/auth/signin.types"
 
 export async function signupAction(
   formData: Omit<SignupFormData, "confirmPassword">,
 ) {
-  // if (!validatedFields.success) {
-  //   return {
-  //     errors: validatedFields.error.flatten().fieldErrors,
-  //     values: Object.fromEntries(formData),
-  //   }
-  // }
-
-  const apiUrl = buildURL("/auth/register")
-
   try {
+    const apiUrl = buildURL("/auth/register")
     const response = await fetchServer<SignupResponse>(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -61,37 +56,37 @@ export async function signupAction(
   }
 }
 
-export async function loginAction(
-  loginData: ApiRequestType<"POST /auth/login">,
-) {
-  const credentials: ApiRequestType<"POST /auth/login"> = {
-    username: loginData.username,
-    password: loginData.password,
-  }
-
-  const apiUrl = buildURL("/auth/login")
-
+export async function signinAction(loginData: UserLoginBody) {
   try {
-    const response = await fetchServer<ApiResponseType<"POST /auth/login">>(
-      apiUrl,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
-      },
-    )
+    const apiUrl = buildURL("/auth/login")
+    const response = await fetchServer<UserLoginResponse>(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(loginData),
+    })
 
-    console.log("loginAction", response)
+    if (!response.success) {
+      return {
+        success: false,
+        error: {
+          message: response.error.message || "Unknown server error",
+          status: response.error.status,
+        },
+      }
+    }
 
-    if (!response.success) throw new Error("Authentication failed")
-
-    const { accessToken, refreshToken } = await response.data
+    const { accessToken, refreshToken } = response.data
     await setAuthCookies(accessToken, refreshToken)
+    return { success: true, data: response.data }
   } catch (error) {
-    return { error: (error as Error).message }
+    return {
+      success: false,
+      error: {
+        message: "Unexpected server error",
+        status: 500,
+      },
+    }
   }
-
-  redirect("/")
 }
 
 export async function logOutAction() {
@@ -117,9 +112,9 @@ export async function logOutAction() {
     if (!response.success) throw new Error("Authentication failed")
   } catch (error) {
     console.error("Logout error:", error)
-    redirect("/login")
+    redirect("/signin")
   }
-  redirect("/login")
+  redirect("/signin")
 }
 
 export async function refreshTokenIfNeeded(

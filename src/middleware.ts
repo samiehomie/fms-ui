@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAuthData } from './lib/actions/auth.actions'
 
-const PUBLIC_ROUTES = ['/login', '/signup']
+const PUBLIC_ROUTES = ['/signin', '/signup']
 const PROTECTED_ROUTES = ['/companies', '/vehicles', '/users', '/devices']
 
 export async function middleware(request: NextRequest) {
@@ -22,14 +22,14 @@ export async function middleware(request: NextRequest) {
 
   if (pathname === '/') {
     if (!auth) {
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_FRONT_URL}/login`)
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_FRONT_URL}/signin`)
     }
   }
 
   // 보호된 경로 접근 시 미인증 사용자 리다이렉트
   if (PROTECTED_ROUTES.some((route) => pathname.startsWith(route))) {
     if (!auth) {
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_FRONT_URL}/login`)
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_FRONT_URL}/signin`)
     }
 
     // TODO: API 요청 CSRF 검증 추가하기

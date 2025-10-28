@@ -1,18 +1,35 @@
-import type { PaginationMeta } from '@/types/features/common.types'
+import type { PaginationMeta } from "@/types/features/common.types"
+import { HTTP_STATUS } from "@/types/features/route.types"
 
 export type FetchError =
-  | { type: 'http'; status: number; message: string; details?: unknown }
-  | { type: 'network'; message: string; cause?: unknown; status?: number }
-  | { type: 'timeout'; message: string; status?: number }
-  | { type: 'invalid-json'; message: string; text?: string; status?: number }
-  | { type: 'abort'; message: string; status?: number }
+  | { type: "http"; status: number; message: string; details?: unknown }
+  | { type: "network"; message: string; cause?: unknown; status?: number }
+  | { type: "timeout"; message: string; status?: number }
+  | { type: "invalid-json"; message: string; text?: string; status?: number }
+  | { type: "abort"; message: string; status?: number }
 
 export type FetchServerResult<T = any> =
   | { success: true; data: T; pagination?: PaginationMeta; message?: string }
   | { success: false; error: FetchError }
 
+export type FetchServerResponse<T = any> =
+  | {
+      success: true
+      data: T
+      statusCode: HTTP_STATUS
+      timestamp: string
+      message?: string
+      pagination?: PaginationMeta
+    }
+  | {
+      success: false
+      statusCode: HTTP_STATUS
+      message?: string
+      timestamp: string
+    }
+
 // Extended options for Next.js 15
-interface FetchServerOptions extends Omit<RequestInit, 'signal'> {
+interface FetchServerOptions extends Omit<RequestInit, "signal"> {
   timeout?: number
   revalidate?: number | false
   tags?: string[]
@@ -39,7 +56,7 @@ export interface ApiResponse<T> {
 // Default retry logic - only retry on network errors and 5xx
 const defaultShouldRetry = (error: FetchError): boolean => {
   return (
-    error.type === 'network' || (error.type === 'http' && error.status >= 500)
+    error.type === "network" || (error.type === "http" && error.status >= 500)
   )
 }
 
@@ -82,7 +99,7 @@ export async function fetchServer<T = unknown>(
     revalidate,
     tags,
     retry = {},
-    debug = process.env.NODE_ENV === 'development',
+    debug = process.env.NODE_ENV === "development",
     ...fetchOptions
   } = options
 
@@ -93,7 +110,7 @@ export async function fetchServer<T = unknown>(
   } = retry
 
   const url =
-    typeof input === 'string'
+    typeof input === "string"
       ? input
       : input instanceof URL
       ? input.href
@@ -102,9 +119,9 @@ export async function fetchServer<T = unknown>(
       : String(input)
 
   if (debug) {
-    console.log('[fetchServer] Request:', {
+    console.log("[fetchServer] Request:", {
       url,
-      method: fetchOptions.method || 'GET',
+      method: fetchOptions.method || "GET",
       revalidate,
       tags,
     })
@@ -126,8 +143,8 @@ export async function fetchServer<T = unknown>(
         ...fetchOptions,
         signal: controller.signal,
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+          Accept: "application/json",
+          "Content-Type": "application/json",
           ...fetchOptions.headers,
         },
         // Next.js 15 caching configuration
@@ -141,13 +158,13 @@ export async function fetchServer<T = unknown>(
       // Default is no-cache in Next.js 15
       if (revalidate === false) {
         // Force no caching
-        nextFetchOptions.cache = 'no-store'
+        nextFetchOptions.cache = "no-store"
       } else if (revalidate === 0) {
         // Always revalidate
-        nextFetchOptions.cache = 'no-cache'
-      } else if (typeof revalidate === 'number' && revalidate > 0) {
+        nextFetchOptions.cache = "no-cache"
+      } else if (typeof revalidate === "number" && revalidate > 0) {
         // Time-based revalidation
-        nextFetchOptions.cache = 'force-cache'
+        nextFetchOptions.cache = "force-cache"
       }
       // If revalidate is undefined, use Next.js 15 default (no caching)
 
@@ -155,7 +172,7 @@ export async function fetchServer<T = unknown>(
       clearTimeout(timeoutId)
 
       if (debug) {
-        console.log('[fetchServer] Response:', {
+        console.log("[fetchServer] Response:", {
           status: response.status,
           statusText: response.statusText,
           headers: Object.fromEntries(response.headers.entries()),
@@ -163,58 +180,56 @@ export async function fetchServer<T = unknown>(
       }
 
       // Check if response is JSON
-      const contentType = response.headers.get('content-type')
-      const isJson = contentType?.includes('application/json')
-
-      // Handle non-OK responses
-      if (!response.ok) {
-        console.log('error--->', response)
-        const errorMessage = response.statusText || 'Unknown server error'
-        const errorDetails: unknown = undefined
-
-        const error: FetchError = {
-          type: 'http',
-          status: response.status,
-          message: errorMessage,
-          details: errorDetails,
-        }
-
-        // Check if should retry
-        if (attempt < attempts && shouldRetry(error)) {
-          if (debug) {
-            console.log(
-              `[fetchServer] Retrying... Attempt ${attempt + 1}/${attempts}`,
-            )
-          }
-          await delay(retryDelay * attempt) // Exponential backoff
-          continue
-        }
-
-        return { success: false, error }
-      }
+      const contentType = response.headers.get("content-type")
+      const isJson = contentType?.includes("application/json")
 
       if (!isJson) {
         const text = await response.text()
         return {
           success: false,
           error: {
-            type: 'invalid-json',
-            message: 'Server did not return valid JSON',
+            type: "invalid-json",
+            message: "Server did not return valid JSON",
             text: text.substring(0, 200), // Include first 200 chars for debugging
           },
         }
       }
 
       try {
-        const data = await response.json()
-        console.log('data', data.data)
-        return data
-      } catch (error) {
+        const resData = (await response.json()) as FetchServerResponse
+        console.log("resData", resData)
+        if (!resData.success) {
+          const errorMessage = resData.message || "Unknown server error"
+          const errorDetails: unknown = resData.timestamp
+
+          const error: FetchError = {
+            type: "http",
+            status: resData.statusCode,
+            message: errorMessage,
+            details: errorDetails,
+          }
+
+          // Check if should retry
+          if (attempt < attempts && shouldRetry(error)) {
+            if (debug) {
+              console.log(
+                `[fetchServer] Retrying... Attempt ${attempt + 1}/${attempts}`,
+              )
+            }
+            await delay(retryDelay * attempt) // Exponential backoff
+            continue
+          }
+
+          return { success: false, error }
+        }
+
+        return resData
+      } catch (err) {
         return {
           success: false,
           error: {
-            type: 'invalid-json',
-            message: 'Failed to parse JSON response',
+            type: "invalid-json",
+            message: "Failed to parse JSON response",
             text: undefined,
           },
         }
@@ -223,9 +238,9 @@ export async function fetchServer<T = unknown>(
       clearTimeout(timeoutId)
 
       // Handle abort/timeout
-      if (error instanceof Error && error.name === 'AbortError') {
+      if (error instanceof Error && error.name === "AbortError") {
         const timeoutError: FetchError = {
-          type: 'timeout',
+          type: "timeout",
           message: `Request timeout after ${timeout}ms`,
         }
 
@@ -247,9 +262,9 @@ export async function fetchServer<T = unknown>(
 
       // Handle network errors
       const networkError: FetchError = {
-        type: 'network',
+        type: "network",
         message:
-          error instanceof Error ? error.message : 'Unknown network error',
+          error instanceof Error ? error.message : "Unknown network error",
         cause: error,
       }
 
@@ -274,8 +289,8 @@ export async function fetchServer<T = unknown>(
   return {
     success: false,
     error: {
-      type: 'network',
-      message: 'Unexpected error after all retry attempts',
+      type: "network",
+      message: "Unexpected error after all retry attempts",
     },
   }
 }
@@ -285,11 +300,11 @@ export async function fetchServer<T = unknown>(
  * Note: This requires server action or API route
  */
 export async function revalidateTag(tag: string | string[]): Promise<void> {
-  if (typeof window !== 'undefined') {
-    throw new Error('revalidateTag can only be called on the server')
+  if (typeof window !== "undefined") {
+    throw new Error("revalidateTag can only be called on the server")
   }
 
-  const { revalidateTag: nextRevalidateTag } = await import('next/cache')
+  const { revalidateTag: nextRevalidateTag } = await import("next/cache")
   const tags = Array.isArray(tag) ? tag : [tag]
 
   for (const t of tags) {
@@ -303,12 +318,12 @@ export async function revalidateTag(tag: string | string[]): Promise<void> {
  */
 export async function revalidatePath(
   path: string,
-  type: 'page' | 'layout' = 'page',
+  type: "page" | "layout" = "page",
 ): Promise<void> {
-  if (typeof window !== 'undefined') {
-    throw new Error('revalidatePath can only be called on the server')
+  if (typeof window !== "undefined") {
+    throw new Error("revalidatePath can only be called on the server")
   }
 
-  const { revalidatePath: nextRevalidatePath } = await import('next/cache')
+  const { revalidatePath: nextRevalidatePath } = await import("next/cache")
   nextRevalidatePath(path, type)
 }
