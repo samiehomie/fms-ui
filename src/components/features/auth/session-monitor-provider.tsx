@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { logOutAction } from "@/lib/actions/auth.actions"
 import type { FetchError } from "@/lib/api/fetch-client"
+import { useRouter } from "next/navigation"
 
 export function SessionMonitorProvider({
   children,
@@ -13,6 +14,7 @@ export function SessionMonitorProvider({
 }) {
   const queryClient = useQueryClient()
   const sessionExpiredHandled = useRef(false)
+  const router = useRouter()
 
   useEffect(() => {
     // Tanstack Query 전역 에러 핸들러
@@ -47,10 +49,12 @@ export function SessionMonitorProvider({
       duration: Infinity,
       position: "bottom-center",
       action: {
-        label: "Login Again",
+        label: "Signin Again",
         onClick: async () => {
           sessionExpiredHandled.current = false
           await logOutAction()
+          // 로그아웃 (세션 무효화 요청) 실패 하더라도 로그인 페이지 이동
+          router.push("/signin")
         },
       },
     })

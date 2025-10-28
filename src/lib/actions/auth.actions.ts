@@ -11,7 +11,6 @@ import { buildURL } from "@/lib/utils/build-url"
 import type { ApiResponseType, ApiRequestType } from "@/types/features"
 import { fetchServer } from "../api/fetch-server"
 import type { JWTAuthPayload } from "@/types/features"
-import { redirect } from "next/navigation"
 import { parseJWT } from "@/lib/utils/build-url"
 import type { ServerActionResult } from "@/types/features/common.types"
 import type { SignupFormData } from "@/types/features/auth/signup.schema"
@@ -20,10 +19,11 @@ import type {
   UserLoginBody,
   UserLoginResponse,
 } from "@/types/features/auth/signin.types"
+import type { LogoutResponse } from "@/types/features/auth/auth.types"
 
 export async function signupAction(
   formData: Omit<SignupFormData, "confirmPassword">,
-) {
+): Promise<ServerActionResult<SignupResponse>> {
   try {
     const apiUrl = buildURL("/auth/register")
     const response = await fetchServer<SignupResponse>(apiUrl, {
@@ -43,8 +43,8 @@ export async function signupAction(
       }
     }
 
-    const { data } = response
-    return { success: true, data }
+    const { data, message } = response
+    return { success: true, data, message }
   } catch (error) {
     return {
       success: false,
@@ -56,7 +56,9 @@ export async function signupAction(
   }
 }
 
-export async function signinAction(loginData: UserLoginBody) {
+export async function signinAction(
+  loginData: UserLoginBody,
+): Promise<ServerActionResult<null>> {
   try {
     const apiUrl = buildURL("/auth/login")
     const response = await fetchServer<UserLoginResponse>(apiUrl, {
@@ -77,7 +79,7 @@ export async function signinAction(loginData: UserLoginBody) {
 
     const { accessToken, refreshToken } = response.data
     await setAuthCookies(accessToken, refreshToken)
-    return { success: true, data: response.data }
+    return { success: true, data: null, message: response.message }
   } catch (error) {
     return {
       success: false,
@@ -89,32 +91,43 @@ export async function signinAction(loginData: UserLoginBody) {
   }
 }
 
-export async function logOutAction() {
-  const apiUrl = buildURL("/auth/logout")
-
+export async function logOutAction(): Promise<
+  ServerActionResult<LogoutResponse>
+> {
   try {
+    const apiUrl = buildURL("/auth/logout")
     const cookieStore = await cookies()
     const accessToken = cookieStore.get(AUTH_TOKEN_COOKIE_NAME)?.value
 
-    // TODO: API - 세션 하이브리드 방식이라 토큰 무효화 시키려면 로그아웃 동작 구현해야함 현재 없음
-    const response = await fetchServer<ApiResponseType<"POST /auth/logout">>(
-      apiUrl,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+    const response = await fetchServer<LogoutResponse>(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
-    )
+    })
     cookieStore.delete(AUTH_TOKEN_COOKIE_NAME)
     cookieStore.delete(REFRESH_TOKEN_COOKIE_NAME)
-    if (!response.success) throw new Error("Authentication failed")
+    if (!response.success) {
+      return {
+        success: false,
+        error: {
+          message: response.error.message || "Unknown server error",
+          status: response.error.status,
+        },
+      }
+    }
+    const { data, message } = response
+    return { success: true, data, message }
   } catch (error) {
-    console.error("Logout error:", error)
-    redirect("/signin")
+    return {
+      success: false,
+      error: {
+        message: "Unexpected server error",
+        status: 500,
+      },
+    }
   }
-  redirect("/signin")
 }
 
 export async function refreshTokenIfNeeded(
@@ -159,8 +172,6 @@ export async function refreshTokenIfNeeded(
       },
     )
 
-    console.log(result)
-
     if (!result.success) {
       const error = result.error
       // If refresh fails (e.g. token expired or invalid), clear the cookie
@@ -170,17 +181,15 @@ export async function refreshTokenIfNeeded(
           ? error.serverMessage
           : error.message || "Token refresh failed"
 
-      console.error(`인증 토큰 갱신실패: ${status} - ${message}`)
+      console.log(`인증 토큰 갱신실패: ${status} - ${message}`)
       return null
     }
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       result.data
 
-    console.info("인증 토큰 갱신성공")
+    console.log("인증 토큰 갱신성공")
     return { newAccessToken, newRefreshToken }
   }
-
-  // console.info('인증 토큰 갱신 필요없음. 기존 토큰 사용 유지.')
 
   return {
     newAccessToken: accessToken,

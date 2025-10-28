@@ -1,26 +1,9 @@
 import {
   QueryClient,
   defaultShouldDehydrateQuery,
-  QueryCache,
-  MutationCache,
   isServer,
-} from '@tanstack/react-query'
-import { logOutAction } from './actions/auth.actions'
-import { FetchError } from './api/fetch-client'
-
-let isLoggingOut = false // 중복 로그아웃 방지
-
-async function handleUnauthorized() {
-  if (isLoggingOut) return
-
-  isLoggingOut = true
-
-  try {
-    await logOutAction()
-  } finally {
-    isLoggingOut = false
-  }
-}
+} from "@tanstack/react-query"
+import { FetchError } from "./api/fetch-client"
 
 export function makeQueryClient() {
   return new QueryClient({
@@ -33,7 +16,7 @@ export function makeQueryClient() {
           if (
             error?.statusCode === 401 ||
             error?.statusCode === 409 ||
-            error?.statusText === 'Unauthorized'
+            error?.statusText === "Unauthorized"
           ) {
             return false
           }
@@ -44,7 +27,7 @@ export function makeQueryClient() {
         // include pending queries in dehydration
         shouldDehydrateQuery: (query) =>
           defaultShouldDehydrateQuery(query) ||
-          query.state.status === 'pending',
+          query.state.status === "pending",
       },
     },
     // queryCache: new QueryCache({
