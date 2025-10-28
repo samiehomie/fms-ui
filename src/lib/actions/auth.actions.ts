@@ -15,11 +15,11 @@ import { redirect } from "next/navigation"
 import { parseJWT } from "@/lib/utils/build-url"
 import type { ServerActionResult } from "@/types/features/common.types"
 import { signupSchema } from "@/types/features/auth/signup.schema"
-import type { SignupData } from "@/types/features/auth/signup.schema"
+import type { SignupFormData } from "@/types/features/auth/signup.schema"
 import type { SignupResponse } from "@/types/features/auth/signup.types"
 
 export async function signupAction(
-  formData: Omit<SignupData, "confirmPassword">,
+  formData: Omit<SignupFormData, "confirmPassword">,
 ) {
   // if (!validatedFields.success) {
   //   return {

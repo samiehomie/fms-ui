@@ -12,11 +12,11 @@ import {
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { useState } from "react"
-import { useForm, Controller } from "react-hook-form"
+import { useForm, Controller, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   signupSchema,
-  type SignupData,
+  type SignupFormData,
 } from "@/types/features/auth/signup.schema"
 import { signupAction } from "@/lib/actions/auth.actions"
 import { useAllCompanyList } from "@/lib/query-hooks/use-companies"
@@ -43,7 +43,7 @@ export function SignupForm({
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<SignupData>({
+  } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     mode: "onBlur",
     defaultValues: {
@@ -57,7 +57,10 @@ export function SignupForm({
     },
   })
 
-  const onSubmit = async (data: SignupData) => {
+
+  const onSubmit: SubmitHandler<SignupFormData> = async (
+    data: SignupFormData,
+  ) => {
     setIsPending(true)
     setServerError(null)
 
@@ -94,7 +97,10 @@ export function SignupForm({
                 <h1 className="text-2xl font-bold">Create your account</h1>
               </div>
               {serverError && (
-                <div className="text-destructive text-sm text-center p-2 bg-destructive/10 rounded">
+                <div
+                  role="alert"
+                  className="text-destructive text-sm text-center p-2 bg-destructive/10 rounded"
+                >
                   {serverError}
                 </div>
               )}
@@ -104,12 +110,16 @@ export function SignupForm({
                   id="email"
                   type="email"
                   placeholder="m@example.com"
+                  aria-invalid={errors.email ? "true" : "false"}
                   {...register("email")}
                 />
                 {errors.email && (
-                  <p className="text-destructive text-sm leading-none">
+                  <div
+                    role="alert"
+                    className="text-destructive text-sm leading-none"
+                  >
                     {errors.email.message}
-                  </p>
+                  </div>
                 )}
               </Field>
               <Field>
@@ -118,12 +128,13 @@ export function SignupForm({
                   id="username"
                   type="text"
                   placeholder="username"
+                  aria-invalid={errors.username ? "true" : "false"}
                   {...register("username")}
                 />
                 {errors.username && (
-                  <p className="text-destructive text-sm">
+                  <div role="alert" className="text-destructive text-sm">
                     {errors.username.message}
-                  </p>
+                  </div>
                 )}
               </Field>
               <Field>
@@ -132,12 +143,13 @@ export function SignupForm({
                   id="name"
                   type="text"
                   placeholder="name"
+                  aria-invalid={errors.name ? "true" : "false"}
                   {...register("name")}
                 />
                 {errors.name && (
-                  <p className="text-destructive text-sm">
+                  <div role="alert" className="text-destructive text-sm">
                     {errors.name.message}
-                  </p>
+                  </div>
                 )}
               </Field>
               <Field>
@@ -147,12 +159,13 @@ export function SignupForm({
                     <Input
                       id="password"
                       type="password"
+                      aria-invalid={errors.password ? "true" : "false"}
                       {...register("password")}
                     />
                     {errors.password && (
-                      <p className="text-destructive text-sm">
+                      <div role="alert" className="text-destructive text-sm">
                         {errors.password.message}
-                      </p>
+                      </div>
                     )}
                   </Field>
                   <Field>
@@ -162,12 +175,13 @@ export function SignupForm({
                     <Input
                       id="confirmPassword"
                       type="password"
+                      aria-invalid={errors.confirmPassword ? "true" : "false"}
                       {...register("confirmPassword")}
                     />
                     {errors.confirmPassword && (
-                      <p className="text-destructive text-sm">
+                      <div role="alert" className="text-destructive text-sm">
                         {errors.confirmPassword.message}
-                      </p>
+                      </div>
                     )}
                   </Field>
                 </Field>
@@ -198,41 +212,11 @@ export function SignupForm({
                     )}
                   />
                   {errors.companyId && (
-                    <p className="text-destructive text-sm">
+                    <div role="alert" className="text-destructive text-sm">
                       {errors.companyId.message}
-                    </p>
+                    </div>
                   )}
                 </Field>
-
-                {/* <Field>
-                  <FieldLabel htmlFor="roleId">Role</FieldLabel>
-                  <Controller
-                    name="roleId"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        onValueChange={(value) => field.onChange(Number(value))}
-                        defaultValue={field.value?.toString()}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {rolesData?.map((role) => (
-                            <SelectItem key={role.id} value={`${role.id}`}>
-                              {role.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.companyId && (
-                    <p className="text-destructive text-sm">
-                      {errors.companyId.message}
-                    </p>
-                  )}
-                </Field> */}
               </Field>
               <Field>
                 <Button type="submit" disabled={isPending}>
