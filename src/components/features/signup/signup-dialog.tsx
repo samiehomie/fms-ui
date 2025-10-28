@@ -10,6 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { useRouter } from "next/navigation"
 
 interface SignupDialogProps {
   open: boolean
@@ -22,6 +23,7 @@ const SignupDialog: FC<SignupDialogProps> = ({
   handleOpenChange,
   email,
 }) => {
+  const router = useRouter()
   return (
     <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogContent>
@@ -35,7 +37,14 @@ const SignupDialog: FC<SignupDialogProps> = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogAction>Confirm</AlertDialogAction>
+          <AlertDialogAction
+            onClick={(e) => {
+              e.preventDefault()
+              router.push("/signin")
+            }}
+          >
+            Confirm
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

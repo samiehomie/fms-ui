@@ -56,6 +56,39 @@ export async function signupAction(
   }
 }
 
+export async function verifyEmailAction(
+  token: string,
+): Promise<ServerActionResult<null>> {
+  try {
+    const apiUrl = buildURL(`/auth/verify-email?token=${token}`)
+    const response = await fetchServer<null>(apiUrl, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      cache: "no-store",
+    })
+
+    if (!response.success) {
+      return {
+        success: false,
+        error: {
+          message: response.error.message || "Unknown server error",
+          status: response.error.status,
+        },
+      }
+    }
+
+    return { success: true, data: null, message: response.message }
+  } catch (error) {
+    return {
+      success: false,
+      error: {
+        message: "Unexpected server error",
+        status: 500,
+      },
+    }
+  }
+}
+
 export async function signinAction(
   loginData: UserLoginBody,
 ): Promise<ServerActionResult<null>> {
