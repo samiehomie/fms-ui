@@ -32,7 +32,7 @@ import {
   formatDuration,
   type ExportColumn,
 } from "@/lib/utils/report-export"
-import type { TripReport, VehicleReport } from "@/lib/mock_data/reports"
+import type { TripReport } from "@/lib/mock_data/reports"
 
 const reportTabs = [
   {
