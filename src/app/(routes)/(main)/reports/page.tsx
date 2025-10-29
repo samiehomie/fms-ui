@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
-import { useState, useMemo } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Badge } from '@/components/ui/badge'
+import { useState, useMemo } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Badge } from "@/components/ui/badge"
 import {
   FileText,
   Truck,
@@ -17,13 +17,13 @@ import {
   SortAsc,
   SortDesc,
   TrendingUp,
-} from 'lucide-react'
+} from "lucide-react"
 import {
   ReportFilters,
   type FilterState,
-} from '@/components/features/reports/report-filters'
-import { ExportControls } from '@/components/features/reports/export-controls'
-import { enhancedReportsData } from '@/lib/mock_data/enhanced-reports'
+} from "@/components/features/reports/report-filters"
+import { ExportControls } from "@/components/features/reports/export-controls"
+import { enhancedReportsData } from "@/lib/mock_data/enhanced-reports"
 import {
   formatCurrency,
   formatDate,
@@ -31,72 +31,72 @@ import {
   formatNumber,
   formatDuration,
   type ExportColumn,
-} from '@/lib/utils/report-export'
-import type { TripReport, VehicleReport } from '@/lib/mock_data/reports'
+} from "@/lib/utils/report-export"
+import type { TripReport, VehicleReport } from "@/lib/mock_data/reports"
 
 const reportTabs = [
   {
-    id: 'trips',
-    label: 'Trip Reports',
+    id: "trips",
+    label: "Trip Reports",
     icon: Route,
-    description: 'Detailed trip analysis and performance',
+    description: "Detailed trip analysis and performance",
   },
   {
-    id: 'vehicles',
-    label: 'Vehicle Reports',
+    id: "vehicles",
+    label: "Vehicle Reports",
     icon: Truck,
-    description: 'Vehicle performance and utilization',
+    description: "Vehicle performance and utilization",
   },
   {
-    id: 'drivers',
-    label: 'Driver Reports',
+    id: "drivers",
+    label: "Driver Reports",
     icon: Users,
-    description: 'Driver performance and safety metrics',
+    description: "Driver performance and safety metrics",
   },
   {
-    id: 'fuel',
-    label: 'Fuel Reports',
+    id: "fuel",
+    label: "Fuel Reports",
     icon: Fuel,
-    description: 'Fuel consumption and cost analysis',
+    description: "Fuel consumption and cost analysis",
   },
   {
-    id: 'maintenance',
-    label: 'Maintenance',
+    id: "maintenance",
+    label: "Maintenance",
     icon: Wrench,
-    description: 'Maintenance schedules and costs',
+    description: "Maintenance schedules and costs",
   },
   {
-    id: 'incidents',
-    label: 'Incidents',
+    id: "incidents",
+    label: "Incidents",
     icon: AlertTriangle,
-    description: 'Safety incidents and violations',
+    description: "Safety incidents and violations",
   },
   {
-    id: 'routes',
-    label: 'Route Analysis',
+    id: "routes",
+    label: "Route Analysis",
     icon: Route,
-    description: 'Route efficiency and optimization',
+    description: "Route efficiency and optimization",
   },
   {
-    id: 'costs',
-    label: 'Cost Analysis',
+    id: "costs",
+    label: "Cost Analysis",
     icon: DollarSign,
-    description: 'Financial analysis and budgeting',
+    description: "Financial analysis and budgeting",
   },
 ]
 
 export default function ReportsPage() {
-  const [activeTab, setActiveTab] = useState('trips')
+  const [activeTab, setActiveTab] = useState("trips")
   const [selectedItems, setSelectedItems] = useState<number[]>([])
-  const [sortField, setSortField] = useState('')
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [sortField, setSortField] = useState("")
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
   const [filters, setFilters] = useState<FilterState>({
-    search: '',
+    search: "",
     dateRange: {},
-    status: '',
-    vehicle: '',
-    driver: '',
-    category: '',
+    status: "",
+    vehicle: "",
+    driver: "",
+    category: "",
   })
 
   // Get filtered and sorted data
@@ -142,14 +142,14 @@ export default function ReportsPage() {
         const aValue = a[sortField]
         const bValue = b[sortField]
 
-        if (typeof aValue === 'number' && typeof bValue === 'number') {
-          return sortDirection === 'asc' ? aValue - bValue : bValue - aValue
+        if (typeof aValue === "number" && typeof bValue === "number") {
+          return sortDirection === "asc" ? aValue - bValue : bValue - aValue
         }
 
         const aStr = String(aValue).toLowerCase()
         const bStr = String(bValue).toLowerCase()
 
-        if (sortDirection === 'asc') {
+        if (sortDirection === "asc") {
           return aStr.localeCompare(bStr)
         } else {
           return bStr.localeCompare(aStr)
@@ -200,10 +200,10 @@ export default function ReportsPage() {
 
   const handleSort = (field: string) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
     } else {
       setSortField(field)
-      setSortDirection('asc')
+      setSortDirection("asc")
     }
   }
 
@@ -214,91 +214,91 @@ export default function ReportsPage() {
   // Define export columns for each report type
   const getExportColumns = (): ExportColumn[] => {
     switch (activeTab) {
-      case 'trips':
+      case "trips":
         return [
-          { key: 'plateNumber', label: 'Vehicle' },
-          { key: 'driverName', label: 'Driver' },
-          { key: 'startTime', label: 'Start Time', format: formatDateTime },
-          { key: 'endTime', label: 'End Time', format: formatDateTime },
-          { key: 'startLocation', label: 'Start Location' },
-          { key: 'endLocation', label: 'End Location' },
-          { key: 'distance', label: 'Distance (km)', format: formatNumber(1) },
-          { key: 'duration', label: 'Duration', format: formatDuration },
+          { key: "plateNumber", label: "Vehicle" },
+          { key: "driverName", label: "Driver" },
+          { key: "startTime", label: "Start Time", format: formatDateTime },
+          { key: "endTime", label: "End Time", format: formatDateTime },
+          { key: "startLocation", label: "Start Location" },
+          { key: "endLocation", label: "End Location" },
+          { key: "distance", label: "Distance (km)", format: formatNumber(1) },
+          { key: "duration", label: "Duration", format: formatDuration },
           {
-            key: 'averageSpeed',
-            label: 'Avg Speed (km/h)',
+            key: "averageSpeed",
+            label: "Avg Speed (km/h)",
             format: formatNumber(1),
           },
           {
-            key: 'maxSpeed',
-            label: 'Max Speed (km/h)',
+            key: "maxSpeed",
+            label: "Max Speed (km/h)",
             format: formatNumber(1),
           },
           {
-            key: 'fuelConsumed',
-            label: 'Fuel Consumed (L)',
+            key: "fuelConsumed",
+            label: "Fuel Consumed (L)",
             format: formatNumber(1),
           },
           {
-            key: 'fuelEfficiency',
-            label: 'Fuel Efficiency (km/L)',
+            key: "fuelEfficiency",
+            label: "Fuel Efficiency (km/L)",
             format: formatNumber(1),
           },
-          { key: 'status', label: 'Status' },
-          { key: 'cost', label: 'Cost', format: formatCurrency },
+          { key: "status", label: "Status" },
+          { key: "cost", label: "Cost", format: formatCurrency },
         ]
-      case 'vehicles':
+      case "vehicles":
         return [
-          { key: 'plateNumber', label: 'Plate Number' },
-          { key: 'brand', label: 'Brand' },
-          { key: 'model', label: 'Model' },
-          { key: 'year', label: 'Year' },
-          { key: 'mileage', label: 'Mileage (km)' },
-          { key: 'fuelType', label: 'Fuel Type' },
-          { key: 'status', label: 'Status' },
-          { key: 'totalTrips', label: 'Total Trips' },
+          { key: "plateNumber", label: "Plate Number" },
+          { key: "brand", label: "Brand" },
+          { key: "model", label: "Model" },
+          { key: "year", label: "Year" },
+          { key: "mileage", label: "Mileage (km)" },
+          { key: "fuelType", label: "Fuel Type" },
+          { key: "status", label: "Status" },
+          { key: "totalTrips", label: "Total Trips" },
           {
-            key: 'totalDistance',
-            label: 'Total Distance (km)',
+            key: "totalDistance",
+            label: "Total Distance (km)",
             format: formatNumber(1),
           },
           {
-            key: 'averageFuelEfficiency',
-            label: 'Avg Fuel Efficiency (km/L)',
+            key: "averageFuelEfficiency",
+            label: "Avg Fuel Efficiency (km/L)",
             format: formatNumber(1),
           },
           {
-            key: 'utilizationRate',
-            label: 'Utilization Rate (%)',
+            key: "utilizationRate",
+            label: "Utilization Rate (%)",
             format: formatNumber(1),
           },
         ]
-      case 'drivers':
+      case "drivers":
         return [
-          { key: 'name', label: 'Name' },
-          { key: 'licenseNumber', label: 'License Number' },
-          { key: 'email', label: 'Email' },
-          { key: 'hireDate', label: 'Hire Date', format: formatDate },
-          { key: 'status', label: 'Status' },
-          { key: 'totalTrips', label: 'Total Trips' },
+          { key: "name", label: "Name" },
+          { key: "licenseNumber", label: "License Number" },
+          { key: "email", label: "Email" },
+          { key: "hireDate", label: "Hire Date", format: formatDate },
+          { key: "status", label: "Status" },
+          { key: "totalTrips", label: "Total Trips" },
           {
-            key: 'totalDistance',
-            label: 'Total Distance (km)',
+            key: "totalDistance",
+            label: "Total Distance (km)",
             format: formatNumber(1),
           },
           {
-            key: 'averageSpeed',
-            label: 'Avg Speed (km/h)',
+            key: "averageSpeed",
+            label: "Avg Speed (km/h)",
             format: formatNumber(1),
           },
           {
-            key: 'safetyScore',
-            label: 'Safety Score',
+            key: "safetyScore",
+            label: "Safety Score",
             format: formatNumber(1),
           },
           {
-            key: 'onTimeDeliveryRate',
-            label: 'On-Time Delivery (%)',
+            key: "onTimeDeliveryRate",
+            label: "On-Time Delivery (%)",
             format: formatNumber(1),
           },
         ]
@@ -307,159 +307,8 @@ export default function ReportsPage() {
     }
   }
 
-  const renderSummaryCards = () => {
-    switch (activeTab) {
-      case 'trips':
-        const tripData = processedData as TripReport[]
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold">{tripData.length}</div>
-                    <div className="text-sm text-muted-foreground">
-                      Total Trips
-                    </div>
-                  </div>
-                  <Route className="h-8 w-8 text-muted-foreground" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold">
-                      {tripData
-                        .reduce((sum, trip) => sum + trip.distance, 0)
-                        .toLocaleString()}{' '}
-                      km
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Total Distance
-                    </div>
-                  </div>
-                  <TrendingUp className="h-8 w-8 text-green-500" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold">
-                      {tripData
-                        .reduce((sum, trip) => sum + trip.fuelConsumed, 0)
-                        .toFixed(1)}{' '}
-                      L
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Fuel Consumed
-                    </div>
-                  </div>
-                  <Fuel className="h-8 w-8 text-orange-500" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold">
-                      {formatCurrency(
-                        tripData.reduce((sum, trip) => sum + trip.cost, 0),
-                      )}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Total Cost
-                    </div>
-                  </div>
-                  <DollarSign className="h-8 w-8 text-blue-500" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )
-      case 'vehicles':
-        const vehicleData = processedData as VehicleReport[]
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold">
-                      {vehicleData.length}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Total Vehicles
-                    </div>
-                  </div>
-                  <Truck className="h-8 w-8 text-muted-foreground" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold">
-                      {vehicleData.filter((v) => v.status === 'active').length}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Active Vehicles
-                    </div>
-                  </div>
-                  <TrendingUp className="h-8 w-8 text-green-500" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold">
-                      {(
-                        vehicleData.reduce(
-                          (sum, v) => sum + v.utilizationRate,
-                          0,
-                        ) / vehicleData.length
-                      ).toFixed(1)}
-                      %
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Avg Utilization
-                    </div>
-                  </div>
-                  <TrendingUp className="h-8 w-8 text-blue-500" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold">
-                      {vehicleData.reduce((sum, v) => sum + v.incidentCount, 0)}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Total Incidents
-                    </div>
-                  </div>
-                  <AlertTriangle className="h-8 w-8 text-red-500" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )
-      default:
-        return null
-    }
-  }
-
   const renderDataTable = () => {
-    if (activeTab === 'trips') {
+    if (activeTab === "trips") {
       const data = processedData as TripReport[]
       return (
         <div className="border rounded-lg overflow-hidden">
@@ -477,12 +326,12 @@ export default function ReportsPage() {
                   </th>
                   <th
                     className="p-3 text-left cursor-pointer"
-                    onClick={() => handleSort('plateNumber')}
+                    onClick={() => handleSort("plateNumber")}
                   >
                     <div className="flex items-center gap-2">
                       Vehicle
-                      {sortField === 'plateNumber' &&
-                        (sortDirection === 'asc' ? (
+                      {sortField === "plateNumber" &&
+                        (sortDirection === "asc" ? (
                           <SortAsc className="h-4 w-4" />
                         ) : (
                           <SortDesc className="h-4 w-4" />
@@ -491,12 +340,12 @@ export default function ReportsPage() {
                   </th>
                   <th
                     className="p-3 text-left cursor-pointer"
-                    onClick={() => handleSort('driverName')}
+                    onClick={() => handleSort("driverName")}
                   >
                     <div className="flex items-center gap-2">
                       Driver
-                      {sortField === 'driverName' &&
-                        (sortDirection === 'asc' ? (
+                      {sortField === "driverName" &&
+                        (sortDirection === "asc" ? (
                           <SortAsc className="h-4 w-4" />
                         ) : (
                           <SortDesc className="h-4 w-4" />
@@ -505,12 +354,12 @@ export default function ReportsPage() {
                   </th>
                   <th
                     className="p-3 text-left cursor-pointer"
-                    onClick={() => handleSort('distance')}
+                    onClick={() => handleSort("distance")}
                   >
                     <div className="flex items-center gap-2">
                       Distance
-                      {sortField === 'distance' &&
-                        (sortDirection === 'asc' ? (
+                      {sortField === "distance" &&
+                        (sortDirection === "asc" ? (
                           <SortAsc className="h-4 w-4" />
                         ) : (
                           <SortDesc className="h-4 w-4" />
@@ -519,12 +368,12 @@ export default function ReportsPage() {
                   </th>
                   <th
                     className="p-3 text-left cursor-pointer"
-                    onClick={() => handleSort('fuelEfficiency')}
+                    onClick={() => handleSort("fuelEfficiency")}
                   >
                     <div className="flex items-center gap-2">
                       Fuel Efficiency
-                      {sortField === 'fuelEfficiency' &&
-                        (sortDirection === 'asc' ? (
+                      {sortField === "fuelEfficiency" &&
+                        (sortDirection === "asc" ? (
                           <SortAsc className="h-4 w-4" />
                         ) : (
                           <SortDesc className="h-4 w-4" />
@@ -533,12 +382,12 @@ export default function ReportsPage() {
                   </th>
                   <th
                     className="p-3 text-left cursor-pointer"
-                    onClick={() => handleSort('status')}
+                    onClick={() => handleSort("status")}
                   >
                     <div className="flex items-center gap-2">
                       Status
-                      {sortField === 'status' &&
-                        (sortDirection === 'asc' ? (
+                      {sortField === "status" &&
+                        (sortDirection === "asc" ? (
                           <SortAsc className="h-4 w-4" />
                         ) : (
                           <SortDesc className="h-4 w-4" />
@@ -547,12 +396,12 @@ export default function ReportsPage() {
                   </th>
                   <th
                     className="p-3 text-left cursor-pointer"
-                    onClick={() => handleSort('cost')}
+                    onClick={() => handleSort("cost")}
                   >
                     <div className="flex items-center gap-2">
                       Cost
-                      {sortField === 'cost' &&
-                        (sortDirection === 'asc' ? (
+                      {sortField === "cost" &&
+                        (sortDirection === "asc" ? (
                           <SortAsc className="h-4 w-4" />
                         ) : (
                           <SortDesc className="h-4 w-4" />
@@ -579,7 +428,7 @@ export default function ReportsPage() {
                     <td className="p-3">
                       <Badge
                         variant={
-                          trip.status === 'completed' ? 'default' : 'secondary'
+                          trip.status === "completed" ? "default" : "secondary"
                         }
                       >
                         {trip.status}
@@ -613,10 +462,6 @@ export default function ReportsPage() {
 
   return (
     <div className="container">
-      <h1 className="text-4xl font-bold tracking-tight">Reports</h1>
-      <p className=" tracking-tight text-[15px] font-[400] mt-2">
-        Generate and export fleet management reports
-      </p>
       <main className="container mx-auto my-10 ">
         <Tabs
           value={activeTab}
@@ -631,7 +476,7 @@ export default function ReportsPage() {
                 className="flex flex-col items-center gap-1 py-2 px-3 h-auto"
               >
                 {/* <tab.icon className="h-4 w-4" /> */}
-                <span className="text-xs">{tab.label.split(' ')[0]}</span>
+                <span className="text-xs">{tab.label.split(" ")[0]}</span>
               </TabsTrigger>
             ))}
           </TabsList>
