@@ -86,7 +86,7 @@ const reportTabs = [
 ]
 
 export default function ReportsPage() {
-  const [activeTab, setActiveTab] = useState("trips")
+  const [activeTab, setActiveTab] = useState("fleet")
   const [selectedItems, setSelectedItems] = useState<number[]>([])
   const [sortField, setSortField] = useState("")
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
@@ -308,7 +308,7 @@ export default function ReportsPage() {
   }
 
   const renderDataTable = () => {
-    if (activeTab === "trips") {
+    if (activeTab === "fleet") {
       const data = processedData as TripReport[]
       return (
         <div className="border rounded-lg overflow-hidden">
@@ -468,18 +468,26 @@ export default function ReportsPage() {
           onValueChange={setActiveTab}
           className="space-y-6"
         >
-          <TabsList className="grid grid-cols-4 lg:grid-cols-8 h-auto p-1">
-            {reportTabs.map((tab) => (
-              <TabsTrigger
-                key={tab.id}
-                value={tab.id}
-                className="flex flex-col items-center gap-1 py-2 px-3 h-auto"
-              >
-                {/* <tab.icon className="h-4 w-4" /> */}
-                <span className="text-xs">{tab.label.split(" ")[0]}</span>
-              </TabsTrigger>
-            ))}
+          <TabsList className="">
+            <TabsTrigger value="fleet">Fleet</TabsTrigger>
+            <TabsTrigger value="vehicle">Vehicle</TabsTrigger>
           </TabsList>
+          <TabsContent value={"fleet"} className="space-y-6">
+            <div className=" shadow-none">
+              <div className="space-y-6">
+                {/* {renderSummaryCards()} */}
+                {renderDataTable()}
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value={"vehicle"} className="space-y-6">
+            <div className=" shadow-none">
+              <div className="space-y-6">
+                {/* {renderSummaryCards()} */}
+                {renderDataTable()}
+              </div>
+            </div>
+          </TabsContent>
 
           {/* Filters */}
           <ReportFilters
@@ -500,27 +508,6 @@ export default function ReportsPage() {
             onSelectAll={handleSelectAll}
             onClearSelection={clearSelection}
           />
-
-          {/* Report Content */}
-          {reportTabs.map((tab) => (
-            <TabsContent key={tab.id} value={tab.id} className="space-y-6">
-              <div className=" shadow-none">
-                {/* <div>
-                  <div className="flex items-center gap-2">
-                    <tab.icon className="h-5 w-5" />
-                    {tab.label}
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {tab.description}
-                  </p>
-                </div> */}
-                <div className="space-y-6">
-                  {/* {renderSummaryCards()} */}
-                  {renderDataTable()}
-                </div>
-              </div>
-            </TabsContent>
-          ))}
         </Tabs>
       </main>
     </div>
