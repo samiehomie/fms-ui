@@ -1,13 +1,14 @@
-'use client'
+"use client"
 
-import { ChevronRight, type LucideIcon } from 'lucide-react'
-import Link from 'next/link'
+import { ChevronRight, type LucideIcon } from "lucide-react"
+import Link from "next/link"
+import { useState } from "react"
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible'
+} from "@/components/ui/collapsible"
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -17,7 +18,8 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from '@/components/ui/sidebar'
+  useSidebar,
+} from "@/components/ui/sidebar"
 
 export function NavMain({
   items,
@@ -33,18 +35,32 @@ export function NavMain({
     }[]
   }[]
 }) {
+  const { state, toggleSidebar } = useSidebar()
+  const [expandedMenu, setExpandedMenu] = useState<string | null>(null)
+  const isCollapsed = state === "collapsed"
+
+  const handleMenuClick = (item: (typeof items)[0]) => {
+    const hasChildren = item.items && item.items.length > 0
+
+    if (isCollapsed && hasChildren) {
+      // 접힌 상태에서 하위 항목이 있으면: 메뉴바 펼치기 + 해당 메뉴 확장
+      toggleSidebar()
+      setExpandedMenu(item.title)
+    }
+  }
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>FMS</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
-          const hasChildren = item.items
+          const hasChildren = item.items && item.items.length > 0
           if (!hasChildren) {
             return (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
+                <SidebarMenuButton tooltip={item.title} asChild>
                   <Link href={item.url}>
+                    {item.icon && <item.icon />}
                     <span>{item.title}</span>
                   </Link>
                 </SidebarMenuButton>
@@ -55,12 +71,22 @@ export function NavMain({
               <Collapsible
                 key={item.title}
                 asChild
-                defaultOpen={item.isActive}
+                open={expandedMenu === item.title ? true : undefined}
+                onOpenChange={(open) => {
+                  if (open) {
+                    setExpandedMenu(item.title)
+                  } else if (expandedMenu === item.title) {
+                    setExpandedMenu(null)
+                  }
+                }}
                 className="group/collapsible"
               >
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={item.title}>
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      onClick={() => handleMenuClick(item)}
+                    >
                       {item.icon && <item.icon />}
                       <span>{item.title}</span>
                       <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
