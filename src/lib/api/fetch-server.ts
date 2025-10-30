@@ -1,4 +1,4 @@
-import type { PaginationMeta } from "@/types/features/common.types"
+import type { PaginationMeta } from "@/types/common/common.types"
 import { HTTP_STATUS } from "@/types/features/route.types"
 
 export type FetchError =

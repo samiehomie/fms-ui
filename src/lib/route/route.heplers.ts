@@ -6,7 +6,7 @@ import type {
   ApiErrorCode,
 } from "@/types/features/route.types"
 import { HTTP_STATUS, API_ERROR_CODES } from "@/types/features/route.types"
-import type { PaginationMeta } from "@/types/features/common.types"
+import type { PaginationMeta } from "@/types/common/common.types"
 
 export class HTTPError extends Error {
   statusCode: HTTP_STATUS

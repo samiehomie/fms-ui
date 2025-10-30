@@ -2,36 +2,36 @@ import type {
   PaginatedResponseWithKey,
   CommonProperties,
   PaginationQuery,
-} from '../common.types'
-import { GearType, FuelType } from '@/types/enums/vehicle.enum'
-import type { Vehicle } from '@/types/entities/vehicle.entity'
-import type { Company } from '@/types/entities/company.entity'
-import type { User } from '@/types/entities/user.entity'
-import type { Tire } from '@/types/entities/tire.entity'
-import type { SmartProfiler } from '@/types/entities/smart-profiler.entity'
-import type { Sensor } from '@/types/entities/sensor.entity'
-import type { EdgeDevice } from '@/types/entities/edge-device.entity'
-import type { Trip } from '@/types/entities/trip.entity'
-import { TripStatus } from '@/types/enums/trip.enum'
+} from "../../common/common.types"
+import { GearType, FuelType } from "@/types/enums/vehicle.enum"
+import type { Vehicle } from "@/types/entities/vehicle.entity"
+import type { Company } from "@/types/entities/company.entity"
+import type { User } from "@/types/entities/user.entity"
+import type { Tire } from "@/types/entities/tire.entity"
+import type { SmartProfiler } from "@/types/entities/smart-profiler.entity"
+import type { Sensor } from "@/types/entities/sensor.entity"
+import type { EdgeDevice } from "@/types/entities/edge-device.entity"
+import type { Trip } from "@/types/entities/trip.entity"
+import { TripStatus } from "@/types/enums/trip.enum"
 
 type VehicleData = Pick<
   Vehicle,
   | CommonProperties
-  | 'vehicleName'
-  | 'plateNumber'
-  | 'brand'
-  | 'model'
-  | 'manufactureYear'
-  | 'canBitrate'
-  | 'fuelType'
-  | 'gearType'
-  | 'numTire'
-  | 'isdeleted'
+  | "vehicleName"
+  | "plateNumber"
+  | "brand"
+  | "model"
+  | "manufactureYear"
+  | "canBitrate"
+  | "fuelType"
+  | "gearType"
+  | "numTire"
+  | "isdeleted"
 >
 // GET /vehicles
 export type VehiclesGetResponse = (VehicleData & {
-  company: Pick<Company, 'id' | 'name'>
-  tires: Pick<Tire, 'id' | 'tireLocation'>[]
+  company: Pick<Company, "id" | "name">
+  tires: Pick<Tire, "id" | "tireLocation">[]
 })[]
 
 // GET /vehicles
@@ -42,27 +42,27 @@ export interface VehiclesGetQuery extends PaginationQuery {
 
 // GET /vehicles/{id}
 export type VehicleGetResponse = VehicleData & {
-  users: Pick<User, 'id' | 'username' | 'email'>[]
-  tires: (Pick<Tire, 'id' | 'tireLocation'> & {
-    profiler: Pick<SmartProfiler, 'id' | 'serialNumber' | 'isdeleted'>
-    sensor: Pick<Sensor, 'id' | 'serialNumber' | 'isdeleted'>
+  users: Pick<User, "id" | "username" | "email">[]
+  tires: (Pick<Tire, "id" | "tireLocation"> & {
+    profiler: Pick<SmartProfiler, "id" | "serialNumber" | "isdeleted">
+    sensor: Pick<Sensor, "id" | "serialNumber" | "isdeleted">
   })[]
   edgeDevices: Pick<
     EdgeDevice,
-    'id' | 'serialNumber' | 'type' | 'verified' | 'terminated'
+    "id" | "serialNumber" | "type" | "verified" | "terminated"
   >[]
   company: Pick<
     Company,
-    | 'id'
-    | 'name'
-    | 'regNumber'
-    | 'type'
-    | 'details'
-    | 'phone'
-    | 'email'
-    | 'website'
-    | 'verified'
-    | 'isdeleted'
+    | "id"
+    | "name"
+    | "regNumber"
+    | "type"
+    | "details"
+    | "phone"
+    | "email"
+    | "website"
+    | "verified"
+    | "isdeleted"
   >
 }
 
@@ -74,15 +74,15 @@ export interface VehicleGetQuery {
 // POST /vehicles
 export type VehicleCreateBody = Pick<
   Vehicle,
-  | 'vehicleName'
-  | 'plateNumber'
-  | 'brand'
-  | 'model'
-  | 'manufactureYear'
-  | 'canBitrate'
-  | 'fuelType'
-  | 'gearType'
-  | 'numTire'
+  | "vehicleName"
+  | "plateNumber"
+  | "brand"
+  | "model"
+  | "manufactureYear"
+  | "canBitrate"
+  | "fuelType"
+  | "gearType"
+  | "numTire"
 > & {
   companyId: number
 }
@@ -120,20 +120,20 @@ export interface VehicleUpdateQuery {
 // GET /vehicles/{id}/trips
 // TODO API에 numTire 포하되게 수정 해야함
 export type VehicleTripsResponse = {
-  vehicle: Pick<Vehicle, 'id' | 'plateNumber' | 'vehicleName' | 'numTire'> & {
+  vehicle: Pick<Vehicle, "id" | "plateNumber" | "vehicleName" | "numTire"> & {
     tireLocations: string[]
   }
   trips: Pick<
     Trip,
     | CommonProperties
-    | 'startTime'
-    | 'endTime'
-    | 'status'
-    | 'distanceInKph'
-    | 'durationInSecs'
-    | 'fuelConsumed'
-    | 'startPoint'
-    | 'endPoint'
+    | "startTime"
+    | "endTime"
+    | "status"
+    | "distanceInKph"
+    | "durationInSecs"
+    | "fuelConsumed"
+    | "startPoint"
+    | "endPoint"
   >[]
   stats: {
     totalTrips: number
@@ -280,7 +280,7 @@ export type VehiclesSearchResponse = VehiclesGetResponse & {
   search_query: string
 }
 
-export type VehicleTripStatus = 'active' | 'completed' | 'cancelled' | ''
+export type VehicleTripStatus = "active" | "completed" | "cancelled" | ""
 export interface VehicleTripsPaginationParams {
   page?: number
   limit?: number
@@ -372,7 +372,7 @@ export interface ActiveTrip {
   plate_number: string
   start_time: string
   end_time: string
-  status: 'active'
+  status: "active"
   created_at: string
   updated_at: string
 }
@@ -383,7 +383,7 @@ export interface VehicleActiveTripsPaginationParams {
 }
 export type ActiveTripsResponse = PaginatedResponseWithKey<
   ActiveTrip,
-  'active_trips'
+  "active_trips"
 >
 
 export interface VehicleDeleteParams {
@@ -457,11 +457,11 @@ export interface VehiclesLiveStreamParams {
   include_deleted?: boolean // default: false
 }
 
-export type VehiclesLiveStreamTypes = 'vehicle-update' | 'heartbeat' | 'error'
+export type VehiclesLiveStreamTypes = "vehicle-update" | "heartbeat" | "error"
 
 export type VehiclesLiveStreamPagination = PaginatedResponseWithKey<
   VehicleInLiveStream,
-  'vehicles'
+  "vehicles"
 >
 
 export interface VehiclesLiveStreamData {
@@ -517,10 +517,10 @@ export interface TPMSResult {
   }
 }
 
-export type AIResultsResponse = PaginatedResponseWithKey<AIResult, 'ai_results'>
+export type AIResultsResponse = PaginatedResponseWithKey<AIResult, "ai_results">
 export type TPMSResultsResponse = PaginatedResponseWithKey<
   TPMSResult,
-  'tpms_results'
+  "tpms_results"
 >
 
 export interface VehicleDataParams {
@@ -531,77 +531,77 @@ export interface VehicleDataParams {
 }
 
 export interface VehicleApiTypes {
-  'GET /vehicles': {
+  "GET /vehicles": {
     params: VehiclesPaginationParams
     request: {}
     response: VehiclesGetResponse
   }
-  'GET /vehicles/{id}': {
+  "GET /vehicles/{id}": {
     params: { id: string }
     request: {}
     response: VehicleGetResponse
   }
-  'DELETE /vehicles/{id}': {
+  "DELETE /vehicles/{id}": {
     params: VehicleDeleteParams
     request: {}
     response: VehicleDeleteResponse
   }
-  'GET /vehicles/search': {
+  "GET /vehicles/search": {
     params: VehiclesSearchPaginationParams
     request: {}
     response: VehiclesSearchResponse
   }
-  'GET /vehicles/company/{company_id}': {
+  "GET /vehicles/company/{company_id}": {
     params: VehiclesByCompanyIdPaginationParams
     request: {}
     response: {}
   }
-  'POST /vehicles': {
+  "POST /vehicles": {
     params: {}
     request: VehicleCreateRequest
     response: VehicleCreateResponse
   }
-  'GET /vehicles/trips/vehicle/{vehicle_id}': {
+  "GET /vehicles/trips/vehicle/{vehicle_id}": {
     params: VehicleTripsParams
     request: {}
     response: VehicleTripsResponse
   }
-  'GET /vehicles/trips/{id}': {
+  "GET /vehicles/trips/{id}": {
     params: VehicleTripsByTripIdParams
     request: {}
     response: VehicleTripsByTripIdResponse
   }
-  'GET /vehicles/trips': {
+  "GET /vehicles/trips": {
     params: VehicleTripsParams
     request: {}
     response: VehicleTripsResponse
   }
-  'PATCH /vehicles/{id}/restore': {
+  "PATCH /vehicles/{id}/restore": {
     params: VehicleRestoreParams
     request: {}
     response: VehicleRestoreResponse
   }
-  'PATCH /vehicles/{id}': {
+  "PATCH /vehicles/{id}": {
     params: VehicleUpdateParams
     request: VehicleUpdateRequest
     response: VehicleUpdateResponse
   }
-  'POST /vehicles/get': {
+  "POST /vehicles/get": {
     params: {}
     request: VehicleRequest
     response: VehicleGetResponse
   }
-  'GET /sse/vehicles/live-stream/{company_id}': {
+  "GET /sse/vehicles/live-stream/{company_id}": {
     params: VehiclesLiveStreamParams
     request: {}
     response: VehiclesLiveStreamData
   }
-  'GET /data/ai-results/vehicle/{id}': {
+  "GET /data/ai-results/vehicle/{id}": {
     params: VehicleDataParams
     request: {}
     response: AIResultsResponse
   }
-  'GET /data/tpms-results/vehicle/{id}': {
+  "GET /data/tpms-results/vehicle/{id}": {
     params: VehicleDataParams
     request: {}
     response: TPMSResultsResponse

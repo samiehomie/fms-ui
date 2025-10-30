@@ -1,14 +1,14 @@
-'use client'
+"use client"
 
-import { MetricCard } from '@/components/features/dashboard-mock/metric-card'
-import { FleetActivityChart } from '@/components/features/dashboard-mock/fleet-activity-chart'
-import { RecentIssues } from '@/components/features/dashboard-mock/recent-issues'
-import { DashboardFilters } from '@/components/features/dashboard-mock/dashboard-filters'
+import { MetricCard } from "@/components/features/dashboard-mock/metric-card"
+import { FleetActivityChart } from "@/components/features/dashboard-mock/fleet-activity-chart"
+import { RecentIssues } from "@/components/features/dashboard-mock/recent-issues"
+import { DashboardFilters } from "@/components/features/dashboard-mock/dashboard-filters"
 import {
   dashboardMetrics,
   recentIssues,
   chartData,
-} from '@/lib/mock_data/dashboard'
+} from "@/lib/mock-data/dashboard"
 
 export default function DashboardMockContent() {
   return (

@@ -1,4 +1,4 @@
-import { FetchServerResult, FetchError } from '@/lib/api/fetch-server'
+import { FetchServerResult, FetchError } from "@/lib/api/fetch-server"
 
 export type ApiResponse<T = any> = FetchServerResult<T>
 
@@ -8,7 +8,7 @@ export interface PaginationParams {
   page: number
   limit: number
   sort?: string
-  order?: 'asc' | 'desc'
+  order?: "asc" | "desc"
 }
 export interface PaginationMeta {
   page: number
@@ -18,7 +18,7 @@ export interface PaginationMeta {
 }
 
 // 동적 속성명을 지원하는 페이지네이션 응답 타입
-export type PaginatedResponse<T, K extends string = 'data'> = {
+export type PaginatedResponse<T, K extends string = "data"> = {
   [key in K]: T[]
 } & {
   pagination: PaginationMeta
@@ -26,7 +26,7 @@ export type PaginatedResponse<T, K extends string = 'data'> = {
 
 // 일반적인 사용을 위한 기본 페이지네이션 응답
 export interface DefaultPaginatedResponse<T>
-  extends PaginatedResponse<T, 'data'> {
+  extends PaginatedResponse<T, "data"> {
   data: T[]
   pagination: PaginationMeta
 }
@@ -48,7 +48,7 @@ export type ApiPutResponse<T> = ApiResponse<T>
 export type ApiDeleteResponse = ApiResponse<null>
 
 // 페이지네이션 응답을 위한 추가 헬퍼 타입들
-export type ApiGetPaginatedResponse<T, K extends string = 'data'> = ApiResponse<
+export type ApiGetPaginatedResponse<T, K extends string = "data"> = ApiResponse<
   PaginatedResponse<T, K>
 >
 
@@ -67,8 +67,7 @@ export interface CommonData {
   updatedAt: string
 }
 
-
-export type CommonProperties = 'id' | 'createdAt' | 'updatedAt'
+export type CommonProperties = "id" | "createdAt" | "updatedAt"
 
 export type ServerActionError = {
   message: string
@@ -79,3 +78,8 @@ export type ServerActionError = {
 export type ServerActionResult<T = any> =
   | { success: true; data: T; pagination?: PaginationMeta; message?: string }
   | { success: false; error: ServerActionError }
+
+export interface DateRange {
+  start: string // ISO 8601 format
+  end: string // ISO 8601 format
+}

@@ -12,7 +12,7 @@ import type { ApiResponseType, ApiRequestType } from "@/types/features"
 import { fetchServer } from "../api/fetch-server"
 import type { JWTAuthPayload } from "@/types/features"
 import { parseJWT } from "@/lib/utils/build-url"
-import type { ServerActionResult } from "@/types/features/common.types"
+import type { ServerActionResult } from "@/types/common/common.types"
 import type { SignupFormData } from "@/types/features/auth/signup.schema"
 import type { SignupResponse } from "@/types/features/auth/signup.types"
 import type {

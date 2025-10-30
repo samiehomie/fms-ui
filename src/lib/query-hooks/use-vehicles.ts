@@ -38,7 +38,7 @@ import {
 } from "../actions/vehicle.actions"
 import { getTripGpsDetails, getTripTpmsDetails } from "../actions/trip.actions"
 import { getVehicleTrips } from "../actions/vehicle-trip.actions"
-import type { ServerActionResult } from "@/types/features/common.types"
+import type { ServerActionResult } from "@/types/common/common.types"
 import {
   TripGpsDetailsResponse,
   TripTpmsDetailsQuery,

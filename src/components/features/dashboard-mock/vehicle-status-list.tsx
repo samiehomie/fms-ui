@@ -1,24 +1,24 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Car, User, MapPin, Clock } from 'lucide-react'
-import type { VehicleStatus } from '@/lib/mock_data/dashboard'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Car, User, MapPin, Clock } from "lucide-react"
+import type { VehicleStatus } from "@/lib/mock-data/dashboard"
 
 interface VehicleStatusListProps {
   vehicles: VehicleStatus[]
 }
 
-const getStatusColor = (status: VehicleStatus['status']) => {
+const getStatusColor = (status: VehicleStatus["status"]) => {
   switch (status) {
-    case 'active':
-      return 'bg-green-100 text-green-800'
-    case 'idle':
-      return 'bg-yellow-100 text-yellow-800'
-    case 'maintenance':
-      return 'bg-orange-100 text-orange-800'
-    case 'offline':
-      return 'bg-red-100 text-red-800'
+    case "active":
+      return "bg-green-100 text-green-800"
+    case "idle":
+      return "bg-yellow-100 text-yellow-800"
+    case "maintenance":
+      return "bg-orange-100 text-orange-800"
+    case "offline":
+      return "bg-red-100 text-red-800"
     default:
-      return 'bg-gray-100 text-gray-800'
+      return "bg-gray-100 text-gray-800"
   }
 }
 

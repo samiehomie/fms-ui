@@ -1,23 +1,26 @@
-import type { CommonProperties, PaginationQuery } from '../common.types'
-import type { Vehicle } from '@/types/entities/vehicle.entity'
-import type { Company } from '@/types/entities/company.entity'
-import type { User } from '@/types/entities/user.entity'
-import { CompanyType } from '@/types/enums/company.enum'
+import type {
+  CommonProperties,
+  PaginationQuery,
+} from "../../common/common.types"
+import type { Vehicle } from "@/types/entities/vehicle.entity"
+import type { Company } from "@/types/entities/company.entity"
+import type { User } from "@/types/entities/user.entity"
+import { CompanyType } from "@/types/enums/company.enum"
 
 type CompanyData = Pick<
   Company,
   | CommonProperties
-  | 'name'
-  | 'regNumber'
-  | 'type'
-  | 'details'
-  | 'phone'
-  | 'email'
-  | 'website'
-  | 'contactPerson'
-  | 'contactPhone'
-  | 'verified'
-  | 'isdeleted'
+  | "name"
+  | "regNumber"
+  | "type"
+  | "details"
+  | "phone"
+  | "email"
+  | "website"
+  | "contactPerson"
+  | "contactPhone"
+  | "verified"
+  | "isdeleted"
 >
 
 // GET /companies
@@ -36,8 +39,8 @@ export interface CompaniesGetQuery extends PaginationQuery {
 
 // GET /companies/{id}
 export type CompanyGetResponse = CompanyData & {
-  users: Pick<User, 'id' | 'username' | 'email'>[]
-  vehicles: Pick<Vehicle, 'id' | 'plateNumber'>[]
+  users: Pick<User, "id" | "username" | "email">[]
+  vehicles: Pick<Vehicle, "id" | "plateNumber">[]
 }
 
 // GET /companies/{id}
@@ -48,15 +51,15 @@ export interface CompanyGetQuery {
 // POST /companies
 export type CompanyCreateBody = Pick<
   Company,
-  | 'name'
-  | 'regNumber'
-  | 'type'
-  | 'details'
-  | 'phone'
-  | 'email'
-  | 'website'
-  | 'contactPerson'
-  | 'contactPhone'
+  | "name"
+  | "regNumber"
+  | "type"
+  | "details"
+  | "phone"
+  | "email"
+  | "website"
+  | "contactPerson"
+  | "contactPhone"
 >
 
 // POST /companies
@@ -113,14 +116,14 @@ export interface CompanyVehiclesQuery extends PaginationQuery {
 export type CompanyVehiclesReponse = Pick<
   Vehicle,
   | CommonProperties
-  | 'vehicleName'
-  | 'plateNumber'
-  | 'brand'
-  | 'manufactureYear'
-  | 'model'
-  | 'canBitrate'
-  | 'fuelType'
-  | 'gearType'
-  | 'numTire'
-  | 'isdeleted'
+  | "vehicleName"
+  | "plateNumber"
+  | "brand"
+  | "manufactureYear"
+  | "model"
+  | "canBitrate"
+  | "fuelType"
+  | "gearType"
+  | "numTire"
+  | "isdeleted"
 >[]

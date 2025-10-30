@@ -1,47 +1,47 @@
-import type { DefaultPaginatedResponse } from '../common.types'
-import type { Gps } from '@/types/entities/gps.entity'
-import type { Vehicle } from '@/types/entities/vehicle.entity'
-import type { Trip } from '@/types/entities/trip.entity'
-import { TripStatus } from '@/types/enums/trip.enum'
+import type { DefaultPaginatedResponse } from "../../common/common.types"
+import type { Gps } from "@/types/entities/gps.entity"
+import type { Vehicle } from "@/types/entities/vehicle.entity"
+import type { Trip } from "@/types/entities/trip.entity"
+import { TripStatus } from "@/types/enums/trip.enum"
 
 type GpsData = Pick<
   Gps,
-  | 'id'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'latitude'
-  | 'longitude'
-  | 'northSouth'
-  | 'eastWest'
-  | 'speedOverGrd'
-  | 'gpsTime'
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "latitude"
+  | "longitude"
+  | "northSouth"
+  | "eastWest"
+  | "speedOverGrd"
+  | "gpsTime"
 >
 
 type VehicleData = Pick<
   Vehicle,
-  | 'id'
-  | 'plateNumber'
-  | 'vehicleName'
-  | 'fuelType'
-  | 'gearType'
-  | 'numTire'
-  | 'model'
-  | 'brand'
-  | 'canBitrate'
-  | 'manufactureYear'
+  | "id"
+  | "plateNumber"
+  | "vehicleName"
+  | "fuelType"
+  | "gearType"
+  | "numTire"
+  | "model"
+  | "brand"
+  | "canBitrate"
+  | "manufactureYear"
 >
 
 type TripData = Pick<
   Trip,
-  | 'id'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'startTime'
-  | 'endTime'
-  | 'status'
-  | 'distanceInKph'
-  | 'durationInSecs'
-  | 'fuelConsumed'
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "startTime"
+  | "endTime"
+  | "status"
+  | "distanceInKph"
+  | "durationInSecs"
+  | "fuelConsumed"
 >
 
 export type VehicleTripsData = TripData & {
@@ -63,7 +63,7 @@ export interface VehicleTripsParams {
 }
 
 export interface VehicleTripApiTypes {
-  'GET /vehicles/{id}/trips': {
+  "GET /vehicles/{id}/trips": {
     params: VehicleTripsParams
     request: {}
     response: VehicleTripsResponse

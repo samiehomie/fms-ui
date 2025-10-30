@@ -1,4 +1,4 @@
-import { DefaultPaginatedResponse } from './common.types'
+import { DefaultPaginatedResponse } from "../common/common.types"
 
 export interface User {
   id: number
@@ -56,17 +56,17 @@ export interface UsersCreateResponse {
 }
 
 export interface UserApiTypes {
-  'GET /users': {
+  "GET /users": {
     params: {}
     request: {}
     response: UsersResponse
   }
-  'POST /users': {
+  "POST /users": {
     params: {}
     request: UsersCreateRequest
     response: UsersCreateResponse
   }
-  'POST /users/verify': {
+  "POST /users/verify": {
     params: {}
     request: UsersVerifyRequest
     response: UsersVerifyResponse

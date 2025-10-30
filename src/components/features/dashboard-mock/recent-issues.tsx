@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import {
   AlertTriangle,
   Wrench,
@@ -7,53 +7,53 @@ import {
   Siren as Tire,
   PenLine as Engine,
   HelpCircle,
-} from 'lucide-react'
-import type { Issue } from '@/lib/mock_data/dashboard'
+} from "lucide-react"
+import type { Issue } from "@/lib/mock-data/dashboard"
 
 interface RecentIssuesProps {
   issues: Issue[]
 }
 
-const getIssueIcon = (type: Issue['type']) => {
+const getIssueIcon = (type: Issue["type"]) => {
   switch (type) {
-    case 'maintenance':
+    case "maintenance":
       return Wrench
-    case 'fuel':
+    case "fuel":
       return Fuel
-    case 'tire':
+    case "tire":
       return Tire
-    case 'engine':
+    case "engine":
       return Engine
     default:
       return HelpCircle
   }
 }
 
-const getSeverityColor = (severity: Issue['severity']) => {
+const getSeverityColor = (severity: Issue["severity"]) => {
   switch (severity) {
-    case 'critical':
-      return 'bg-gray-100 text-gray-600 border-gray-200'
-    case 'high':
-      return 'bg-gray-100 text-gray-600 border-gray-200'
-    case 'medium':
-      return 'bg-gray-100 text-gray-600 border-gray-200'
-    case 'low':
-      return 'bg-gray-100 text-gray-400 border-gray-200'
+    case "critical":
+      return "bg-gray-100 text-gray-600 border-gray-200"
+    case "high":
+      return "bg-gray-100 text-gray-600 border-gray-200"
+    case "medium":
+      return "bg-gray-100 text-gray-600 border-gray-200"
+    case "low":
+      return "bg-gray-100 text-gray-400 border-gray-200"
     default:
-      return 'bg-gray-100 text-gray-400 border-gray-200'
+      return "bg-gray-100 text-gray-400 border-gray-200"
   }
 }
 
-const getStatusColor = (status: Issue['status']) => {
+const getStatusColor = (status: Issue["status"]) => {
   switch (status) {
-    case 'open':
-      return 'bg-gray-100 text-gray-400 border-gray-200'
-    case 'in-progress':
-      return 'bg-gray-100 text-gray-400 border-gray-200'
-    case 'resolved':
-      return 'bg-gray-100 text-gray-400 border-gray-200'
+    case "open":
+      return "bg-gray-100 text-gray-400 border-gray-200"
+    case "in-progress":
+      return "bg-gray-100 text-gray-400 border-gray-200"
+    case "resolved":
+      return "bg-gray-100 text-gray-400 border-gray-200"
     default:
-      return 'bg-gray-100 text-gray-800'
+      return "bg-gray-100 text-gray-800"
   }
 }
 

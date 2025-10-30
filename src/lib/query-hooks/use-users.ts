@@ -8,7 +8,7 @@ import type {
   UserVerifyBody,
   UserVerifyResponse,
 } from "@/types/features/users/user.types"
-import type { ServerActionResult } from "@/types/features/common.types"
+import type { ServerActionResult } from "@/types/common/common.types"
 import { HTTPError } from "../route/route.heplers"
 
 export function useAllUsers(query: UsersGetQuery) {

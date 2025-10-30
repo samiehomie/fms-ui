@@ -1,17 +1,20 @@
-import type { User } from '@/types/entities/user.entity'
-import type { Company } from '@/types/entities/company.entity'
-import type { Role } from '@/types/entities/role.entity'
-import type { CommonProperties, PaginationQuery } from '../common.types'
+import type { User } from "@/types/entities/user.entity"
+import type { Company } from "@/types/entities/company.entity"
+import type { Role } from "@/types/entities/role.entity"
+import type {
+  CommonProperties,
+  PaginationQuery,
+} from "../../common/common.types"
 
 type UserData = Pick<
   User,
-  CommonProperties | 'name' | 'username' | 'email' | 'verified' | 'isdeleted'
+  CommonProperties | "name" | "username" | "email" | "verified" | "isdeleted"
 >
 
 // GET /users
 export type UsersGetResponse = (UserData & {
-  company: Pick<Company, 'id' | 'name' | 'regNumber'>
-  role: Pick<Role, 'id' | 'name'>
+  company: Pick<Company, "id" | "name" | "regNumber">
+  role: Pick<Role, "id" | "name">
 })[]
 
 // GET /users
@@ -25,18 +28,18 @@ export interface UsersGetQuery extends PaginationQuery {
 export type UserGetResponse = UserData & {
   company: Pick<
     Company,
-    | 'id'
-    | 'name'
-    | 'regNumber'
-    | 'type'
-    | 'details'
-    | 'phone'
-    | 'email'
-    | 'website'
-    | 'verified'
-    | 'isdeleted'
+    | "id"
+    | "name"
+    | "regNumber"
+    | "type"
+    | "details"
+    | "phone"
+    | "email"
+    | "website"
+    | "verified"
+    | "isdeleted"
   >
-  role: Pick<Role, 'id' | 'name'>
+  role: Pick<Role, "id" | "name">
 }
 
 // GET /users/{id}
@@ -47,7 +50,7 @@ export interface UserGetQuery {
 // POST /users
 export type UserCreateBody = Pick<
   User,
-  'username' | 'email' | 'name' | 'password'
+  "username" | "email" | "name" | "password"
 > & {
   companyId: number
   roleId: number

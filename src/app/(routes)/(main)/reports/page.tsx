@@ -23,7 +23,7 @@ import {
   type FilterState,
 } from "@/components/features/reports/report-filters"
 import { ExportControls } from "@/components/features/reports/export-controls"
-import { enhancedReportsData } from "@/lib/mock_data/enhanced-reports"
+import { enhancedReportsData } from "@/lib/mock-data/enhanced-reports"
 import {
   formatCurrency,
   formatDate,
@@ -32,7 +32,7 @@ import {
   formatDuration,
   type ExportColumn,
 } from "@/lib/utils/report-export"
-import type { TripReport } from "@/lib/mock_data/reports"
+import type { TripReport } from "@/lib/mock-data/reports"
 
 const reportTabs = [
   {
@@ -469,8 +469,8 @@ export default function ReportsPage() {
           className="space-y-6"
         >
           <TabsList className="">
-            <TabsTrigger value="fleet">Fleet</TabsTrigger>
-            <TabsTrigger value="vehicle">Vehicle</TabsTrigger>
+            <TabsTrigger value="fleet">Fleet Overview</TabsTrigger>
+            <TabsTrigger value="vehicle">Vehicle Detail</TabsTrigger>
           </TabsList>
           <TabsContent value={"fleet"} className="space-y-6">
             <div className=" shadow-none">

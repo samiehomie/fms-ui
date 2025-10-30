@@ -14,7 +14,7 @@ import type {
   DeviceCreateBody,
   DeviceCreateResponse,
 } from "@/types/features/devices/device.types"
-import type { ServerActionResult } from "@/types/features/common.types"
+import type { ServerActionResult } from "@/types/common/common.types"
 import { getAllDevices, createDevice } from "../actions/device.actions"
 import { HTTPError } from "../route/route.heplers"
 

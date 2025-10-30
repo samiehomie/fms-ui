@@ -1,4 +1,4 @@
-import { DefaultPaginatedResponse } from './common.types'
+import { DefaultPaginatedResponse } from "../common/common.types"
 export interface Address {
   id: number
   created_at: string
@@ -186,32 +186,32 @@ export interface CompaniesVerifyResponse {
 }
 
 export interface CompanyApiTypes {
-  'POST /companies': {
+  "POST /companies": {
     params: {}
     request: CompaniesCreateRequest
     response: CompaniesCreateResponse
   }
-  'GET /companies': {
+  "GET /companies": {
     params: CompaniesPaginationParams
     request: {}
     response: CompaniesResponse
   }
-  'GET /companies/{id}': {
+  "GET /companies/{id}": {
     params: {}
     request: {}
     response: CompanyByIdResponse
   }
-  'DELETE /companies': {
+  "DELETE /companies": {
     params: {}
     request: CompaniesDeleteRequest
     response: CompaniesDeleteResponse
   }
-  'PUT /companies': {
+  "PUT /companies": {
     params: {}
     request: CompaniesCreateRequest
     response: CompaniesCreateResponse
   }
-  'PATCH /companies/{id}/verify': {
+  "PATCH /companies/{id}/verify": {
     params: {}
     request: CompaniesVerifyRequest
     response: CompaniesVerifyResponse

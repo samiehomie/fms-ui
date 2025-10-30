@@ -31,7 +31,7 @@ import {
   verifyCompany,
   getCompanyVehicles,
 } from "../actions/compnay.actions"
-import type { ServerActionResult } from "@/types/features/common.types"
+import type { ServerActionResult } from "@/types/common/common.types"
 import { HTTPError } from "../route/route.heplers"
 
 export function useAllCompanyList() {

@@ -1,8 +1,8 @@
-'use client'
+"use client"
 
-import type React from 'react'
+import type React from "react"
 
-import { useState } from 'react'
+import { useState } from "react"
 import {
   LineChart,
   Line,
@@ -11,11 +11,11 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from 'recharts'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { Route, Car, Fuel } from 'lucide-react'
-import type { ChartDataPoint } from '@/lib/mock_data/dashboard'
+} from "recharts"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Route, Car, Fuel } from "lucide-react"
+import type { ChartDataPoint } from "@/lib/mock-data/dashboard"
 
 interface FleetActivityChartProps {
   data: ChartDataPoint[]
@@ -32,40 +32,40 @@ interface ChartConfig {
 
 const chartConfigs: ChartConfig[] = [
   {
-    key: 'distance',
-    label: 'Distance Traveled',
-    unit: 'km',
-    color: '#8884d8',
+    key: "distance",
+    label: "Distance Traveled",
+    unit: "km",
+    color: "#8884d8",
     icon: Route,
-    description: 'Total distance covered by all vehicles',
+    description: "Total distance covered by all vehicles",
   },
   {
-    key: 'vehicles',
-    label: 'Active Vehicles',
-    unit: 'vehicles',
-    color: '#82ca9d',
+    key: "vehicles",
+    label: "Active Vehicles",
+    unit: "vehicles",
+    color: "#82ca9d",
     icon: Car,
-    description: 'Number of vehicles in operation',
+    description: "Number of vehicles in operation",
   },
   {
-    key: 'fuelConsumption',
-    label: 'Fuel Consumption',
-    unit: 'L',
-    color: '#ffc658',
+    key: "fuelConsumption",
+    label: "Fuel Consumption",
+    unit: "L",
+    color: "#ffc658",
     icon: Fuel,
-    description: 'Total fuel consumed by fleet',
+    description: "Total fuel consumed by fleet",
   },
 ]
 
 export function FleetActivityChart({ data }: FleetActivityChartProps) {
-  const [activeTab, setActiveTab] = useState('distance')
+  const [activeTab, setActiveTab] = useState("distance")
 
   const formatTooltipValue = (value: any, name: string) => {
     const config = chartConfigs.find((c) => c.key === name)
     if (!config) return [value, name]
 
     const formattedValue =
-      typeof value === 'number' ? value.toLocaleString() : value
+      typeof value === "number" ? value.toLocaleString() : value
     return [`${formattedValue} ${config.unit}`, config.label]
   }
 
@@ -122,26 +122,26 @@ export function FleetActivityChart({ data }: FleetActivityChartProps) {
                     <XAxis
                       dataKey="date"
                       tick={{ fontSize: 12 }}
-                      tickLine={{ stroke: '#e5e7eb' }}
+                      tickLine={{ stroke: "#e5e7eb" }}
                     />
                     <YAxis
                       tick={{ fontSize: 12 }}
-                      tickLine={{ stroke: '#e5e7eb' }}
+                      tickLine={{ stroke: "#e5e7eb" }}
                       label={{
                         value: config.unit,
                         angle: -90,
-                        position: 'insideLeft',
-                        style: { textAnchor: 'middle' },
+                        position: "insideLeft",
+                        style: { textAnchor: "middle" },
                       }}
                     />
                     <Tooltip
                       formatter={formatTooltipValue}
                       labelFormatter={(label) => `Date: ${label}`}
                       contentStyle={{
-                        backgroundColor: 'white',
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                        backgroundColor: "white",
+                        border: "1px solid #e5e7eb",
+                        borderRadius: "8px",
+                        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
                       }}
                     />
                     <Line
@@ -153,13 +153,13 @@ export function FleetActivityChart({ data }: FleetActivityChartProps) {
                         fill: config.color,
                         strokeWidth: 2,
                         r: 4,
-                        stroke: 'white',
+                        stroke: "white",
                       }}
                       activeDot={{
                         r: 6,
                         stroke: config.color,
                         strokeWidth: 2,
-                        fill: 'white',
+                        fill: "white",
                       }}
                       name={config.key}
                     />

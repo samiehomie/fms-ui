@@ -1,6 +1,6 @@
-import type { DefaultPaginatedResponse } from './common.types'
+import type { DefaultPaginatedResponse } from "../common/common.types"
 
-export type DeviceTypes = 'master' | 'slave' | 'gateway' | 'sensor' | 'logger'
+export type DeviceTypes = "master" | "slave" | "gateway" | "sensor" | "logger"
 export interface Device {
   id: number
   name: string
@@ -76,12 +76,12 @@ export interface DeviceCreateResponse {
 }
 
 export interface DeviceApiTypes {
-  'GET /edge-devices': {
+  "GET /edge-devices": {
     params: {}
     request: {}
     response: DevicesResponse
   }
-  'POST /edge-devices': {
+  "POST /edge-devices": {
     params: {}
     request: DeviceCreateRequest
     response: DeviceCreateResponse
