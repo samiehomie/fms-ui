@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { ColumnDef } from "@tanstack/react-table"
+import type { ColumnDef } from "@tanstack/react-table"
 import { formatDateTime } from "@/lib/utils/date-formatter"
 import { ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
