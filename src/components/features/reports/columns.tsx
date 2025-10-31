@@ -21,13 +21,39 @@ import {
   useRestoreVehicle,
 } from "@/lib/query-hooks/use-vehicles"
 import type { VehiclesGetResponse } from "@/types/features/vehicles/vehicle.types"
+import { Checkbox } from "@/components/ui/checkbox"
 
 export const columns: ColumnDef<VehiclesGetResponse[number]>[] = [
   {
-    accessorKey: "id",
-    header: () => <div className="min-w-[45px] pl-2">{"ID"}</div>,
-    cell: ({ row }) => <div className="pl-2">{row.getValue("id")}</div>,
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="mr-3.5"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className=""
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
   },
+  {
+    accessorKey: "id",
+    header: () => <div className="mr-2.5">{"ID"}</div>,
+    cell: ({ row }) => <div>{row.getValue("id")}</div>,
+  },
+
   {
     id: "company",
     header: "Company",

@@ -1,218 +1,205 @@
-// Reports data structure for FMS
-export interface ReportData {
-  fleet: TripReport[]
-  vehicle: VehicleReport[]
-}
+// lib/dummyData.ts
+import type { VehicleData } from "@/types/features/reports/reports.types"
 
-export interface TripReport {
-  id: number
-  vehicleId: number
-  plateNumber: string
-  driverId: number
-  driverName: string
-  startTime: string
-  endTime: string
-  startLocation: string
-  endLocation: string
-  distance: number
-  duration: number
-  averageSpeed: number
-  maxSpeed: number
-  fuelConsumed: number
-  fuelEfficiency: number
-  status: "completed" | "in-progress" | "cancelled"
-  events: string[]
-  cost: number
-}
-
-export interface VehicleReport {
-  id: number
-  plateNumber: string
-  brand: string
-  model: string
-  year: number
-  mileage: number
-  fuelType: string
-  status: "active" | "maintenance" | "retired"
-  lastMaintenanceDate: string
-  nextMaintenanceDate: string
-  totalTrips: number
-  totalDistance: number
-  totalFuelConsumed: number
-  averageFuelEfficiency: number
-  incidentCount: number
-  utilizationRate: number
-}
-
-export interface DriverReport {
-  id: number
-  name: string
-  licenseNumber: string
-  phoneNumber: string
-  email: string
-  hireDate: string
-  status: "active" | "inactive" | "suspended"
-  totalTrips: number
-  totalDistance: number
-  totalDrivingHours: number
-  averageSpeed: number
-  safetyScore: number
-  incidentCount: number
-  fuelEfficiencyRating: number
-  onTimeDeliveryRate: number
-}
-
-export interface FuelReport {
-  id: number
-  vehicleId: number
-  plateNumber: string
-  driverId: number
-  driverName: string
-  date: string
-  fuelType: string
-  quantity: number
-  pricePerLiter: number
-  totalCost: number
-  location: string
-  odometer: number
-  fuelEfficiency: number
-}
-
-export interface MaintenanceReport {
-  id: number
-  vehicleId: number
-  plateNumber: string
-  date: string
-  type: "scheduled" | "unscheduled" | "emergency"
-  category:
-    | "engine"
-    | "transmission"
-    | "brakes"
-    | "tires"
-    | "electrical"
-    | "other"
-  description: string
-  cost: number
-  duration: number
-  serviceProvider: string
-  nextServiceDate: string
-  status: "completed" | "in-progress" | "scheduled"
-}
-
-export interface IncidentReport {
-  id: number
-  vehicleId: number
-  plateNumber: string
-  driverId: number
-  driverName: string
-  date: string
-  time: string
-  location: string
-  type: "accident" | "breakdown" | "violation" | "theft" | "other"
-  severity: "low" | "medium" | "high" | "critical"
-  description: string
-  cost: number
-  resolved: boolean
-  insuranceClaim: boolean
-}
-
-export interface RouteReport {
-  id: number
-  name: string
-  startLocation: string
-  endLocation: string
-  distance: number
-  estimatedDuration: number
-  averageTraffic: string
-  fuelConsumption: number
-  tollCosts: number
-  frequency: number
-  efficiency: number
-  popularityScore: number
-}
-
-export interface CostReport {
-  id: number
-  vehicleId: number
-  plateNumber: string
-  date: string
-  category:
-    | "fuel"
-    | "maintenance"
-    | "insurance"
-    | "registration"
-    | "tolls"
-    | "fines"
-    | "other"
-  description: string
-  amount: number
-  currency: string
-  approved: boolean
-  approvedBy: string
-}
-
-// Mock data for reports
-export const mockReportsData: ReportData = {
-  fleet: [
-    {
-      id: 1,
-      vehicleId: 1,
-      plateNumber: "12가 3456",
-      driverId: 1,
-      driverName: "John Smith",
-      startTime: "2025-01-13T08:00:00Z",
-      endTime: "2025-01-13T12:30:00Z",
-      startLocation: "Seoul, Gangnam-gu",
-      endLocation: "Busan, Haeundae-gu",
-      distance: 325.5,
-      duration: 270,
-      averageSpeed: 72.3,
-      maxSpeed: 95.0,
-      fuelConsumed: 45.2,
-      fuelEfficiency: 7.2,
-      status: "completed",
-      events: ["Speed Warning", "Rest Stop"],
-      cost: 125.5,
-    },
-    {
-      id: 2,
-      vehicleId: 2,
-      plateNumber: "34나 5678",
-      driverId: 2,
-      driverName: "Emily Johnson",
-      startTime: "2025-01-13T09:15:00Z",
-      endTime: "2025-01-13T11:45:00Z",
-      startLocation: "Incheon Airport",
-      endLocation: "Seoul, Mapo-gu",
-      distance: 58.2,
-      duration: 150,
-      averageSpeed: 23.3,
-      maxSpeed: 65.0,
-      fuelConsumed: 12.8,
-      fuelEfficiency: 4.5,
-      status: "completed",
-      events: ["Traffic Delay"],
-      cost: 35.2,
-    },
-  ],
-  vehicle: [
-    {
-      id: 1,
-      plateNumber: "12가 3456",
-      brand: "Hyundai",
-      model: "Mighty",
-      year: 2022,
-      mileage: 45230,
-      fuelType: "Diesel",
-      status: "active",
-      lastMaintenanceDate: "2025-01-01T00:00:00Z",
-      nextMaintenanceDate: "2025-04-01T00:00:00Z",
-      totalTrips: 156,
-      totalDistance: 23450.5,
-      totalFuelConsumed: 3245.8,
-      averageFuelEfficiency: 7.2,
-      incidentCount: 2,
-      utilizationRate: 85.5,
-    },
-  ],
-}
+export const vehicleListData: VehicleData[] = [
+  {
+    id: 61,
+    company: "Chugoku Logistics & Heavy Haul",
+    name: "Foundation Fleet 05",
+    plateNo: "Osaka 500-1205",
+    model: "Hino Dutro XZU650M 2024 automatic electric",
+    canBitrate: "500 Kbps",
+    tires: 4,
+    createdAt: "2025. 10. 20 08:49",
+  },
+  {
+    id: 60,
+    company: "Chugoku Logistics & Heavy Haul",
+    name: "Core Transport 04",
+    plateNo: "Osaka 500-1204",
+    model: "Toyota Dyna XZU414 2023 automatic diesel",
+    canBitrate: "250 Kbps",
+    tires: 4,
+    createdAt: "2025. 10. 20 08:49",
+  },
+  {
+    id: 59,
+    company: "Chugoku Logistics & Heavy Haul",
+    name: "Essential Hauler 03",
+    plateNo: "Osaka 500-1203",
+    model: "Mitsubishi Fuso Canter FEB80 2024 manual diesel",
+    canBitrate: "250 Kbps",
+    tires: 4,
+    createdAt: "2025. 10. 20 08:49",
+  },
+  {
+    id: 58,
+    company: "Chugoku Logistics & Heavy Haul",
+    name: "Basic Cargo 02",
+    plateNo: "Osaka 500-1202",
+    model: "Isuzu Elf NMR85AN 2023 automatic diesel",
+    canBitrate: "250 Kbps",
+    tires: 4,
+    createdAt: "2025. 10. 20 08:49",
+  },
+  {
+    id: 57,
+    company: "Chugoku Logistics & Heavy Haul",
+    name: "Standard Fleet 01",
+    plateNo: "Osaka 500-1201",
+    model: "Hino Ranger FC9JUWA 2024 manual diesel",
+    canBitrate: "250 Kbps",
+    tires: 6,
+    createdAt: "2025. 10. 20 08:49",
+  },
+  {
+    id: 56,
+    company: "Tohoku Regional Freight Systems",
+    name: "Utility Master 05",
+    plateNo: "Tokyo 400-1105",
+    model: "Isuzu Elf NPR85AR 2023 automatic diesel",
+    canBitrate: "250 Kbps",
+    tires: 4,
+    createdAt: "2025. 10. 20 08:49",
+  },
+  {
+    id: 55,
+    company: "Tohoku Regional Freight Systems",
+    name: "All Purpose 04",
+    plateNo: "Tokyo 400-1104",
+    model: "UD Trucks Condor PK39L 2024 manual diesel",
+    canBitrate: "250 Kbps",
+    tires: 6,
+    createdAt: "2025. 10. 20 08:49",
+  },
+  {
+    id: 54,
+    company: "Tohoku Regional Freight Systems",
+    name: "Versatile Carrier 03",
+    plateNo: "Tokyo 400-1103",
+    model: "Mitsubishi Fuso Fighter FK62F 2023 amt diesel",
+    canBitrate: "250 Kbps",
+    tires: 6,
+    createdAt: "2025. 10. 20 08:49",
+  },
+  {
+    id: 53,
+    company: "Tohoku Regional Freight Systems",
+    name: "Multi Purpose 02",
+    plateNo: "Tokyo 400-1102",
+    model: "Hino Ranger FE7JUWA 2024 automatic diesel",
+    canBitrate: "250 Kbps",
+    tires: 6,
+    createdAt: "2025. 10. 20 08:49",
+  },
+  {
+    id: 52,
+    company: "Tohoku Regional Freight Systems",
+    name: "General Hauler 01",
+    plateNo: "Tokyo 400-1101",
+    model: "Isuzu Forward FRR34S2 2023 manual diesel",
+    canBitrate: "250 Kbps",
+    tires: 6,
+    createdAt: "2025. 10. 20 08:49",
+  },
+  {
+    id: 51,
+    company: "Kyushu Heavy Equipment Rentals",
+    name: "Excavator Prime 10",
+    plateNo: "Fukuoka 300-2210",
+    model: "Komatsu PC200-11 2024 excavator",
+    canBitrate: "500 Kbps",
+    tires: 4,
+    createdAt: "2025. 10. 19 14:23",
+  },
+  {
+    id: 50,
+    company: "Kyushu Heavy Equipment Rentals",
+    name: "Dozer Master 09",
+    plateNo: "Fukuoka 300-2209",
+    model: "Caterpillar D6T 2023 bulldozer",
+    canBitrate: "500 Kbps",
+    tires: 4,
+    createdAt: "2025. 10. 19 14:23",
+  },
+  {
+    id: 49,
+    company: "Kyushu Heavy Equipment Rentals",
+    name: "Loader Chief 08",
+    plateNo: "Fukuoka 300-2208",
+    model: "Volvo L120H 2024 wheel loader",
+    canBitrate: "500 Kbps",
+    tires: 4,
+    createdAt: "2025. 10. 19 14:23",
+  },
+  {
+    id: 48,
+    company: "Kyushu Heavy Equipment Rentals",
+    name: "Hauler Elite 07",
+    plateNo: "Fukuoka 300-2207",
+    model: "Hitachi EH3500AC-3 2023 dump truck",
+    canBitrate: "500 Kbps",
+    tires: 6,
+    createdAt: "2025. 10. 19 14:23",
+  },
+  {
+    id: 47,
+    company: "Hokkaido Mining & Construction",
+    name: "Excavator Alpha 15",
+    plateNo: "Sapporo 100-3315",
+    model: "Hitachi ZX470-6 2024 excavator",
+    canBitrate: "500 Kbps",
+    tires: 4,
+    createdAt: "2025. 10. 18 09:15",
+  },
+  {
+    id: 46,
+    company: "Hokkaido Mining & Construction",
+    name: "Dozer Beta 14",
+    plateNo: "Sapporo 100-3314",
+    model: "Komatsu D51PX-24 2023 bulldozer",
+    canBitrate: "500 Kbps",
+    tires: 4,
+    createdAt: "2025. 10. 18 09:15",
+  },
+  {
+    id: 45,
+    company: "Hokkaido Mining & Construction",
+    name: "Loader Gamma 13",
+    plateNo: "Sapporo 100-3313",
+    model: "Caterpillar 950M 2024 wheel loader",
+    canBitrate: "500 Kbps",
+    tires: 4,
+    createdAt: "2025. 10. 18 09:15",
+  },
+  {
+    id: 44,
+    company: "Hokkaido Mining & Construction",
+    name: "Grader Delta 12",
+    plateNo: "Sapporo 100-3312",
+    model: "John Deere 872GP 2023 motor grader",
+    canBitrate: "500 Kbps",
+    tires: 6,
+    createdAt: "2025. 10. 18 09:15",
+  },
+  {
+    id: 43,
+    company: "Kansai Logistics Solutions",
+    name: "Crane Operator 20",
+    plateNo: "Kyoto 200-4420",
+    model: "Tadano GR-700N 2024 mobile crane",
+    canBitrate: "500 Kbps",
+    tires: 8,
+    createdAt: "2025. 10. 17 16:42",
+  },
+  {
+    id: 42,
+    company: "Kansai Logistics Solutions",
+    name: "Excavator Pro 19",
+    plateNo: "Kyoto 200-4419",
+    model: "Kobelco SK200-10 2023 excavator",
+    canBitrate: "500 Kbps",
+    tires: 4,
+    createdAt: "2025. 10. 17 16:42",
+  },
+]

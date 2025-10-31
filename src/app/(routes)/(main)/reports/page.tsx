@@ -1,4 +1,4 @@
-import ReportsContent from "@/components/features/reports/reports-content"
+import ReportsContent from "@/components/features/reports/reports-demo"
 
 export default async function ReportsPage() {
   return (

@@ -31,7 +31,7 @@ const DataTableHeader: FC<DataTableHeaderProps> = ({
       <div className="flex items-center gap-x-2 ">
         <DateRangePicker className="mr-3" />
         <Input
-          placeholder="Search in vehicle name, model, or plate number"
+          placeholder="Search reports"
           value={search}
           onChange={(event) => {
             //setPagination((old) => ({ ...old, search: event.target.value }))
