@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, type ReactNode } from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -30,6 +30,7 @@ interface DataTableProps<TData, TValue, TPagination = any> {
   setPagination: React.Dispatch<React.SetStateAction<TPagination>>
   totalCount: number
   hiddenColumns?: VisibilityState
+  children?: ReactNode
 }
 
 export function DataTable<
@@ -43,6 +44,7 @@ export function DataTable<
   pagination,
   setPagination,
   hiddenColumns,
+  children,
 }: DataTableProps<TData, TValue, TPagination>) {
   const [search, setSearch] = useState("")
   const [sorting, setSorting] = useState<SortingState>([])
@@ -176,7 +178,8 @@ export function DataTable<
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end py-5 px-1">
+      <div className={cn("flex items-center justify-end py-5 px-1", children && "justify-between")}>
+        {children}
         <DataTablePagination table={table} />
       </div>
     </div>

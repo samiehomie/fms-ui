@@ -1,22 +1,22 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Badge } from '@/components/ui/badge'
-import { Download, FileSpreadsheet, FileText, Loader2 } from 'lucide-react'
+} from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Badge } from "@/components/ui/badge"
+import { Download, FileSpreadsheet, FileText, Loader2 } from "lucide-react"
 import {
   exportToCSV,
   exportToXLSX,
   type ExportColumn,
-} from '@/lib/utils/report-export'
+} from "@/lib/utils/report-export"
 
 interface ExportControlsProps {
   selectedItems: any[]
@@ -35,29 +35,29 @@ export function ExportControls({
   onSelectAll,
   onClearSelection,
 }: ExportControlsProps) {
-  const [exportFormat, setExportFormat] = useState<'csv' | 'xlsx'>('csv')
+  const [exportFormat, setExportFormat] = useState<"csv" | "xlsx">("csv")
   const [isExporting, setIsExporting] = useState(false)
 
   const handleExport = async () => {
     if (selectedItems.length === 0) {
-      alert('Please select items to export')
+      alert("Please select items to export")
       return
     }
 
     setIsExporting(true)
 
     try {
-      const timestamp = new Date().toISOString().split('T')[0]
+      const timestamp = new Date().toISOString().split("T")[0]
       const exportFilename = `${filename}_${timestamp}`
 
-      if (exportFormat === 'csv') {
+      if (exportFormat === "csv") {
         exportToCSV(selectedItems, columns, exportFilename)
       } else {
         await exportToXLSX(selectedItems, columns, exportFilename)
       }
     } catch (error) {
-      logger.error('Export failed:', error)
-      alert('Export failed. Please try again.')
+      logger.error("Export failed:", error)
+      alert("Export failed. Please try again.")
     } finally {
       setIsExporting(false)
     }
@@ -67,17 +67,7 @@ export function ExportControls({
     selectedItems.length === allData.length && allData.length > 0
 
   return (
-    <div className="flex flex-wrap items-center gap-4 p-4 rounded-lg">
-      <div className="flex items-center gap-2">
-        <Checkbox
-          checked={isAllSelected}
-          onCheckedChange={isAllSelected ? onClearSelection : onSelectAll}
-        />
-        <span className="text-sm font-medium">
-          Select All ({allData.length} items)
-        </span>
-      </div>
-
+    <div className="flex flex-wrap items-center gap-4">
       <div className="flex items-center gap-2">
         <span className="text-sm text-muted-foreground">Selected:</span>
         <Badge variant="secondary">
@@ -87,36 +77,26 @@ export function ExportControls({
 
       <Select
         value={exportFormat}
-        onValueChange={(value: 'csv' | 'xlsx') => setExportFormat(value)}
+        onValueChange={(value: "csv" | "xlsx") => setExportFormat(value)}
       >
-        <SelectTrigger className="w-32">
+        <SelectTrigger className="w-25">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="csv">
-            <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              CSV
-            </div>
-          </SelectItem>
-          <SelectItem value="xlsx">
-            <div className="flex items-center gap-2">
-              <FileSpreadsheet className="h-4 w-4" />
-              XLSX
-            </div>
-          </SelectItem>
+          <SelectItem value="csv">CSV</SelectItem>
+          <SelectItem value="xlsx">XLSX</SelectItem>
         </SelectContent>
       </Select>
 
       <Button
         onClick={handleExport}
         disabled={selectedItems.length === 0 || isExporting}
-        className="gap-2"
+        className="gap-1.5 text-[13px]"
       >
         {isExporting ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <Loader2 className="h-3 w-3 animate-spin" />
         ) : (
-          <Download className="h-4 w-4" />
+          <Download className="h-3 w-3" />
         )}
         Export {selectedItems.length > 0 && `(${selectedItems.length})`}
       </Button>
