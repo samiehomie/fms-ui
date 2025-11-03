@@ -16,6 +16,7 @@ interface DateRangePickerProps {
   minDate?: string | Date | Dayjs
   maxDate?: string | Date | Dayjs
   isLimited?: boolean
+  defaultDateRange?: [Dayjs, Dayjs]
 }
 
 const DateRangePicker = ({
@@ -24,14 +25,21 @@ const DateRangePicker = ({
   minDate,
   maxDate,
   isLimited,
+  defaultDateRange,
 }: DateRangePickerProps) => {
   const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(() =>
-    getDefaultDateRange(),
+    defaultDateRange || getDefaultDateRange(),
   )
 
   // Convert minDate and maxDate to Dayjs objects
   const minDayjs = useMemo(() => (minDate ? dayjs(minDate) : null), [minDate])
   const maxDayjs = useMemo(() => (maxDate ? dayjs(maxDate) : null), [maxDate])
+
+  useEffect(() => {
+    if (defaultDateRange) {
+      setDateRange(defaultDateRange)
+    }
+  }, [defaultDateRange])
 
   useEffect(() => {
     if (minDayjs && maxDayjs) {
