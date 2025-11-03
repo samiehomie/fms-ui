@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select"
 import { Calendar, Filter, RefreshCw } from "lucide-react"
 import DateRangePicker from "@/components/ui/data-range-picker"
+import { VehicleType } from "@/types/enums/vehicle.enum"
 
 interface DashboardFiltersProps {
   onFiltersChange?: (filters: any) => void
@@ -58,9 +59,14 @@ export function DashboardFilters({ onFiltersChange }: DashboardFiltersProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Vehicles</SelectItem>
-              <SelectItem value="truck">Trucks</SelectItem>
-              <SelectItem value="van">Vans</SelectItem>
-              <SelectItem value="car">Cars</SelectItem>
+              {Object.values(VehicleType).map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type
+                    .split("_")
+                    .map((t) => t.slice(0, 1).toUpperCase() + t.slice(1))
+                    .join(" ")}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
 

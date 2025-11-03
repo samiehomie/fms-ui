@@ -1,11 +1,16 @@
-import { BaseEntity } from './base.entity'
-import { User } from './user.entity'
-import { Company } from './company.entity'
-import { Trip } from './trip.entity'
-import { EdgeDevice } from './edge-device.entity'
-import { Gps } from './gps.entity'
-import { Tire } from './tire.entity'
-import { GearType, FuelType, CanBitrateType } from '@/types/enums/vehicle.enum'
+import { BaseEntity } from "./base.entity"
+import { User } from "./user.entity"
+import { Company } from "./company.entity"
+import { Trip } from "./trip.entity"
+import { EdgeDevice } from "./edge-device.entity"
+import { Gps } from "./gps.entity"
+import { Tire } from "./tire.entity"
+import {
+  GearType,
+  FuelType,
+  CanBitrateType,
+  VehicleType,
+} from "@/types/enums/vehicle.enum"
 
 export interface Vehicle extends BaseEntity {
   vehicleName: string
@@ -23,6 +28,8 @@ export interface Vehicle extends BaseEntity {
   fuelType: FuelType
 
   gearType: GearType
+
+  vehicleType: VehicleType
 
   numTire: number
 

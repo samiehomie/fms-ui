@@ -150,6 +150,7 @@ const TripTpmsHeader = ({
           className="h-7 leading-none "
           minDate={startDate}
           maxDate={endDate}
+          isLimited
         />
       </div>
     </div>

@@ -15,6 +15,7 @@ interface DateRangePickerProps {
   onDateChange?: (formattedRange: { from: string; to: string } | null) => void
   minDate?: string | Date | Dayjs
   maxDate?: string | Date | Dayjs
+  isLimited?: boolean
 }
 
 const DateRangePicker = ({
@@ -22,6 +23,7 @@ const DateRangePicker = ({
   onDateChange,
   minDate,
   maxDate,
+  isLimited,
 }: DateRangePickerProps) => {
   const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(() =>
     getDefaultDateRange(),
@@ -84,7 +86,7 @@ const DateRangePicker = ({
         style={{ width: 260 }}
         placeholder={["Start date", "End date"]}
         allowClear={true}
-        disabledDate={disabledDate}
+        disabledDate={isLimited ? disabledDate : undefined}
         showTime={{
           hideDisabledOptions: true,
           defaultValue: [
