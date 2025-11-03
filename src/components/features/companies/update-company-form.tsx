@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
-import { useState, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Button } from '@/components/ui/button'
+import { useState, useEffect } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog"
 import {
   Drawer,
   DrawerContent,
@@ -20,16 +20,16 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+} from "@/components/ui/drawer"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select"
 import {
   Form,
   FormControl,
@@ -37,28 +37,28 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { useMedia } from 'react-use'
-import { Loader2 } from 'lucide-react'
-import { useUpdateCompany } from '@/lib/query-hooks/use-companies'
-import { useCompanyById } from '@/lib/query-hooks/use-companies'
-import { Skeleton } from '@/components/ui/skeleton'
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
-import type { CompanyUpdateBody } from '@/types/features/companies/company.types'
-import { CompanyType } from '@/types/enums/company.enum'
+} from "@/components/ui/form"
+import { useMedia } from "react-use"
+import { Loader2 } from "lucide-react"
+import { useUpdateCompany } from "@/lib/query-hooks/use-companies"
+import { useCompanyById } from "@/lib/query-hooks/use-companies"
+import { Skeleton } from "@/components/ui/skeleton"
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
+import type { CompanyUpdateBody } from "@/types/features/companies/company.types"
+import { CompanyType } from "@/types/enums/company.enum"
 
 const companySchema = z.object({
-  name: z.string().min(1, 'Company name is required'),
-  regNumber: z.string().min(1, 'Registration number is required'),
+  name: z.string().min(1, "Company name is required"),
+  regNumber: z.string().min(1, "Registration number is required"),
   type: z.nativeEnum(CompanyType, {
-    errorMap: () => ({ message: 'Company type is required' }),
+    errorMap: () => ({ message: "Company type is required" }),
   }),
-  details: z.string().min(1, 'Company details are required'),
-  phone: z.string().min(1, 'Phone number is required'),
-  email: z.string().email('Invalid email address'),
-  website: z.string().url('Invalid website URL'),
-  contactPerson: z.string().min(1, 'Contact person is required'),
-  contactPhone: z.string().min(1, 'Contact phone is required'),
+  details: z.string().min(1, "Company details are required"),
+  phone: z.string().min(1, "Phone number is required"),
+  email: z.string().email("Invalid email address"),
+  website: z.string().url("Invalid website URL"),
+  contactPerson: z.string().min(1, "Contact person is required"),
+  contactPhone: z.string().min(1, "Contact phone is required"),
 })
 
 type CompanyFormData = z.infer<typeof companySchema>
@@ -66,7 +66,7 @@ type CompanyFormData = z.infer<typeof companySchema>
 function CompanyForm({ onClose, id }: { onClose: () => void; id: string }) {
   const [isInitialized, setIsInitialized] = useState(false)
 
-  const { data: companyData, isLoading } = useCompanyById(id)
+  const { data: companyData, isPending, isError, error } = useCompanyById(id)
   const mutation = useUpdateCompany(id)
 
   const form = useForm<CompanyFormData>({
@@ -77,22 +77,22 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: string }) {
     if (companyData?.data) {
       const company = companyData.data
       form.reset({
-        name: company.name || '',
-        regNumber: company.regNumber || '',
-        type: company.type || '',
-        details: company.details || '',
-        phone: company.phone || '',
-        email: company.email || '',
-        website: company.website || '',
-        contactPerson: company.contactPerson || '',
-        contactPhone: company.contactPhone || '',
+        name: company.name || "",
+        regNumber: company.regNumber || "",
+        type: company.type || "",
+        details: company.details || "",
+        phone: company.phone || "",
+        email: company.email || "",
+        website: company.website || "",
+        contactPerson: company.contactPerson || "",
+        contactPhone: company.contactPhone || "",
       })
       setIsInitialized(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyData])
 
-  if (isLoading || !companyData || !isInitialized) {
+  if (isPending || !isInitialized) {
     return (
       <div className="min-h-[51.125rem]  flex flex-col gap-y-4 overflow-y-hidden">
         <Skeleton className="w-full h-10" />
@@ -107,6 +107,10 @@ function CompanyForm({ onClose, id }: { onClose: () => void; id: string }) {
         <Skeleton className="w-full h-10" />
       </div>
     )
+  }
+
+  if (isError) {
+    return <div>Error: {error.message}</div>
   }
 
   const onSubmit = async (data: CompanyUpdateBody) => {
@@ -380,7 +384,7 @@ export function UpdateCompanyForm({
   onClose: () => void
 }) {
   const [open, setOpen] = useState(false)
-  const isDesktop = useMedia('(min-width: 768px)', true)
+  const isDesktop = useMedia("(min-width: 768px)", true)
 
   const handleClose = () => {
     onClose()
@@ -416,7 +420,7 @@ export function UpdateCompanyForm({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant={'ghost'}
+          variant={"ghost"}
           className="w-full flex justify-start pl-2 font-[400]"
         >
           Edit

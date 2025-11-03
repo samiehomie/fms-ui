@@ -1,11 +1,11 @@
-'use client'
-import { DataTable } from '../../ui/data-table'
-import { useState } from 'react'
-import { useAllCompanies } from '@/lib/query-hooks/use-companies'
-import { columns } from '@/components/features/companies/columns'
-import { Skeleton } from '@/components/ui/skeleton'
-import DataTableHeader from './data-table-header'
-import type { CompaniesGetQuery } from '@/types/features/companies/company.types'
+"use client"
+import { DataTable } from "../../ui/data-table"
+import { useState } from "react"
+import { useAllCompanies } from "@/lib/query-hooks/use-companies"
+import { columns } from "@/components/features/companies/columns"
+import { Skeleton } from "@/components/ui/skeleton"
+import DataTableHeader from "./data-table-header"
+import type { CompaniesGetQuery } from "@/types/features/companies/company.types"
 
 const CompaniesContent = () => {
   const [query, setQuery] = useState<CompaniesGetQuery>({
@@ -17,9 +17,14 @@ const CompaniesContent = () => {
     type: undefined,
   })
 
-  const { data: companiesData, isLoading } = useAllCompanies(query)
+  const {
+    data: companiesData,
+    isPending,
+    isError,
+    error,
+  } = useAllCompanies(query)
 
-  if (isLoading || !companiesData) {
+  if (isPending) {
     return (
       <div className="mt-10 flex flex-col gap-y-2">
         <Skeleton className="w-full h-10" />
@@ -27,6 +32,10 @@ const CompaniesContent = () => {
         <Skeleton className="w-full h-10" />
       </div>
     )
+  }
+
+  if (isError) {
+    return <div>Error: {error.message}</div>
   }
 
   if (!companiesData.pagination) return null
