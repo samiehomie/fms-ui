@@ -31,11 +31,9 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 import { useAllAlerts } from "@/lib/query-hooks/use-alerts"
-import {
-  AlertSeverity,
-  AlertStatus,
-  AlertType,
-} from "@/types/features/alerts/alerts.enum"
+import { AlertSeverity, AlertStatus } from "@/types/features/alerts/alerts.enum"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Spinner } from "@/components/ui/spinner"
 
 interface Notification {
   id: number
@@ -48,19 +46,15 @@ interface Notification {
   driverName: string
   timestamp: string
   status: AlertStatus
-  category: AlertType
+  category: string
 }
-
-// Mock data for OTR tire fleet notifications
-const mockNotifications: Notification[] = []
-
 type GroupBy = "none" | "vehicle" | "driver" | "category"
-type FilterType = "all" | "unread" | "critical" | "warning" | "maintenance"
+type FilterType = `${AlertSeverity}` | `${AlertStatus}` | 'all'
 
-export default function NotificationsPage() {
+export default function AlertsContent() {
   const {
     data: alertsData,
-    isPaused,
+    isPending,
     isError,
     error,
   } = useAllAlerts({
@@ -82,14 +76,16 @@ export default function NotificationsPage() {
         driverName: a.vehicle.users[0].name,
         timestamp: a.updatedAt,
         status: a.status,
-        category: a.type,
+        category: a.type
+          .split("_")
+          .map((c) => c.slice(0, 1).toUpperCase() + c.slice(1, undefined))
+          .join(" "),
       }))
       setNotifications(formattedData)
     }
   }, [alertsData])
 
-  const [notifications, setNotifications] =
-    useState<Notification[]>(mockNotifications)
+  const [notifications, setNotifications] = useState<Notification[]>([])
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [searchQuery, setSearchQuery] = useState("")
   const [groupBy, setGroupBy] = useState<GroupBy>("vehicle")
@@ -107,10 +103,9 @@ export default function NotificationsPage() {
 
       const matchesFilter =
         activeFilter === "all" ||
-        (activeFilter === "unread" && notif.status === "unread") ||
         (activeFilter === "critical" && notif.type === "critical") ||
         (activeFilter === "warning" && notif.type === "warning") ||
-        (activeFilter === "maintenance" && notif.category === "maintenance")
+        (activeFilter === "info" && notif.type === "info")
 
       return matchesSearch && matchesFilter
     })
@@ -221,7 +216,7 @@ export default function NotificationsPage() {
   }
 
   const getTimeAgo = (date: string) => {
-    const seconds = Math.floor((Date.now() -  new Date(date).getTime()) / 1000)
+    const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000)
     if (seconds < 60) return "just now"
     const minutes = Math.floor(seconds / 60)
     if (minutes < 60) return `${minutes}m ago`
@@ -233,15 +228,17 @@ export default function NotificationsPage() {
 
   const unreadCount = notifications.filter((n) => n.status === "unread").length
 
+  if (isPending) {
+    return (
+      <div className="flex h-screen bg-background -ml-6 -mt-7 relative">
+        <Spinner className="size-13 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-3/4 text-blue-400" />
+      </div>
+    )
+  }
+
   return (
     <div className="flex h-screen bg-background -ml-6 -mt-7">
-      {/* Sidebar */}
       <div className="w-64 border-r border-border bg-muted/30 pl-4.5 pr-4 pt-9.5">
-        {/* <div className="mb-6">
-          <h1 className="text-xl font-semibold">Notifications</h1>
-        </div> */}
-
-        {/* Main Navigation */}
         <div className="space-y-1 mb-6">
           <button
             onClick={() => setActiveFilter("all")}
@@ -332,10 +329,10 @@ export default function NotificationsPage() {
               Warnings
             </button>
             <button
-              onClick={() => setActiveFilter("maintenance")}
+              onClick={() => setActiveFilter("info")}
               className={cn(
                 "w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors",
-                activeFilter === "maintenance"
+                activeFilter === "info"
                   ? "bg-accent text-accent-foreground"
                   : "hover:bg-accent/50 text-muted-foreground",
               )}
@@ -359,7 +356,7 @@ export default function NotificationsPage() {
                   d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              Maintenance
+              Info
             </button>
           </div>
         </div>
@@ -479,13 +476,13 @@ export default function NotificationsPage() {
         )}
 
         {/* Notifications List */}
-        <div className="flex-1 overflow-y-auto">
+        <ScrollArea className="flex-1 overflow-auto">
           {Object.entries(groupedNotifications).map(
             ([groupName, groupNotifications]) => (
               <div key={groupName} className="border-b border-border">
                 {/* Group Header */}
                 {groupBy !== "none" && (
-                  <div className="bg-[#fcfcfc] px-4 py-2 flex items-center justify-between sticky top-0 z-10">
+                  <div className="bg-[#fcfcfc] px-4 py-2 flex items-center justify-between sticky top-0 ">
                     <h3 className="text-sm font-semibold">{groupName}</h3>
                     <Button variant="ghost" size="sm" className="h-7 text-xs">
                       Mark as done
@@ -557,7 +554,7 @@ export default function NotificationsPage() {
               </div>
             ),
           )}
-        </div>
+        </ScrollArea>
 
         {/* Footer Tip */}
         <div className="border-t border-border px-4 py-2 bg-muted/30">

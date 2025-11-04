@@ -33,7 +33,7 @@ export default function DashboardLayout({
               />
               <BreadcrumbMain />
             </div>
-            <Link href={"/notifications"} className="relative">
+            <Link href={"/alerts"} className="relative">
               <div className="w-2 h-2 bg-[#2c7fff] rounded-full absolute z-[999]" />
               <InboxIcon size={20} strokeWidth={1.5} />
             </Link>
