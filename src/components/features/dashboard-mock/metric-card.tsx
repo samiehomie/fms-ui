@@ -34,7 +34,7 @@ export function MetricCard({
   }
 
   return (
-    <Card className="gap-3">
+    <Card className="gap-3 flex flex-col justify-between">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-[400]">{title}</CardTitle>
         {change && (
@@ -48,11 +48,6 @@ export function MetricCard({
       </CardHeader>
       <CardContent>
         <div className="text-3xl font-bold">{value}</div>
-        {change && (
-          <p className={`text-xs mt-[.375rem] ${getChangeColor()}`}>
-            {change} from last period
-          </p>
-        )}
       </CardContent>
     </Card>
   )

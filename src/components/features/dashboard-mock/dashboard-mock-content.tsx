@@ -41,8 +41,8 @@ export default function DashboardMockContent() {
             changeType="positive"
           />
           <MetricCard
-            title="Fuel Consumption"
-            value={`${dashboardMetrics.fuelConsumption.toLocaleString()} L`}
+            title="Tire Pressure Compliance"
+            value={`${'94'} %`}
             change="+5.2%"
             changeType="negative"
           />

@@ -1,5 +1,3 @@
-// types/reports.ts
-
 export type ReportCategory = "fleet-overview" | "vehicle-detail"
 export type ExportFormat = "csv" | "xlsx"
 

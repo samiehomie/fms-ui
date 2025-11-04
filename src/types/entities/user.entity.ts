@@ -1,18 +1,18 @@
-import { Vehicle } from './vehicle.entity'
-import { BaseEntity } from './base.entity'
-import { Role } from './role.entity'
-import { Company } from './company.entity'
-import { Issue } from './issue.entity'
-import { Ticket } from './ticket.entity'
+import { Vehicle } from "./vehicle.entity"
+import { BaseEntity } from "./base.entity"
+import { Role } from "./role.entity"
+import { Company } from "./company.entity"
+import { Issue } from "./issue.entity"
+import { Ticket } from "./ticket.entity"
+import { AlertReadStatus } from "./alert-read-status.entity"
 
 export interface User extends BaseEntity {
-
   name: string
 
   username: string
- 
+
   password: string
-  
+
   email: string
 
   verified: boolean
@@ -23,15 +23,15 @@ export interface User extends BaseEntity {
 
   role: Role
 
-  vehicles: Vehicle[]
+  vehicles?: Vehicle[]
 
-  issues: Issue[]
+  issues?: Issue[]
 
-  assignedIssues: Issue[]
+  assignedIssues?: Issue[]
 
-  createdTickets: Ticket[]
+  createdTickets?: Ticket[]
 
-  assignedTickets: Ticket[]
+  assignedTickets?: Ticket[]
 
   emailVerificationToken: string
 
@@ -40,4 +40,6 @@ export interface User extends BaseEntity {
   passwordResetToken: string
 
   passwordResetExpires: Date
+
+  alertReadStatuses: AlertReadStatus[]
 }

@@ -2,15 +2,10 @@ import {
   useQuery,
   useMutation,
   useQueryClient,
-  useQueries,
-  skipToken,
 } from "@tanstack/react-query"
-import { devicesApi } from "@/lib/api/device"
 import { toast } from "sonner"
-import { useMemo } from "react"
 import type {
   DevicesGetQuery,
-  DevicesGetResponse,
   DeviceCreateBody,
   DeviceCreateResponse,
 } from "@/types/features/devices/device.types"

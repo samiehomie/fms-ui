@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import {
   Search,
   Check,
@@ -30,147 +30,67 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
-
-type NotificationType = "critical" | "warning" | "info"
-type NotificationStatus = "unread" | "read" | "done"
+import { useAllAlerts } from "@/lib/query-hooks/use-alerts"
+import {
+  AlertSeverity,
+  AlertStatus,
+  AlertType,
+} from "@/types/features/alerts/alerts.enum"
 
 interface Notification {
-  id: string
+  id: number
   title: string
   description: string
-  type: NotificationType
+  type: AlertSeverity
   vehicleId: string
   vehicleName: string
-  driverId: string
+  driverId: number
   driverName: string
-  timestamp: Date
-  status: NotificationStatus
-  category: string
+  timestamp: string
+  status: AlertStatus
+  category: AlertType
 }
 
 // Mock data for OTR tire fleet notifications
-const mockNotifications: Notification[] = [
-  {
-    id: "1",
-    title: "Critical Tire Pressure Alert",
-    description:
-      "Front left tire pressure dropped below 80 PSI. Immediate inspection required.",
-    type: "critical",
-    vehicleId: "HD-001",
-    vehicleName: "Haul Truck HD-001",
-    driverId: "D-101",
-    driverName: "John Smith",
-    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-    status: "unread",
-    category: "Tire Pressure",
-  },
-  {
-    id: "2",
-    title: "Tire Temperature Warning",
-    description:
-      "Rear tire temperature exceeds 85°C. Reduce load or speed recommended.",
-    type: "warning",
-    vehicleId: "HD-001",
-    vehicleName: "Haul Truck HD-001",
-    driverId: "D-101",
-    driverName: "John Smith",
-    timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000),
-    status: "unread",
-    category: "Tire Temperature",
-  },
-  {
-    id: "3",
-    title: "Scheduled Tire Rotation Due",
-    description:
-      "Vehicle has reached 500 operating hours. Tire rotation maintenance required.",
-    type: "info",
-    vehicleId: "LD-205",
-    vehicleName: "Loader LD-205",
-    driverId: "D-102",
-    driverName: "Sarah Johnson",
-    timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-    status: "unread",
-    category: "Maintenance",
-  },
-  {
-    id: "4",
-    title: "Low Tire Pressure Warning",
-    description:
-      "Right rear tire pressure at 95 PSI. Monitor closely and inflate if needed.",
-    type: "warning",
-    vehicleId: "EX-112",
-    vehicleName: "Excavator EX-112",
-    driverId: "D-103",
-    driverName: "Mike Davis",
-    timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
-    status: "unread",
-    category: "Tire Wear",
-  },
-  {
-    id: "5",
-    title: "Tire Temperature Warning",
-    description:
-      "Rear tire temperature exceeds 85°C. Reduce load or speed recommended.",
-    type: "warning",
-    vehicleId: "DT-089",
-    vehicleName: "Dump Truck DT-089",
-    driverId: "D-104",
-    driverName: "Emily Chen",
-    timestamp: new Date(Date.now() - 30 * 60 * 1000),
-    status: "unread",
-    category: "Tire Condition",
-  },
-  {
-    id: "6",
-    title: "Tire Inspection Completed",
-    description:
-      "All tires passed inspection. Next inspection due in 200 hours.",
-    type: "info",
-    vehicleId: "LD-205",
-    vehicleName: "Loader LD-205",
-    driverId: "D-102",
-    driverName: "Sarah Johnson",
-    timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    status: "read",
-    category: "Inspection",
-  },
-  {
-    id: "7",
-    title: "Low Tire Pressure Warning",
-    description:
-      "Right rear tire pressure at 95 PSI. Monitor closely and inflate if needed.",
-    type: "warning",
-    vehicleId: "HD-003",
-    vehicleName: "Haul Truck HD-003",
-    driverId: "D-105",
-    driverName: "Robert Lee",
-    timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
-    status: "unread",
-    category: "Tire Pressure",
-  },
-  {
-    id: "8",
-    title: "Critical Tire Pressure Alert",
-    description:
-      "Front left tire pressure dropped below 80 PSI. Immediate inspection required.",
-    type: "critical",
-    vehicleId: "EX-112",
-    vehicleName: "Excavator EX-112",
-    driverId: "D-103",
-    driverName: "Mike Davis",
-    timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000),
-    status: "unread",
-    category: "Tire Wear",
-  },
-]
+const mockNotifications: Notification[] = []
 
 type GroupBy = "none" | "vehicle" | "driver" | "category"
 type FilterType = "all" | "unread" | "critical" | "warning" | "maintenance"
 
 export default function NotificationsPage() {
+  const {
+    data: alertsData,
+    isPaused,
+    isError,
+    error,
+  } = useAllAlerts({
+    page: 1,
+    limit: 10,
+    includeDeleted: true,
+  })
+
+  useEffect(() => {
+    if (alertsData) {
+      const formattedData = alertsData.data.map((a) => ({
+        id: a.id,
+        title: a.title,
+        description: a.message,
+        type: a.severity,
+        vehicleId: a.vehicle.plateNumber,
+        vehicleName: a.vehicle.vehicleName,
+        driverId: a.vehicle.users[0].id,
+        driverName: a.vehicle.users[0].name,
+        timestamp: a.updatedAt,
+        status: a.status,
+        category: a.type,
+      }))
+      setNotifications(formattedData)
+    }
+  }, [alertsData])
+
   const [notifications, setNotifications] =
     useState<Notification[]>(mockNotifications)
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [searchQuery, setSearchQuery] = useState("")
   const [groupBy, setGroupBy] = useState<GroupBy>("vehicle")
   const [activeFilter, setActiveFilter] = useState<FilterType>("all")
@@ -190,7 +110,7 @@ export default function NotificationsPage() {
         (activeFilter === "unread" && notif.status === "unread") ||
         (activeFilter === "critical" && notif.type === "critical") ||
         (activeFilter === "warning" && notif.type === "warning") ||
-        (activeFilter === "maintenance" && notif.category === "Maintenance")
+        (activeFilter === "maintenance" && notif.category === "maintenance")
 
       return matchesSearch && matchesFilter
     })
@@ -231,7 +151,7 @@ export default function NotificationsPage() {
     }
   }
 
-  const handleSelectNotification = (id: string) => {
+  const handleSelectNotification = (id: number) => {
     const newSelected = new Set(selectedIds)
     if (newSelected.has(id)) {
       newSelected.delete(id)
@@ -245,7 +165,7 @@ export default function NotificationsPage() {
     setNotifications((prev) =>
       prev.map((notif) =>
         selectedIds.has(notif.id)
-          ? { ...notif, status: "done" as NotificationStatus }
+          ? { ...notif, status: "done" as AlertStatus }
           : notif,
       ),
     )
@@ -256,7 +176,7 @@ export default function NotificationsPage() {
     setNotifications((prev) =>
       prev.map((notif) =>
         selectedIds.has(notif.id)
-          ? { ...notif, status: "read" as NotificationStatus }
+          ? { ...notif, status: "read" as AlertStatus }
           : notif,
       ),
     )
@@ -270,7 +190,7 @@ export default function NotificationsPage() {
     setSelectedIds(new Set())
   }
 
-  const getNotificationIcon = (type: NotificationType) => {
+  const getNotificationIcon = (type: AlertSeverity) => {
     switch (type) {
       case "critical":
         return <AlertTriangle className="h-4 w-4 text-destructive" />
@@ -281,7 +201,7 @@ export default function NotificationsPage() {
     }
   }
 
-  const getNotificationBadge = (type: NotificationType) => {
+  const getNotificationBadge = (type: AlertSeverity) => {
     switch (type) {
       case "critical":
         return <Badge variant="destructive">Critical</Badge>
@@ -300,8 +220,8 @@ export default function NotificationsPage() {
     }
   }
 
-  const getTimeAgo = (date: Date) => {
-    const seconds = Math.floor((Date.now() - date.getTime()) / 1000)
+  const getTimeAgo = (date: string) => {
+    const seconds = Math.floor((Date.now() -  new Date(date).getTime()) / 1000)
     if (seconds < 60) return "just now"
     const minutes = Math.floor(seconds / 60)
     if (minutes < 60) return `${minutes}m ago`
@@ -614,6 +534,7 @@ export default function NotificationsPage() {
                           <div className="flex items-center gap-2 flex-shrink-0">
                             {getNotificationBadge(notification.type)}
                             <span className="text-xs text-muted-foreground whitespace-nowrap">
+                              {/* {notification.timestamp} */}
                               {getTimeAgo(notification.timestamp)}
                             </span>
                           </div>
