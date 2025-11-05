@@ -14,8 +14,7 @@ import {
 } from "@/components/ui/select"
 import { useAllVehicles } from "@/lib/query-hooks/use-vehicles"
 
-
-// TODO trip 날짜 선택이 초기값으로만 작용함 
+// TODO trip 날짜 선택이 초기값으로만 작용함
 // TODO 차량 등록전 화면 구현 필요
 export default function TripContainer({ vehicleId }: { vehicleId?: string }) {
   const [carId, setCarId] = useState<string>()
