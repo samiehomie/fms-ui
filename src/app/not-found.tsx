@@ -49,7 +49,7 @@ export default function NotFound() {
             }}
           >
             <div className="flex items-center justify-center gap-x-2">
-              <Home className=" h-3 w-3" />
+              <Home className="h-3 w-3" />
               Go Home
             </div>
           </Button>

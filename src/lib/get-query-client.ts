@@ -9,6 +9,7 @@ export function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
+        throwOnError: true,
         staleTime: 3 * 60 * 1000, // 3분
         gcTime: 5 * 60 * 1000,
         retry: (failureCount, error: FetchError) => {

@@ -7,13 +7,18 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import type { LucideIcon } from "lucide-react"
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
+import {
+  IconTrendingDown,
+  IconTrendingUp,
+  IconMinus,
+} from "@tabler/icons-react"
+import { DataDirection } from "@/types/features/dashboard/dashbaord.enum"
 
 interface MetricCardProps {
   title: string
   value: string | number
   change?: string
-  changeType?: "positive" | "negative" | "neutral"
+  changeType?: DataDirection
 }
 
 export function MetricCard({
@@ -22,14 +27,16 @@ export function MetricCard({
   change,
   changeType,
 }: MetricCardProps) {
-  const getChangeColor = () => {
+  const getChangeIcon = () => {
     switch (changeType) {
-      case "positive":
-        return "text-green-600"
-      case "negative":
-        return "text-red-600"
+      case DataDirection.UP:
+        return <IconTrendingUp />
+      case DataDirection.DOWN:
+        return <IconTrendingDown />
+      case DataDirection.STABLE:
+        return <IconMinus />
       default:
-        return "text-gray-600"
+        return
     }
   }
 
@@ -40,8 +47,8 @@ export function MetricCard({
         {change && (
           <CardAction>
             <Badge variant="outline">
-              {change[0] === "-" ? <IconTrendingDown /> : <IconTrendingUp />}
-              {`${change}`}
+              {getChangeIcon()}
+              {change}
             </Badge>
           </CardAction>
         )}
