@@ -23,10 +23,10 @@ export default function Error({
 
   return (
     <div className="flex-1 flex items-center justify-center p-4 bg-background">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md shadow-none">
         <CardHeader>
           <CardTitle className="text-2xl flex leading-none items-center justify-center gap-x-2">
-            <div className="rounded-full bg-destructive/10 p-[6px]">
+            <div className="rounded-full bg-destructive/10 p-1.5">
               <AlertCircle className="h-4 w-4 text-destructive" />
             </div>
             Error
@@ -44,7 +44,7 @@ export default function Error({
         <CardFooter className="flex flex-col gap-2 sm:flex-row">
           <Button
             onClick={reset}
-            className="w-full sm:w-auto"
+            className="w-full sm:flex-1"
             variant="default"
           >
             <RefreshCw className="mr-2 h-4 w-4" />
@@ -55,7 +55,7 @@ export default function Error({
               await logOutAction()
               router.push("/signin")
             }}
-            className="w-full sm:w-auto"
+            className="w-full sm:flex-1"
             variant="outline"
           >
             <LogIn className="mr-2 h-4 w-4" />
