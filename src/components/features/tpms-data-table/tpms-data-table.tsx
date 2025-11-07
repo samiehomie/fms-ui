@@ -105,7 +105,7 @@ export default function TPMSDataTable({
                             {formatPressure(tireData.pressure, pressureUnit)}
                           </td>
                           <td className="px-2 py-3 text-center border-r border-border">
-                            {tireData.slowleak && (
+                            {tireData.status > 0 && (
                               <AlertTriangle className="w-4 h-4 mx-auto text-destructive fill-destructive/20" />
                             )}
                           </td>

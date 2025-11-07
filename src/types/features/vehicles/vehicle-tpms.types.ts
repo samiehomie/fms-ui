@@ -8,7 +8,7 @@ import type {
 
 type TPMSResultData = Pick<
   TpmsResult,
-  "id" | "pressure" | "temperature" | "slowleak" | "blowout" | "resultTime"
+  "id" | "pressure" | "temperature" | "status" | "resultTime"
 >
 
 // GET /vehicles/{id}/tpms-results

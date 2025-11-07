@@ -1,7 +1,7 @@
-import { type ClassValue, clsx } from 'clsx'
-import { twMerge } from 'tailwind-merge'
-import { differenceInSeconds } from 'date-fns'
-import { decodeJwt } from 'jose'
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+import { differenceInSeconds } from "date-fns"
+import { decodeJwt } from "jose"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -19,7 +19,7 @@ export function formatTotalDuration(
   }>,
 ): string {
   if (!items || items.length === 0) {
-    return '0s'
+    return "0s"
   }
 
   let totalSeconds = 0
@@ -50,7 +50,7 @@ export function formatTotalDuration(
   if (minutes > 0) parts.push(`${minutes}m`)
   if (seconds > 0 || parts.length === 0) parts.push(`${seconds}s`)
 
-  return parts.join(' ')
+  return parts.join(" ")
 }
 
 /**
@@ -67,7 +67,7 @@ export function formatDuration(
   const endDate = new Date(end)
 
   if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-    return 'N/A'
+    return "N/A"
   }
 
   let totalSeconds = differenceInSeconds(endDate, startDate)
@@ -83,7 +83,7 @@ export function formatDuration(
   if (minutes > 0) parts.push(`${minutes}m`)
   if (seconds > 0 || parts.length === 0) parts.push(`${seconds}s`)
 
-  return parts.join(' ')
+  return parts.join(" ")
 }
 
 export function buildSearchParams(
@@ -92,12 +92,12 @@ export function buildSearchParams(
   const filteredParams: Record<string, string> = {}
 
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      if (typeof value === 'number') {
+    if (value !== undefined && value !== null && value !== "") {
+      if (typeof value === "number") {
         filteredParams[key] = value.toString()
-      } else if (typeof value === 'boolean') {
+      } else if (typeof value === "boolean") {
         filteredParams[key] = value.toString()
-      } else if (typeof value === 'string') {
+      } else if (typeof value === "string") {
         filteredParams[key] = value
       }
     }
@@ -113,13 +113,35 @@ export function isEmpty(obj: Object) {
 export const buildURL = (
   endpoint: string,
   params?: Record<string, any>,
+  prefix: string = "v1",
 ): string => {
-  const url = new URL(endpoint, process.env.NEXT_PUBLIC_API_BASE_URL!)
+  // endpoint가 전체 URL이거나 경로만 있는지 확인
+  let pathPart: string
+
+  if (endpoint.startsWith("http://") || endpoint.startsWith("https://")) {
+    // 전체 URL인 경우: https://example.com/test -> /test
+    const url = new URL(endpoint)
+    pathPart = url.pathname
+  } else {
+    // 경로만 있는 경우: /test -> /test
+    pathPart = endpoint
+  }
+
+  // 경로 앞에 prefix 추가 (중복 방지)
+  if (!pathPart.startsWith(`/${prefix}/`) && !pathPart.startsWith(`/${prefix}`)) {
+    pathPart = `/${prefix}${pathPart.startsWith("/") ? "" : "/"}${pathPart}`
+  }
+
+  // 최종 URL 구성
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || ""
+  const finalUrl = endpoint.startsWith("http://") || endpoint.startsWith("https://")
+    ? new URL(endpoint).origin + pathPart
+    : baseUrl + pathPart
 
   const filteredParams =
-    params && !isEmpty(params) ? `?${buildSearchParams(params)}` : ''
+    params && !isEmpty(params) ? `?${buildSearchParams(params)}` : ""
 
-  return `${url.toString()}${filteredParams}`
+  return `${finalUrl}${filteredParams}`
 }
 
 export async function parseJWT<T = any>(token: string): Promise<T | null> {

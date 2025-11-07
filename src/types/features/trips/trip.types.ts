@@ -43,7 +43,7 @@ export interface TripGpsDetailsQuery {
 
 type TripTpmsDetailsData = Pick<
   TpmsResult,
-  "id" | "pressure" | "temperature" | "blowout" | "resultTime" | "slowleak"
+  "id" | "pressure" | "temperature" | "resultTime" | "status"
 > & {
   gps: Pick<Gps, "id" | "latitude" | "longitude">
   tire: Pick<Tire, "id" | "tireLocation">
