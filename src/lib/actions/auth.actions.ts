@@ -236,9 +236,13 @@ export async function setAuthCookies(
 ) {
   const cookieStore = await cookies()
   const { exp } = await parseJWT(accessToken)
+  const isSecure = process.env.NEXT_PUBLIC_FORCE_INSECURE_COOKIES
+    ? false
+    : process.env.NODE_ENV === "production"
+
   cookieStore.set(AUTH_TOKEN_COOKIE_NAME, accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: isSecure,
     sameSite: "lax",
     path: "/",
     expires: new Date(exp * 1000),
@@ -246,7 +250,7 @@ export async function setAuthCookies(
 
   cookieStore.set(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: isSecure,
     sameSite: "lax",
     path: "/",
     expires: new Date(exp * 1000),
@@ -271,16 +275,20 @@ export async function withAuth(
   // TODO: 쿠키 설정이
   const response = await handler(refreshTokenData.newAccessToken)
   const { exp } = await parseJWT(refreshTokenData.newAccessToken)
+  const isSecure = process.env.NEXT_PUBLIC_FORCE_INSECURE_COOKIES
+    ? false
+    : process.env.NODE_ENV === "production"
+
   cookieStore.set(AUTH_TOKEN_COOKIE_NAME, refreshTokenData.newAccessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: isSecure,
     path: "/",
     sameSite: "lax",
     expires: new Date(exp * 1000),
   })
   cookieStore.set(REFRESH_TOKEN_COOKIE_NAME, refreshTokenData.newRefreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: isSecure,
     path: "/",
     sameSite: "lax",
     expires: new Date(exp * 1000),
@@ -330,16 +338,20 @@ export async function withAuthAction<T = unknown>(
 
   const response = await handler(refreshTokenData.newAccessToken)
   const { exp } = await parseJWT(refreshTokenData.newAccessToken)
+  const isSecure = process.env.NEXT_PUBLIC_FORCE_INSECURE_COOKIES
+    ? false
+    : process.env.NODE_ENV === "production"
+
   cookieStore.set(AUTH_TOKEN_COOKIE_NAME, refreshTokenData.newAccessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: isSecure,
     path: "/",
     sameSite: "lax",
     expires: new Date(exp * 1000),
   })
   cookieStore.set(REFRESH_TOKEN_COOKIE_NAME, refreshTokenData.newRefreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: isSecure,
     path: "/",
     sameSite: "lax",
     expires: new Date(exp * 1000),
