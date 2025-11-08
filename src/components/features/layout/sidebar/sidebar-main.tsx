@@ -47,6 +47,10 @@ const data = {
           title: "Live Map",
           url: "/live-map",
         },
+        {
+          title: "Events",
+          url: "/events",
+        },
       ],
     },
     {

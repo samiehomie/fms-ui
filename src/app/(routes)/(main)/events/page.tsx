@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { TripMonitor } from "@/components/features/live/trip-monitor"
+import { TripMonitor } from "@/components/features/events/trip-monitor"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Field, FieldContent, FieldError, FieldLabel } from "@/components/ui/field"
