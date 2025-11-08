@@ -42,6 +42,7 @@ import {
   getAllTrips,
 } from "../actions/trip.actions"
 import { getVehicleTrips } from "../actions/vehicle-trip.actions"
+import { socketManager } from "../socket-manager"
 import type { ServerActionResult } from "@/types/common/common.types"
 import {
   TripGpsDetailsResponse,
@@ -372,6 +373,26 @@ export function useLiveVehicles() {
 }
 
 export function useAllTrips(query: TripsGetQuery) {
+  const queryClient = useQueryClient()
+
+  // WebSocket 이벤트를 통해 캐시 무효화
+  useEffect(() => {
+    // trip:started 이벤트가 발생하면 캐시 무효화
+    const unsubscribe = socketManager.addEventListener(
+      "trip:started",
+      () => {
+        logger.info("Trip started detected, invalidating trips cache")
+        queryClient.invalidateQueries({
+          queryKey: ["trips", query],
+        })
+      },
+    )
+
+    return () => {
+      unsubscribe()
+    }
+  }, [query, queryClient])
+
   return useQuery({
     queryKey: ["trips", query],
     queryFn: async () => {

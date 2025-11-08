@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { TripMonitor } from "@/components/features/events/trip-monitor"
 import { useAllTrips } from "@/lib/query-hooks/use-vehicles"
 import { TripStatus } from "@/types/enums/trip.enum"
@@ -17,9 +17,11 @@ export default function TripDetailPage() {
   const trips = data?.success ? data.data : []
 
   // 첫 번째 trip이 있으면 자동으로 선택
-  if (selectedTripId === null && trips && trips.length > 0) {
-    setSelectedTripId(trips[0].id)
-  }
+  useEffect(() => {
+    if (selectedTripId === null && trips && trips.length > 0) {
+      setSelectedTripId(trips[0].id)
+    }
+  }, [trips, selectedTripId])
 
   return (
     <main className="min-h-screen ">
