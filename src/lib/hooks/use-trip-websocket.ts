@@ -48,7 +48,7 @@ export function useTripWebSocket({
 
   // Handle subscription
   useEffect(() => {
-    if (!socketManager.isConnectedStatus()) return
+    if (!isConnected) return
 
     const subscriptionOptions: SubscriptionOptions = {
       tripId,
@@ -60,10 +60,14 @@ export function useTripWebSocket({
     return () => {
       socketManager.unsubscribe(tripId)
     }
-  }, [tripId, vehicleId])
+  }, [tripId, vehicleId, isConnected])
 
   // Handle events
   useEffect(() => {
+    // Cleanup previous listeners
+    unsubscribersRef.current.forEach((unsubscribe) => unsubscribe())
+    unsubscribersRef.current = []
+
     const unsubscribe1 = socketManager.addEventListener(
       "trip:started",
       (event) => {
