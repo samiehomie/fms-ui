@@ -28,7 +28,7 @@ export class SocketManager {
     return SocketManager.instance
   }
 
-  connect(url: string = process.env.NEXT_PUBLIC_API_BASE_URL!): Promise<void> {
+  connect(url: string = 'https://192.168.0.100'): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
         if (this.socket?.connected) {
