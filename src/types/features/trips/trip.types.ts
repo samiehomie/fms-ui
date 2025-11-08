@@ -4,6 +4,7 @@ import type { Vehicle } from "@/types/entities/vehicle.entity"
 import type { PaginationQuery } from "../../common/common.types"
 import type { TpmsResult } from "@/types/entities/tpms-result.entity"
 import type { Tire } from "@/types/entities/tire.entity"
+import { TripStatus } from "@/types/enums/trip.enum"
 
 type GpsData = Pick<
   Gps,
@@ -58,3 +59,15 @@ export interface TripTpmsDetailsQuery extends PaginationQuery {
 
 // GET /trips/{id}/tpms-results
 export type TripTpmsDetailsResponse = TripTpmsDetailsData[]
+
+// GET /trips
+export interface TripsGetQuery extends PaginationQuery {
+  status?: TripStatus
+  startDate?: string
+  endDate?: string
+  search?: string
+}
+
+// GET /trips
+
+export type TripsGetResponse = { id: number }[]

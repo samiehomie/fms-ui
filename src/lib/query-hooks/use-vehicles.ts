@@ -36,12 +36,17 @@ import {
   deleteVehicle,
   restoreVehicle,
 } from "../actions/vehicle.actions"
-import { getTripGpsDetails, getTripTpmsDetails } from "../actions/trip.actions"
+import {
+  getTripGpsDetails,
+  getTripTpmsDetails,
+  getAllTrips,
+} from "../actions/trip.actions"
 import { getVehicleTrips } from "../actions/vehicle-trip.actions"
 import type { ServerActionResult } from "@/types/common/common.types"
 import {
   TripGpsDetailsResponse,
   TripTpmsDetailsQuery,
+  TripsGetQuery,
   // TripTpmsDetailsResponse,
 } from "@/types/features/trips/trip.types"
 import { HTTPError } from "../route/route.heplers"
@@ -363,5 +368,21 @@ export function useLiveVehicles() {
     queryKey: ["live-vehicles"],
     initialData: new Map(),
     staleTime: Number.POSITIVE_INFINITY, // Data is live, no need to refetch via standard means
+  })
+}
+
+export function useAllTrips(query: TripsGetQuery) {
+  return useQuery({
+    queryKey: ["trips", query],
+    queryFn: async () => {
+      const result = await getAllTrips(query)
+
+      if (!result.success) {
+        throw new HTTPError(result.error.status ?? 500, result.error.message)
+      }
+
+      return result
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }

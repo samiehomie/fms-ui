@@ -23,6 +23,8 @@ export function TripMonitor({ tripId, vehicleId }: TripMonitorProps) {
     },
   })
 
+  console.log('events', events)
+
   const getEventTypeLabel = (event: WebSocketEvent): string => {
     switch (event.type) {
       case 'trip:started':

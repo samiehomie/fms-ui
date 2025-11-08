@@ -8,7 +8,49 @@ import type {
   TripGpsDetailsQuery,
   TripTpmsDetailsQuery,
   TripTpmsDetailsResponse,
+  TripsGetQuery,
+  TripsGetResponse
 } from '@/types/features/trips/trip.types'
+
+
+
+export async function getAllTrips(query: TripsGetQuery) {
+  return await withAuthAction<TripsGetResponse>(async (accessToken) => {
+    const apiUrl = buildURL(`/trips`, query)
+
+    try {
+      const response = await fetchServer<TripsGetResponse>(apiUrl, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      })
+
+      if (!response.success) {
+        return {
+          success: false,
+          error: {
+            message: response.error.message || "Unknown server error",
+            status: response.error.status,
+          },
+        }
+      }
+      const { data, pagination } = response
+
+      return { success: true, data, pagination }
+    } catch (error) {
+      return {
+        success: false,
+        error: {
+          message: "Unexpected server error",
+          status: 500,
+        },
+      }
+    }
+  })
+}
 
 // GET /trips/{id}
 export async function getTripGpsDetails(query: TripGpsDetailsQuery) {
