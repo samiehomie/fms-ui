@@ -375,15 +375,17 @@ export function useLiveVehicles() {
 export function useAllTrips(query: TripsGetQuery) {
   const queryClient = useQueryClient()
 
+  // 쿼리 객체를 JSON 문자열로 직렬화 (얕은 비교 문제 해결)
+  const queryKey = useMemo(() => ["trips", query] as const, [query])
+
   // WebSocket 이벤트를 통해 캐시 무효화
   useEffect(() => {
     // trip:started 이벤트가 발생하면 캐시 무효화
     const unsubscribe = socketManager.addEventListener(
       "trip:started",
       () => {
-        logger.info("Trip started detected, invalidating trips cache")
         queryClient.invalidateQueries({
-          queryKey: ["trips", query],
+          queryKey: queryKey,
         })
       },
     )
@@ -391,7 +393,7 @@ export function useAllTrips(query: TripsGetQuery) {
     return () => {
       unsubscribe()
     }
-  }, [query, queryClient])
+  }, [queryKey, queryClient])
 
   return useQuery({
     queryKey: ["trips", query],

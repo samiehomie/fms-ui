@@ -7,6 +7,9 @@ import type {
   SubscriptionOptions,
 } from "@/types/features/trips/trip-live.types"
 
+// 전역 hook 사용 카운트 (disconnect 방지)
+let socketHookCount = 0
+
 interface UseTripWebSocketOptions {
   tripId: number
   vehicleId?: number
@@ -27,8 +30,10 @@ export function useTripWebSocket({
   const [error, setError] = useState<Error | null>(null)
   const unsubscribersRef = useRef<Array<() => void>>([])
 
-  // Initialize connection
+  // Initialize connection (한 번만 실행)
   useEffect(() => {
+    socketHookCount++
+
     const initializeConnection = async () => {
       try {
         if (!socketManager.isConnectedStatus()) {
@@ -44,7 +49,11 @@ export function useTripWebSocket({
     }
 
     initializeConnection()
-  }, [onError])
+
+    return () => {
+      socketHookCount--
+    }
+  }, [])
 
   // Handle subscription
   useEffect(() => {
@@ -62,16 +71,11 @@ export function useTripWebSocket({
     }
   }, [tripId, vehicleId, isConnected])
 
-  // Handle events
+  // Handle events (한 번만 등록)
   useEffect(() => {
-    // Cleanup previous listeners
-    unsubscribersRef.current.forEach((unsubscribe) => unsubscribe())
-    unsubscribersRef.current = []
-
     const unsubscribe1 = socketManager.addEventListener(
       "trip:started",
       (event) => {
-        logger.info("Received trip:started event", event)
         setEvents((prev) => [event, ...prev])
       },
     )
@@ -79,7 +83,6 @@ export function useTripWebSocket({
     const unsubscribe2 = socketManager.addEventListener(
       "trip:completed",
       (event) => {
-        logger.info("Received trip:completed event", event)
         setEvents((prev) => [event, ...prev])
       },
     )
@@ -87,7 +90,6 @@ export function useTripWebSocket({
     const unsubscribe3 = socketManager.addEventListener(
       "gps:updated",
       (event) => {
-        logger.info("Received gps:updated event", event)
         setEvents((prev) => [event, ...prev])
       },
     )
@@ -95,7 +97,6 @@ export function useTripWebSocket({
     const unsubscribe4 = socketManager.addEventListener(
       "tpms:updated",
       (event) => {
-        logger.info("Received tpms:updated event", event)
         setEvents((prev) => [event, ...prev])
       },
     )
@@ -103,7 +104,6 @@ export function useTripWebSocket({
     const unsubscribe5 = socketManager.addEventListener(
       "ai:result:updated",
       (event) => {
-        logger.info("Received ai:result:updated event", event)
         setEvents((prev) => [event, ...prev])
       },
     )
@@ -127,7 +127,7 @@ export function useTripWebSocket({
     return () => {
       unsubscribersRef.current.forEach((unsubscribe) => unsubscribe())
     }
-  }, [onError])
+  }, [])
 
   // Handle connection status
   useEffect(() => {
@@ -146,10 +146,15 @@ export function useTripWebSocket({
     return unsubscribe
   }, [onConnect, onDisconnect])
 
-  // Cleanup
+  // Cleanup (마지막 hook이 언마운트될 때만 disconnect)
   useEffect(() => {
     return () => {
-      socketManager.disconnect()
+      socketHookCount--
+      // 모든 hook이 언마운트되었을 때만 disconnect
+      if (socketHookCount === 0) {
+        socketManager.disconnect()
+        logger.info("All WebSocket hooks unmounted, disconnecting")
+      }
     }
   }, [])
 

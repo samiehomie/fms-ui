@@ -10,6 +10,8 @@ export class SocketManager {
   private static instance: SocketManager
   private socket: Socket | null = null
   private isConnected = false
+  private isConnecting = false // 연결 중인 상태 추적
+  private connectPromise: Promise<void> | null = null // 중복 연결 방지용 Promise 캐시
   private reconnectAttempts = 0
   private maxReconnectAttempts = 5
   private reconnectDelay = 1000
@@ -29,14 +31,22 @@ export class SocketManager {
   }
 
   connect(url: string = process.env.NEXT_PUBLIC_API_BASE_URL!): Promise<void> {
-    return new Promise((resolve, reject) => {
-      try {
-        if (this.socket?.connected) {
-          logger.warn("Socket already connected")
-          resolve()
-          return
-        }
+    // 이미 연결된 경우
+    if (this.socket?.connected) {
+      logger.info("Socket already connected")
+      return Promise.resolve()
+    }
 
+    // 연결 중인 경우, 기존 Promise 반환 (중복 연결 방지)
+    if (this.isConnecting && this.connectPromise) {
+      logger.info("Socket connection already in progress, reusing existing promise")
+      return this.connectPromise
+    }
+
+    this.isConnecting = true
+
+    this.connectPromise = new Promise((resolve, reject) => {
+      try {
         this.socket = io(url, {
           path: "/v1/socket.io/",
           transports: ["websocket", "polling"],
@@ -54,6 +64,7 @@ export class SocketManager {
         this.socket.on("connect", () => {
           logger.info("Socket connected successfully")
           this.isConnected = true
+          this.isConnecting = false
           this.reconnectAttempts = 0
           this.notifyConnectionListeners(true)
           resolve()
@@ -63,6 +74,8 @@ export class SocketManager {
           logger.error("Socket connection error", error)
           this.reconnectAttempts++
           if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+            this.isConnecting = false
+            this.connectPromise = null
             reject(new Error("Failed to connect after maximum attempts"))
           }
         })
@@ -70,13 +83,19 @@ export class SocketManager {
         this.socket.on("disconnect", (reason: string) => {
           logger.warn("Socket disconnected", { reason })
           this.isConnected = false
+          this.isConnecting = false
+          this.connectPromise = null
           this.notifyConnectionListeners(false)
         })
       } catch (error) {
         logger.error("Error connecting socket", error)
+        this.isConnecting = false
+        this.connectPromise = null
         reject(error)
       }
     })
+
+    return this.connectPromise
   }
 
   private setupEventListeners(): void {
@@ -84,30 +103,25 @@ export class SocketManager {
 
     // Trip events
     this.socket.on("trip:started", (data) => {
-      logger.info("Trip started event received", data)
       this.notifyListeners("trip:started", { type: "trip:started", data })
     })
 
     this.socket.on("trip:completed", (data) => {
-      logger.info("Trip completed event received", data)
       this.notifyListeners("trip:completed", { type: "trip:completed", data })
     })
 
     // GPS events
     this.socket.on("gps:updated", (data) => {
-      logger.info("GPS updated event received", data)
       this.notifyListeners("gps:updated", { type: "gps:updated", data })
     })
 
     // TPMS events
     this.socket.on("tpms:updated", (data) => {
-      logger.info("TPMS updated event received", data)
       this.notifyListeners("tpms:updated", { type: "tpms:updated", data })
     })
 
     // AI result events
     this.socket.on("ai:result:updated", (data) => {
-      logger.info("AI result updated event received", data)
       this.notifyListeners("ai:result:updated", {
         type: "ai:result:updated",
         data,
@@ -221,6 +235,8 @@ export class SocketManager {
     if (this.socket) {
       this.socket.disconnect()
       this.isConnected = false
+      this.isConnecting = false
+      this.connectPromise = null
       logger.info("Socket disconnected")
     }
   }
