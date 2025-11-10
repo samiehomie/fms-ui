@@ -197,7 +197,7 @@ export async function fetchServer<T = unknown>(
 
       try {
         const resData = (await response.json()) as FetchServerResponse
-        console.log("resData", resData)
+        
         if (!resData.success) {
           const errorMessage = resData.message || "Unknown server error"
           const errorDetails: unknown = resData.timestamp
