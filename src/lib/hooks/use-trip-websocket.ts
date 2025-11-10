@@ -32,7 +32,7 @@ export function useTripWebSocket({
     const initializeConnection = async () => {
       try {
         if (!socketManager.isConnectedStatus()) {
-          await socketManager.connect()
+          await socketManager.connect(process.env.NEXT_PUBLIC_WS_URL)
           logger.info("WebSocket connection established")
         }
       } catch (err) {
