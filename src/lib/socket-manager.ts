@@ -30,6 +30,27 @@ export class SocketManager {
     return SocketManager.instance
   }
 
+  private normalizeSocketUrl(url: string): string {
+    // URL이 이미 프로토콜을 포함하는 경우
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      // https -> wss, http -> ws로 변환
+      return url.replace(/^https:/, "wss:").replace(/^http:/, "ws:")
+    }
+
+    // 상대 경로인 경우, 현재 페이지의 프로토콜을 사용
+    if (typeof window !== "undefined") {
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:"
+      // URL이 /로 시작하면 도메인 추가
+      if (url.startsWith("/")) {
+        return `${protocol}//${window.location.host}${url}`
+      }
+      // 도메인만 있으면 프로토콜 추가
+      return `${protocol}//${url}`
+    }
+
+    return url
+  }
+
   connect(url: string = process.env.NEXT_PUBLIC_API_BASE_URL!): Promise<void> {
     // 이미 연결된 경우
     if (this.socket?.connected) {
@@ -47,7 +68,13 @@ export class SocketManager {
 
     this.connectPromise = new Promise((resolve, reject) => {
       try {
-        this.socket = io(url, {
+        logger.info("Connecting to WebSocket", { url })
+
+        // URL이 프로토콜 없이 전달된 경우, https에서 온 요청이면 wss로 설정
+        const socketUrl = this.normalizeSocketUrl(url)
+        logger.info("Normalized WebSocket URL", { socketUrl })
+
+        this.socket = io(socketUrl, {
           path: "/v1/socket.io/",
           transports: ["websocket", "polling"],
           reconnection: true,
@@ -55,6 +82,8 @@ export class SocketManager {
           reconnectionDelayMax: 5000,
           reconnectionAttempts: this.maxReconnectAttempts,
           autoConnect: false,
+          secure: true,
+          rejectUnauthorized: false, // 자체 서명된 인증서 허용
         })
 
         this.setupEventListeners()
