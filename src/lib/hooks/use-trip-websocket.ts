@@ -37,7 +37,10 @@ export function useTripWebSocket({
     const initializeConnection = async () => {
       try {
         if (!socketManager.isConnectedStatus()) {
-          await socketManager.connect(process.env.NEXT_PUBLIC_WS_URL)
+          await socketManager.connect(
+            process.env.NEXT_PUBLIC_WS_URL ??
+              process.env.NEXT_PUBLIC_API_BASE_URL,
+          )
           logger.info("WebSocket connection established")
         }
       } catch (err) {
