@@ -78,14 +78,16 @@ export function TripHistoryTable({
                 <div className="flex items-center pl-4 text-xs text-gray-800 font-[400]">
                   <div className="flex flex-col gap-y-[9px] leading-none">
                     <div>
-                      {format(parseISO(session.startTime), "yy.MM.d HH:mm")}
+                      {session.startTime &&
+                        format(parseISO(session.startTime), "yy.MM.d HH:mm")}
                     </div>
                     <div className="flex gap-x-1 items-center">
                       <MoveRight
                         className="leading-none text-muted-foreground"
                         size={12}
                       />
-                      {format(parseISO(session.endTime), "yy.MM.d HH:mm")}
+                      {session.endTime &&
+                        format(parseISO(session.endTime), "yy.MM.d HH:mm")}
                     </div>
                     {/* <div className="text-muted-foreground font-light tracking-wider text-[11.6px] font-mono">
                       {`${format(
@@ -104,17 +106,17 @@ export function TripHistoryTable({
                   variant={"outline"}
                   className={cn(
                     "text-xs text-muted-foreground font-[400]",
-                    session.status === "active" &&
+                    session?.status === "active" &&
                       "border-green-500 text-green-500",
                   )}
                 >
-                  {session.status}
+                  {session?.status}
                 </Badge>
               </TableCell>
               <TableCell className="text-xs">
-                <div>Driving: {session.driveTime}</div>
+                <div>Driving: {session?.driveTime ?? 0}</div>
                 <div className="text-muted-foreground">
-                  Distance: {session.distance}km
+                  Distance: {session?.distance ?? 0}km
                 </div>
               </TableCell>
 

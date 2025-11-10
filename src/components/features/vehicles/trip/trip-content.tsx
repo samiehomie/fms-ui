@@ -24,18 +24,18 @@ import type { TripTpmsDetailsQuery } from "@/types/features/trips/trip.types"
 
 export interface TripSession {
   id: number
-  startTime: string
-  endTime: string
+  startTime?: string
+  endTime?: string
   driveTime: string // in minutes
   distance: number // in km
   status: string
-  startPoint: {
-    latitude: string
-    longitude: string
+  startPoint?: {
+    latitude?: string
+    longitude?: string
   }
-  endPoint: {
-    latitude: string
-    longitude: string
+  endPoint?: {
+    latitude?: string
+    longitude?: string
   }
 }
 
@@ -167,12 +167,12 @@ const TripContent = ({
         distance: trip.distanceInKph,
         status: trip.status,
         startPoint: {
-          latitude: trip.startPoint.latitude,
-          longitude: trip.startPoint.longitude,
+          latitude: trip?.startPoint?.latitude,
+          longitude: trip?.startPoint?.longitude,
         },
         endPoint: {
-          latitude: trip.endPoint.latitude,
-          longitude: trip.endPoint.longitude,
+          latitude: trip?.endPoint?.latitude,
+          longitude: trip?.endPoint?.longitude,
         },
       }))
       setSessions(newSessions)
