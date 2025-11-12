@@ -5,7 +5,6 @@ import {
   useQueries,
   skipToken,
 } from "@tanstack/react-query"
-import { vehiclesApi } from "@/lib/api/vehicle"
 import type {
   // VehicleTripsByTripIdResponse,
   VehiclesGetQuery,
@@ -21,11 +20,6 @@ import type {
   VehicleTripsQuery,
   // VehicleTripsResponse,
 } from "@/types/features/vehicles/vehicle.types"
-import {
-  // ApiResponseType,
-  // ApiRequestType,
-  ApiParamsType,
-} from "@/types/features"
 import { toast } from "sonner"
 import { useMemo, useEffect } from "react"
 import {
@@ -312,15 +306,6 @@ export function useTripTpmsDetails(query: TripTpmsDetailsQuery) {
   })
 }
 
-export function useAllVehicleTripsPaginated(
-  params: ApiParamsType<"GET /vehicles/{id}/trips">,
-) {
-  return useQuery({
-    queryKey: ["all trips", params],
-    queryFn: () => vehiclesApi.getAllVehicleTrips(params),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  })
-}
 
 interface Vehicle {
   id: number

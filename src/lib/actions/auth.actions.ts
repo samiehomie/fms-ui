@@ -8,7 +8,6 @@ import {
   AUTH_REFRESH_THRESHOLD,
 } from "@/lib/constants/auth"
 import { buildURL } from "@/lib/utils/build-url"
-import type { ApiResponseType, ApiRequestType } from "@/types/features"
 import { fetchServer } from "../api/fetch-server"
 import type { JWTAuthPayload } from "@/types/features/auth/auth.types"
 import { parseJWT } from "@/lib/utils/build-url"

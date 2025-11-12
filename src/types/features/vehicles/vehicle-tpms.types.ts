@@ -2,7 +2,6 @@ import type { Gps } from "@/types/entities/gps.entity"
 import type { TpmsResult } from "@/types/entities/tpms-result.entity"
 import type { Tire } from "@/types/entities/tire.entity"
 import type {
-  CommonProperties,
   PaginationQuery,
 } from "../../common/common.types"
 

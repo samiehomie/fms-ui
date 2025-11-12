@@ -7,15 +7,7 @@ import {
 } from '@tanstack/react-query'
 import type {
   TPMSResultsByVehicleGetQuery,
-  TPMSResultsByVehicleGetResponse,
 } from '@/types/features/vehicles/vehicle-tpms.types'
-import {
-  ApiResponseType,
-  ApiRequestType,
-  ApiParamsType,
-} from '@/types/features'
-import { toast } from 'sonner'
-import { useMemo, useEffect } from 'react'
 import { getTpmsResultsByVehicle } from '../actions/vehicle-tpms.actions'
 
 export function useTpmsResultsByVehicle(query: TPMSResultsByVehicleGetQuery) {

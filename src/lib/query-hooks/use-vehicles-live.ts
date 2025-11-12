@@ -1,33 +1,7 @@
-// 테스트 위함 삭제 될 것
-
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import {
-  ApiResponseType,
-  ApiRequestType,
-  ApiParamsType,
-} from '@/types/features'
 import { buildURL } from '../utils/build-url'
-
-// export interface Vehicle {
-//   id: string
-//   name: string
-//   type: 'sedan' | 'truck' | 'bus' | 'van'
-//   status: 'active' | 'idle'
-//   speed: number
-//   fuel: number
-//   driver: string
-//   lat: number
-//   lng: number
-//   heading: number
-//   lastUpdate: string
-// }
-
-// interface StreamData {
-//   type: 'initial' | 'update' | 'heartbeat'
-//   vehicles?: Vehicle[]
-//   timestamp: string
-// }
+import type { VehiclesLiveStreamData, VehiclesLiveStreamParams } from '@/types/features/vehicles/vehicle.types'
 
 export interface Vehicle {
   id: string
@@ -44,14 +18,8 @@ export interface Vehicle {
   address: string
 }
 
-// type Vehicles = NonNullable<
-//   ApiResponseType<`GET /sse/vehicles/live-stream/{company_id}`>['data']['vehicles']
-// >
-
-type StreamData = ApiResponseType<`GET /sse/vehicles/live-stream/{company_id}`>
-
 export const useVehicleLiveStream = (
-  params: ApiParamsType<`GET /sse/vehicles/live-stream/{company_id}`>,
+  params: VehiclesLiveStreamParams,
 ) => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const [isConnected, setIsConnected] = useState(false)
@@ -85,7 +53,7 @@ export const useVehicleLiveStream = (
 
       eventSource.onmessage = (event) => {
         try {
-          const data: StreamData = JSON.parse(event.data)
+          const data: VehiclesLiveStreamData = JSON.parse(event.data)
 
           if (data.type === 'vehicle-update') {
             if (data.data.vehicles) {
