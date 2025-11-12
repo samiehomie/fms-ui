@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 import { Building, Users, Truck, Cpu, ChevronsLeft, Undo2 } from "lucide-react"
 import type { NavItems } from "./company-details"
 import type { LucideProps } from "lucide-react"

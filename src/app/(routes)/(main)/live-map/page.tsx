@@ -1,18 +1,18 @@
-'use client'
+"use client"
 
-import React, { useState } from 'react'
-import dynamic from 'next/dynamic'
-import { useVehicleStream } from '@/lib/query-hooks/use-vehicle-stream'
-import VehicleList from '@/components/features/live/vehicle-list'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import { Loader2, WifiOff } from 'lucide-react'
-import { APIProvider } from '@vis.gl/react-google-maps'
-import { useClickOutside } from '@/hooks/use-clickoutside'
+import React, { useState } from "react"
+import dynamic from "next/dynamic"
+import { useVehicleStream } from "@/lib/query-hooks/use-vehicle-stream"
+import VehicleList from "@/components/features/live/vehicle-list"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { Loader2, WifiOff } from "lucide-react"
+import { APIProvider } from "@vis.gl/react-google-maps"
+import { useClickOutside } from "@/lib/hooks/use-clickoutside"
 
 // 클라이언트 사이드에서만 렌더링
 const VehicleMap = dynamic(
-  () => import('@/components/features/live/vehicle-map'),
+  () => import("@/components/features/live/vehicle-map"),
   {
     ssr: false,
     loading: () => (
@@ -41,7 +41,7 @@ export default function VehicleTrackingContent() {
     <div className="flex-1 flex flex-col lg:-mx-6 -mt-5" ref={mapContainerRef}>
       <APIProvider
         apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
-        libraries={['marker']}
+        libraries={["marker"]}
       >
         <div className="flex-1 flex">
           {/* 좌측 차량 목록 (30%) */}
@@ -60,7 +60,7 @@ export default function VehicleTrackingContent() {
                 <AlertDescription className="flex items-center justify-between">
                   <div className="flex items-center gap-x-3">
                     <WifiOff className="h-4 w-4" />
-                    <span>{error || 'Connecting...'}</span>
+                    <span>{error || "Connecting..."}</span>
                   </div>
 
                   <Button

@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { DataTablePagination } from "../features/companies/data-table-pagination"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 
 interface DataTableProps<TData, TValue, TPagination = any> {
   columns: ColumnDef<TData, TValue>[]
@@ -178,7 +178,12 @@ export function DataTable<
           </TableBody>
         </Table>
       </div>
-      <div className={cn("flex items-center justify-end py-5 px-1", children && "justify-between")}>
+      <div
+        className={cn(
+          "flex items-center justify-end py-5 px-1",
+          children && "justify-between",
+        )}
+      >
         {children}
         <DataTablePagination table={table} />
       </div>

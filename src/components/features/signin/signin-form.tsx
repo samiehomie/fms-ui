@@ -5,7 +5,7 @@ import {
   signinSchema,
   type SigninFormData,
 } from "@/types/features/auth/signin.schema"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { signinAction } from "@/lib/actions/auth.actions"

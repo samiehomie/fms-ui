@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { ColumnDef } from "@tanstack/react-table"
 import { formatDateTime } from "@/lib/utils/date-formatter"
-import { getCompanyTypeColor } from "@/lib/utils"
+import { getCompanyTypeColor } from "@/lib/utils/utils"
 import { ArrowUpDown, CircleSlash } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {

@@ -29,7 +29,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 import { useAllAlerts } from "@/lib/query-hooks/use-alerts"
 import { AlertSeverity, AlertStatus } from "@/types/features/alerts/alerts.enum"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -49,7 +49,7 @@ interface Notification {
   category: string
 }
 type GroupBy = "none" | "vehicle" | "driver" | "category"
-type FilterType = `${AlertSeverity}` | `${AlertStatus}` | 'all'
+type FilterType = `${AlertSeverity}` | `${AlertStatus}` | "all"
 
 export default function AlertsContent() {
   const {

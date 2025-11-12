@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { IconDotsVertical } from "@tabler/icons-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 import ConfirmDialog from "@/components/ui/confirm-dialog"
 import {
   useDeleteVehicle,

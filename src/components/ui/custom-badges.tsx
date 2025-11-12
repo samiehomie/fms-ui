@@ -1,7 +1,7 @@
 import { IconCircleCheckFilled } from "@tabler/icons-react"
 import { CircleSlash } from "lucide-react"
 import { Badge } from "./badge"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 
 export function VerifiedBadge({ className }: { className?: string }) {
   return (

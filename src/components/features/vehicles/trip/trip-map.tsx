@@ -22,7 +22,7 @@ import { useEffect, useRef, useState } from "react"
 import { useTripGpsDetailsBatch } from "@/lib/query-hooks/use-vehicles"
 import type { TripGpsDetailsResponse } from "@/types/features/trips/trip.types"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils"
 
 interface TripMapProps {
   selectedIds: number[]
