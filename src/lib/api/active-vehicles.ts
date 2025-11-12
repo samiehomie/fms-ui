@@ -1,10 +1,10 @@
-import { fetchServer } from '@/lib/api/fetch-server'
+import { fetchServer } from "@/lib/api/fetch-server"
 import type {
   AIResultsResponse,
   TPMSResultsResponse,
   VehicleDataParams,
-} from '@/types/features/vehicles/vehicle.types'
-import { ApiSuccessResponse } from '@/types/features/route.types'
+} from "@/types/features/vehicles/vehicle.types"
+import { ApiSuccessResponse } from "@/types/common/api.types"
 
 export const activeVehiclesApi = {
   getAIResults: async (
@@ -23,7 +23,7 @@ export const activeVehiclesApi = {
     )
 
     if (!response.success) {
-      throw new Error('Failed to fetch AI results')
+      throw new Error("Failed to fetch AI results")
     }
 
     return response.data
@@ -45,7 +45,7 @@ export const activeVehiclesApi = {
     )
 
     if (!response.success) {
-      throw new Error('Failed to fetch TPMS results')
+      throw new Error("Failed to fetch TPMS results")
     }
 
     return response.data

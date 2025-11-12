@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Button } from '@/components/ui/button'
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog"
 import {
   Drawer,
   DrawerContent,
@@ -20,16 +20,16 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+} from "@/components/ui/drawer"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select"
 import {
   Form,
   FormControl,
@@ -37,25 +37,25 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { useMedia } from 'react-use'
-import { Loader2 } from 'lucide-react'
-import { useCreateCompany } from '@/lib/query-hooks/use-companies'
-import { IconPlus } from '@tabler/icons-react'
-import { CompanyType } from '@/types/enums/company.enum'
+} from "@/components/ui/form"
+import { useMedia } from "react-use"
+import { Loader2 } from "lucide-react"
+import { useCreateCompany } from "@/lib/query-hooks/use-companies"
+import { IconPlus } from "@tabler/icons-react"
+import { CompanyType } from "@/types/features/companies/company.enum"
 
 const companySchema = z.object({
-  name: z.string().min(1, 'Company name is required'),
-  regNumber: z.string().min(1, 'Registration number is required'),
+  name: z.string().min(1, "Company name is required"),
+  regNumber: z.string().min(1, "Registration number is required"),
   type: z.nativeEnum(CompanyType, {
-    errorMap: () => ({ message: 'Company type is required' }),
+    errorMap: () => ({ message: "Company type is required" }),
   }),
-  details: z.string().min(1, 'Company details are required'),
-  phone: z.string().min(1, 'Phone number is required'),
-  email: z.string().email('Invalid email address'),
-  website: z.string().url('Invalid website URL'),
-  contactPerson: z.string().min(1, 'Contact person is required'),
-  contactPhone: z.string().min(1, 'Contact phone is required'),
+  details: z.string().min(1, "Company details are required"),
+  phone: z.string().min(1, "Phone number is required"),
+  email: z.string().email("Invalid email address"),
+  website: z.string().url("Invalid website URL"),
+  contactPerson: z.string().min(1, "Contact person is required"),
+  contactPhone: z.string().min(1, "Contact phone is required"),
 })
 
 type CompanyFormData = z.infer<typeof companySchema>
@@ -65,15 +65,15 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
   const form = useForm<CompanyFormData>({
     resolver: zodResolver(companySchema),
     defaultValues: {
-      name: '',
-      regNumber: '',
+      name: "",
+      regNumber: "",
       type: CompanyType.OWNER,
-      details: '',
-      phone: '',
-      email: '',
-      website: '',
-      contactPerson: '',
-      contactPhone: '',
+      details: "",
+      phone: "",
+      email: "",
+      website: "",
+      contactPerson: "",
+      contactPhone: "",
     },
   })
 
@@ -347,7 +347,7 @@ function CompanyForm({ onClose }: { onClose: () => void }) {
 
 export function AddCompanyForm() {
   const [open, setOpen] = useState(false)
-  const isDesktop = useMedia('(min-width: 768px)', true)
+  const isDesktop = useMedia("(min-width: 768px)", true)
 
   const handleClose = () => setOpen(false)
 
@@ -376,8 +376,8 @@ export function AddCompanyForm() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant={'outline'}
-          size={'sm'}
+          variant={"outline"}
+          size={"sm"}
           className="text-[.8125rem] tracking-tight h-6"
         >
           <IconPlus />

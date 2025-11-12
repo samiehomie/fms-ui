@@ -5,7 +5,7 @@ import type {
 import type { Vehicle } from "@/types/entities/vehicle.entity"
 import type { Company } from "@/types/entities/company.entity"
 import type { User } from "@/types/entities/user.entity"
-import { CompanyType } from "@/types/enums/company.enum"
+import { CompanyType } from "@/types/features/companies/company.enum"
 
 type CompanyData = Pick<
   Company,

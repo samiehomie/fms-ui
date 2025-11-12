@@ -45,7 +45,7 @@ import { useCompanyById } from "@/lib/query-hooks/use-companies"
 import { Skeleton } from "@/components/ui/skeleton"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import type { CompanyUpdateBody } from "@/types/features/companies/company.types"
-import { CompanyType } from "@/types/enums/company.enum"
+import { CompanyType } from "@/types/features/companies/company.enum"
 
 const companySchema = z.object({
   name: z.string().min(1, "Company name is required"),

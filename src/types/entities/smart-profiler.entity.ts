@@ -1,6 +1,6 @@
-import { BaseEntity } from './base.entity'
-import { Tire } from './tire.entity'
-import { SensorStatus } from '@/types/enums/sensor.enum'
+import { BaseEntity } from "./base.entity"
+import { Tire } from "./tire.entity"
+import { SensorStatus } from "@/types/features/sensor/sensor.enum"
 
 export interface SmartProfiler extends BaseEntity {
   serialNumber: string

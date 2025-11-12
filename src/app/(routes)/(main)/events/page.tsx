@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { TripMonitor } from "@/components/features/events/trip-monitor"
 import { useAllTrips } from "@/lib/query-hooks/use-vehicles"
-import { TripStatus } from "@/types/enums/trip.enum"
+import { TripStatus } from "@/types/features/trips/trip.enum"
 import { Loader2 } from "lucide-react"
 
 export default function TripDetailPage() {

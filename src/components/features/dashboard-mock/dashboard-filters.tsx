@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select"
 import { Calendar, Filter, RefreshCw } from "lucide-react"
 import DateRangePicker from "@/components/ui/data-range-picker"
-import { VehicleType } from "@/types/enums/vehicle.enum"
+import { VehicleType } from "@/types/features/vehicles/vehicle.enum"
 import dayjs, { type Dayjs } from "dayjs"
 
 interface DashboardFiltersProps {
@@ -69,7 +69,9 @@ export function DashboardFilters({ onFiltersChange }: DashboardFiltersProps) {
     setIsRefreshing(false)
   }
 
-  const handleDateChange = (formattedRange: { from: string; to: string } | null) => {
+  const handleDateChange = (
+    formattedRange: { from: string; to: string } | null,
+  ) => {
     // DateRangePicker에서 직접 수정된 경우 처리
     if (formattedRange) {
       // 필요하면 selectedPeriod를 "custom"으로 변경할 수도 있습니다

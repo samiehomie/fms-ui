@@ -1,8 +1,8 @@
-import { BaseEntity } from './base.entity'
-import { Vehicle } from './vehicle.entity'
-import { TripEvent } from './trip-event.entity'
-import { Gps } from './gps.entity'
-import { TripStatus } from '@/types/enums/trip.enum'
+import { BaseEntity } from "./base.entity"
+import { Vehicle } from "./vehicle.entity"
+import { TripEvent } from "./trip-event.entity"
+import { Gps } from "./gps.entity"
+import { TripStatus } from "@/types/features/trips/trip.enum"
 
 export interface Trip extends BaseEntity {
   vehicle: Vehicle

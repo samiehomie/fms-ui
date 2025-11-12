@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Button } from '@/components/ui/button'
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog"
 import {
   Drawer,
   DrawerContent,
@@ -20,15 +20,15 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer'
-import { Input } from '@/components/ui/input'
+} from "@/components/ui/drawer"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select"
 import {
   Form,
   FormControl,
@@ -36,57 +36,57 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { useMedia } from 'react-use'
-import { Loader2 } from 'lucide-react'
-import { useCreateDevice } from '@/lib/query-hooks/use-devices'
-import { IconPlus } from '@tabler/icons-react'
-import { useAllVehicles } from '@/lib/query-hooks/use-vehicles'
-import { EdgeDeviceType } from '@/types/enums/edge-device.enum'
-import { Skeleton } from '@/components/ui/skeleton'
+} from "@/components/ui/form"
+import { useMedia } from "react-use"
+import { Loader2 } from "lucide-react"
+import { useCreateDevice } from "@/lib/query-hooks/use-devices"
+import { IconPlus } from "@tabler/icons-react"
+import { useAllVehicles } from "@/lib/query-hooks/use-vehicles"
+import { DeviceType } from "@/types/features/devices/device.enum"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const deviceSchema = z.object({
   serialNumber: z
     .string()
-    .min(8, 'Serial number must be at least 8 characters')
-    .max(255, 'Serial number must be at most 255 characters')
+    .min(8, "Serial number must be at least 8 characters")
+    .max(255, "Serial number must be at most 255 characters")
     .regex(
       /^[A-Z0-9]+$/,
-      'Serial number must contain only uppercase letters and numbers',
+      "Serial number must contain only uppercase letters and numbers",
     ),
-  type: z.nativeEnum(EdgeDeviceType, {
-    errorMap: () => ({ message: 'Edge device type is required' }),
+  type: z.nativeEnum(DeviceType, {
+    errorMap: () => ({ message: "Edge device type is required" }),
   }),
   username: z
     .string()
-    .min(3, 'Username must be at least 3 characters')
-    .max(20, 'Username must be at most 20 characters'),
+    .min(3, "Username must be at least 3 characters")
+    .max(20, "Username must be at most 20 characters"),
   password: z
     .string()
-    .min(3, 'Password must be at least 3 characters')
-    .max(20, 'Password must be at most 20 characters'),
+    .min(3, "Password must be at least 3 characters")
+    .max(20, "Password must be at most 20 characters"),
   name: z
     .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(50, 'Name must be at most 50 characters')
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must be at most 50 characters")
     .optional(),
   wlanIpAddr: z
     .string()
-    .max(16, 'IP address must be at most 16 characters')
+    .max(16, "IP address must be at most 16 characters")
     .regex(
       /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
-      'Invalid IP address format',
+      "Invalid IP address format",
     )
     .optional(),
   ethIpAddr: z
     .string()
-    .max(16, 'IP address must be at most 16 characters')
+    .max(16, "IP address must be at most 16 characters")
     .regex(
       /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
-      'Invalid IP address format',
+      "Invalid IP address format",
     )
     .optional(),
-  vehicleId: z.number().min(1, 'Vehicle ID must be at least 1'),
+  vehicleId: z.number().min(1, "Vehicle ID must be at least 1"),
 })
 
 type DeviceFormData = z.infer<typeof deviceSchema>
@@ -97,20 +97,20 @@ function DeviceForm({ onClose }: { onClose: () => void }) {
     page: 1,
     limit: 10,
     includeDeleted: false,
-    search: '',
+    search: "",
   })
 
   const mutation = useCreateDevice()
   const form = useForm<DeviceFormData>({
     resolver: zodResolver(deviceSchema),
     defaultValues: {
-      serialNumber: '',
-      name: '',
-      type: EdgeDeviceType.MASTER,
-      username: '',
-      password: '',
-      wlanIpAddr: '',
-      ethIpAddr: '',
+      serialNumber: "",
+      name: "",
+      type: DeviceType.MASTER,
+      username: "",
+      password: "",
+      wlanIpAddr: "",
+      ethIpAddr: "",
       vehicleId: undefined,
     },
   })
@@ -121,7 +121,7 @@ function DeviceForm({ onClose }: { onClose: () => void }) {
       form.reset()
       onClose()
     } catch (error) {
-      logger.log('add device form:', error)
+      logger.log("add device form:", error)
     }
   }
 
@@ -242,7 +242,7 @@ function DeviceForm({ onClose }: { onClose: () => void }) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {Object.values(EdgeDeviceType).map((type) => (
+                      {Object.values(DeviceType).map((type) => (
                         <SelectItem key={type} value={type}>
                           {type}
                         </SelectItem>
@@ -270,8 +270,8 @@ function DeviceForm({ onClose }: { onClose: () => void }) {
                         <SelectValue
                           placeholder={
                             isLoadingVehicles
-                              ? 'Loading vehicles...'
-                              : 'Select vehicle'
+                              ? "Loading vehicles..."
+                              : "Select vehicle"
                           }
                         />
                       </SelectTrigger>
@@ -316,7 +316,7 @@ function DeviceForm({ onClose }: { onClose: () => void }) {
 
 export function AddDeviceForm() {
   const [open, setOpen] = useState(false)
-  const isDesktop = useMedia('(min-width: 768px)', true)
+  const isDesktop = useMedia("(min-width: 768px)", true)
 
   const handleClose = () => setOpen(false)
 
@@ -345,8 +345,8 @@ export function AddDeviceForm() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant={'outline'}
-          size={'sm'}
+          variant={"outline"}
+          size={"sm"}
           className="text-[.8125rem] tracking-tight h-6"
         >
           <IconPlus />

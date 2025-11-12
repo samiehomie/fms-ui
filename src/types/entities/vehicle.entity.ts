@@ -10,7 +10,7 @@ import {
   FuelType,
   CanBitrateType,
   VehicleType,
-} from "@/types/enums/vehicle.enum"
+} from "@/types/features/vehicles/vehicle.enum"
 
 export interface Vehicle extends BaseEntity {
   vehicleName: string

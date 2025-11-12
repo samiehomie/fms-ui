@@ -1,8 +1,4 @@
-import { RoleType } from '@/types/enums/role.enum'
-
-
-
-
+import { RoleType } from "@/types/features/roles/role.enum"
 
 export interface LoginRequest {
   username: string
@@ -45,23 +41,23 @@ export interface JWTAuthPayload {
 
 export interface JWTRefreshPayload {
   sub: number
-  type: 'refresh'
+  type: "refresh"
   iat: number
   exp: number
 }
 
 export interface AuthApiTypes {
-  'POST /auth/login': {
+  "POST /auth/login": {
     params: {}
     request: LoginRequest
     response: LoginResponse
   }
-  'POST /auth/refresh': {
+  "POST /auth/refresh": {
     params: {}
     request: RefreshTokenRequest
     response: RefreshTokenResponse
   }
-  'POST /auth/logout': {
+  "POST /auth/logout": {
     params: {}
     request: {}
     response: {}

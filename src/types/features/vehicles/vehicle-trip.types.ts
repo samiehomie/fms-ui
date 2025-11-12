@@ -2,7 +2,7 @@ import type { DefaultPaginatedResponse } from "../../common/common.types"
 import type { Gps } from "@/types/entities/gps.entity"
 import type { Vehicle } from "@/types/entities/vehicle.entity"
 import type { Trip } from "@/types/entities/trip.entity"
-import { TripStatus } from "@/types/enums/trip.enum"
+import { TripStatus } from "@/types/features/trips/trip.enum"
 
 type GpsData = Pick<
   Gps,

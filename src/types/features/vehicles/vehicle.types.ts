@@ -3,7 +3,7 @@ import type {
   CommonProperties,
   PaginationQuery,
 } from "../../common/common.types"
-import { GearType, FuelType } from "@/types/enums/vehicle.enum"
+import { GearType, FuelType } from "@/types/features/vehicles/vehicle.enum"
 import type { Vehicle } from "@/types/entities/vehicle.entity"
 import type { Company } from "@/types/entities/company.entity"
 import type { User } from "@/types/entities/user.entity"
@@ -12,7 +12,7 @@ import type { SmartProfiler } from "@/types/entities/smart-profiler.entity"
 import type { Sensor } from "@/types/entities/sensor.entity"
 import type { EdgeDevice } from "@/types/entities/edge-device.entity"
 import type { Trip } from "@/types/entities/trip.entity"
-import { TripStatus } from "@/types/enums/trip.enum"
+import { TripStatus } from "@/types/features/trips/trip.enum"
 
 type VehicleData = Pick<
   Vehicle,

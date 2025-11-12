@@ -4,8 +4,8 @@ import type {
   ApiSuccessResponse,
   ApiErrorResponse,
   ApiErrorCode,
-} from "@/types/features/route.types"
-import { HTTP_STATUS, API_ERROR_CODES } from "@/types/features/route.types"
+} from "@/types/common/api.types"
+import { HTTP_STATUS, API_ERROR_CODES } from "@/types/common/api.types"
 import type { PaginationMeta } from "@/types/common/common.types"
 
 export class HTTPError extends Error {

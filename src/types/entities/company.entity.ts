@@ -1,8 +1,8 @@
-import { BaseEntity } from './base.entity'
-import { User } from './user.entity'
-import { Vehicle } from './vehicle.entity'
-import { Address } from './address.entity'
-import { CompanyType } from '@/types/enums/company.enum'
+import { BaseEntity } from "./base.entity"
+import { User } from "./user.entity"
+import { Vehicle } from "./vehicle.entity"
+import { Address } from "./address.entity"
+import { CompanyType } from "@/types/features/companies/company.enum"
 
 export interface Company extends BaseEntity {
   name: string

@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Button } from '@/components/ui/button'
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog"
 import {
   Drawer,
   DrawerContent,
@@ -20,15 +20,15 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer'
-import { Input } from '@/components/ui/input'
+} from "@/components/ui/drawer"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select"
 import {
   Form,
   FormControl,
@@ -36,39 +36,43 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { useMedia } from 'react-use'
-import { Loader2 } from 'lucide-react'
-import { useCreateVehicle } from '@/lib/query-hooks/use-vehicles'
-import { IconPlus } from '@tabler/icons-react'
-import { GearType, FuelType, CanBitrateType } from '@/types/enums/vehicle.enum'
-import { useAuth } from '../auth/auth-provider'
-import { Skeleton } from '@/components/ui/skeleton'
-import { useAllCompanies } from '@/lib/query-hooks/use-companies'
+} from "@/components/ui/form"
+import { useMedia } from "react-use"
+import { Loader2 } from "lucide-react"
+import { useCreateVehicle } from "@/lib/query-hooks/use-vehicles"
+import { IconPlus } from "@tabler/icons-react"
+import {
+  GearType,
+  FuelType,
+  CanBitrateType,
+} from "@/types/features/vehicles/vehicle.enum"
+import { useAuth } from "../auth/auth-provider"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useAllCompanies } from "@/lib/query-hooks/use-companies"
 
 const vehicleSchema = z.object({
-  vehicleName: z.string().min(1, 'Vehicle name is required'),
-  plateNumber: z.string().min(1, 'Plate number is required'),
-  brand: z.string().min(1, 'Brand is required'),
-  model: z.string().min(1, 'Model is required'),
+  vehicleName: z.string().min(1, "Vehicle name is required"),
+  plateNumber: z.string().min(1, "Plate number is required"),
+  brand: z.string().min(1, "Brand is required"),
+  model: z.string().min(1, "Model is required"),
   manufactureYear: z
     .number()
-    .min(1900, 'Invalid manufacturing year')
+    .min(1900, "Invalid manufacturing year")
     .max(
       new Date().getFullYear() + 1,
-      'Manufacturing year cannot be in the future',
+      "Manufacturing year cannot be in the future",
     ),
   canBitrate: z.nativeEnum(CanBitrateType, {
-    errorMap: () => ({ message: 'Can bitrate type is required' }),
+    errorMap: () => ({ message: "Can bitrate type is required" }),
   }),
   fuelType: z.nativeEnum(FuelType, {
-    errorMap: () => ({ message: 'Fuel type is required' }),
+    errorMap: () => ({ message: "Fuel type is required" }),
   }),
   gearType: z.nativeEnum(GearType, {
-    errorMap: () => ({ message: 'Gear type is required' }),
+    errorMap: () => ({ message: "Gear type is required" }),
   }),
-  numTire: z.number().min(1, 'Number of tires must be at least 1'),
-  companyId: z.number().min(1, 'Company name is required'),
+  numTire: z.number().min(1, "Number of tires must be at least 1"),
+  companyId: z.number().min(1, "Company name is required"),
 })
 
 type VehicleFormData = z.infer<typeof vehicleSchema>
@@ -84,12 +88,12 @@ function VehicleForm({ onClose }: { onClose: () => void }) {
   const form = useForm<VehicleFormData>({
     resolver: zodResolver(vehicleSchema),
     defaultValues: {
-      vehicleName: '',
-      plateNumber: '',
-      brand: '',
-      model: '',
+      vehicleName: "",
+      plateNumber: "",
+      brand: "",
+      model: "",
       manufactureYear: new Date().getFullYear(),
-      canBitrate: CanBitrateType['500Kbps'],
+      canBitrate: CanBitrateType["500Kbps"],
       fuelType: FuelType.GASOLINE,
       gearType: GearType.AUTOMATIC,
       numTire: 4,
@@ -103,7 +107,7 @@ function VehicleForm({ onClose }: { onClose: () => void }) {
       form.reset()
       onClose()
     } catch (error) {
-      logger.log('mutation', error)
+      logger.log("mutation", error)
       // Error is handled in the mutation
     }
   }
@@ -196,7 +200,7 @@ function VehicleForm({ onClose }: { onClose: () => void }) {
                       value={field.value || 1900}
                       onChange={(e) => {
                         const value = e.target.value
-                        if (value === '') {
+                        if (value === "") {
                           field.onChange(1900)
                         } else {
                           const numValue = parseInt(value)
@@ -225,7 +229,7 @@ function VehicleForm({ onClose }: { onClose: () => void }) {
                       value={field.value || 4}
                       onChange={(e) => {
                         const value = e.target.value
-                        if (value === '') {
+                        if (value === "") {
                           field.onChange(4)
                         } else {
                           const numValue = parseInt(value)
@@ -381,7 +385,7 @@ function VehicleForm({ onClose }: { onClose: () => void }) {
 
 export function AddVehicleForm() {
   const [open, setOpen] = useState(false)
-  const isDesktop = useMedia('(min-width: 768px)', true)
+  const isDesktop = useMedia("(min-width: 768px)", true)
 
   const handleClose = () => setOpen(false)
 
@@ -410,8 +414,8 @@ export function AddVehicleForm() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant={'outline'}
-          size={'sm'}
+          variant={"outline"}
+          size={"sm"}
           className="text-[.8125rem] tracking-tight h-6"
         >
           <IconPlus />

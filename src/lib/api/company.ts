@@ -2,22 +2,22 @@ import type {
   ApiRequestType,
   ApiResponseType,
   ApiParamsType,
-} from '@/types/features'
-import { ApiSuccessResponse } from '@/types/features/route.types'
-import { fetchClient } from './fetch-client'
-import { buildURL } from '../utils/build-url'
+} from "@/types/features"
+import { ApiSuccessResponse } from "@/types/common/api.types"
+import { fetchClient } from "./fetch-client"
+import { buildURL } from "../utils/build-url"
 
 export const companiesApi = {
   // 페이지네이션된 회사 목록 조회
   getCompaniesPaginated: async (
-    params: ApiParamsType<'GET /companies'>,
-  ): Promise<ApiResponseType<'GET /companies'>> => {
+    params: ApiParamsType<"GET /companies">,
+  ): Promise<ApiResponseType<"GET /companies">> => {
     const apiUrl = buildURL(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies`,
       params,
     )
 
-    const response = await fetchClient<ApiResponseType<'GET /companies'>>(
+    const response = await fetchClient<ApiResponseType<"GET /companies">>(
       apiUrl,
     )
     return response
@@ -26,9 +26,9 @@ export const companiesApi = {
   getCompanyById: async (
     id: number,
     cookie?: string,
-  ): Promise<ApiSuccessResponse<ApiResponseType<'GET /companies/{id}'>>> => {
+  ): Promise<ApiSuccessResponse<ApiResponseType<"GET /companies/{id}">>> => {
     const response = await fetchClient<
-      ApiSuccessResponse<ApiResponseType<'GET /companies/{id}'>>
+      ApiSuccessResponse<ApiResponseType<"GET /companies/{id}">>
     >(
       `${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`,
       cookie
@@ -41,7 +41,7 @@ export const companiesApi = {
     )
 
     if (!response.success) {
-      throw new Error('Failed to fetch companies')
+      throw new Error("Failed to fetch companies")
     }
 
     return response
@@ -57,20 +57,20 @@ export const companiesApi = {
 
   // 새 회사 추가
   createCompany: async (
-    company: ApiRequestType<'POST /companies'>,
-  ): Promise<ApiSuccessResponse<ApiResponseType<'POST /companies'>>> => {
+    company: ApiRequestType<"POST /companies">,
+  ): Promise<ApiSuccessResponse<ApiResponseType<"POST /companies">>> => {
     const response = await fetchClient<
-      ApiSuccessResponse<ApiResponseType<'POST /companies'>>
+      ApiSuccessResponse<ApiResponseType<"POST /companies">>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(company),
     })
 
     if (!response.success) {
-      throw new Error('Failed to create company')
+      throw new Error("Failed to create company")
     }
 
     return response
@@ -79,19 +79,19 @@ export const companiesApi = {
   // 회사 삭제
   deleteCompany: async (
     id: number,
-  ): Promise<ApiSuccessResponse<ApiResponseType<'DELETE /companies'>>> => {
+  ): Promise<ApiSuccessResponse<ApiResponseType<"DELETE /companies">>> => {
     const response = await fetchClient<
-      ApiSuccessResponse<ApiResponseType<'DELETE /companies'>>
+      ApiSuccessResponse<ApiResponseType<"DELETE /companies">>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: id.toString(),
     })
 
     if (!response.success) {
-      throw new Error('Failed to delete company')
+      throw new Error("Failed to delete company")
     }
 
     return response
@@ -99,20 +99,20 @@ export const companiesApi = {
 
   modifyCompany: async (
     id: number,
-    company: ApiRequestType<'PUT /companies'>,
+    company: ApiRequestType<"PUT /companies">,
   ) => {
     const response = await fetchClient<
-      ApiSuccessResponse<ApiResponseType<'POST /companies'>>
+      ApiSuccessResponse<ApiResponseType<"POST /companies">>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(company),
     })
 
     if (!response.success) {
-      throw new Error('Failed to create company')
+      throw new Error("Failed to create company")
     }
 
     return response.data
@@ -120,20 +120,20 @@ export const companiesApi = {
 
   verifyCompany: async (
     id: number,
-    verified: ApiRequestType<'PATCH /companies/{id}/verify'>,
+    verified: ApiRequestType<"PATCH /companies/{id}/verify">,
   ) => {
     const response = await fetchClient<
-      ApiSuccessResponse<ApiResponseType<'PATCH /companies/{id}/verify'>>
+      ApiSuccessResponse<ApiResponseType<"PATCH /companies/{id}/verify">>
     >(`${process.env.NEXT_PUBLIC_FRONT_URL}/api/companies?id=${id}`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(verified),
     })
 
     if (!response.success) {
-      throw new Error('Failed to create company')
+      throw new Error("Failed to create company")
     }
 
     return response.data

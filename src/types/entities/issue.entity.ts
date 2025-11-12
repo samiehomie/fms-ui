@@ -1,7 +1,7 @@
 import { User } from './user.entity'
 import { BaseEntity } from './base.entity'
 import { Ticket } from './ticket.entity'
-import { IssueStatus, IssuePriority, IssueType } from '@/types/enums/issue.enum'
+import { IssueStatus, IssuePriority, IssueType } from '@/types/features/issues/issue.enum'
 
 export interface Issue extends BaseEntity {
   type: IssueType

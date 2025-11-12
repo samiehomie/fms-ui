@@ -1,7 +1,7 @@
-import { Vehicle } from './vehicle.entity'
-import { BaseEntity } from './base.entity'
-import { SystemModule } from './system-module.entity'
-import { EdgeDeviceType } from '@/types/enums/edge-device.enum'
+import { Vehicle } from "./vehicle.entity"
+import { BaseEntity } from "./base.entity"
+import { SystemModule } from "./system-module.entity"
+import { DeviceType } from "@/types/features/devices/device.enum"
 
 export interface EdgeDevice extends BaseEntity {
   name: string
@@ -12,7 +12,7 @@ export interface EdgeDevice extends BaseEntity {
 
   serialNumber: string
 
-  type: EdgeDeviceType
+  type: DeviceType
 
   wlanIpAddr: string
 

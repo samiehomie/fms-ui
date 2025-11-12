@@ -5,7 +5,7 @@ import type {
 import type { Vehicle } from "@/types/entities/vehicle.entity"
 import type { Company } from "@/types/entities/company.entity"
 import type { EdgeDevice } from "@/types/entities/edge-device.entity"
-import { EdgeDeviceType } from "@/types/enums/edge-device.enum"
+import { DeviceType } from "@/types/features/devices/device.enum"
 
 type DeviceData = Pick<
   EdgeDevice,
@@ -28,7 +28,7 @@ export type DevicesGetResponse = (DeviceData & {
 // GET /edge-devices
 export interface DevicesGetQuery extends PaginationQuery {
   search?: string
-  type?: EdgeDeviceType
+  type?: DeviceType
   verified?: boolean
   includeTerminated?: boolean
 }

@@ -4,7 +4,7 @@ import type { Vehicle } from "@/types/entities/vehicle.entity"
 import type { PaginationQuery } from "../../common/common.types"
 import type { TpmsResult } from "@/types/entities/tpms-result.entity"
 import type { Tire } from "@/types/entities/tire.entity"
-import { TripStatus } from "@/types/enums/trip.enum"
+import { TripStatus } from "@/types/features/trips/trip.enum"
 
 type GpsData = Pick<
   Gps,

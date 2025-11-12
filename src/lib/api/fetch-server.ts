@@ -1,5 +1,5 @@
 import type { PaginationMeta } from "@/types/common/common.types"
-import { HTTP_STATUS } from "@/types/features/route.types"
+import { HTTP_STATUS } from "@/types/common/api.types"
 
 export type FetchError =
   | { type: "http"; status: number; message: string; details?: unknown }
@@ -197,7 +197,7 @@ export async function fetchServer<T = unknown>(
 
       try {
         const resData = (await response.json()) as FetchServerResponse
-        
+
         if (!resData.success) {
           const errorMessage = resData.message || "Unknown server error"
           const errorDetails: unknown = resData.timestamp
