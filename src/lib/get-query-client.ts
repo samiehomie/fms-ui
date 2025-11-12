@@ -3,7 +3,7 @@ import {
   defaultShouldDehydrateQuery,
   isServer,
 } from "@tanstack/react-query"
-import { FetchError } from "./api/fetch-client"
+import type { FetchError } from "@/types/common/api.types"
 
 export function makeQueryClient() {
   return new QueryClient({

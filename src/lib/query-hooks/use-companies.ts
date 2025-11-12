@@ -32,8 +32,9 @@ import {
   getCompanyVehicles,
 } from "../actions/compnay.actions"
 import type { ServerActionResult } from "@/types/common/common.types"
-import { HTTPError } from "../route/route.heplers"
+import { HTTPError } from "@/lib/api/fetch-server"
 
+// 인증없이 전체 회사 목록을 가져옴. 회사 선택 컴포넌트 렌더링 위함
 export function useAllCompanyList() {
   return useQuery({
     queryKey: ["company list"],

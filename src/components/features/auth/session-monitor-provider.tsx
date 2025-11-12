@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { logOutAction } from "@/lib/actions/auth.actions"
-import type { FetchError } from "@/lib/api/fetch-client"
+import type { FetchError } from "@/types/common/api.types"
 import { useRouter } from "next/navigation"
 
 export function SessionMonitorProvider({

@@ -11,7 +11,7 @@ import type {
 } from "@/types/features/devices/device.types"
 import type { ServerActionResult } from "@/types/common/common.types"
 import { getAllDevices, createDevice } from "../actions/device.actions"
-import { HTTPError } from "../route/route.heplers"
+import { HTTPError } from "@/lib/api/fetch-server"
 
 export function useAllDevices(query: DevicesGetQuery) {
   return useQuery({

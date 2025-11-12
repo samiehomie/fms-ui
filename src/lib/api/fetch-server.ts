@@ -1,6 +1,19 @@
 import type { PaginationMeta } from "@/types/common/common.types"
 import { HTTP_STATUS } from "@/types/common/api.types"
 
+export class HTTPError extends Error {
+  statusCode: HTTP_STATUS
+
+  constructor(statusCode: HTTP_STATUS, message?: string) {
+    super(message)
+    this.statusCode = statusCode
+    this.name = "HTTPError"
+
+    // TypeScript에서 instanceof를 정확하게 하기 위해
+    Object.setPrototypeOf(this, new.target.prototype)
+  }
+}
+
 export type FetchError =
   | { type: "http"; status: number; message: string; details?: unknown }
   | { type: "network"; message: string; cause?: unknown; status?: number }

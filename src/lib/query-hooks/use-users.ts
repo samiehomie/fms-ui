@@ -9,7 +9,7 @@ import type {
   UserVerifyResponse,
 } from "@/types/features/users/user.types"
 import type { ServerActionResult } from "@/types/common/common.types"
-import { HTTPError } from "../route/route.heplers"
+import { HTTPError } from "@/lib/api/fetch-server"
 
 export function useAllUsers(query: UsersGetQuery) {
   return useQuery({

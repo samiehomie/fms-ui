@@ -76,3 +76,9 @@ export enum HTTP_STATUS {
   INTERNAL_SERVER_ERROR = 500,
   SERVICE_UNAVAILABLE = 503,
 }
+
+export interface FetchError extends Error {
+  statusCode?: number
+  statusText?: string
+  info?: any
+}

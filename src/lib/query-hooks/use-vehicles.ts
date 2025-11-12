@@ -44,7 +44,7 @@ import {
   TripsGetQuery,
   // TripTpmsDetailsResponse,
 } from "@/types/features/trips/trip.types"
-import { HTTPError } from "../route/route.heplers"
+import { HTTPError } from "@/lib/api/fetch-server"
 
 export function useAllVehicles(query: VehiclesGetQuery, id?: string) {
   return useQuery({

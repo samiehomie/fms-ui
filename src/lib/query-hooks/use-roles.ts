@@ -7,7 +7,7 @@ import type {
   RolesGetResponse,
 } from '@/types/features/roles/role.types'
 import { getAllRoles, getRole, getAllRoleList } from '../actions/role.actions'
-import { HTTPError } from '../route/route.heplers'
+import { HTTPError } from "@/lib/api/fetch-server"
 
 
 export function useAllRoleList() {

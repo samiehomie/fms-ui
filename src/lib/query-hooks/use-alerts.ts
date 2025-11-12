@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import type { ServerActionResult } from "@/types/common/common.types"
-import { HTTPError } from "../route/route.heplers"
+import { HTTPError } from "@/lib/api/fetch-server"
 import type { AlertGetAllQuery } from "@/types/features/alerts/alerts.types"
 import { getAllAlerts, getOneAlert } from "../actions/alert.actions"
 
