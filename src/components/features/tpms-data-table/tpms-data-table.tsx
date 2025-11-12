@@ -56,9 +56,9 @@ export default function TPMSDataTable({
           </tr>
           <tr className="bg-muted/90">
             <th className="px-4 py-2 text-left font-medium border-r border-border bg-muted/60 sticky left-0 z-20 w-[180px] min-w-[180px] max-w-[180px]"></th>
-            {filteredTirePositions.map((position) => {
+            {filteredTirePositions.map((position, index) => {
               return (
-                <React.Fragment key={position}>
+                <React.Fragment key={`${position}_${index}`}>
                   <th className="px-2 py-2 text-center font-medium border-r border-border/50 w-16">
                     {temperatureUnit}
                   </th>
