@@ -8,6 +8,7 @@ import {
   User,
   Cpu,
   FileText,
+  Route
 } from "lucide-react"
 
 import { NavMain } from "./nav-main"
@@ -32,6 +33,11 @@ const data = {
       title: "Dashboard",
       url: "/",
       icon: ChartGantt,
+    },
+    {
+      title: "Trips",
+      url: "/trips",
+      icon: Route,
     },
     {
       title: "Vehicles",
