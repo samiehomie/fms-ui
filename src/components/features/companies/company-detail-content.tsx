@@ -1,18 +1,18 @@
-import { FC } from 'react'
+import { FC } from "react"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Building, Mail, Phone, Globe, UserCircle, MapPin } from 'lucide-react'
-import type { CompanyByIdResponse } from '@/types/features/company.types'
-import { VerifiedBadge, UnVerifiedBadge } from '@/components/ui/custom-badges'
+} from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Building, Mail, Phone, Globe, UserCircle, MapPin } from "lucide-react"
+import type { CompanyByIdResponse } from "@/types/features/companies/company.types"
+import { VerifiedBadge, UnVerifiedBadge } from "@/components/ui/custom-badges"
 
 type CompanyDetailContentProps = {
-  company: CompanyByIdResponse['company']
+  company: CompanyByIdResponse["company"]
 }
 
 const InfoRow = ({

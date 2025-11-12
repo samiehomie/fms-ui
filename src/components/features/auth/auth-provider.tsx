@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import {
   createContext,
@@ -6,9 +6,9 @@ import {
   useState,
   useEffect,
   ReactNode,
-} from 'react'
-import type { JWTAuthPayload } from '@/types/features'
-import { getAuthData } from '@/lib/actions/auth.actions'
+} from "react"
+import type { JWTAuthPayload } from "@/types/features/auth/auth.types"
+import { getAuthData } from "@/lib/actions/auth.actions"
 
 type AuthContextType = {
   user: JWTAuthPayload | null

@@ -10,7 +10,7 @@ import {
 import { buildURL } from "@/lib/utils/build-url"
 import type { ApiResponseType, ApiRequestType } from "@/types/features"
 import { fetchServer } from "../api/fetch-server"
-import type { JWTAuthPayload } from "@/types/features"
+import type { JWTAuthPayload } from "@/types/features/auth/auth.types"
 import { parseJWT } from "@/lib/utils/build-url"
 import type { ServerActionResult } from "@/types/common/common.types"
 import type { SignupFormData } from "@/types/features/auth/signup.schema"
@@ -19,7 +19,7 @@ import type {
   UserLoginBody,
   UserLoginResponse,
 } from "@/types/features/auth/signin.types"
-import type { LogoutResponse } from "@/types/features/auth/auth.types"
+import type { LogoutResponse, RefreshTokenRequest, RefreshTokenResponse } from "@/types/features/auth/auth.types"
 
 export async function signupAction(
   formData: Omit<SignupFormData, "confirmPassword">,
@@ -188,11 +188,11 @@ export async function refreshTokenIfNeeded(
 
   if (timeUntilExpiry < refreshThreshold) {
     const apiUrl = buildURL("/auth/refresh")
-    const requestBody: ApiRequestType<"POST /auth/refresh"> = {
+    const requestBody: RefreshTokenRequest = {
       refreshToken,
     }
 
-    const result = await fetchServer<ApiResponseType<"POST /auth/refresh">>(
+    const result = await fetchServer<RefreshTokenResponse>(
       apiUrl,
       {
         method: "POST",

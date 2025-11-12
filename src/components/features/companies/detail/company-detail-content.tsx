@@ -17,7 +17,7 @@ import {
   ClockPlus,
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
-import type { CompanyByIdResponse } from '@/types/features/company.types'
+import type { CompanyByIdResponse } from '@/types/features/companies/company.types'
 import { VerifiedBadge, UnVerifiedBadge } from '@/components/ui/custom-badges'
 import { formatDateTime } from '@/lib/utils/date-formatter'
 

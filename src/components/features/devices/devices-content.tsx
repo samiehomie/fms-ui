@@ -1,15 +1,10 @@
 "use client"
 import { DataTable } from "@/components/ui/data-table"
-import type {
-  DevicesPaginationParams,
-  Device,
-} from "@/types/features/device.types"
 import { useState } from "react"
 import { columns } from "./columns"
 import { Skeleton } from "@/components/ui/skeleton"
 import DataTableHeader from "./data-table-header"
 import type { DevicesGetQuery } from "@/types/features/devices/device.types"
-import { DeviceType } from "@/types/features/devices/device.enum"
 import { useAllDevices } from "@/lib/query-hooks/use-devices"
 
 const DevicesContent = () => {

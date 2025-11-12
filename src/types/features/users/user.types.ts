@@ -69,5 +69,5 @@ export interface UserVerifyBody {
   verified: boolean
 }
 
-// PATCH /companies/{id}/verify
+// PATCH /users/{id}/verify
 export type UserVerifyResponse = UserGetResponse
